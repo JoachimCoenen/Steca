@@ -1,0 +1,93 @@
+// c
+
+#ifndef C_DEF_H
+#define C_DEF_H
+
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+#endif
+
+#ifdef __cplusplus
+
+#define __cpp__ (1)
+#define EXTERN_C extern "C" {
+#define EXTERN_C_END }
+
+#else
+
+#define __cpp__ (0)
+#define EXTERN_C
+#define EXTERN_C_END
+
+#endif
+
+#define C_STRUCT(name, body)             \
+  EXTERN_C                               \
+  struct c_##name##_mut body;            \
+  typedef c_##name##_mut const c_##name; \
+  EXTERN_C_END
+
+#define C_CON(name, args) \
+  c_##name##_mut args;
+
+#define C_MTH(mth, args) \
+  mth args;
+
+#if __cpp__
+
+#define C_STRUCT_CPP(name, body) \
+  namespace c { struct name : private c_##name body; }
+
+#else
+
+#define C_STRUCT_CPP(name, body)
+#define C_CON(name, args)
+#define C_MTH(mth, args)
+
+#endif
+
+#define COMMA ,
+
+#if __cpp__
+//------------------------------------------------------------------------------
+
+// Automatically declared type aliases:
+// t - typ, tc - typ const, p - pointer, r - reference,
+// pc - pointer to const, rc - reference to const, rval
+#define TYPEDEFS(s)       \
+  using base = c_##s;     \
+  typedef s   typ;        \
+  typedef typ &ref;       \
+  typedef typ const &rc;  \
+  typedef typ &&rval;
+
+//  typedef t &&rval;
+
+#define GEN(s) TYPEDEFS(s)
+
+#define NO_MOVE(s) TYPEDEFS(s)  \
+  s(rval)           = delete;   \
+  r operator=(rval) = delete;
+
+#define NO_COPY(s) TYPEDEFS(s)  \
+  s(rc)               = delete;   \
+  ref operator=(rc)   = delete; \
+  ref operator=(rval) = delete;
+
+#define NO_GEN(s) TYPEDEFS(s)   \
+  s(rc)               = delete; \
+  ref operator=(rc)   = delete; \
+  s(rval)             = delete; \
+  ref operator=(rval) = delete;
+
+#define MOVE_OP(s) r operator=(rval);
+
+#define COMPARABLE \
+  int compare(rc) const;
+
+//------------------------------------------------------------------------------
+#endif
+
+#endif
+// eof

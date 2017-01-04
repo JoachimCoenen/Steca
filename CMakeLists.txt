@@ -1,41 +1,19 @@
-# top-level project
-
-cmake_minimum_required (VERSION 2.8.12 FATAL_ERROR)
-
 project (SteCa2)
 
-if (CMAKE_VERSION VERSION_LESS "3.1")
-  set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-else ()
-  set (CMAKE_CXX_STANDARD 11)
-endif ()
+cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
 
-set (CMAKE_AUTOMOC ON)
-set (CMAKE_AUTORCC ON)
-set (CMAKE_INCLUDE_CURRENT_DIR OFF)
-
-if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+set (CMAKE_CXX_STANDARD 11)
+if (CMAKE_COMPILER_IS_GNUCXX)
   add_compile_options("-Wall")
+  if (WITH_COVERAGE)
+    add_compile_options("--coverage")
+  endif ()
 endif ()
 
-if (WITH_COVERAGE)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-endif ()
+file (GLOB_RECURSE old_files ".old/*")
+add_custom_target (.old SOURCES ${old_files})
 
-find_package (Qt5Core       REQUIRED)
-find_package (Qt5Gui        REQUIRED)
-find_package (Qt5Test       REQUIRED)
-find_package (Qt5Widgets    REQUIRED)
-find_package (Qt5Multimedia REQUIRED)
-
-add_subdirectory (lib)
-add_subdirectory (LevMar)
-add_subdirectory (core)
-add_subdirectory (io)
-add_subdirectory (gui)
-
-if (WITH_TESTS)
-  add_subdirectory (tests)
-endif ()
+add_subdirectory (c)
+add_subdirectory (tests)
 
 # eof
