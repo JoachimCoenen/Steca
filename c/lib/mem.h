@@ -3,11 +3,9 @@
 #ifndef C_MEM_H
 #define C_MEM_H
 
-#include "../def/num.h"
+#include "../def/def_num"
 
 C_STRUCT(mem, {
-  typedef uint  size_t;
-
   size_t size;
   void   *p;
 

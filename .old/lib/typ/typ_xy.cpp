@@ -33,7 +33,7 @@ TEST("XY()", ({
   XY xy;
   CHECK(qIsNaN(xy.x));
   CHECK(qIsNaN(xy.y));
-});)
+})
 
 XY::XY(qreal x_, qreal y_) : x(x_), y(y_) {}
 
@@ -41,7 +41,7 @@ TEST("XY(x,y)", ({
   XY xy(2.3,3.4);
   CHECK_EQ(2.3, xy.x);
   CHECK_EQ(3.4, xy.y);
-});)
+})
 
 int XY::compare(rc that) const {
   EXPECT(isValid() && that.isValid())
@@ -61,7 +61,7 @@ TEST("XY::compare", ({
 
   CHECK_EQ(xy, xy1);
   CHECK_NE(xy, xy2);
-});)
+})
 
 void XY::invalidate() {
   x = y = NAN;
@@ -80,7 +80,7 @@ TEST("XY::valid", ({
   CHECK(xy.isValid());
   xy.invalidate();
   CHECK(!xy.isValid());
-});)
+})
 
 JsonObj XY::saveJson() const {
   return JsonObj().saveQreal(json_key::X, x).saveQreal(json_key::Y, y);
@@ -95,7 +95,7 @@ TEST("XY::json", ({
   XY xy(-1,2), xy1;
   xy1.loadJson(xy.saveJson());
   CHECK_EQ(xy, xy1);
-});)
+})
 
 //------------------------------------------------------------------------------
 }

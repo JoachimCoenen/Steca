@@ -1,0 +1,41 @@
+// c
+
+#ifdef C_DEF_ALG
+#error include only once
+#endif
+
+#define C_DEF_ALG
+
+#include "def_h"
+
+#if !__cpp__
+#error this should be used in cpp files
+#endif
+
+#ifdef __GNUC__
+
+template <typename T> struct non_const          { typedef T typ; };
+template <typename T> struct non_const<T const> { typedef T typ; };
+
+#define for_int(i, n) \
+  for (non_const<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
+#define for_int_down(n) \
+  for (non_const<decltype(n)>::typ i = (num); i-- > decltype(n)(0); )
+
+#define for_i(n)        for_int (i, n)
+#define for_i_down(n)   for_int_down (i, n)
+#define for_ij(ni, nj)  for_int (i, ni) for_int (j, nj)
+
+#else // msvc fails the above
+
+#define for_int(i, n) \
+  for (int i = 0, i##End = (n); i < i##End; ++i)
+#define for_int_down(n) \
+  for (int i = (num); i-- > 0; )
+
+#endif
+
+#define ONLY_ONCE \
+{ static bool once = false; if (once) return; once = true; }
+
+// eof

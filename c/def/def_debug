@@ -1,0 +1,51 @@
+// c
+
+#ifdef C_DEF_DEBUG
+#error include only once
+#endif
+
+#define C_DEF_DEBUG
+
+#include "def_h"
+
+#if !__cpp__
+#error this should be used in cpp files
+#endif
+
+#ifndef NDEBUG
+
+#include <iostream>
+
+struct _DebugOut_ final {
+  _DebugOut_() {
+  }
+
+ ~_DebugOut_() {
+    std::cout << std::endl;
+  }
+
+  template<typename T>
+  _DebugOut_& operator<<(T const& t) {
+    std::cout << t << ' ';
+    return *this;
+  }
+};
+
+#define TR(what)  { _DebugOut_() << what; }
+
+#define EXPECT_WT(cond, what) { if (!(cond)) WT(what); EXPECT(cond) }
+#define ENSURE_WT(cond, what) { if (!(cond)) WT(what); ENSURE(cond) }
+
+#else
+
+#define TR(what)  {}
+
+#define EXPECT_WT(cond, what) { EXPECT(cond) }
+#define ENSURE_WT(cond, what) { ENSURE(cond) }
+
+#endif
+
+#define WT(what) TR(#what ":" << what)
+#define NEVER    EXPECT(false)
+
+// eof

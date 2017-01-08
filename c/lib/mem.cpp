@@ -1,9 +1,8 @@
 // c
 
-#include "test/test.h"
-
 #include "mem.h"
-#include "../def/cpp"
+#include "../def/def_cpp"
+#include "../test/test.h"
 #include <memory>
 #include <utility>
 
@@ -23,11 +22,11 @@ C_CON_IMPL(mem, (size_t size_, void* p_)) : size(size_), p(p_) {}
 namespace c {
 //------------------------------------------------------------------------------
 
-mem::mem(size_t size_) : base(size_, 0) {
+mem::mem(size_t size_) : c_mem(size_, 0) {
   unsafe::malloc(p, size);
 }
 
-mem::mem(rval that) : base(0, nullptr) {
+mem::mem(rval that) : c_mem(0, nullptr) {
   std::swap(size, that.size);
   std::swap(p,    that.p);
 }

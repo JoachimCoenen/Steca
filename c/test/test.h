@@ -10,16 +10,16 @@
 
 // TODO #pragma GCC diagnostic ignored "-Wgnu-statement-expression"
 
-#define TEST(name, code)  \
-namespace {               \
-TEST_CASE(name) {         \
-  code                    \
-}                         \
+#define TEST(name, code) \
+namespace {              \
+TEST_CASE(name) {        \
+  code                   \
+}                        \
 }
 
 #else
 
-#define TEST(name, code)  \
+#define TEST(name, code)
 
 #endif
 

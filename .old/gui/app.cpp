@@ -22,27 +22,10 @@
 
 #include <QMessageBox>
 #include <QStatusBar>
-#include <QStyleFactory>
 #include <iostream>
 
 //------------------------------------------------------------------------------
 
-App::App(int& argc, char* argv[]) : super(argc, argv) {
-  setApplicationName(APPLICATION_NAME);
-  setApplicationVersion(
-    #include "../VERSION"
-  );
-  setOrganizationName(ORGANIZATION_NAME);
-  setOrganizationDomain(ORGANIZATION_DOMAIN);
-
-#if defined(Q_OS_OSX)
-  setStyle(QStyleFactory::create("Macintosh"));
-#elif defined(Q_OS_WIN)
-  setStyle(QStyleFactory::create("Fusion"));
-#else
-  setStyle(QStyleFactory::create("Fusion"));
-#endif
-}
 
 static QtMessageHandler oldHandler;
 static QAtomicInt       noWarning;

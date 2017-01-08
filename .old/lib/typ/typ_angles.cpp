@@ -29,7 +29,7 @@ deg::deg(rad r) {
 
 TEST("deg(rad)", ({
   CHECK_EQ(qreal(deg(rad(M_PI_2))), 90);
-});)
+})
 
 rad deg::toRad() const {
   return val_ * (M_PI / 180);
@@ -60,7 +60,7 @@ rad::rad(deg d) {
 
 TEST("rad(deg)", ({
   CHECK_EQ(qreal(rad(deg(90))), M_PI_2);
-});)
+})
 
 deg rad::toDeg() const {
   return val_ * (180 / M_PI);

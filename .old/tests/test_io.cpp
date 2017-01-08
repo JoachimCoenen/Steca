@@ -14,6 +14,6 @@ str thisDir() {
 
 TEST("XY()", ({
   CHECK_NOTHROW(io::loadCaress2(thisDir() + "/test_caress.dat"));
-});)
+})
 
 // eof

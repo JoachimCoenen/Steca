@@ -1,0 +1,14 @@
+// c
+
+#ifdef C_CPP
+#error include only once
+#endif
+
+#define C_CPP
+
+#include "def/def_cpp"
+#include "def/def_alg"
+#include "def/def_debug"
+#include "test/test.h"
+
+// eof

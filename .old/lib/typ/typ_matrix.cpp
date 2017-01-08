@@ -70,7 +70,7 @@ TEST("vec3", ({
   CHECK_EQ(r, fr);
   CHECK_EQ(r, rf);
   CHECK_EQ(fr, rf);
-}););
+});
 
 mat3r::mat3r(qreal _00_, qreal _01_, qreal _02_,
                    qreal _10_, qreal _11_, qreal _12_,
@@ -133,7 +133,7 @@ TEST("mat3r", ({
 
   CHECK_EQ(vec3r(17,62,107), m1 * vec3r(4,5,6));
   CHECK_EQ(mat3r(5,14,23, 14,50,86, 23,86,149), m1*mt);
-}););
+});
 
 mat3r mat3r::rotationCWx(qreal angle) {
   return mat3r(1, 0,           0,
@@ -160,7 +160,7 @@ TEST("mat3r::rotation", ({
   vec3r v(1,2,3);
   CHECK_EQ(v, cwx.transposed()*(cwx*v));
   CHECK_EQ(v, ccwz*(cwz*v));
-}););
+});
 
 //------------------------------------------------------------------------------
 }

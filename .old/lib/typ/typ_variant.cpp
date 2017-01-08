@@ -63,7 +63,7 @@ TEST("cmp_int(QVariants)", ({ // not exhaustive, just due diligence
   CHECK_EQ( 0, cmp_int(v1, v1));
   CHECK_EQ(-1, cmp_int(v1, v2));
   CHECK_EQ(+1, cmp_int(v2, v1));
-});)
+})
 
 #undef IMPL_CMP
 

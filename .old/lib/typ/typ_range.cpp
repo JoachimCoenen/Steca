@@ -47,7 +47,7 @@ TEST("Range()", ({
   Range r;
   CHECK(qIsNaN(r.min));
   CHECK(qIsNaN(r.max));
-});)
+})
 
 Range::Range(qreal val) {
   set(val);
@@ -57,7 +57,7 @@ TEST("Range(v)", ({
   Range r(6);
   CHECK_EQ(6, r.min);
   CHECK_EQ(6, r.max);
-});)
+})
 
 Range::Range(qreal min, qreal max) {
   set(min, max);
@@ -67,7 +67,7 @@ TEST("Range(min, max)", ({
   Range r(6,7);
   CHECK_EQ(6, r.min);
   CHECK_EQ(7, r.max);
-});)
+})
 
 Range Range::infinite() {
   return Range(-INF, +INF);
@@ -86,7 +86,7 @@ TEST("Range::infinite", ({
   auto r = Range::infinite();
   CHECK(qIsInf(r.min)); CHECK_LE(r.min, 0);
   CHECK(qIsInf(r.max)); CHECK_GE(r.max, 0);
-});)
+})
 
 void Range::invalidate() {
   set(NAN);
@@ -107,7 +107,7 @@ TEST("Range::valid", ({
   CHECK(!r.isValid());
   r.set(0);
   CHECK(r.isValid());
-});)
+})
 
 bool Range::isEmpty() const {
   return !isValid() || min >= max;
@@ -125,7 +125,7 @@ TEST("Range::empty", ({
   CHECK(r.isEmpty());
   r.max = NAN;
   CHECK(r.isEmpty());
-});)
+})
 
 qreal Range::width() const {
   return isValid() ? max - min : NAN;
@@ -145,7 +145,7 @@ TEST("Range::width", ({
   CHECK(r.isEmpty());
   r.max = NAN;
   CHECK(r.isEmpty());
-});)
+})
 
 qreal Range::center() const {
   return isValid() ? (min + max) / 2 : NAN;
@@ -157,7 +157,7 @@ TEST("Range::center", ({
   CHECK(qIsNaN(Range(0,NAN).center()));
   CHECK(qIsInf(Range(0,INF).center()));
   CHECK(qIsNaN(Range::infinite().center()));
-});)
+})
 
 void Range::set(qreal val) {
   set(val, val);
@@ -191,7 +191,7 @@ TEST("Range::safe", ({
   RANGE_EQ(r, Range(3,4));
   r.safeSet(+INF, -INF);
   RANGE_EQ(r, Range::infinite());
-});)
+})
 
 void Range::extendBy(qreal val) {
   min = qIsNaN(min) ? val : qMin(min, val);
@@ -209,7 +209,7 @@ TEST("Range::extend", ({
   RANGE_EQ(r, Range(-1,2));
   r.extendBy(Range(3,4));
   RANGE_EQ(r, Range(-1,4));
-});)
+})
 
 bool Range::contains(qreal val) const {
   return min <= val && val <= max;
@@ -242,7 +242,7 @@ TEST("Range::contains", ({
   CHECK(r.contains(+1));
   CHECK(r.contains(Range(0,1)));
   CHECK(!r.contains(Range(-2,0)));
-});)
+})
 
 bool Range::intersects(Range::rc that) const {
   return min <= that.max && that.min <= max;
@@ -266,7 +266,7 @@ TEST("Range::intersects", ({
 
   CHECK(r.intersects(Range(0,10)));
   CHECK(r.intersects(Range(-2,0)));
-});)
+})
 
 Range Range::intersect(Range::rc that) const {
   if (!isValid() || !that.isValid())
@@ -303,7 +303,7 @@ TEST("Range::intersect", ({
   auto disjoint = Range(-3,-2);
   CHECK(r.intersect(disjoint).isEmpty());
   CHECK_EQ(r.min, r.intersect(disjoint).min);
-});)
+})
 
 qreal Range::bound(qreal value) const {
   if (isValid() && !qIsNaN(value))
@@ -326,7 +326,7 @@ TEST("Range::bound", ({
   CHECK_EQ(-1, r.bound(-INF));
   CHECK_EQ(+1, r.bound(+10));
   CHECK_EQ(+1, r.bound(+INF));
-});)
+})
 
 JsonObj Range::saveJson() const {
   return JsonObj().saveQreal(json_key::MIN, min).saveQreal(json_key::MAX, max);
@@ -341,7 +341,7 @@ TEST("Range::json", ({
   Range r(-1,2), r1;
   r1.loadJson(r.saveJson());
   CHECK_EQ(r, r1);
-});)
+})
 
 //------------------------------------------------------------------------------
 
@@ -477,7 +477,7 @@ TEST("Ranges", ({
   CHECK(RANGES_EQ(rs, {{0,1}, {2,4}} ));
 
   rs.clear(); CHECK_FALSE(rs.rem(r1));
-});)
+})
 
 TEST("Ranges::json", ({
   Ranges rs, rs1;
@@ -488,7 +488,7 @@ TEST("Ranges::json", ({
 
   rs1.loadJson(rs.saveJson());
   CHECK(RANGES_EQ(rs, rs1));
-});)
+})
 
 //------------------------------------------------------------------------------
 }

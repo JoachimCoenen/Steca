@@ -1,8 +1,6 @@
 add_definitions (-DWITH_TESTS)
 
-set (srcdirs
-  c
-)
+set (srcdirs c)
 
 foreach (dir ${srcdirs})
   include_directories (${CMAKE_HOME_DIRECTORY}/${dir})
@@ -15,6 +13,12 @@ file (GLOB_RECURSE test_files *.h *.cpp)
 add_executable (tests
   ${test_files}
   ${files}
+)
+
+target_link_libraries (tests
+  Qt5::Core
+  Qt5::Gui
+  Qt5::Widgets
 )
 
 # eof

@@ -31,7 +31,7 @@ TEST("IJ()", ({
   IJ ij;
   CHECK_EQ(0, ij.i);
   CHECK_EQ(0, ij.j);
-});)
+})
 
 IJ::IJ(int i_, int j_) : i(i_), j(j_) {}
 
@@ -39,7 +39,7 @@ TEST("IJ(i,j)", ({
   IJ ij(2,3);
   CHECK_EQ(2, ij.i);
   CHECK_EQ(3, ij.j);
-});)
+})
 
 int IJ::compare(rc that) const {
   RET_COMPARE_VALUE(i)
@@ -58,7 +58,7 @@ TEST("IJ::compare", ({
 
   CHECK_EQ(ij, ij1);
   CHECK_NE(ij, ij2);
-});)
+})
 
 JsonObj IJ::saveJson() const {
   return JsonObj().saveInt(json_key::I, i).saveInt(json_key::J, j);
@@ -73,7 +73,7 @@ TEST("IJ::json", ({
   IJ ij(-1,2), ij1;
   ij1.loadJson(ij.saveJson());
   CHECK_EQ(ij, ij1);
-});)
+})
 
 //------------------------------------------------------------------------------
 }

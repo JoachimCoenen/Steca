@@ -19,7 +19,6 @@
 #define APP_H
 
 #include "def/defs.h"
-#include <QApplication>
 
 //------------------------------------------------------------------------------
 
@@ -29,12 +28,6 @@ public:
  ~NoWarnings();
 };
 
-class App : public QApplication {
-  CLASS(App) SUPER(QApplication)
-public:
-  App(int& argc, char* argv[]);
-
-  int exec();
 
 private:
   // Exceptions caught here; displayed in a dialog.

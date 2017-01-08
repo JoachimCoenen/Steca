@@ -1,0 +1,11 @@
+// c
+
+#ifndef C_H
+#define C_H
+
+#include "def/def_h"
+#include "def/def_num"
+#include "lib/ptr.h"
+
+#endif
+// eof
