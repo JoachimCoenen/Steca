@@ -8,6 +8,8 @@
 #pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
+#include <stddef.h>
+
 #include <assert.h>
 #define EXPECT(cond) assert(cond);
 #define ENSURE(cond) assert(cond);
@@ -34,7 +36,7 @@
 
 #if __cpp__
 
-// TODO form c struct
+// TODO from c struct
 #define C_STRUCT_CPP(name, body) \
   namespace c { struct name final : private c_##name body; }
 

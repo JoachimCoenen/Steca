@@ -1,24 +1,20 @@
+get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
 add_definitions (-DWITH_TESTS)
 
 set (srcdirs c)
 
 foreach (dir ${srcdirs})
-  include_directories (${CMAKE_HOME_DIRECTORY}/${dir})
-  file (GLOB_RECURSE fs ${CMAKE_HOME_DIRECTORY}/${dir}/*.cpp)
+  set (sd ${CMAKE_HOME_DIRECTORY}/${dir})
+  include_directories (${sd})
+  file (GLOB_RECURSE fs ${sd}/*.cpp)
   set (files ${files} ${fs})
 endforeach (dir)
 
 file (GLOB_RECURSE test_files *.h *.cpp)
 
-add_executable (tests
-  ${test_files}
-  ${files}
-)
-
-target_link_libraries (tests
-  Qt5::Core
-  Qt5::Gui
-  Qt5::Widgets
+add_executable (${app}
+  ${files} ${test_files}
 )
 
 # eof

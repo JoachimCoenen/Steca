@@ -3,21 +3,22 @@
 #ifndef C_QT_WIN_H
 #define C_QT_WIN_H
 
-#include "../../h"
+#include <c/app/win.i.h>
 
 #if __cpp__
 
 #include <QMainWindow>
 
-namespace c { namespace qt {
+namespace qt {
 //------------------------------------------------------------------------------
 
-struct win : QMainWindow { BASE(QMainWindow)
+struct win : c::win, QMainWindow { BASE(QMainWindow)
   win();
+  void show();
 };
 
 //------------------------------------------------------------------------------
-}}
+}
 #endif
 #endif
 // eof

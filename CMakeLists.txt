@@ -15,15 +15,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 file (GLOB_RECURSE old_files ".old/*")
 add_custom_target (.old SOURCES ${old_files})
 
-# Qt for now
-add_definitions (-DWITH_QT)
-set (CMAKE_AUTOMOC ON)
-find_package (Qt5Core       REQUIRED)
-find_package (Qt5Gui        REQUIRED)
-find_package (Qt5Widgets    REQUIRED)
-
 add_subdirectory (c)
-add_subdirectory (tests)
+add_subdirectory (qt)
 add_subdirectory (test_app)
+#add_subdirectory (io)
+#add_subdirectory (tests)
 
 # eof

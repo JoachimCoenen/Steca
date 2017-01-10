@@ -1,20 +1,24 @@
 // c
-#include <app/app.h>
-#include <app/win.h>
+#include <qt/app.h>
+#include <qt/win.h>
 
-struct app : c::app { BASE_CONS(c::app)
+struct app : qt::app { BASE_CONS(qt::app)
   int exec();
 };
 
-struct win : c::win { BASE_CONS(c::win)
+struct win : qt::win { BASE_CONS(qt::win)
+  ~win();
 };
+
+win::~win() {
+}
 
 int app::exec() {
   try {
     win w;
     w.show();
 
-    int res = c::app::exec();
+    int res = base::exec();
 
     return res;
 

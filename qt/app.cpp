@@ -1,10 +1,11 @@
 // c
 
 #include "app.h"
-#include "../../cpp"
+#include <c/cpp>
 
-namespace c { namespace qt {
+namespace qt {
 //------------------------------------------------------------------------------
+
 app::app(int& argc, char* argv[]) : base(argc, argv) {
 // TODO   setApplicationName(APPLICATION_NAME);
 //    setApplicationVersion(VERSION);
@@ -18,7 +19,6 @@ app::app(int& argc, char* argv[]) : base(argc, argv) {
   #else
     setStyle(QStyleFactory::create("Fusion"));
   #endif
-  TR("app" << this)
 }
 
 int app::exec() {
@@ -26,5 +26,5 @@ int app::exec() {
 }
 
 //------------------------------------------------------------------------------
-}}
+}
 // eof
