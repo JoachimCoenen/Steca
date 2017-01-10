@@ -16,19 +16,26 @@
 
 #include <iostream>
 
-struct _DebugOut_ final {
+struct _DebugOut_ {
   _DebugOut_() {
+    std::cout << "[";
   }
 
  ~_DebugOut_() {
-    std::cout << std::endl;
+    std::cout << "]" << std::endl;
   }
 
   template<typename T>
   _DebugOut_& operator<<(T const& t) {
-    std::cout << t << ' ';
+    if (have)
+      std::cout << ":";
+    have = true;
+    std::cout << t;
     return *this;
   }
+
+private:
+  bool have = false;
 };
 
 #define TR(what)  { _DebugOut_() << what; }

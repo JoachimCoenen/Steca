@@ -14,8 +14,11 @@ C_STRUCT(mem, {
 
 C_STRUCT_CPP(mem, { NO_COPY(mem)
   mem(size_t);
+  mem(size_t, void const* src);
   mem(rval);
  ~mem();
+protected:
+  void swap(ref);
 })
 
 //------------------------------------------------------------------------------

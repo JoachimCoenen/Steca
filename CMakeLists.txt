@@ -17,8 +17,8 @@ add_custom_target (.old SOURCES ${old_files})
 
 add_subdirectory (c)
 add_subdirectory (qt)
-add_subdirectory (test_app)
 #add_subdirectory (io)
-#add_subdirectory (tests)
+add_subdirectory (tests)
+add_subdirectory (test_app)
 
 # eof

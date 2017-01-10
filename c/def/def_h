@@ -36,9 +36,12 @@
 
 #if __cpp__
 
-// TODO from c struct
+// TODO macro names!
 #define C_STRUCT_CPP(name, body) \
-  namespace c { struct name final : private c_##name body; }
+  namespace c { struct name : protected c_##name body; }
+
+#define C_SUB_STRUCT_CPP(name, base, body) \
+  namespace c { struct name : base body; }
 
 // TODO plain struct
 #define C_IFACE_CPP(name, body) \

@@ -97,20 +97,6 @@ bool isnormal(flt64);
 
 //------------------------------------------------------------------------------
 
-#if defined(__GNUC__)
-
-#else
-
-inline int to_i(uint u) {
-  return int(u);
-}
-
-inline uint to_u(int i) {
-  return uint(i);
-}
-
-#endif
-
 #ifndef NDEBUG
 
 struct pint {
@@ -123,7 +109,7 @@ struct pint {
 
   operator uint() const { return ui; }
 
-private:
+protected:
   uint ui;
 };
 
@@ -134,7 +120,7 @@ struct preal {
 
   operator real() const { return r; }
 
-private:
+protected:
   real r;
 };
 
@@ -147,7 +133,6 @@ typedef real preal;
 
 }
 #endif
-//------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 #endif

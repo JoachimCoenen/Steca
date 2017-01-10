@@ -1,0 +1,129 @@
+ver. 2.1.5, released ....
+-------------------------------
+
+Changes:
+
+* some unit tests are back
+* code cleanup
+
+ver. 2.0.4, released 2016.12.01
+-------------------------------
+
+New features:
+
+* image overlay: visualise gamma slices and 2theta bins;
+  show where gamma=0 is
+* the "about" dialog indicates if the build is 64-bit;
+  startup options reset after a new version is installed
+  (to alert the user to that fact)
+
+Improvements:
+
+* raw diffractogram (before background adjustment) is plotted as dots
+  (to show the nature of the histogram binning)
+* detector geometry defaults to 1035 / 1 mm
+* image color scale adjusted to show lower counts more clearly
+* add/remove file buttons moved above the file list
+
+Bug fixes:
+
+* more conservative memory allocation that, we hope, fixes the strange
+  "bad allocation" errors on some machines
+* utf8 (Greek) characters replaced by ASCII strings (e.g. "gamma")
+  in output text files
+
+ver. 2.0.3a (hotfix), released 2016.11.14
+-----------------------------------------
+
+Changes:
+
+* fixed incorrect calculation of bin numbers for combined datasets
+* non-used configuration entries (detector) temporarily hidden
+
+ver. 2.0.3 (Armistice), released 2016.11.11
+-------------------------------------------
+
+New features:
+
+* check updates; optionally at startup
+* loads TIFF data format
+* loads Mar data format
+* handles beam offset
+* option to disable gamma-slicing
+* option to disable neutron count averaging (experimental)
+
+Improvements:
+
+* optimized angle map calculation
+* improved image display resizing
+* image overlay shows beam centre crosshairs
+* Metadata view is a table view
+* more compact gui layout
+* X button that clears reflections
+* progress bar shows the progress of pole figure points interpolation
+* gamma slicing shown in images
+
+Bug fixes:
+
+* #28 - a bug in vanadium correction
+
+ver. 2.0.2a (hotfix), released 2016.08.29
+-----------------------------------------
+
+Bug fixes:
+
+* vanadium correction re-enabled for diffractograms
+* fixed labels in diffractogram output
+
+ver. 2.0.2, released 2016.08.23
+-------------------------------
+
+New features:
+
+* #23 - normalisation to monitor count
+
+Bug fixes:
+
+* #22 - missing values in saved diagrams
+* Diagrams of RAW reflection values are output without (meaningless) error limits.
+* "all datasets" curve works
+
+Changes, improvements:
+
+* The range of gammas is now retrieved at the 'middle' 2 theta.
+* Output text files are written with OS-specific end-of-line (\r\n on Windows).
+* Output text formats: only .dat (spaces) and .csv (commas); .txt is discontinued.
+* Output dialogs: improved gamma slicing controls.
+
+ver. 2.0.1, released 2016.06.29
+-------------------------------
+
+New features:
+
+* Datasets with different 2theta and/or gamma values (i.e. angle maps) are now properly combined.
+* Some relevant warnings are now shown on the statusbar.
+
+Bug fixes:
+
+* #1442 - crash when normalizing to invalid monitor counts or delta time
+* #1443 - NaN errors shown by the diffractogram plot
+
+Changes in code:
+
+* statubar-messaging
+* semi-major code refactoring, rearranged modules and source code files
+* new specialized types and typedefs to improve type safety and self-documentation of code
+* cache classe to handle angle maps
+* Fixed bugs #1442, #1443, and a number of small things
+
+STeCa2-2.0.0.1, released 2016.06.09
+-----------------------------------
+* First release for user acceptance testing
+
+
+Features planned for the next version (2.0.2, probably by the end of July)
+==========================================================================
+
+Loading of TIFF and Mar files. X-ray - type data + beam offset handling.
+Filtering of results by their fitting errors (standard deviations).
+Faster interpolation; all datasets feature taking into account different tth angles.

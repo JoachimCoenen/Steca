@@ -10,11 +10,8 @@ find_package (Qt5Gui     REQUIRED)
 find_package (Qt5Widgets REQUIRED)
 
 target_link_libraries (${app}
-  qt
-  Qt5::Core
-  Qt5::Gui
-  Qt5::Widgets
-  c53c
+  qt c2c
+  Qt5::Core Qt5::Gui Qt5::Widgets
 )
 
 # eof

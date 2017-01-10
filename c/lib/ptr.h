@@ -138,7 +138,7 @@ protected:
 };
 
 template <typename T>
-struct shared : private _shared_base_ {
+struct shared : protected _shared_base_ {
   shared(just_ptr<T> p) : _shared_base_(p) {}
   shared(shared const& that) : _shared_base_(that) {}
  ~shared() {
