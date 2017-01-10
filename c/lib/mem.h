@@ -5,12 +5,12 @@
 
 #include "../def/def_num"
 
-C_STRUCT(mem, {
-  size_t size;
-  void   *p;
+C_STRUCT_C(mem)
+  C_ATR_C(size_t, size)
+  C_PTR_C(void,   p)
 
-  C_CON(mem, (size_t, void*))
-})
+  C_CON_C(mem, (size_t, void*))
+C_STRUCT_C_END(mem)
 
 C_STRUCT_CPP(mem, { NO_COPY(mem)
   mem(size_t);

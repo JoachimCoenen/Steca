@@ -5,10 +5,10 @@
 #include "../def/def_num"
 #include <atomic>
 
-C_CON_IMPL(ptr, (void* p_)) : p(p_) {}
+C_CON_C_IMPL(ptr, (void const*const p_)) : p(p_) {}
 
-C_MTH_IMPL(ptr, void*, take, ()) {
-  auto _ = p; p = nullptr; return _;
+C_MTH_C_IMPL(ptr, void const*, take, ()) {
+  auto _ = mut(p); mut(p) = nullptr; return _;
 }
 
 //------------------------------------------------------------------------------
@@ -20,7 +20,8 @@ TEST("just_ptr", ({
   auto p1 = just_ptr<int>::from(&i), p2(p1);
   CHECK_EQ(p1, p2);
 
-  ++(*p1); ++(*p1.ptr());
+  ++(mut(*p1));
+  ++(mut(*p1.ptr()));
   CHECK_EQ(2, *p2);
 });)
 
@@ -31,8 +32,8 @@ struct o_cnt {
 
   o_cnt(just_ptr<void> o_) : o(o_), cnt(0) {}
 
-  static o_cnt* from(just_ptr<void> p) {
-    return static_cast<o_cnt*>(p.ptr());
+  static o_cnt const* from(just_ptr<void> p) {
+    return static_cast<o_cnt const*>(p.ptr());
   }
 };
 
@@ -45,7 +46,7 @@ TEST("o_cnt", ({
 });)
 
 _shared_base_::_shared_base_(just_ptr<void> o) : c_ptr(nullptr) {
-  c_ptr::p = new o_cnt(o);
+  mut(c_ptr::p) = new o_cnt(o);
   inc();
 }
 
@@ -54,19 +55,19 @@ _shared_base_::_shared_base_(_shared_base_ const& that) : c_ptr(that.c_ptr::p) {
 }
 
 just_ptr<void> _shared_base_::p() const {
-  return static_cast<o_cnt*>(c_ptr::p)->o;
+  return static_cast<o_cnt const*>(c_ptr::p)->o;
 }
 
 void _shared_base_::inc() {
-  ++(static_cast<o_cnt*>(c_ptr::p)->cnt);
+  ++(mut(static_cast<o_cnt const*>(c_ptr::p)->cnt));
 }
 
 bool _shared_base_::dec() {
-  return 0 == --(static_cast<o_cnt*>(c_ptr::p)->cnt);
+  return 0 == --(mut(static_cast<o_cnt const*>(c_ptr::p)->cnt));
 }
 
 void _shared_base_::cleanup() {
-  delete static_cast<o_cnt*>(c_ptr::p);
+  delete static_cast<o_cnt*>(mut(c_ptr::p));
 }
 
 #ifdef WITH_TESTS
@@ -105,7 +106,7 @@ TEST("scoped", ({
     sco_ptr p(new cnt);
     CHECK(bool(p));
     CHECK_EQ(1, cnt::cnt);
-    raw = p.take();
+    raw.set(p.take());
     CHECK_FALSE(bool(p));
     CHECK_EQ(1, cnt::cnt);
   }

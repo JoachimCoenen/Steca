@@ -12,11 +12,23 @@
 #error this should be used in cpp files
 #endif
 
-#define C_CON_IMPL(name, args) \
-  c_##name##_mut::c_##name##_mut args
+//template <typename T> struct non_const          { typedef T typ; };
+//template <typename T> struct non_const<T const> { typedef T typ; };
 
-#define C_MTH_IMPL(name, type, mth, args) \
-  type c_##name##_mut::mth args
+//template<typename T>
+//T* mutp(T const*const t) { return *const_cast<T*>(&t);}
+
+//template<typename T>
+//T** pmut(T const*const t) { return const_cast<T*>(&t);}
+
+//template<typename T>
+//T* pmut(T const& t) { return const_cast<T*>(&t);}
+
+#define C_CON_C_IMPL(name, args) \
+  c_##name::c_##name args
+
+#define C_MTH_C_IMPL(name, type, mth, args) \
+  type c_##name::mth args
 
 #define C_PROXY_IMPL(name) \
   c_##name::c_##name (nob n_) : n(n_) {}

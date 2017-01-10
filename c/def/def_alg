@@ -14,9 +14,6 @@
 
 #ifdef __GNUC__
 
-template <typename T> struct non_const          { typedef T typ; };
-template <typename T> struct non_const<T const> { typedef T typ; };
-
 #define for_int(i, n) \
   for (non_const<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
 #define for_int_down(n) \

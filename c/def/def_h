@@ -28,11 +28,40 @@
 
 #endif
 
-#define C_STRUCT(name, body)             \
-  EXTERN_C                               \
-  struct c_##name##_mut body;            \
-  typedef c_##name##_mut const c_##name; \
+#define C_STRUCT_C(name)      \
+  EXTERN_C                    \
+  struct c_##name {
+
+#define C_ATR_C(typ, name)    \
+  typ const name;
+
+#define C_PTR_C(typ, name)    \
+  typ const * const name;
+
+#define C_STRUCT_C_END(name)  \
+  };                          \
   EXTERN_C_END
+
+#if __cpp__
+
+template<typename T>
+T*& mut(T const*const& t) { return const_cast<T*&>(t); }
+
+template<typename T>
+T& mut(T const& t) { return const_cast<T&>(t); }
+
+#define C_CON_C(name, args)     \
+  c_##name args;
+
+#define C_MTH_C(typ, mth, args) \
+  typ mth args;
+
+#else
+
+#define C_CON_C(name, args)
+#define C_MTH_C(typ, mth, args)
+
+#endif
 
 #if __cpp__
 
@@ -47,18 +76,10 @@
 #define C_IFACE_CPP(name, body) \
   namespace c { struct name body; }
 
-#define C_CON(name, args) \
-  c_##name##_mut args;
-
-#define C_MTH(mth, args) \
-  mth args;
-
 #else
 
 #define C_STRUCT_CPP(name, body)
 #define C_IFACE_CPP(name, body)
-#define C_CON(name, args)
-#define C_MTH(mth, args)
 
 #endif
 

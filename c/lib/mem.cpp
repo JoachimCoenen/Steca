@@ -21,19 +21,24 @@ namespace unsafe {
   void memcpy(void* dst, void const* src, size_t size) {
     ::memcpy(dst, src, size);
   }
+
+  template<typename T>
+  void swap(T& t1, T& t2) {
+    std::swap(mut(t1), mut(t2));
+  }
 }
 
-C_CON_IMPL(mem, (size_t size_, void* p_)) : size(size_), p(p_) {}
+C_CON_C_IMPL(mem, (size_t size_, void* p_)) : size(size_), p(p_) {}
 
 namespace c {
 //------------------------------------------------------------------------------
 
 mem::mem(size_t size_) : c_mem(size_, 0) {
-  p = unsafe::malloc(size);
+  mut(p) = unsafe::malloc(size);
 }
 
 mem::mem(size_t size, void const* src) : mem(size) {
-  unsafe::memcpy(p, src, size);
+  unsafe::memcpy(mut(p), src, size);
 }
 
 mem::mem(rval that) : c_mem(0, nullptr) {
@@ -41,12 +46,12 @@ mem::mem(rval that) : c_mem(0, nullptr) {
 }
 
 mem::~mem() {
-  unsafe::free(p);
+  unsafe::free(mut(p));
 }
 
 void mem::swap(ref that) {
-  std::swap(size, that.size);
-  std::swap(p,    that.p);
+  unsafe::swap(size, that.size);
+  unsafe::swap(p,    that.p);
 }
 
 #ifdef WITH_TESTS

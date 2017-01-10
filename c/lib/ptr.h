@@ -5,11 +5,12 @@
 
 #include "../def/def_h"
 
-C_STRUCT(ptr, {
-  void* p;
-  C_CON(ptr, (void*))
-  C_MTH(void* take, ())
-})
+C_STRUCT_C(ptr)
+  C_PTR_C(void, p)
+
+  C_CON_C(ptr, (void const*const))
+  C_MTH_C(void const*, take, ())
+C_STRUCT_C_END(ptr)
 
 #if __cpp__
 namespace c {
@@ -18,7 +19,7 @@ namespace c {
 
 template <typename T>
 struct just_ptr : c_ptr { // not null
-  static just_ptr from(T* p) {
+  static just_ptr from(T const* p) {
     return just_ptr(p);
   }
 
@@ -27,7 +28,7 @@ struct just_ptr : c_ptr { // not null
 
   // from another type just_ptr
   template <typename O>
-  just_ptr(just_ptr<O> const& that) : c_ptr(static_cast<O*>(that.p)) {
+  just_ptr(just_ptr<O> const& that) : c_ptr(static_cast<O const*>(that.p)) {
   }
 
   template <typename O>
@@ -36,15 +37,15 @@ struct just_ptr : c_ptr { // not null
     return *this;
   }
 
-  T* ptr()        const { return static_cast<T*>(p); }
-  operator T*()   const { return static_cast<T*>(p); }
-  T* operator->() const { return static_cast<T*>(p); }
+  T const* ptr()        const { return static_cast<T const*>(p); }
+  operator T const*()   const { return ptr(); }
+  T const* operator->() const { return ptr(); }
 
   bool operator==(T* const& o) const { return p == o; }
   bool operator!=(T* const& o) const { return p != o; }
 
 protected:
-  just_ptr(T* p) : c_ptr(p) {
+  just_ptr(T const*const p) : c_ptr(p) {
     EXPECT(p)
   }
 
@@ -68,11 +69,13 @@ private:
 template <typename T> // name = a hint
 struct own_ptr : c_ptr {
   own_ptr()     : c_ptr(nullptr) {}
-  own_ptr(T* p) : c_ptr(p)       {}
+  own_ptr(T const*const p) : c_ptr(p)       {}
 
-  T* ptr()        const { return static_cast<T*>(p); }
-  operator T*()   const { return static_cast<T*>(p); }
-  T* operator->() const { return static_cast<T*>(p); }
+  T const* ptr()        const { return static_cast<T const*>(p); }
+  operator T const*()   const { return ptr(); }
+  T const* operator->() const { return ptr(); }
+
+  void set(T const*const p_)  { mut(p) = mut(p_); }
 };
 
 template <typename T> // name = a hint
@@ -109,16 +112,17 @@ struct scoped : c_ptr {
  ~scoped() { reset(nullptr); }
 
   void reset(T* p_) {
-    delete static_cast<T*>(p); p = p_;
+    delete static_cast<T*>(mut(p));
+    mut(p) = p_;
   }
 
   own_ptr<T> take() {
-    return own_ptr<T>(static_cast<T*>(c_ptr::take()));
+    return own_ptr<T>(static_cast<T const*>(c_ptr::take()));
   }
 
-  T* ptr()        const { return static_cast<T*>(p); }
-  operator T*()   const { return static_cast<T*>(p); }
-  T* operator->() const { return static_cast<T*>(p); }
+  T const* ptr()        const { return static_cast<T const*>(p); }
+  operator T const*()   const { return ptr(); }
+  T const* operator->() const { return ptr(); }
 };
 
 #define scope(p) c::scoped<decltype(p)>(p)
@@ -143,7 +147,7 @@ struct shared : protected _shared_base_ {
   shared(shared const& that) : _shared_base_(that) {}
  ~shared() {
     if (!dec()) {
-      delete static_cast<T*>(p().ptr());
+      delete static_cast<T*>(mut(p().ptr()));
       cleanup();
     }
   }
@@ -152,9 +156,9 @@ struct shared : protected _shared_base_ {
     return _shared_base_::operator=(that);
   }
 
-  T* ptr()        const { return static_cast<T*>(p().ptr()); }
-  operator T*()   const { return ptr(); }
-  T* operator->() const { return ptr(); }
+  T const* ptr()        const { return static_cast<T const*>(p().ptr()); }
+  operator T const*()   const { return ptr(); }
+  T const* operator->() const { return ptr(); }
 };
 
 }
