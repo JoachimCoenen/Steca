@@ -20,15 +20,6 @@ void c::threads::join() {
     t.join();
 }
 
-#ifdef WITH_TESTS
-
-static void f(uint dst[], uint const src[], size_t from, size_t to) {
-  for (auto i=from; i<to; ++i)
-    dst[i] = src[i]*src[i];
-}
-
-#endif
-
 TEST("thread", ({
   uint const n = 10000;
   uint dst[n], src[n];
