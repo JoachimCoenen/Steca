@@ -3,7 +3,7 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_definitions (-DWITH_TESTS)
 
-set (srcdirs c core)
+set (srcdirs c cpp core)
 
 foreach (dir ${srcdirs})
   set (d ${CMAKE_HOME_DIRECTORY}/${dir})
@@ -15,6 +15,10 @@ file (GLOB_RECURSE test_files *)
 
 add_executable (${app}
   ${files} ${test_files}
+)
+
+target_link_libraries (${app}
+  pthread
 )
 
 # eof

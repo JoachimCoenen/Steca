@@ -16,6 +16,7 @@ file (GLOB_RECURSE old_files ".old/*")
 add_custom_target (.old SOURCES ${old_files})
 
 add_subdirectory (c)
+add_subdirectory (cpp)
 add_subdirectory (core)
 add_subdirectory (gui)
 add_subdirectory (tests)

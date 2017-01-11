@@ -14,9 +14,9 @@
 #ifdef __GNUC__
 
 #define for_int(i, n) \
-  for (non_const<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
+  for (mut_typ<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
 #define for_int_down(n) \
-  for (non_const<decltype(n)>::typ i = (num); i-- > decltype(n)(0); )
+  for (mut_typ<decltype(n)>::typ i = (num); i-- > decltype(n)(0); )
 
 #define for_i(n)        for_int (i, n)
 #define for_i_down(n)   for_int_down (i, n)

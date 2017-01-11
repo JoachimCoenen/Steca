@@ -31,7 +31,6 @@ namespace io {
 //------------------------------------------------------------------------------
 
 void loadCaress(strc) {
-  TR(88)
 }
 
 //------------------------------------------------------------------------------
@@ -255,7 +254,6 @@ void loadCaress(strc) {
 //      }
 //    }
 
-//    TR(element << node)
 //    // Read Master Counter
 //    if (!strncmp(element, "MM1 ", 4)) {
 //      s_masterCounter = node; // Master Counter steht in Node
