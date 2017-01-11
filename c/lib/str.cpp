@@ -1,19 +1,31 @@
 // c
 
 #include "str.h"
+#include "unsafe.h"
 #include "../def/def_cpp"
 #include "../def/def_debug"
 #include "../test/test.h"
 #include <string.h>
 
+//------------------------------------------------------------------------------
+
+_c_con_impl(str, (pcstr p_)) : size(p_ ? strlen(p_) : 0), p(nullptr) {
+  mut(p) = static_cast<pstr>(::unsafe::mem::cpy(size + 1, p_ ? p_ : ""));
+}
+
+_c_des_impl(str) {
+  unsafe::mem::free(zerop(p));
+}
+
 namespace c {
 //------------------------------------------------------------------------------
 
-str::str(pcstr p) : base(p ? strlen(p) + 1 : 1, p ? p : "") {
+str::str(pcstr p) : c_str(p) {
 }
 
-str::str(rval that) : base(0) {
-  swap(that);
+str::str(rval that) : c_str(nullptr) {
+  unsafe::swap(size, that.size);
+  unsafe::swap(p,    that.p);
 }
 
 TEST("str", ({

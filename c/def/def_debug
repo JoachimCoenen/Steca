@@ -3,12 +3,11 @@
 #ifdef C_DEF_DEBUG
 #error include only once
 #endif
-
 #define C_DEF_DEBUG
 
 #include "def_h"
 
-#if !__cpp__
+#if !_c_cpp_
 #error this should be used in cpp files
 #endif
 

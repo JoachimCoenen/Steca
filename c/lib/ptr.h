@@ -5,14 +5,17 @@
 
 #include "../def/def_h"
 
-C_STRUCT_C(ptr)
-  C_PTR_C(void, p)
+typedef void*       pvoid;
+typedef void const* pcvoid;
 
-  C_CON_C(ptr, (void const*const))
-  C_MTH_C(void const*, take, ())
-C_STRUCT_C_END(ptr)
+_c_c_struct(ptr)
+  _c_ptr(void, p)
 
-#if __cpp__
+  _c_con(ptr, (pcvoid))
+  _c_mth(pcvoid, take, ())
+_c_c_struct_end(ptr)
+
+#if _c_cpp_
 namespace c {
 
 // parts adapted from https://github.com/Microsoft/GSL.git

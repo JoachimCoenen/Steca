@@ -2,12 +2,14 @@
 #include <qt/app.h>
 #include <qt/win.h>
 
-struct app : qt::app { BASE_CONS(qt::app)
+struct app : qt::app { BASE(qt::app)
+  using base::base;
   int exec();
 };
 
-struct win : qt::win { BASE_CONS(qt::win)
-  ~win();
+struct win : qt::win { BASE(qt::win)
+  using base::base;
+ ~win();
 };
 
 win::~win() {

@@ -4,130 +4,176 @@
 #define C_DEF_H
 
 #if defined(__GNUC__) && !defined(__APPLE__)
-#pragma GCC diagnostic ignored "-Wpragmas"
-#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+//TODO #pragma GCC diagnostic ignored "-Wpragmas"
+//#pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
-#include <stddef.h>
+#include <stddef.h> // size_t, wchar_t, ...
+
+//------------------------------------------------------------------------------
+// debug
 
 #include <assert.h>
 #define EXPECT(cond) assert(cond);
 #define ENSURE(cond) assert(cond);
 
+//------------------------------------------------------------------------------
+// cpp
+
 #ifdef __cplusplus
 
-#define __cpp__ (1)
+#define _c_cpp_ (1)
 #define EXTERN_C extern "C" {
 #define EXTERN_C_END }
 
 #else
 
-#define __cpp__ (0)
+#define _c_cpp_ (0)
 #define EXTERN_C
 #define EXTERN_C_END
 
 #endif
 
-#define C_STRUCT_C(name)      \
-  EXTERN_C                    \
+//------------------------------------------------------------------------------
+// "C" structs
+
+#define _c_c_struct(name)       \
+  EXTERN_C                      \
   struct c_##name {
-
-#define C_ATR_C(typ, name)    \
-  typ const name;
-
-#define C_PTR_C(typ, name)    \
-  typ const * const name;
-
-#define C_STRUCT_C_END(name)  \
-  };                          \
+#define _c_c_struct_end(name)   \
+  };                            \
   EXTERN_C_END
 
-#if __cpp__
+#define _c_var(typ, name)       \
+  typ const name;
 
-template<typename T>
-T*& mut(T const*const& t) { return const_cast<T*&>(t); }
+#define _c_ptr(typ, name)       \
+  typ const * const name;
 
-template<typename T>
-T& mut(T const& t) { return const_cast<T&>(t); }
+#if _c_cpp_
 
-#define C_CON_C(name, args)     \
+#define _c_con(name, args)      \
   c_##name args;
+#define _c_des(name)            \
+ ~c_##name();
 
-#define C_MTH_C(typ, mth, args) \
+#define _c_mth(typ, mth, args)  \
   typ mth args;
 
-#else
+#define _c_op(typ, expr)  \
+  operator typ() const { return expr; }
 
-#define C_CON_C(name, args)
-#define C_MTH_C(typ, mth, args)
+#define _c_cpp_con(name, args)  \
+  name args;
 
-#endif
-
-#if __cpp__
-
-// TODO macro names!
-#define C_STRUCT_CPP(name, body) \
-  namespace c { struct name : protected c_##name body; }
-
-#define C_SUB_STRUCT_CPP(name, base, body) \
-  namespace c { struct name : base body; }
-
-// TODO plain struct
-#define C_IFACE_CPP(name, body) \
-  namespace c { struct name body; }
+#define _c_cpp_des(name)        \
+  ~name();
 
 #else
 
-#define C_STRUCT_CPP(name, body)
-#define C_IFACE_CPP(name, body)
+#define _c_con(name, args)
+#define _c_des(name)
+#define _c_mth(typ, mth, args)
+#define _c_cpp_con(name, args)
+#define _c_cpp_des(name)
 
 #endif
 
-#define COMMA ,
+#define _c_cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
+#define _c_cpp_op(typ, expr)       _c_op(typ, expr)
 
-#if __cpp__
 //------------------------------------------------------------------------------
+// cpp structs
+
+#if _c_cpp_
+
+#define _c_cpp_struct_typedefs(name)  \
+  typedef name typ;                   \
+  typedef typ& ref;                   \
+  typedef typ const& rc;              \
+  typedef typ&& rval;
+
+#define _c_cpp_c_struct(name)     \
+  namespace c { struct name : protected c_##name { _c_cpp_struct_typedefs(name)
+#define _c_cpp_c_struct_end(name) \
+  };}
+
+#define _c_cpp_struct(name)       \
+  namespace c { struct name  { _c_cpp_struct_typedefs(name)
+#define _c_cpp_struct_end(name)   \
+  };}
+
+#define _c_cpp_sub_struct(name, base) \
+  namespace c { struct name : base { _c_cpp_struct_typedefs(name)
+#define _c_cpp_sub_struct_end(name)   \
+  };}
+
+#else
+
+#define _c_cpp_c_struct(name)
+#define _c_cpp_c_struct_end(name)
+#define _c_cpp_struct(name)
+#define _c_cpp_struct_end(name)
+#define _c_cpp_sub_struct(name, base)
+#define _c_cpp_sub_struct_end(name)
+
+#endif
+
+#define _c_cpp_iface(name)     _c_cpp_struct(name)
+#define _c_cpp_iface_end(name) _c_cpp_struct_end(name)
+
+//------------------------------------------------------------------------------
+// handy inner helpers
+
+#if _c_cpp_
 
 #define BASE(s) using base = s;
-#define BASE_CONS(s) BASE(s) using base::base;
 
 // Automatically declared type aliases:
-// t - typ, tc - typ const, p - pointer, r - reference,
-// pc - pointer to const, rc - reference to const, rval
-#define TYPEDEFS(s)       \
-  typedef s   typ;        \
-  typedef typ &ref;       \
-  typedef typ const &rc;  \
-  typedef typ &&rval;
 
 //  typedef t &&rval;
 
-#define GEN(s) TYPEDEFS(s)
-
-#define NO_MOVE(s) TYPEDEFS(s)  \
+#define NO_MOVE(s)              \
   s(rval)           = delete;   \
   r operator=(rval) = delete;
 
-#define NO_COPY(s) TYPEDEFS(s)  \
-  s(rc)               = delete;   \
+#define NO_COPY(s)              \
+  s(rc)               = delete; \
   ref operator=(rc)   = delete; \
   ref operator=(rval) = delete;
 
-#define NO_GEN(s) TYPEDEFS(s)   \
+#define NO_GEN(s)               \
   s(rc)               = delete; \
   ref operator=(rc)   = delete; \
   s(rval)             = delete; \
   ref operator=(rval) = delete;
 
-#define MOVE_OP(s) r operator=(rval);
-
-#define COMPARABLE            \
-  int compare(rc)     const;  \
-  bool operator==(rc) const;  \
+#define COMPARABLE              \
+  int compare(rc)     const;
+#define EQ_NE                   \
+  bool operator==(rc) const;    \
   bool operator!=(rc) const;
 
-//------------------------------------------------------------------------------
 #endif
 
+//------------------------------------------------------------------------------
+// mutability
+
+#if _c_cpp_
+
+template <typename T> struct mut_typ           { typedef T typ; };
+template <typename T> struct mut_typ<T const>  { typedef T typ; };
+
+template<typename T> T*& mut(T const*const& t) { return const_cast<T*&>(t); }
+template<typename T> T&  mut(T const& t)       { return const_cast<T&> (t); }
+
+template<typename T> T*  zerop(T const*const& t) {
+  auto& m = mut(t); auto _ = m; m = 0;
+  return _;
+}
+
+#endif
+
+//------------------------------------------------------------------------------
 #endif
 // eof

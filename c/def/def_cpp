@@ -3,55 +3,25 @@
 #ifdef C_DEF_CPP
 #error include only once
 #endif
-
 #define C_DEF_CPP
 
 #include "def_h"
 
-#if !__cpp__
+#if !_c_cpp_
 #error this should be used in cpp files
 #endif
 
-//template <typename T> struct non_const          { typedef T typ; };
-//template <typename T> struct non_const<T const> { typedef T typ; };
+//------------------------------------------------------------------------------
+// cpp structs
 
-//template<typename T>
-//T* mutp(T const*const t) { return *const_cast<T*>(&t);}
-
-//template<typename T>
-//T** pmut(T const*const t) { return const_cast<T*>(&t);}
-
-//template<typename T>
-//T* pmut(T const& t) { return const_cast<T*>(&t);}
-
-#define C_CON_C_IMPL(name, args) \
+#define _c_con_impl(name, args) \
   c_##name::c_##name args
 
-#define C_MTH_C_IMPL(name, type, mth, args) \
+#define _c_des_impl(name)       \
+  c_##name::~c_##name()
+
+#define _c_mth_impl(name, type, mth, args) \
   type c_##name::mth args
-
-#define C_PROXY_IMPL(name) \
-  c_##name::c_##name (nob n_) : n(n_) {}
-
-#define C_PROXY_MTH_IMPL(name, type, mth, args) \
-  type c_##name::mth args
-
-#define EQ_NE_IMPL(s)               \
-bool T::operator==(rc that) const { \
-  return 0 == compare(that);        \
-}                                   \                                      \
-bool T::operator!=(rc that) const{  \
-  return 0 != compare(that);        \
-}
-
-#define DEF_EQ_NE_IMPL(T)                               \
-bool T::operator==(rc that) const {                     \
-  return isDef() && that.isDef() && 0 == compare(that); \
-}                                                       \
-                                                        \
-bool T::operator!=(rc that) const{                      \
-  return isDef() && that.isDef() && 0 != compare(that); \
-}
 
 #define COMPARABLE_IMPL(s) \
   int s::compare(rc that) const
@@ -63,8 +33,27 @@ bool T::operator!=(rc that) const{                      \
 #define RETURN_COMPARE_UNEQUAL_THAT(v) \
   RETURN_COMPARE_UNEQUAL(v, that.v)
 
-#define RETURN_COMPARE_UNEQUALS(o) \
+#define RETURN_COMPARABLES_UNEQUAL(o)   \
   for (int cmp = o.compare(that.o); cmp; ) \
     return cmp;
 
+#define EQ_NE_IMPL(s) \
+bool T::operator==(rc that) const { return 0 == compare(that); } \
+bool T::operator!=(rc that) const { return 0 != compare(that); }
+
+#define DEF_EQ_NE_IMPL(T) \
+bool T::operator==(rc that) const { return isDef() && that.isDef() && 0 == compare(that); } \                                                       \
+bool T::operator!=(rc that) const { return isDef() && that.isDef() && 0 != compare(that); }
+
+//------------------------------------------------------------------------------
+// unsafe
+
+#include <utility>
+namespace unsafe {
+  template<typename T> void swap(T& t1, T& t2) {
+    std::swap(mut(t1), mut(t2));
+  }
+}
+
+//------------------------------------------------------------------------------
 // eof

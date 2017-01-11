@@ -5,21 +5,25 @@
 
 #include "../def/def_num"
 
-C_STRUCT_C(mem)
-  C_ATR_C(size_t, size)
-  C_PTR_C(void,   p)
+typedef void*            pvoid;
+typedef void const*      pcvoid;
 
-  C_CON_C(mem, (size_t, void*))
-C_STRUCT_C_END(mem)
+_c_c_struct(mem)
+  _c_var(size_t, size)
+  _c_ptr(void,   p)
 
-C_STRUCT_CPP(mem, { NO_COPY(mem)
-  mem(size_t);
-  mem(size_t, void const* src);
-  mem(rval);
- ~mem();
-protected:
-  void swap(ref);
-})
+  _c_con(mem, (size_t))
+  _c_con(mem, (size_t, pcvoid))
+  _c_des(mem)
+_c_c_struct_end(mem)
+
+_c_cpp_c_struct(mem) NO_COPY(mem)
+  _c_cpp_con(mem, (size_t))
+  _c_cpp_con(mem, (size_t, pcvoid))
+  _c_cpp_con(mem, (rval))
+
+  _c_cpp_op(pcvoid, p)
+_c_cpp_c_struct_end(mem)
 
 //------------------------------------------------------------------------------
 #endif

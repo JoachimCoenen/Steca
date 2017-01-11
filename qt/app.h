@@ -5,7 +5,7 @@
 
 #include <c/app/app.i.h>
 
-#if __cpp__
+#if _c_cpp_
 
 #include <QApplication>
 #include <QStyleFactory>

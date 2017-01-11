@@ -5,9 +5,9 @@
 #include "../def/def_num"
 #include <atomic>
 
-C_CON_C_IMPL(ptr, (void const*const p_)) : p(p_) {}
+_c_con_impl(ptr, (pcvoid p_)) : p(p_) {}
 
-C_MTH_C_IMPL(ptr, void const*, take, ()) {
+_c_mth_impl(ptr, pcvoid, take, ()) {
   auto _ = mut(p); mut(p) = nullptr; return _;
 }
 

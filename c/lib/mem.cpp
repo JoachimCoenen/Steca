@@ -1,55 +1,31 @@
 // c
 
 #include "mem.h"
+#include "unsafe.h"
 #include "../def/def_cpp"
 #include "../test/test.h"
-#include <memory>
-#include <string.h>
-#include <utility>
 
-namespace unsafe {
-  void* malloc(size_t size) {
-    return ::malloc(size); // TODO abrt if null
-  }
+//------------------------------------------------------------------------------
 
-  void free(void*& p) {
-    if (p) {
-      ::free(p); p = nullptr;
-    }
-  }
-
-  void memcpy(void* dst, void const* src, size_t size) {
-    ::memcpy(dst, src, size);
-  }
-
-  template<typename T>
-  void swap(T& t1, T& t2) {
-    std::swap(mut(t1), mut(t2));
-  }
+_c_con_impl(mem, (size_t size_)) : size(size_), p(nullptr) {
+  mut(p) = unsafe::mem::alloc(size);
 }
 
-C_CON_C_IMPL(mem, (size_t size_, void* p_)) : size(size_), p(p_) {}
+_c_con_impl(mem, (size_t size_, pcvoid p_)) : size(size_), p(nullptr) {
+  mut(p) = unsafe::mem::cpy(size, p_);
+}
+
+_c_des_impl(mem){
+  unsafe::mem::free(zerop(p));
+}
 
 namespace c {
 //------------------------------------------------------------------------------
 
-mem::mem(size_t size_) : c_mem(size_, 0) {
-  mut(p) = unsafe::malloc(size);
-}
+mem::mem(size_t size_)            : c_mem(size_)     {}
+mem::mem(size_t size, pcvoid src) : c_mem(size, src) {}
 
-mem::mem(size_t size, void const* src) : mem(size) {
-  unsafe::memcpy(mut(p), src, size);
-}
-
-mem::mem(rval that) : c_mem(0, nullptr) {
-  swap(that);
-}
-
-mem::~mem() {
-  unsafe::free(mut(p));
-}
-
-void mem::swap(ref that) {
+mem::mem(rval that) : c_mem(0) {
   unsafe::swap(size, that.size);
   unsafe::swap(p,    that.p);
 }
