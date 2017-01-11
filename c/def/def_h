@@ -8,14 +8,18 @@
 //#pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
+#ifdef PROCESS_I_H
+
+#define NDEBUG
+
+#else
+
 #include <stddef.h> // size_t, wchar_t, ...
-
-//------------------------------------------------------------------------------
-// debug
-
 #include <assert.h>
 #define EXPECT(cond) assert(cond);
 #define ENSURE(cond) assert(cond);
+
+#endif
 
 //------------------------------------------------------------------------------
 // cpp
@@ -79,37 +83,35 @@
 
 #endif
 
-#define _c_cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
-#define _c_cpp_op(typ, expr)       _c_op(typ, expr)
-
 //------------------------------------------------------------------------------
-// cpp structs
+// c-cpp structs
 
 #if _c_cpp_
 
-#define _c_cpp_struct_typedefs(name)  \
-  typedef name typ;                   \
-  typedef typ& ref;                   \
-  typedef typ const& rc;              \
+#define _cpp_struct_typedefs(name)  \
+  typedef name typ;                 \
+  typedef typ& ref;                 \
+  typedef typ const& rc;            \
   typedef typ&& rval;
 
-#define _c_cpp_c_struct(name)     \
-  namespace c { struct name : protected c_##name { _c_cpp_struct_typedefs(name)
-#define _c_cpp_c_struct_end(name) \
+#define _c_cpp_c_struct(name)       \
+  namespace c { struct name : protected c_##name { _cpp_struct_typedefs(name)
+#define _c_cpp_c_struct_end(name)   \
   };}
 
-#define _c_cpp_struct(name)       \
-  namespace c { struct name  { _c_cpp_struct_typedefs(name)
-#define _c_cpp_struct_end(name)   \
+#define _c_cpp_struct(name)         \
+  namespace c { struct name  { _cpp_struct_typedefs(name)
+#define _c_cpp_struct_end(name)     \
   };}
 
 #define _c_cpp_sub_struct(name, base) \
-  namespace c { struct name : base { _c_cpp_struct_typedefs(name)
+  namespace c { struct name : base { _cpp_struct_typedefs(name)
 #define _c_cpp_sub_struct_end(name)   \
   };}
 
 #else
 
+#define _cpp_struct_typedefs(name)
 #define _c_cpp_c_struct(name)
 #define _c_cpp_c_struct_end(name)
 #define _c_cpp_struct(name)
@@ -119,19 +121,55 @@
 
 #endif
 
-#define _c_cpp_iface(name)     _c_cpp_struct(name)
-#define _c_cpp_iface_end(name) _c_cpp_struct_end(name)
+#define _c_cpp_iface(name)         _c_cpp_struct(name)
+#define _c_cpp_iface_end(name)     _c_cpp_struct_end(name)
+
+#define _c_cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
+#define _c_cpp_op(typ, expr)       _c_op(typ, expr)
 
 //------------------------------------------------------------------------------
-// handy inner helpers
+// cpp structs
+
+#if _c_cpp_
+
+#define _cpp_c_struct(name)       \
+  struct name : protected c_##name { _cpp_struct_typedefs(name)
+#define _cpp_c_struct_end(name)   \
+  };
+
+#define _cpp_struct(name)         \
+  struct name  { _cpp_struct_typedefs(name)
+#define _cpp_struct_end(name)     \
+  };
+
+#define _cpp_sub_struct(name, base) \
+  struct name : base { _cpp_struct_typedefs(name)
+#define _cpp_sub_struct_end(name)   \
+  };
+
+#else
+
+#define _cpp_c_struct(name)
+#define _cpp_c_struct_end(name)
+#define _cpp_struct(name)
+#define _cpp_struct_end(name)
+#define _cpp_sub_struct(name, base)
+#define _cpp_sub_struct_end(name)
+
+#endif
+
+#define _cpp_iface(name)         _cpp_struct(name)
+#define _cpp_iface_end(name)     _cpp_struct_end(name)
+
+#define _cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
+#define _cpp_op(typ, expr)       _c_op(typ, expr)
+
+//------------------------------------------------------------------------------
+// handy helpers
 
 #if _c_cpp_
 
 #define BASE(s) using base = s;
-
-// Automatically declared type aliases:
-
-//  typedef t &&rval;
 
 #define NO_MOVE(s)              \
   s(rval)           = delete;   \
@@ -153,6 +191,19 @@
 #define EQ_NE                   \
   bool operator==(rc) const;    \
   bool operator!=(rc) const;
+
+#define C_CPP(code) code
+
+#else
+
+#define BASE(s)
+#define NO_MOVE(s)
+#define NO_COPY(s)
+#define NO_GEN(s)
+#define COMPARABLE
+#define EQ_NE
+
+#define C_CPP(code)
 
 #endif
 

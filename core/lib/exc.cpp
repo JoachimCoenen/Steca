@@ -15,14 +15,25 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "def_exc.h"
-#include "test/tests.h"
+#include "exc.h"
+#include <c/cpp>
+#include "c/test/test.h"
+
 //------------------------------------------------------------------------------
 
-#ifdef QT_NO_EXCEPTIONS
-#error needs exception handling
-#endif
+exc::exc(strc msg_) : base(), msg(msg_) {
+}
 
+void exc::err(strc msg) {
+  throw exc(msg);
+}
+
+TEST("exc", ({
+  CHECK_THROWS_AS(exc::err(""), exc&);
+});)
+
+/*
+TODO
 #ifdef TESTS
 #include "def/def_gsl.h"
 #endif
@@ -94,6 +105,6 @@ Exception* Exception::clone() const {
 void Exception::raise() const {
   throw *this;
 }
-
+*/
 //------------------------------------------------------------------------------
 // eof

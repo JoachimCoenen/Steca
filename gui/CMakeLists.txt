@@ -10,7 +10,7 @@ find_package (Qt5Gui     REQUIRED)
 find_package (Qt5Widgets REQUIRED)
 
 target_link_libraries (${app}
-  qt c2c
+  core c2c
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 

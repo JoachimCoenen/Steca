@@ -23,6 +23,9 @@ namespace c {
 str::str(pcstr p) : c_str(p) {
 }
 
+str::str(rc that) : str(that.p) {
+}
+
 str::str(rval that) : c_str(nullptr) {
   unsafe::swap(size, that.size);
   unsafe::swap(p,    that.p);

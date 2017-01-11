@@ -23,9 +23,23 @@
 //#include <sstream>
 //#include <qmath.h>
 
-//namespace io {
-////------------------------------------------------------------------------------
+#include "io.h"
+#include <c/cpp>
+#include "c/test/test.h"
+
+namespace io {
+//------------------------------------------------------------------------------
+
+void loadCaress(strc) {
+  TR(88)
+}
+
+//------------------------------------------------------------------------------
+}
+// eof
+
 //// Code taken from the original STeCa, only slightly modified.
+
 
 //data::shp_File loadCaress2(rcstr filePath) THROWS {
 

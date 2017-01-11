@@ -3,7 +3,7 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_definitions (-DWITH_TESTS)
 
-set (srcdirs c)
+set (srcdirs c core)
 
 foreach (dir ${srcdirs})
   set (d ${CMAKE_HOME_DIRECTORY}/${dir})

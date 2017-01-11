@@ -17,14 +17,20 @@
 
 // exceptions
 
-#ifndef DEF_EXC_H
-#define DEF_EXC_H
+#ifndef EXC_H
+#define EXC_H
 
-#include "def/def_macros.h"
-#include "typ/typ_str.h"
-#include <QException>
-//------------------------------------------------------------------------------
+#include <c/lib/str.h>
+#include <exception>
 
+struct exc : std::exception { BASE(std::exception)
+  c::str msg;
+  exc(strc);
+
+  [[noreturn]] static void err(strc) noexcept(false);
+};
+
+/* TODO
 // An exception that carries a message.
 class Exception : public QException {
   CLASS(Exception) SUPER(QException)
@@ -58,7 +64,7 @@ protected:
 // run-time condition checking
 #define RUNTIME_CHECK(test, msg) \
   if (!(test)) THROW(msg)
-
+*/
 //------------------------------------------------------------------------------
 #endif // DEF_EXC_H
 // eof

@@ -1,3 +1,4 @@
+/*
 #include <io/io_caress.cpp>
 #include <c/test/test.h>
 
@@ -17,3 +18,4 @@ TEST("IO()", ({
 });)
 
 // eof
+*/

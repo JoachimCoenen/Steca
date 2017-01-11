@@ -1,6 +1,7 @@
 // c
-#include <qt/app.h>
-#include <qt/win.h>
+#include <gui/qt/app.h>
+#include <gui/qt/win.h>
+#include <core/io/io.h>
 
 struct app : qt::app { BASE(qt::app)
   using base::base;
@@ -31,6 +32,7 @@ int app::exec() {
 }
 
 int main(int argc, char* argv[]) {
+  io::loadCaress("");
   app a(argc, argv);
   a.exec();
 }

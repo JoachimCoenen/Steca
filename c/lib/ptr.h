@@ -3,7 +3,7 @@
 #ifndef C_PTR_H
 #define C_PTR_H
 
-#include "../def/def_h"
+#include "../h"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
