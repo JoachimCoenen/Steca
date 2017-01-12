@@ -47,8 +47,12 @@ _cpp_sub_struct(Worker, QObject)
 
   void doWork(shTask);
 
+signals:
+  void workDone(shTask);
+
 private:
   Session& session;
+  Q_OBJECT
 _cpp_sub_struct_end
 
 _cpp_sub_struct(Hub, QObject)
@@ -56,12 +60,13 @@ _cpp_sub_struct(Hub, QObject)
  ~Hub();
 
   void post(Task*);
+  void workDone(shTask);
+
+signals:
+  void doWork(shTask);
 
 private:
   Session session;
-
-signals:
-  void workToDo(shTask);
 
 private:
   void registerMetaTypes();
@@ -70,9 +75,6 @@ private:
   QThread thread;
   Worker  worker;
   Q_OBJECT
-
-public:
-  void done_long_square(int);
 _cpp_struct_end
 
 #endif

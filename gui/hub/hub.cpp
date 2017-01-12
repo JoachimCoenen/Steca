@@ -39,26 +39,8 @@ Worker::Worker(Session& session_) : session(session_) {
 void Worker::doWork(shTask task) {
   auto mp = task.mut_ptr();
   mp->work();
-  mp->done();
+  emit workDone(task);
 }
-
-//------------------------------------------------------------------------------
-
-_cpp_sub_struct(Square, Task)
-  Square(int i_) : i(i_) {}
-
-  Task* clone() { return new Square(i); }
-
-  void work() {
-    i = session->long_square(i);
-  }
-
-  void done() {
-    hub->done_long_square(i);
-  }
-
-  int i;
-_cpp_sub_struct_end
 
 //------------------------------------------------------------------------------
 
@@ -66,10 +48,10 @@ Hub::Hub() : session(), thread(), worker(session) {
   registerMetaTypes();
 
   worker.moveToThread(&thread);
-  connect(this, &This::workToDo, &worker, &Worker::doWork);
-  thread.start();
+  connect(this,    &This::doWork,     &worker, &Worker::doWork);
+  connect(&worker, &Worker::workDone, this,    &This::workDone);
 
-  post(new Square(8));
+  thread.start();
 }
 
 Hub::~Hub() {
@@ -81,27 +63,25 @@ void Hub::post(Task* event) {
   QApplication::postEvent(this, event);
 }
 
+void Hub::workDone(shTask task) {
+  task.mut_ptr()->done();
+}
+
 void Hub::registerMetaTypes() {
   ONLY_ONCE
   qRegisterMetaType<shTask>("shTask");
 }
 
-bool Hub::event(QEvent* event) {
-  auto task = dynamic_cast<Task*>(event);
+bool Hub::event(QEvent* e) {
+  auto task = dynamic_cast<Task*>(e);
   if (!task)
-    return false;
+    return base::event(e);
 
-  auto clone = task->clone();
-  clone->set(*this, session);
+  shTask sh(task->clone());
+  sh.mut_ptr()->set(*this, session);
 
-  shTask sh(clone);
-  emit workToDo(sh);
-
+  emit doWork(sh);
   return true;
-}
-
-void Hub::done_long_square(int i) {
-  TR("i2" << i)
 }
 
 //------------------------------------------------------------------------------
