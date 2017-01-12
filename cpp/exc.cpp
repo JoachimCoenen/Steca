@@ -1,12 +1,17 @@
-// cpp
+// c
 
 #include "exc.h"
 #include <c/cpp>
 #include "c/test/test.h"
 
+namespace c {
 //------------------------------------------------------------------------------
 
-exc::exc(strc msg_) : base(), msg(msg_) {
+exc::exc(strc msg_) noexcept : base(), msg(msg_), silent(false) {
+}
+
+pcstr exc::what() const noexcept {
+  return msg;
 }
 
 void exc::err(strc msg) {
@@ -63,9 +68,6 @@ Exception::Exception(rc that) noexcept
 : Cls(that.msg_) {
 }
 
-pcstr Exception::what() const noexcept {
-  return msg8bit_.constData();
-}
 
 TEST("Exception(\"Hi\")",
   try {
@@ -92,4 +94,5 @@ void Exception::raise() const {
 }
 */
 //------------------------------------------------------------------------------
+}
 // eof

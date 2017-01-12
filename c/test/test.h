@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_TEST_H
-#define C_TEST_H
+#ifndef C_C_TEST_H
+#define C_C_TEST_H
 
 #ifdef WITH_TESTS
 //------------------------------------------------------------------------------

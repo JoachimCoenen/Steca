@@ -20,13 +20,6 @@
 
 #include "def/defs.h"
 
-class TakesLongTime final {
-public:
-  TakesLongTime();
- ~TakesLongTime();
-
-  static void (*handler)(bool);
-};
 
 class Progress final {
 public:

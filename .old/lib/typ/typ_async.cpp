@@ -21,18 +21,6 @@
 
 //------------------------------------------------------------------------------
 
-TakesLongTime::TakesLongTime() {
-  if (handler) handler(true);
-}
-
-TakesLongTime::~TakesLongTime() {
-  if (handler) handler(false);
-}
-
-void (*TakesLongTime::handler)(bool) = nullptr;
-
-//------------------------------------------------------------------------------
-
 Progress::Progress(uint mulTotal, QProgressBar* bar)
 : total_(0), mulTotal_(mulTotal), i_(0), bar_(bar)
 {

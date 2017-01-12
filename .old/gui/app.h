@@ -29,9 +29,6 @@ public:
 };
 
 
-private:
-  // Exceptions caught here; displayed in a dialog.
-  bool notify(QObject*, QEvent*);
 };
 
 //------------------------------------------------------------------------------

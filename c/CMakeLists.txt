@@ -1,4 +1,4 @@
-set (lib c2c)
+set (lib c_c)
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 

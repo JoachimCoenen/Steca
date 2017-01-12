@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_UNSAFE_H
-#define C_UNSAFE_H
+#ifndef C_C_UNSAFE_H
+#define C_C_UNSAFE_H
 
 #include "../def/def_h"
 #include <utility>

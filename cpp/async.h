@@ -1,7 +1,7 @@
-// cpp
+// c
 
-#ifndef CPP_THREAD_H
-#define CPP_THREAD_H
+#ifndef C_CPP_ASYNC_H
+#define C_CPP_ASYNC_H
 
 #include <c/h>
 #include <thread>
@@ -9,9 +9,8 @@
 
 namespace c {
 
-struct thread : std::thread { BASE(std::thread)
-  using base::base;
-};
+_cpp_sub_struct(thread, std::thread) BASE_CONS
+_cpp_sub_struct_end
 
 struct threads {
   static uint num_cores();

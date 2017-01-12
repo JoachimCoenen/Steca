@@ -7,19 +7,19 @@
 
 //------------------------------------------------------------------------------
 
-#define _DEFINE_NUM_MIN_MAX_(T) \
+#define C_DEFINE_NUM_MIN_MAX_(T) \
 T##_t::typ const T##_t::min = std::numeric_limits<T##_t::typ>::min(); \
 T##_t::typ const T##_t::max = std::numeric_limits<T##_t::typ>::max();
 
 namespace c {
-  _DEFINE_NUM_MIN_MAX_(uint8)
-  _DEFINE_NUM_MIN_MAX_(int8)
-  _DEFINE_NUM_MIN_MAX_(uint16)
-  _DEFINE_NUM_MIN_MAX_(int16)
-  _DEFINE_NUM_MIN_MAX_(uint32)
-  _DEFINE_NUM_MIN_MAX_(int32)
-  _DEFINE_NUM_MIN_MAX_(uint64)
-  _DEFINE_NUM_MIN_MAX_(int64)
+  C_DEFINE_NUM_MIN_MAX_(uint8)
+  C_DEFINE_NUM_MIN_MAX_(int8)
+  C_DEFINE_NUM_MIN_MAX_(uint16)
+  C_DEFINE_NUM_MIN_MAX_(int16)
+  C_DEFINE_NUM_MIN_MAX_(uint32)
+  C_DEFINE_NUM_MIN_MAX_(int32)
+  C_DEFINE_NUM_MIN_MAX_(uint64)
+  C_DEFINE_NUM_MIN_MAX_(int64)
 }
 
 //------------------------------------------------------------------------------

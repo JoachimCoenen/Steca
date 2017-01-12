@@ -1,13 +1,18 @@
-// cpp
+// c
 
-#include "map.h"
+#include "win.h"
 #include <c/cpp>
-#include "c/test/test.h"
 
+namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
-TEST("map", ({
-});)
+win::win() : base() {
+}
+
+void win::show() {
+  base::show();
+}
 
 //------------------------------------------------------------------------------
+}}
 // eof

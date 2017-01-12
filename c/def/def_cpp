@@ -1,11 +1,12 @@
 // c
 
-#ifdef C_DEF_CPP
+#ifdef C_C_DEF_CPP
 #error include only once
 #endif
-#define C_DEF_CPP
+#define C_C_DEF_CPP
 
 #include "def_h"
+#include "def_debug"
 
 #if !_c_cpp_
 #error this should be used in cpp files

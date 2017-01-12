@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_PTR_H
-#define C_PTR_H
+#ifndef C_C_PTR_H
+#define C_C_PTR_H
 
 #include "../h"
 

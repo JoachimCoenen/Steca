@@ -1,17 +1,20 @@
-// cpp
+// c
 
-#ifndef CPP_EXC_H
-#define CPP_EXC_H
+#ifndef C_CPP_EXC_H
+#define C_CPP_EXC_H
 
 #include <c/lib/str.h>
 #include <exception>
 
-struct exc : std::exception { BASE(std::exception)
-  c::str msg;
-  exc(strc);
+_c_cpp_sub_struct(exc, ::std::exception)
+  _c_var(str,  msg)
+  _c_var(bool, silent)
+
+  exc(strc)          noexcept;
+  pcstr what() const noexcept;
 
   [[noreturn]] static void err(strc) noexcept(false);
-};
+_c_cpp_sub_struct_end
 
 /* TODO
 // An exception that carries a message.
@@ -25,19 +28,13 @@ public:
   Exception(rcstr msg)  noexcept;
   Exception(rc)         noexcept;
 
-  bool  silent() const noexcept { return silent_; }
-  rcstr msg()    const noexcept { return msg_;    }
-  pcstr what()   const noexcept;
-
   void setMsg(rcstr);
 
   Exception* clone() const;
   void       raise() const;
 
 protected:
-  str        msg_;
   QByteArray msg8bit_;
-  bool       silent_;
 };
 
 // raise an exception

@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_STR_H
-#define C_STR_H
+#ifndef C_C_STR_H
+#define C_C_STR_H
 
 #include "../h"
 
@@ -22,7 +22,7 @@ _c_cpp_c_struct(str)
   _c_cpp_con(str, (rval))
 
   _c_cpp_op(pcstr, p)
-_c_cpp_c_struct_end(str)
+_c_cpp_c_struct_end
 
 C_CPP(typedef c::str::rc strc;)
 

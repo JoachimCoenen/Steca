@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_DEF_H
-#define C_DEF_H
+#ifndef C_C_DEF_H
+#define C_C_DEF_H
 
 #if defined(__GNUC__) && !defined(__APPLE__)
 //TODO #pragma GCC diagnostic ignored "-Wpragmas"
@@ -94,35 +94,35 @@
   typedef typ const& rc;            \
   typedef typ&& rval;
 
-#define _c_cpp_c_struct(name)       \
+#define _c_cpp_c_struct(name) \
   namespace c { struct name : protected c_##name { _cpp_struct_typedefs(name)
-#define _c_cpp_c_struct_end(name)   \
+#define _c_cpp_c_struct_end   \
   };}
 
-#define _c_cpp_struct(name)         \
+#define _c_cpp_struct(name)   \
   namespace c { struct name  { _cpp_struct_typedefs(name)
-#define _c_cpp_struct_end(name)     \
+#define _c_cpp_struct_end     \
   };}
 
 #define _c_cpp_sub_struct(name, base) \
-  namespace c { struct name : base { _cpp_struct_typedefs(name)
-#define _c_cpp_sub_struct_end(name)   \
+  namespace c { struct name : base { BASE(base) _cpp_struct_typedefs(name)
+#define _c_cpp_sub_struct_end         \
   };}
 
 #else
 
 #define _cpp_struct_typedefs(name)
 #define _c_cpp_c_struct(name)
-#define _c_cpp_c_struct_end(name)
+#define _c_cpp_c_struct_end
 #define _c_cpp_struct(name)
-#define _c_cpp_struct_end(name)
+#define _c_cpp_struct_end
 #define _c_cpp_sub_struct(name, base)
-#define _c_cpp_sub_struct_end(name)
+#define _c_cpp_sub_struct_end
 
 #endif
 
 #define _c_cpp_iface(name)         _c_cpp_struct(name)
-#define _c_cpp_iface_end(name)     _c_cpp_struct_end(name)
+#define _c_cpp_iface_end           _c_cpp_struct_end
 
 #define _c_cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
 #define _c_cpp_op(typ, expr)       _c_op(typ, expr)
@@ -132,44 +132,47 @@
 
 #if _c_cpp_
 
-#define _cpp_c_struct(name)       \
+#define BASE(name) using base = name;
+#define BASE_CONS  using base::base;
+
+#define _cpp_c_struct(name) \
   struct name : protected c_##name { _cpp_struct_typedefs(name)
-#define _cpp_c_struct_end(name)   \
+#define _cpp_c_struct_end   \
   };
 
-#define _cpp_struct(name)         \
+#define _cpp_struct(name)   \
   struct name  { _cpp_struct_typedefs(name)
-#define _cpp_struct_end(name)     \
+#define _cpp_struct_end     \
   };
 
 #define _cpp_sub_struct(name, base) \
-  struct name : base { _cpp_struct_typedefs(name)
-#define _cpp_sub_struct_end(name)   \
+  struct name : base { BASE(base) _cpp_struct_typedefs(name)
+#define _cpp_sub_struct_end         \
   };
 
 #else
 
 #define _cpp_c_struct(name)
-#define _cpp_c_struct_end(name)
+#define _cpp_c_struct_end
+
 #define _cpp_struct(name)
-#define _cpp_struct_end(name)
+#define _cpp_struct_end
+
 #define _cpp_sub_struct(name, base)
-#define _cpp_sub_struct_end(name)
+#define _cpp_sub_struct_end
 
 #endif
 
-#define _cpp_iface(name)         _cpp_struct(name)
-#define _cpp_iface_end(name)     _cpp_struct_end(name)
+#define _cpp_iface(name)          _cpp_struct(name)
+#define _cpp_iface_end            _cpp_struct_end
 
-#define _cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
-#define _cpp_op(typ, expr)       _c_op(typ, expr)
+#define _cpp_mth(typ, mth, args)  _c_mth(typ, mth, args)
+#define _cpp_op(typ, expr)        _c_op(typ, expr)
 
 //------------------------------------------------------------------------------
 // handy helpers
 
 #if _c_cpp_
-
-#define BASE(s) using base = s;
 
 #define NO_MOVE(s)              \
   s(rval)           = delete;   \

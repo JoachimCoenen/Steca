@@ -4,12 +4,9 @@
 #define C_QT_WIN_H
 
 #include <c/app/win.i.h>
-
-#if _c_cpp_
-
 #include <QMainWindow>
 
-namespace qt {
+namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
 struct win : c::win, QMainWindow { BASE(QMainWindow)
@@ -18,7 +15,6 @@ struct win : c::win, QMainWindow { BASE(QMainWindow)
 };
 
 //------------------------------------------------------------------------------
-}
-#endif
+}}
 #endif
 // eof

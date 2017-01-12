@@ -15,10 +15,13 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <gui/app/app.h>
+#ifndef GUI_WIN_H
+#define GUI_WIN_H
 
-int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
-}
+#include <qt/win.h>
 
+_cpp_sub_struct(Win, c::qt::win) BASE_CONS
+_cpp_sub_struct_end
+
+#endif
 // eof

@@ -15,10 +15,36 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <gui/app/app.h>
+#include "app.h"
+#include "manifest"
+#include "win.h"
+#include <c/cpp>
 
-int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
+//------------------------------------------------------------------------------
+
+App::App(int& argc, char* argv[]) : base(argc, argv) {
+  setApplicationName(APPLICATION_NAME);
+  setApplicationVersion(
+    #include "VERSION"
+  );
+  setOrganizationName(ORGANIZATION_NAME);
+  setOrganizationDomain(ORGANIZATION_DOMAIN);
 }
 
+int App::exec() {
+  try {
+    Win w;
+    w.show();
+
+    int res = base::exec(&w);
+
+    return res;
+
+  } catch (std::exception const& e) {
+    qWarning("Fatal error: %s", e.what());
+    return -1;
+  }
+}
+
+//------------------------------------------------------------------------------
 // eof

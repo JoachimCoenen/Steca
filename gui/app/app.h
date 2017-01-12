@@ -15,10 +15,15 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <gui/app/app.h>
+#ifndef GUI_APP_H
+#define GUI_APP_H
 
-int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
-}
+#include <qt/app.h>
 
+_cpp_sub_struct(App, c::qt::app)
+  App(int& argc, char* argv[]);
+  int exec();
+_cpp_sub_struct_end
+
+#endif
 // eof

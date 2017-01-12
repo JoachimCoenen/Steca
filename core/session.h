@@ -14,20 +14,3 @@
  *
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
-
-#ifndef TYP_LOG_H
-#define TYP_LOG_H
-
-#include "def/defs.h"
-
-class MessageLogger {
-public:
-  enum eType { INFO, WARN, POPUP };
-  static void info(rcstr);
-  static void warn(rcstr);
-  static void popup(rcstr);
-
-  static void (*handler)(rcstr, eType);
-};
-
-#endif // TYP_LOG_H

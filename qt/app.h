@@ -4,22 +4,31 @@
 #define C_QT_APP_H
 
 #include <c/app/app.i.h>
-
-#if _c_cpp_
-
+#include "win.h"
 #include <QApplication>
-#include <QStyleFactory>
 
-namespace qt {
+namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
 struct app : c::app, QApplication { BASE(QApplication)
   app(int& argc, char* argv[]);
-  int exec();
+  int exec(win*);
+
+private:
+  bool notify(QObject*, QEvent*);
 };
 
 //------------------------------------------------------------------------------
-}
-#endif
+
+struct busy_indicator final {
+public:
+  busy_indicator();
+ ~busy_indicator();
+
+  static void (*handler)(bool);
+};
+
+//------------------------------------------------------------------------------
+}}
 #endif
 // eof

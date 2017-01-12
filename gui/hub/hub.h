@@ -14,11 +14,3 @@
  *
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
-
-#include <gui/app/app.h>
-
-int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
-}
-
-// eof

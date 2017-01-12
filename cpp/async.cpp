@@ -1,6 +1,6 @@
-// cpp
+// c
 
-#include "thread.h"
+#include "async.h"
 #include <c/cpp>
 #include <vector>
 #include "c/test/test.h"

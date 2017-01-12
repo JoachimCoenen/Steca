@@ -1,9 +1,9 @@
 // c
 
-#ifdef C_DEF_ALG
+#ifdef C_C_DEF_ALG
 #error include only once
 #endif
-#define C_DEF_ALG
+#define C_C_DEF_ALG
 
 #include "def_h"
 

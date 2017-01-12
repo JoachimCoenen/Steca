@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_DEF_NUM
-#define C_DEF_NUM
+#ifndef C_C_DEF_NUM
+#define C_C_DEF_NUM
 
 #include "def_h"
 

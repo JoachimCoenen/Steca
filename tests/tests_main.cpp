@@ -1,4 +1,4 @@
-// c
+// STeCa 2
 
 #ifdef WITH_TESTS
 

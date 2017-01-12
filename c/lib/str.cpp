@@ -3,7 +3,6 @@
 #include "str.h"
 #include "unsafe.h"
 #include "../def/def_cpp"
-#include "../def/def_debug"
 #include "../test/test.h"
 #include <string.h>
 

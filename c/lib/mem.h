@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_MEM_H
-#define C_MEM_H
+#ifndef C_C_MEM_H
+#define C_C_MEM_H
 
 #include "../h"
 
@@ -23,7 +23,7 @@ _c_cpp_c_struct(mem) NO_COPY(mem)
   _c_cpp_con(mem, (rval))
 
   _c_cpp_op(pcvoid, p)
-_c_cpp_c_struct_end(mem)
+_c_cpp_c_struct_end
 
 //------------------------------------------------------------------------------
 #endif
