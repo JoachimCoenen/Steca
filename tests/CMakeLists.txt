@@ -1,24 +1,18 @@
 get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-include_directories (${CMAKE_CURRENT_SOURCE_DIR}/..)
-
 add_definitions (-DWITH_TESTS)
 
-set (srcdirs c cpp core)
+TODO
 
-foreach (dir ${srcdirs})
-  set (d ${CMAKE_HOME_DIRECTORY}/${dir})
-  file (GLOB_RECURSE fs ${d}/*.cpp)
-  set (files ${files} ${fs})
-endforeach (dir)
+find_package (Qt5Core    REQUIRED)
+find_package (Qt5Gui     REQUIRED)
+find_package (Qt5Widgets REQUIRED)
 
 file (GLOB_RECURSE test_files *)
-
-add_executable (${app}
-  ${files} ${test_files}
-)
+add_executable (${app} ${test_files})
 
 target_link_libraries (${app}
-  pthread
+  gui core c_qt c_cpp c_c
+  Qt5::Core Qt5::Gui Qt5::Widgets
 )
 
 # eof

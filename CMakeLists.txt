@@ -18,16 +18,10 @@ add_custom_target (.old SOURCES ${old_files})
 set (txt_files AUTHORS CHANGELOG COPYING README.md VERSION manifest)
 add_custom_target (.txt SOURCES ${txt_files})
 
-# light libraries
-add_subdirectory (c)        # foundation
-add_subdirectory (cpp)      # foundation < c
-add_subdirectory (qt)       # qt-specific < cpp, c
+include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
-# steca
-add_subdirectory (core)     # < c cpp
-add_subdirectory (gui)      # < qt
-
-add_subdirectory (tests)
+add_subdirectory (c)
 add_subdirectory (STeCa)
+add_subdirectory (tests)
 
 # eof
