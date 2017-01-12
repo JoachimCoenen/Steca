@@ -132,12 +132,12 @@ struct scoped : c_ptr {
 
 struct _shared_base_ : c_ptr {
 protected:
-  _shared_base_(just_ptr<void>);
+  _shared_base_(pcvoid);
   _shared_base_(_shared_base_ const&);
 
   _shared_base_& operator=(_shared_base_ const&);
 
-  just_ptr<void> p() const;
+  pcvoid p() const;
 
   void inc();
   bool dec();
@@ -146,11 +146,11 @@ protected:
 
 template <typename T>
 struct shared : protected _shared_base_ {
-  shared(just_ptr<T> p) : _shared_base_(p) {}
-  shared(shared const& that) : _shared_base_(that) {}
+  shared(T const* p = nullptr) : _shared_base_(p) {}
+  shared(shared const& that)   : _shared_base_(that) {}
  ~shared() {
-    if (!dec()) {
-      delete static_cast<T*>(mut(p().ptr()));
+    if (dec()) {
+      delete static_cast<T*>(mut(p()));
       cleanup();
     }
   }
@@ -159,7 +159,8 @@ struct shared : protected _shared_base_ {
     return _shared_base_::operator=(that);
   }
 
-  T const* ptr()        const { return static_cast<T const*>(p().ptr()); }
+  T const* ptr()        const { return static_cast<T const*>(p()); }
+  T*       mut_ptr()    const { return mut(ptr()); }
   operator T const*()   const { return ptr(); }
   T const* operator->() const { return ptr(); }
 };

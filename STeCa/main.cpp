@@ -15,20 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.h"
-#include <cpp/async.h>
-#include <chrono>
-#include <c/cpp>
+#include <gui/app/app.h>
 
-//------------------------------------------------------------------------------
-
-Session::Session() {
+int main(int argc, char* argv[]) {
+  App(argc, argv).exec();
 }
 
-int Session::long_square(int i) {
-  std::this_thread::sleep_for(std::chrono::milliseconds(12000));
-  return i*i;
-}
-
-//------------------------------------------------------------------------------
 // eof

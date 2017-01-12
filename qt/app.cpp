@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QStyleFactory>
+#include <iostream>
 
 namespace c { namespace qt {
 //------------------------------------------------------------------------------

@@ -14,3 +14,16 @@
  *
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
+
+#ifndef CORE_SESSION_H
+#define CORE_SESSION_H
+
+#include <c/h>
+
+_cpp_struct(Session)
+  Session();
+  int long_square(int);
+_cpp_struct_end
+
+#endif
+// eof

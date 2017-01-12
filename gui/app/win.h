@@ -19,8 +19,11 @@
 #define GUI_WIN_H
 
 #include <qt/win.h>
+#include "../hub/hub.h"
 
 _cpp_sub_struct(Win, c::qt::win) BASE_CONS
+  Win();
+  Hub hub;
 _cpp_sub_struct_end
 
 #endif

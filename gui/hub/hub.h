@@ -14,3 +14,66 @@
  *
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
+
+#ifndef GUI_HUB_H
+#define GUI_HUB_H
+
+#include <core/session.h>
+
+#include <QObject>
+#include <QEvent>
+#include <QThread>
+
+struct Hub;
+
+_cpp_sub_struct(Task, QEvent) NO_COPY(Task)
+  Task();
+ ~Task();
+
+  void set(Hub& hub, Session& session);
+  virtual Task* clone() = 0;
+
+  virtual void work() = 0;
+  virtual void done() = 0;
+
+  Hub* hub; Session* session;
+_cpp_sub_struct_end
+
+typedef c::shared<Task> shTask;
+Q_DECLARE_METATYPE(shTask)
+
+_cpp_sub_struct(Worker, QObject)
+  Worker(Session&);
+
+  void doWork(shTask);
+
+private:
+  Session& session;
+_cpp_sub_struct_end
+
+_cpp_sub_struct(Hub, QObject)
+  Hub();
+ ~Hub();
+
+  void post(Task*);
+
+private:
+  Session session;
+
+signals:
+  void workToDo(shTask);
+
+private:
+  void registerMetaTypes();
+  bool event(QEvent*);
+
+  QThread thread;
+  Worker  worker;
+  Q_OBJECT
+
+public:
+  void done_long_square(int);
+_cpp_struct_end
+
+#endif
+// eof

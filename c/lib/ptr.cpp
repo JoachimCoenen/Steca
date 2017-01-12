@@ -27,25 +27,25 @@ TEST("just_ptr", ({
 
 // object ptr + counter
 struct o_cnt {
-  just_ptr<void>     o;
+  pcvoid o;
   std::atomic_size_t cnt;
 
-  o_cnt(just_ptr<void> o_) : o(o_), cnt(0) {}
+  o_cnt(pcvoid o_) : o(o_), cnt(0) {}
 
-  static o_cnt const* from(just_ptr<void> p) {
-    return static_cast<o_cnt const*>(p.ptr());
+  static o_cnt const* from(pcvoid p) {
+    return static_cast<o_cnt const*>(p);
   }
 };
 
 TEST("o_cnt", ({
-  typedef uint t; typedef just_ptr<t> jp_t;
-  scoped<t> n(new t); auto j = jp_t::from(n);
-  o_cnt oc(j);
+  typedef uint t;
+  scoped<t> n(new t);
+  o_cnt oc(n);
   CHECK_EQ(n, oc.o);
   CHECK_EQ(0, oc.cnt);
 });)
 
-_shared_base_::_shared_base_(just_ptr<void> o) : c_ptr(nullptr) {
+_shared_base_::_shared_base_(pcvoid o) : c_ptr(nullptr) {
   mut(c_ptr::p) = new o_cnt(o);
   inc();
 }
@@ -54,7 +54,7 @@ _shared_base_::_shared_base_(_shared_base_ const& that) : c_ptr(that.c_ptr::p) {
   inc();
 }
 
-just_ptr<void> _shared_base_::p() const {
+pcvoid _shared_base_::p() const {
   return static_cast<o_cnt const*>(c_ptr::p)->o;
 }
 
@@ -124,10 +124,9 @@ TEST("scoped", ({
 
 
 TEST("shared", ({
-  typedef uint t; typedef just_ptr<t> jp_t;
+  typedef uint t;
   auto n = new t(8);
-  auto p = jp_t::from(n);
-  shared<t> s1(p);
+  shared<t> s1(n);
   shared<t> s2(s1);
   CHECK_EQ(*s1, *s2);
   CHECK_EQ(8,   *s2);

@@ -105,7 +105,7 @@
   };}
 
 #define _c_cpp_sub_struct(name, base) \
-  namespace c { struct name : base { BASE(base) _cpp_struct_typedefs(name)
+  namespace c { struct name : base { THIS(name) BASE(base) _cpp_struct_typedefs(name)
 #define _c_cpp_sub_struct_end         \
   };}
 
@@ -132,6 +132,7 @@
 
 #if _c_cpp_
 
+#define THIS(name) using This = name;
 #define BASE(name) using base = name;
 #define BASE_CONS  using base::base;
 
@@ -146,7 +147,7 @@
   };
 
 #define _cpp_sub_struct(name, base) \
-  struct name : base { BASE(base) _cpp_struct_typedefs(name)
+  struct name : base { THIS(name) BASE(base) _cpp_struct_typedefs(name)
 #define _cpp_sub_struct_end         \
   };
 

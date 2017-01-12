@@ -26,6 +26,8 @@ add_subdirectory (qt)       # qt-specific < cpp, c
 # steca
 add_subdirectory (core)     # < c cpp
 add_subdirectory (gui)      # < qt
+
 add_subdirectory (tests)
+add_subdirectory (STeCa)
 
 # eof
