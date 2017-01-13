@@ -47,8 +47,8 @@ public:
   uint           numFiles()   const { return files_.count(); }
   data::shp_File file(uint i) const;
 
-  bool hasFile(rcstr fileName);
-  void addFile(data::shp_File) THROWS;
+  bool hasFile(qstrc fileName);
+  void addFile(data::shp_File) may_exc;
   void remFile(uint i);
 
 private:
@@ -82,7 +82,7 @@ public:
 
   typ::Image const* intensCorr() const;
 
-  void setCorrFile(data::shp_File) THROWS;  // Load or remove a correction file.
+  void setCorrFile(data::shp_File) may_exc;  // Load or remove a correction file.
   void remCorrFile();
 
   void tryEnableCorr(bool);
@@ -111,7 +111,7 @@ private:
   // Clears the image size if there are no files in the session.
   void updateImageSize();
   // Ensures that all images have the same size.
-  void setImageSize(typ::size2d::rc) THROWS;
+  void setImageSize(typ::size2d::rc) may_exc;
 
 public:
   typ::size2d imageSize() const;
@@ -192,8 +192,8 @@ public:
   void  setNorm(eNorm);
 
 public:
-  qreal calcAvgBackground(data::Dataset::rc) const;
-  qreal calcAvgBackground(data::Datasets::rc) const;
+  real calcAvgBackground(data::Dataset::rc) const;
+  real calcAvgBackground(data::Datasets::rc) const;
 };
 
 //------------------------------------------------------------------------------

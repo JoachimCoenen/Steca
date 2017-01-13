@@ -57,7 +57,7 @@ protected:
 class DiagramsFrame : public Frame {
   CLASS(DiagramsFrame) SUPER(Frame)
 public:
-  DiagramsFrame(TheHub&, rcstr title, QWidget*);
+  DiagramsFrame(TheHub&, qstrc title, QWidget*);
 
 protected:
   TabPlot         *tabPlot_;
@@ -76,8 +76,8 @@ protected:
   void recalculate();
 
   bool saveDiagramOutput();
-  void writeCurrentDiagramOutputFile(rcstr filePath, rcstr separator);
-  void writeAllDataOutputFile(rcstr filePath, rcstr separator);
+  void writeCurrentDiagramOutputFile(qstrc filePath, qstrc separator);
+  void writeAllDataOutputFile(qstrc filePath, qstrc separator);
 };
 
 //------------------------------------------------------------------------------

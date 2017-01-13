@@ -61,7 +61,7 @@ void Method::fit(Function& function, Curve::rc curve) {
     function_->parameterAt(i).setValue(parValue[i], parError[i]);
 }
 
-void Method::callbackY(qreal* parValues, qreal* yValues,
+void Method::callbackY(real* parValues, real* yValues,
                               int /*parCount*/, int    xLength, void*) {
   for_i (xLength)
     yValues[i] = function_->y(xValues_[i], parValues);
@@ -78,12 +78,12 @@ T* remove_const(T const* t) {
 }
 
 void LinearLeastSquare::approximate(
-    qreal* params,  // IO initial parameter estimates -> estimated solution
-    qreal const* paramsLimitMin,   // I
-    qreal const* paramsLimitMax,   // I
-    qreal*       paramsError,      // O
+    real* params,  // IO initial parameter estimates -> estimated solution
+    real const* paramsLimitMin,   // I
+    real const* paramsLimitMax,   // I
+    real*       paramsError,      // O
     uint         paramsCount,      // I
-    qreal const* yValues,          // I
+    real const* yValues,          // I
     uint         dataPointsCount)  // I
 {
   DelegateCalculationDbl function(this, &Cls::callbackY);
@@ -111,12 +111,12 @@ LevenbergMarquardt::LevenbergMarquardt() {
 }
 
 void LevenbergMarquardt::approximate(
-    qreal* params,  // IO initial parameter estimates -> estimated solution
-    qreal const* paramsLimitMin,   // I
-    qreal const* paramsLimitMax,   // I
-    qreal*       paramsError,      // O
+    real* params,  // IO initial parameter estimates -> estimated solution
+    real const* paramsLimitMin,   // I
+    real const* paramsLimitMax,   // I
+    real*       paramsError,      // O
     uint         paramsCount,      // I
-    qreal const* yValues,          // I
+    real const* yValues,          // I
     uint         dataPointsCount)  // I
 {
   DelegateCalculationDbl function(this, &Cls::callbackY);
@@ -146,8 +146,8 @@ void LevenbergMarquardt::approximate(
     paramsError[i] = sqrt(covar[i * paramsCount + i]);  // the diagonal
 }
 
-void LevenbergMarquardt::callbackJacobianLM(qreal* parValues,
-                                                   qreal* jacobian,
+void LevenbergMarquardt::callbackJacobianLM(real* parValues,
+                                                   real* jacobian,
                                                    int parameterLength,
                                                    int xLength, void*)
 {

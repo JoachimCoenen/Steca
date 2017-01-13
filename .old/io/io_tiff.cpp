@@ -22,7 +22,7 @@
 namespace io {
 //------------------------------------------------------------------------------
 
-static void loadTiff(data::shp_File&, rcstr, typ::deg, qreal, qreal) THROWS;
+static void loadTiff(data::shp_File&, qstrc, typ::deg, real, real) may_exc;
 
 // The dat file looks like so:
 /*
@@ -41,7 +41,7 @@ Aus-Weimin-00008.tif -55
 Aus-Weimin-00009.tif -50
 */
 
-data::shp_File loadTiffDat(rcstr filePath) THROWS {
+data::shp_File loadTiffDat(qstrc filePath) may_exc {
   data::shp_File file(new data::File(filePath));
 
   QFile f(filePath);
@@ -73,13 +73,13 @@ data::shp_File loadTiffDat(rcstr filePath) THROWS {
     typ::deg phi     = lst.at(1).toDouble(&ok);
     RUNTIME_CHECK(ok, "bad phi value");
 
-    qreal monitor = 0;
+    real monitor = 0;
     if (cnt > 2) {
       monitor = lst.at(2).toDouble(&ok);
       RUNTIME_CHECK(ok, "bad monitor value");
     }
 
-    qreal expTime = 0;
+    real expTime = 0;
     if (cnt > 3) {
       expTime = lst.at(3).toDouble(&ok);
       RUNTIME_CHECK(ok, "bad expTime value");
@@ -109,8 +109,8 @@ data::shp_File loadTiffDat(rcstr filePath) THROWS {
   IS_NUMBER; RUNTIME_CHECK(val==dataOffset, BAD_FORMAT)
 
 
-static void loadTiff(data::shp_File& file, rcstr filePath,
-                     typ::deg phi, qreal monitor, qreal expTime) THROWS {
+static void loadTiff(data::shp_File& file, qstrc filePath,
+                     typ::deg phi, real monitor, real expTime) may_exc {
 
   data::Metadata md;
   md.motorPhi     = phi;

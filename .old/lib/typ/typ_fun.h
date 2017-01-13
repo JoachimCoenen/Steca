@@ -38,17 +38,17 @@ public:
   class Factory : public typ::Factory<Function> {
     CLASS(Factory) SUPER(typ::Factory<Function>)
   public:
-    owner_not_null<Function*> make(JsonObj::rc) THROWS;
+    owner_not_null<Function*> make(JsonObj::rc) may_exc;
   };
 
 protected:
   static Factory factory_;
 
 public:
-  static void addFactoryMaker(rcstr key, owner_not_null<Factory::MakerBase*>);
+  static void addFactoryMaker(qstrc key, owner_not_null<Factory::MakerBase*>);
   static void initFactory();
 
-  static owner_not_null<Function*> make(JsonObj::rc) THROWS;
+  static owner_not_null<Function*> make(JsonObj::rc) may_exc;
 
 public:
   class Parameter final {
@@ -56,20 +56,20 @@ public:
   public:
     Parameter();
 
-    qreal value() const { return value_; }
-    qreal error() const { return error_; }
+    real value() const { return value_; }
+    real error() const { return error_; }
 
     Range valueRange() const;  // allowed range of values
-    void  setValueRange(qreal min, qreal max);
+    void  setValueRange(real min, real max);
 
-    void  setValue(qreal value, qreal error);
+    void  setValue(real value, real error);
 
   public:
     JsonObj saveJson() const;
-    void loadJson(JsonObj::rc) THROWS;
+    void loadJson(JsonObj::rc) may_exc;
 
   private:
-    qreal value_, error_;
+    real value_, error_;
 
     // allowed range of values
     Range range_;
@@ -87,14 +87,14 @@ public:
   }
 
   // evaluate the function y = f(x), with given (parValues) or own parameters
-  virtual qreal y(qreal x, qreal const* parValues = nullptr) const = 0;
+  virtual real y(real x, real const* parValues = nullptr) const = 0;
 
   // partial derivative / parameter, with given (parValues) or own parameters
-  virtual qreal dy(qreal x, uint parIndex,
-                   qreal const* parValues = nullptr) const = 0;
+  virtual real dy(real x, uint parIndex,
+                   real const* parValues = nullptr) const = 0;
 public:
   virtual JsonObj saveJson() const;
-  virtual void loadJson(JsonObj::rc) THROWS;
+  virtual void loadJson(JsonObj::rc) may_exc;
 };
 
 //------------------------------------------------------------------------------
@@ -113,12 +113,12 @@ public:
 
 public:
   JsonObj saveJson() const;
-  void loadJson(JsonObj::rc) THROWS;
+  void loadJson(JsonObj::rc) may_exc;
 
 protected:
   vec<Parameter> parameters_;
-  qreal parValue(uint parIndex, qreal const* parValues) const;
-  void  setValue(uint parIndex, qreal val);
+  real parValue(uint parIndex, real const* parValues) const;
+  void  setValue(uint parIndex, real val);
 };
 
 //------------------------------------------------------------------------------
@@ -136,12 +136,12 @@ public:
   uint       parameterCount() const;
   Parameter& parameterAt(uint);
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
 public:
   JsonObj saveJson() const;
-  void loadJson(JsonObj::rc) THROWS;
+  void loadJson(JsonObj::rc) may_exc;
 
 protected:
   // summed functions

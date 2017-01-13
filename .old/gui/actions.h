@@ -29,28 +29,28 @@ namespace gui {
 class Action : public QAction {
   CLASS(Action) SUPER(QAction)
 public:
-  Action(rcstr text, QObject*);
+  Action(qstrc text, QObject*);
 
-  Action& text(rcstr);
-  Action& tip(rcstr);
+  Action& text(qstrc);
+  Action& tip(qstrc);
   Action& key(QKeySequence);
-  Action& icon(rcstr);
+  Action& icon(qstrc);
 
-  virtual Action& alt(rcstr text2);
+  virtual Action& alt(qstrc text2);
 };
 
 class TriggerAction : public Action {
   CLASS(TriggerAction) SUPER(Action)
 public:
-  TriggerAction(rcstr text, QObject* = nullptr);
+  TriggerAction(qstrc text, QObject* = nullptr);
 };
 
 class ToggleAction : public Action {
   CLASS(ToggleAction) SUPER(Action)
 public:
-  ToggleAction(rcstr text, QObject* = nullptr);
+  ToggleAction(qstrc text, QObject* = nullptr);
 
-  Action& alt(rcstr text2);
+  Action& alt(qstrc text2);
 
 protected:
   str text1_, text2_;
@@ -79,8 +79,8 @@ public:
     *outputPolefigures, *outputDiagrams, *outputDiffractograms;
 
 private:
-  Action& trg(Action*& action, rcstr text);
-  Action& tgl(Action*& action, rcstr text);
+  Action& trg(Action*& action, qstrc text);
+  Action& tgl(Action*& action, qstrc text);
 };
 
 //------------------------------------------------------------------------------

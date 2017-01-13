@@ -237,7 +237,7 @@ public:
   Action *actBrowse, *actSave;
 
 protected:
-  str fileSetSuffix(rcstr);
+  str fileSetSuffix(qstrc);
 
   QLineEdit    *dir_, *file_;
   QRadioButton *rbDat_, *rbCsv_;
@@ -248,7 +248,7 @@ protected:
 class Frame : public QFrame, protected RefHub {
   CLASS(Frame) SUPER(QFrame)
 public:
-  Frame(TheHub&, rcstr title, Params*, QWidget*);
+  Frame(TheHub&, qstrc title, Params*, QWidget*);
 
 protected:
   QAction     *actClose_, *actCalculate_, *actInterpolate_;
@@ -273,9 +273,9 @@ protected:
   uint getReflIndex()    const;
   bool getInterpolated() const;
 
-  void logMessage(rcstr) const;
+  void logMessage(qstrc) const;
   void logSuccess(bool)  const;
-  bool logCheckSuccess(rcstr path, bool)  const;
+  bool logCheckSuccess(qstrc path, bool)  const;
 };
 
 //------------------------------------------------------------------------------

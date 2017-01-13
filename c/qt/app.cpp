@@ -28,7 +28,7 @@ static QtMessageHandler oldHandler;
 static QAtomicInt       noWarning;
 
 static void messageHandler(QtMsgType type, QMessageLogContext const& ctx,
-                           QString const& msg) {
+                           qstrc msg) {
   switch (type) {
   case QtDebugMsg:
     std::cerr << "Trace: " << msg.toStdString()
@@ -53,7 +53,7 @@ static void waiting(bool on) {
 
 static win *mainWin;
 
-static void logMessage(QString const& msg, log::eType type) {
+static void logMessage(qstrc msg, log::eType type) {
   EXPECT(mainWin)
 
   QString statusMsg;

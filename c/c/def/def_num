@@ -25,7 +25,7 @@ typedef unsigned int   uint;
 //------------------------------------------------------------------------------
 EXTERN_C_END
 
-#if _c_cpp_
+#if _is_cpp_
 namespace c {
 //------------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ typedef flt64  real;
 #undef NAN
 #undef INF
 
-#if _c_cpp_
+#if _is_cpp_
 namespace c {
 //------------------------------------------------------------------------------
 
@@ -95,7 +95,18 @@ bool isinf(flt64);
 bool isnormal(flt32);
 bool isnormal(flt64);
 
-//------------------------------------------------------------------------------
+
+template <typename T> T const& min(T const& a, T const& b) {
+  return (a < b) ? a : b;
+}
+
+template <typename T> T const& max(T const& a, T const& b) {
+  return (a > b) ? a : b;
+}
+
+template <typename T> T const& bound(T const& min, T const& v, T const& max) {
+  return c::max(min, c::min(v, max));
+}
 
 #ifndef NDEBUG
 
@@ -131,9 +142,8 @@ typedef real preal;
 
 #endif
 
+//------------------------------------------------------------------------------
 }
 #endif
-
-//------------------------------------------------------------------------------
 #endif
 // eof

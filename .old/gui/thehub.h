@@ -35,32 +35,32 @@ namespace gui {
 class Settings : public QSettings {
   CLASS(Settings) SUPER(QSettings)
 public:
-  Settings(rcstr group = EMPTY_STR);
+  Settings(qstrc group = EMPTY_STR);
  ~Settings();
 
-  QVariant readVariant(rcstr key, QVariant const& def);
-  void     saveVariant(rcstr key, QVariant const& val);
+  QVariant readVariant(qstrc key, QVariant const& def);
+  void     saveVariant(qstrc key, QVariant const& val);
 
-  void read(rcstr key, QAction*, bool def = false);
-  void save(rcstr key, QAction*);
+  void read(qstrc key, QAction*, bool def = false);
+  void save(qstrc key, QAction*);
 
-  void read(rcstr key, QSpinBox*, int def = 0);
-  void save(rcstr key, QSpinBox*);
+  void read(qstrc key, QSpinBox*, int def = 0);
+  void save(qstrc key, QSpinBox*);
 
-  void read(rcstr key, QDoubleSpinBox*, qreal def = 0);
-  void save(rcstr key, QDoubleSpinBox*);
+  void read(qstrc key, QDoubleSpinBox*, real def = 0);
+  void save(qstrc key, QDoubleSpinBox*);
 
-  bool readBool(rcstr key, bool def = false);
-  void saveBool(rcstr key, bool);
+  bool readBool(qstrc key, bool def = false);
+  void saveBool(qstrc key, bool);
 
-  int  readInt(rcstr key, int def = 0);
-  void saveInt(rcstr key, int);
+  int  readInt(qstrc key, int def = 0);
+  void saveInt(qstrc key, int);
 
-  qreal readReal(rcstr key, qreal def = 0);
-  void  saveReal(rcstr key, qreal);
+  real readReal(qstrc key, real def = 0);
+  void  saveReal(qstrc key, real);
 
-  str  readStr(rcstr key, rcstr def = EMPTY_STR);
-  void saveStr(rcstr key, rcstr);
+  str  readStr(qstrc key, qstrc def = EMPTY_STR);
+  void saveStr(qstrc key, qstrc);
 };
 
 //------------------------------------------------------------------------------
@@ -68,13 +68,13 @@ public:
 class ReadFile: public QFile {
   CLASS(ReadFile) SUPER(QFile)
 public:
-  ReadFile(rcstr path) THROWS;
+  ReadFile(qstrc path) may_exc;
 };
 
 class WriteFile: public QFile {
   CLASS(WriteFile) SUPER(QFile)
 public:
-  WriteFile(rcstr path) THROWS;
+  WriteFile(qstrc path) may_exc;
 };
 
 //------------------------------------------------------------------------------
@@ -132,12 +132,12 @@ public:
   QByteArray saveSession() const;
 
   void clearSession();
-  void loadSession(QFileInfo const&)  THROWS;
-  void loadSession(QByteArray const&) THROWS;
+  void loadSession(QFileInfo const&)  may_exc;
+  void loadSession(QByteArray const&) may_exc;
 
 public:
-  void addFile(rcstr filePath) THROWS;
-  void addFiles(str_lst::rc filePaths) THROWS;
+  void addFile(qstrc filePath) may_exc;
+  void addFiles(str_lst::rc filePaths) may_exc;
 
 private:
   uint_vec collectFromFiles_;
@@ -178,7 +178,7 @@ public:
 
   gma_rge collectedDatasetsRgeGma() const;
 
-  void setCorrFile(rcstr filePath) THROWS;
+  void setCorrFile(qstrc filePath) may_exc;
   void tryEnableCorrection(bool);
 
   typ::ImageCut::rc imageCut() const;

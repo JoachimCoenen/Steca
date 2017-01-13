@@ -64,15 +64,15 @@ void Polynom::setDegree(uint degree) {
 }
 
 // the power with *uint* exponent
-static qreal pow_n(qreal x, uint n) {
-  qreal val = 1;
+static real pow_n(real x, uint n) {
+  real val = 1;
   while (n-- > 0)
     val *= x;
   return val;
 }
 
-qreal Polynom::y(qreal x, qreal const* parValues) const {
-  qreal val = 0, xPow = 1;
+real Polynom::y(real x, real const* parValues) const {
+  real val = 0, xPow = 1;
   for_i (parameters_.count()) {
     val += parValue(i, parValues) * xPow;
     xPow *= x;
@@ -80,22 +80,22 @@ qreal Polynom::y(qreal x, qreal const* parValues) const {
   return val;
 }
 
-qreal Polynom::dy(qreal x, uint i, qreal const*) const {
+real Polynom::dy(real x, uint i, real const*) const {
   return pow_n(x, i);
 }
 
 // REVIEW
-qreal Polynom::avgY(Range::rc rgeX, qreal const* parValues) const {
-  EXPECT(rgeX.isValid())
+real Polynom::avgY(Range::rc rgeX, real const* parValues) const {
+  EXPECT(rgeX.isDef())
 
-  qreal w = rgeX.width();
+  real w = rgeX.width();
   if (w <= 0)
     return y(rgeX.min, parValues);
 
-  qreal minY = 0, maxY = 0, minPow = 1, maxPow = 1;
+  real minY = 0, maxY = 0, minPow = 1, maxPow = 1;
 
   for_i (parameters_.count()) {
-    qreal facY = parValue(i, parValues) / (i + 1);
+    real facY = parValue(i, parValues) / (i + 1);
     minY += facY * (minPow *= rgeX.min);
     maxY += facY * (maxPow *= rgeX.max);
   }
@@ -119,7 +119,7 @@ JsonObj Polynom::saveJson() const {
   return super::saveJson() + obj;
 }
 
-void Polynom::loadJson(JsonObj::rc obj) THROWS {
+void Polynom::loadJson(JsonObj::rc obj) may_exc {
   super::loadJson(obj);
 }
 
@@ -152,7 +152,7 @@ void PeakFunction::setRange(Range::rc range) {
   range_ = range;
 }
 
-PeakFunction::PeakFunction() : guessedPeak_(), guessedFWHM_(NAN) {}
+PeakFunction::PeakFunction() : guessedPeak_(), guessedFWHM_(c::NAN) {}
 
 void PeakFunction::setGuessedPeak(peak_t::rc peak) {
   guessedPeak_ = peak;
@@ -173,7 +173,7 @@ void PeakFunction::fit(Curve::rc curve, Range::rc range) {
   if (c.isEmpty())
     return;
 
-//  if (!guessedPeak().isValid()) {  // calculate guesses // TODO caching temporarily disabled, until it works correctly
+//  if (!guessedPeak().isDef()) {  // calculate guesses // TODO caching temporarily disabled, until it works correctly
     uint peakIndex  = c.maxYindex();
     auto peakTth    = c.x(peakIndex);
     auto peakIntens = c.y(peakIndex);
@@ -209,14 +209,14 @@ JsonObj PeakFunction::saveJson() const {
   return super::saveJson()
       .saveRange(json_key::RANGE, range_)
       .saveObj(json_key::PEAK, guessedPeak_.saveJson())
-      .saveQreal(json_key::FWHM, guessedFWHM_);
+      .saveReal(json_key::FWHM, guessedFWHM_);
 }
 
-void PeakFunction::loadJson(JsonObj::rc obj) THROWS {
+void PeakFunction::loadJson(JsonObj::rc obj) may_exc {
   super::loadJson(obj);
   range_ = obj.loadRange(json_key::RANGE);
   guessedPeak_.loadJson(obj.loadObj(json_key::PEAK));
-  guessedFWHM_ = obj.loadQreal(json_key::FWHM);
+  guessedFWHM_ = obj.loadReal(json_key::FWHM);
 }
 
 //------------------------------------------------------------------------------
@@ -224,20 +224,20 @@ void PeakFunction::loadJson(JsonObj::rc obj) THROWS {
 Raw::Raw() {
 }
 
-qreal Raw::y(qreal x, qreal const* /*parValues*/) const {
+real Raw::y(real x, real const* /*parValues*/) const {
   if (!x_count_ || !range_.contains(x))
     return 0;
 
-  uint i = to_u(qBound(0, qFloor((x - range_.min) / dx_), to_i(x_count_) - 1));
+  uint i = to_u(c::bound(0, qFloor((x - range_.min) / dx_), to_i(x_count_) - 1));
   return fittedCurve_.y(i);
 }
 
-qreal Raw::dy(qreal, uint, qreal const*) const {
+real Raw::dy(real, uint, real const*) const {
   return 0; // fake
 }
 
 peak_t Raw::fittedPeak() const {
-  if (qIsNaN(sum_y_))
+  if (isnan(sum_y_))
     sum_y_ = fittedCurve_.sumY();
 
   return peak_t(range_.center(),  // approximate x
@@ -275,7 +275,7 @@ void Raw::prepareY() {
     dx_      = range_.width() / x_count_;
   }
 
-  sum_y_ = NAN;
+  sum_y_ = c::NAN;
 }
 
 JsonObj Raw::saveJson() const {
@@ -284,7 +284,7 @@ JsonObj Raw::saveJson() const {
 
 //------------------------------------------------------------------------------
 
-Gaussian::Gaussian(qreal ampl, qreal xShift, qreal sigma) {
+Gaussian::Gaussian(real ampl, real xShift, real sigma) {
   setParameterCount(3);
 
   auto& parAmpl   = parameters_[parAMPL];
@@ -300,24 +300,24 @@ Gaussian::Gaussian(qreal ampl, qreal xShift, qreal sigma) {
   parSigma.setValue(sigma, 0);
 }
 
-qreal Gaussian::y(qreal x, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal sigma  = parValue(parSIGMA, parValues);
+real Gaussian::y(real x, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real sigma  = parValue(parSIGMA, parValues);
 
-  qreal arg = (x - xShift) / sigma;
-  qreal exa = exp(-0.5 * arg * arg);
+  real arg = (x - xShift) / sigma;
+  real exa = exp(-0.5 * arg * arg);
 
   return ampl * exa;
 }
 
-qreal Gaussian::dy(qreal x, uint parIndex, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal sigma  = parValue(parSIGMA, parValues);
+real Gaussian::dy(real x, uint parIndex, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real sigma  = parValue(parSIGMA, parValues);
 
-  qreal arg = (x - xShift) / sigma;
-  qreal exa = exp(-0.5 * arg * arg);
+  real arg = (x - xShift) / sigma;
+  real exa = exp(-0.5 * arg * arg);
 
   switch (parIndex) {
   case parAMPL:
@@ -366,7 +366,7 @@ JsonObj Gaussian::saveJson() const {
 
 //------------------------------------------------------------------------------
 
-Lorentzian::Lorentzian(qreal ampl, qreal xShift, qreal gamma) {
+Lorentzian::Lorentzian(real ampl, real xShift, real gamma) {
   setParameterCount(3);
 
   auto& parAmpl   = parameters_[parAMPL];
@@ -382,23 +382,23 @@ Lorentzian::Lorentzian(qreal ampl, qreal xShift, qreal gamma) {
   parGamma.setValue(gamma, 0);
 }
 
-qreal Lorentzian::y(qreal x, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal gamma  = parValue(parGAMMA, parValues);
+real Lorentzian::y(real x, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real gamma  = parValue(parGAMMA, parValues);
 
-  qreal arg = (x - xShift) / gamma;
+  real arg = (x - xShift) / gamma;
   return ampl / (1 + arg * arg);
 }
 
-qreal Lorentzian::dy(qreal x, uint parIndex, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal gamma  = parValue(parGAMMA, parValues);
+real Lorentzian::dy(real x, uint parIndex, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real gamma  = parValue(parGAMMA, parValues);
 
-  qreal arg1 = (x - xShift) / gamma;
-  qreal arg2 = arg1 * arg1;
-  qreal arg3 = (1 + arg2) * (1 + arg2);
+  real arg1 = (x - xShift) / gamma;
+  real arg2 = arg1 * arg1;
+  real arg3 = (1 + arg2) * (1 + arg2);
 
   switch (parIndex) {
   case parAMPL:
@@ -447,8 +447,8 @@ JsonObj Lorentzian::saveJson() const {
 
 //------------------------------------------------------------------------------
 
-PseudoVoigt1::PseudoVoigt1(qreal ampl, qreal xShift, qreal sigmaGamma,
-                           qreal eta) {
+PseudoVoigt1::PseudoVoigt1(real ampl, real xShift, real sigmaGamma,
+                           real eta) {
   setParameterCount(4);
 
   auto& parAmpl       = parameters_[parAMPL];
@@ -468,30 +468,30 @@ PseudoVoigt1::PseudoVoigt1(qreal ampl, qreal xShift, qreal sigmaGamma,
   parEta.setValue(eta, 0);
 }
 
-qreal PseudoVoigt1::y(qreal x, qreal const* parValues) const {
-  qreal ampl       = parValue(parAMPL, parValues);
-  qreal xShift     = parValue(parXSHIFT, parValues);
-  qreal sigmaGamma = parValue(parSIGMAGAMMA, parValues);
-  qreal eta        = parValue(parETA, parValues);
+real PseudoVoigt1::y(real x, real const* parValues) const {
+  real ampl       = parValue(parAMPL, parValues);
+  real xShift     = parValue(parXSHIFT, parValues);
+  real sigmaGamma = parValue(parSIGMAGAMMA, parValues);
+  real eta        = parValue(parETA, parValues);
 
-  qreal arg      = (x - xShift) / sigmaGamma;
-  qreal arg2     = arg * arg;
-  qreal gaussian = ampl * exp(-arg2 * log(2.0));
-  qreal lorentz  = ampl / (1 + arg2);
+  real arg      = (x - xShift) / sigmaGamma;
+  real arg2     = arg * arg;
+  real gaussian = ampl * exp(-arg2 * log(2.0));
+  real lorentz  = ampl / (1 + arg2);
 
   return (1 - eta) * gaussian + eta * lorentz;
 }
 
-qreal PseudoVoigt1::dy(qreal x, uint parIndex, qreal const* parValues) const {
-  qreal ampl       = parValue(parAMPL, parValues);
-  qreal xShift     = parValue(parXSHIFT, parValues);
-  qreal sigmaGamma = parValue(parSIGMAGAMMA, parValues);
-  qreal eta        = parValue(parETA, parValues);
+real PseudoVoigt1::dy(real x, uint parIndex, real const* parValues) const {
+  real ampl       = parValue(parAMPL, parValues);
+  real xShift     = parValue(parXSHIFT, parValues);
+  real sigmaGamma = parValue(parSIGMAGAMMA, parValues);
+  real eta        = parValue(parETA, parValues);
 
-  qreal arg1 = (x - xShift) / sigmaGamma;
-  qreal arg2 = arg1 * arg1;
-  qreal arg3 = exp(-arg2 * log(2.0));
-  qreal arg4 = 1 + arg2;
+  real arg1 = (x - xShift) / sigmaGamma;
+  real arg2 = arg1 * arg1;
+  real arg3 = exp(-arg2 * log(2.0));
+  real arg4 = 1 + arg2;
 
   switch (parIndex) {
   case parAMPL:
@@ -546,8 +546,8 @@ JsonObj PseudoVoigt1::saveJson() const {
 
 //------------------------------------------------------------------------------
 
-PseudoVoigt2::PseudoVoigt2(qreal ampl, qreal mu, qreal hwhmG, qreal hwhmL,
-                           qreal eta) {
+PseudoVoigt2::PseudoVoigt2(real ampl, real mu, real hwhmG, real hwhmL,
+                           real eta) {
   setParameterCount(5);
 
   auto& parAmpl  = parameters_[parAMPL];
@@ -571,38 +571,38 @@ PseudoVoigt2::PseudoVoigt2(qreal ampl, qreal mu, qreal hwhmG, qreal hwhmL,
   parEta.setValue(eta, 0);
 }
 
-qreal PseudoVoigt2::y(qreal x, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal sigma  = parValue(parSIGMA, parValues);
-  qreal gamma  = parValue(parGAMMA, parValues);
-  qreal eta    = parValue(parETA, parValues);
+real PseudoVoigt2::y(real x, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real sigma  = parValue(parSIGMA, parValues);
+  real gamma  = parValue(parGAMMA, parValues);
+  real eta    = parValue(parETA, parValues);
 
-  qreal argG     = (x - xShift) / sigma;
-  qreal argG2    = argG * argG;
-  qreal gaussian = ampl * exp(-argG2 * log(2.0));
+  real argG     = (x - xShift) / sigma;
+  real argG2    = argG * argG;
+  real gaussian = ampl * exp(-argG2 * log(2.0));
 
-  qreal argL    = (x - xShift) / gamma;
-  qreal argL2   = argL * argL;
-  qreal lorentz = ampl / (1 + argL2);
+  real argL    = (x - xShift) / gamma;
+  real argL2   = argL * argL;
+  real lorentz = ampl / (1 + argL2);
 
   return (1 - eta) * gaussian + eta * lorentz;
 }
 
-qreal PseudoVoigt2::dy(qreal x, uint parIndex, qreal const* parValues) const {
-  qreal ampl   = parValue(parAMPL, parValues);
-  qreal xShift = parValue(parXSHIFT, parValues);
-  qreal sigma  = parValue(parSIGMA, parValues);
-  qreal gamma  = parValue(parGAMMA, parValues);
-  qreal eta    = parValue(parETA, parValues);
+real PseudoVoigt2::dy(real x, uint parIndex, real const* parValues) const {
+  real ampl   = parValue(parAMPL, parValues);
+  real xShift = parValue(parXSHIFT, parValues);
+  real sigma  = parValue(parSIGMA, parValues);
+  real gamma  = parValue(parGAMMA, parValues);
+  real eta    = parValue(parETA, parValues);
 
-  qreal argG1 = (x - xShift) / sigma;
-  qreal argG2 = argG1 * argG1;
-  qreal argG3 = exp(-argG2 * log(2.0));
+  real argG1 = (x - xShift) / sigma;
+  real argG2 = argG1 * argG1;
+  real argG3 = exp(-argG2 * log(2.0));
 
-  qreal argL1 = (x - xShift) / gamma;
-  qreal argL2 = argL1 * argL1;
-  qreal argL3 = 1 + argL2;
+  real argL1 = (x - xShift) / gamma;
+  real argL2 = argL1 * argL1;
+  real argL3 = 1 + argL2;
 
   switch (parIndex) {
   case parAMPL:
@@ -641,7 +641,7 @@ peak_t PseudoVoigt2::fittedPeak() const {
 }
 
 fwhm_t PseudoVoigt2::fittedFWHM() const {
-  qreal eta = parameters_.at(parETA).value();
+  real eta = parameters_.at(parETA).value();
   return fwhm_t(((1 - eta) * parameters_.at(parSIGMA).value() / 0.424661 +
                  eta * parameters_.at(parGAMMA).value() * 2) / 2);
 }

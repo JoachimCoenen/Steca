@@ -22,7 +22,7 @@ namespace io {
 //------------------------------------------------------------------------------
 // Code taken from the original STeCa, only slightly modified.
 
-data::shp_File loadMar(rcstr filePath) THROWS {
+data::shp_File loadMar(qstrc filePath) may_exc {
   typedef short WORD;
 
   data::shp_File file(new data::File(filePath));

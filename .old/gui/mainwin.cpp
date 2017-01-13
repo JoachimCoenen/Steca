@@ -264,7 +264,7 @@ void MainWin::checkUpdate(bool completeReport) {
   });
 }
 
-void MainWin::messageDialog(rcstr title, rcstr text) {
+void MainWin::messageDialog(qstrc title, qstrc text) {
   QMessageBox::information(this, title, text);
 }
 
@@ -363,7 +363,7 @@ void MainWin::onShow() {
   hub_.clearSession();
 
 #ifdef DEVELOPMENT_JAN
-  auto safeLoad = [this](rcstr fileName) {
+  auto safeLoad = [this](qstrc fileName) {
     QFileInfo info(fileName);
     if (info.exists())
       hub_.loadSession(info);

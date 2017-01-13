@@ -26,20 +26,20 @@
 #include "io.h"
 #include <c/c/cpp>
 
-namespace io {
+namespace core { namespace io {
 //------------------------------------------------------------------------------
 
 void loadCaress(strc) {
 }
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof
 
 //// Code taken from the original STeCa, only slightly modified.
 
 
-//data::shp_File loadCaress2(rcstr filePath) THROWS {
+//data::shp_File loadCaress2(qstrc filePath) may_exc {
 
 //  RUNTIME_CHECK(0 == open_data_file(filePath.toLocal8Bit().data(), nullptr),
 //                "Cannot open file " + filePath);
@@ -68,7 +68,7 @@ void loadCaress(strc) {
 //  return file;
 //}
 
-//data::shp_File loadCaress(rcstr filePath) THROWS {
+//data::shp_File loadCaress(qstrc filePath) may_exc {
 //  data::shp_File file(new data::File(filePath));
 
 //  RUNTIME_CHECK(0 == open_data_file(filePath.toLocal8Bit().data(),nullptr),

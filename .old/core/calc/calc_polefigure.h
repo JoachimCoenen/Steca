@@ -46,7 +46,7 @@ itf_t interpolateValues(typ::deg searchRadius, ReflectionInfos::rc infos,
 
 ReflectionInfos interpolate(ReflectionInfos::rc,
                             typ::deg alphaStep, typ::deg betaStep, typ::deg idwRadius,
-                            typ::deg averagingAlphaMax, typ::deg averagingRadius, qreal inclusionTreshold,
+                            typ::deg averagingAlphaMax, typ::deg averagingRadius, real inclusionTreshold,
                             Progress*);
 
 //------------------------------------------------------------------------------

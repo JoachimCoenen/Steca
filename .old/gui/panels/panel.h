@@ -48,7 +48,7 @@ class BasicPanel : public QGroupBox, protected RefHub {
   CLASS(BasicPanel) SUPER(QGroupBox)
 public:
   BasicPanel(TheHub&);
-  BasicPanel(TheHub&, rcstr title);
+  BasicPanel(TheHub&, qstrc title);
 
   void setHorizontalStretch(int);
   void setVerticalStretch(int);
@@ -60,7 +60,7 @@ class BoxPanel : public BasicPanel {
   CLASS(BoxPanel) SUPER(BasicPanel)
 public:
   BoxPanel(TheHub&, Qt::Orientation);
-  BoxPanel(TheHub&, rcstr title, Qt::Orientation);
+  BoxPanel(TheHub&, qstrc title, Qt::Orientation);
 
   QBoxLayout* box() const { return box_; }
 
@@ -73,7 +73,7 @@ class GridPanel : public BasicPanel {
   CLASS(GridPanel) SUPER(BasicPanel)
 public:
   GridPanel(TheHub&);
-  GridPanel(TheHub&, rcstr title);
+  GridPanel(TheHub&, qstrc title);
 
   GridLayout* grid() const { return grid_; }
 
@@ -111,7 +111,7 @@ class TabsPanel : public QTabWidget, protected RefHub {
 public:
   TabsPanel(TheHub&);
 
-  Tab &addTab(rcstr title, Qt::Orientation);
+  Tab &addTab(qstrc title, Qt::Orientation);
   Tab &tab(uint);
 };
 

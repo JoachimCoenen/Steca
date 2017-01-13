@@ -1607,7 +1607,7 @@ int QCPMarginGroup::commonMargin(QCP::MarginSide side) const
   {
     if (!elements.at(i)->autoMargins().testFlag(side))
       continue;
-    int m = qMax(elements.at(i)->calculateAutoMargin(side), QCP::getMarginValue(elements.at(i)->minimumMargins(), side));
+    int m = c::max(elements.at(i)->calculateAutoMargin(side), QCP::getMarginValue(elements.at(i)->minimumMargins(), side));
     if (m > result)
       result = m;
   }
@@ -2041,7 +2041,7 @@ void QCPLayoutElement::parentPlotInitialized(QCustomPlot *parentPlot)
 */
 int QCPLayoutElement::calculateAutoMargin(QCP::MarginSide side)
 {
-  return qMax(QCP::getMarginValue(mMargins, side), QCP::getMarginValue(mMinimumMargins, side));
+  return c::max(QCP::getMarginValue(mMargins, side), QCP::getMarginValue(mMinimumMargins, side));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2735,7 +2735,7 @@ void QCPLayoutGrid::expandTo(int newRowCount, int newColumnCount)
     mRowStretchFactors.append(1);
   }
   // go through rows and expand columns as necessary:
-  int newColCount = qMax(columnCount(), newColumnCount);
+  int newColCount = c::max(columnCount(), newColumnCount);
   for (int i=0; i<rowCount(); ++i)
   {
     while (mElements.at(i).size() < newColCount)
@@ -2958,8 +2958,8 @@ QSize QCPLayoutGrid::minimumSizeHint() const
     result.rwidth() += minColWidths.at(i);
   for (int i=0; i<minRowHeights.size(); ++i)
     result.rheight() += minRowHeights.at(i);
-  result.rwidth() += qMax(0, columnCount()-1) * mColumnSpacing + mMargins.left() + mMargins.right();
-  result.rheight() += qMax(0, rowCount()-1) * mRowSpacing + mMargins.top() + mMargins.bottom();
+  result.rwidth() += c::max(0, columnCount()-1) * mColumnSpacing + mMargins.left() + mMargins.right();
+  result.rheight() += c::max(0, rowCount()-1) * mRowSpacing + mMargins.top() + mMargins.bottom();
   return result;
 }
 
@@ -2971,11 +2971,11 @@ QSize QCPLayoutGrid::maximumSizeHint() const
 
   QSize result(0, 0);
   for (int i=0; i<maxColWidths.size(); ++i)
-    result.setWidth(qMin(result.width()+maxColWidths.at(i), QWIDGETSIZE_MAX));
+    result.setWidth(c::min(result.width()+maxColWidths.at(i), QWIDGETSIZE_MAX));
   for (int i=0; i<maxRowHeights.size(); ++i)
-    result.setHeight(qMin(result.height()+maxRowHeights.at(i), QWIDGETSIZE_MAX));
-  result.rwidth() += qMax(0, columnCount()-1) * mColumnSpacing + mMargins.left() + mMargins.right();
-  result.rheight() += qMax(0, rowCount()-1) * mRowSpacing + mMargins.top() + mMargins.bottom();
+    result.setHeight(c::min(result.height()+maxRowHeights.at(i), QWIDGETSIZE_MAX));
+  result.rwidth() += c::max(0, columnCount()-1) * mColumnSpacing + mMargins.left() + mMargins.right();
+  result.rheight() += c::max(0, rowCount()-1) * mRowSpacing + mMargins.top() + mMargins.bottom();
   return result;
 }
 
@@ -3635,8 +3635,8 @@ void QCPLineEnding::draw(QCPPainter *painter, const QVector2D &pos, const QVecto
       } else
       {
         // if drawing with thick (non-cosmetic) pen, shift bar a little in line direction to prevent line from sticking through bar slightly
-        painter->drawLine((pos+widthVec+lengthVec*0.2f*(mInverted?-1:1)+dir.normalized()*qMax(1.0f, (float)painter->pen().widthF())*0.5f).toPointF(),
-                          (pos-widthVec-lengthVec*0.2f*(mInverted?-1:1)+dir.normalized()*qMax(1.0f, (float)painter->pen().widthF())*0.5f).toPointF());
+        painter->drawLine((pos+widthVec+lengthVec*0.2f*(mInverted?-1:1)+dir.normalized()*c::max(1.0f, (float)painter->pen().widthF())*0.5f).toPointF(),
+                          (pos-widthVec-lengthVec*0.2f*(mInverted?-1:1)+dir.normalized()*c::max(1.0f, (float)painter->pen().widthF())*0.5f).toPointF());
       }
       break;
     }
@@ -4607,7 +4607,7 @@ void QCPAxis::setTickLabelRotation(double degrees)
 {
   if (!qFuzzyIsNull(degrees-mAxisPainter->tickLabelRotation))
   {
-    mAxisPainter->tickLabelRotation = qBound(-90.0, degrees, 90.0);
+    mAxisPainter->tickLabelRotation = c::bound(-90.0, degrees, 90.0);
     mCachedMarginValid = false;
   }
 }
@@ -6169,7 +6169,7 @@ void QCPAxisPainterPrivate::draw(QCPPainter *painter)
         painter->drawLine(QLineF(origin.x()-subTickLengthOut*tickDir+xCor, subTickPositions.at(i)+yCor, origin.x()+subTickLengthIn*tickDir+xCor, subTickPositions.at(i)+yCor));
     }
   }
-  margin += qMax(0, qMax(tickLengthOut, subTickLengthOut));
+  margin += c::max(0, c::max(tickLengthOut, subTickLengthOut));
 
   // draw axis base endings:
   bool antialiasingBackup = painter->antialiasing();
@@ -6196,10 +6196,10 @@ void QCPAxisPainterPrivate::draw(QCPPainter *painter)
       margin += tickLabelPadding;
     painter->setFont(tickLabelFont);
     painter->setPen(QPen(tickLabelColor));
-    const int maxLabelIndex = qMin(tickPositions.size(), tickLabels.size());
+    const int maxLabelIndex = c::min(tickPositions.size(), tickLabels.size());
     int distanceToAxis = margin;
     if (tickLabelSide == QCPAxis::lsInside)
-      distanceToAxis = -(qMax(tickLengthIn, subTickLengthIn)+tickLabelPadding);
+      distanceToAxis = -(c::max(tickLengthIn, subTickLengthIn)+tickLabelPadding);
     for (int i=0; i<maxLabelIndex; ++i)
       placeTickLabel(painter, tickPositions.at(i), distanceToAxis, tickLabels.at(i), &tickLabelsSize);
     if (tickLabelSide == QCPAxis::lsOutside)
@@ -6244,21 +6244,21 @@ void QCPAxisPainterPrivate::draw(QCPPainter *painter)
     selectionTolerance = mParentPlot->selectionTolerance();
   else
     qDebug() << Q_FUNC_INFO << "mParentPlot is null";
-  int selAxisOutSize = qMax(qMax(tickLengthOut, subTickLengthOut), selectionTolerance);
+  int selAxisOutSize = c::max(c::max(tickLengthOut, subTickLengthOut), selectionTolerance);
   int selAxisInSize = selectionTolerance;
   int selTickLabelSize;
   int selTickLabelOffset;
   if (tickLabelSide == QCPAxis::lsOutside)
   {
     selTickLabelSize = (QCPAxis::orientation(type) == Qt::Horizontal ? tickLabelsSize.height() : tickLabelsSize.width());
-    selTickLabelOffset = qMax(tickLengthOut, subTickLengthOut)+tickLabelPadding;
+    selTickLabelOffset = c::max(tickLengthOut, subTickLengthOut)+tickLabelPadding;
   } else
   {
     selTickLabelSize = -(QCPAxis::orientation(type) == Qt::Horizontal ? tickLabelsSize.height() : tickLabelsSize.width());
-    selTickLabelOffset = -(qMax(tickLengthIn, subTickLengthIn)+tickLabelPadding);
+    selTickLabelOffset = -(c::max(tickLengthIn, subTickLengthIn)+tickLabelPadding);
   }
   int selLabelSize = labelBounds.height();
-  int selLabelOffset = qMax(tickLengthOut, subTickLengthOut)+(!tickLabels.isEmpty() && tickLabelSide == QCPAxis::lsOutside ? tickLabelPadding+selTickLabelSize : 0)+labelPadding;
+  int selLabelOffset = c::max(tickLengthOut, subTickLengthOut)+(!tickLabels.isEmpty() && tickLabelSide == QCPAxis::lsOutside ? tickLabelPadding+selTickLabelSize : 0)+labelPadding;
   if (type == QCPAxis::atLeft)
   {
     mAxisSelectionBox.setCoords(origin.x()-selAxisOutSize, axisRect.top(), origin.x()+selAxisInSize, axisRect.bottom());
@@ -6299,7 +6299,7 @@ int QCPAxisPainterPrivate::size() const
 
   // get length of tick marks pointing outwards:
   if (!tickPositions.isEmpty())
-    result += qMax(0, qMax(tickLengthOut, subTickLengthOut));
+    result += c::max(0, c::max(tickLengthOut, subTickLengthOut));
 
   // calculate size of tick labels:
   if (tickLabelSide == QCPAxis::lsOutside)
@@ -6329,7 +6329,7 @@ int QCPAxisPainterPrivate::size() const
 /*! \internal
 
   Clears the internal label cache. Upon the next \ref draw, all labels will be created new. This
-  method is called automatically in \ref draw, if any parameters have changed that invalidate the
+  method is called automatically in \ref draw, if any parameters have changed that undef the
   cached labels, such as font, color, etc.
 */
 void QCPAxisPainterPrivate::clearCache()
@@ -12793,7 +12793,7 @@ void QCPPlottableLegendItem::draw(QCPPainter *painter)
   QSizeF iconSize = mParentLegend->iconSize();
   QRectF textRect = painter->fontMetrics().boundingRect(0, 0, 0, iconSize.height(), Qt::TextDontClip, mPlottable->name());
   QRectF iconRect(mRect.topLeft(), iconSize);
-  int textHeight = qMax(textRect.height(), iconSize.height());  // if text has smaller height than icon, center text vertically in icon height, else align tops
+  int textHeight = c::max(textRect.height(), iconSize.height());  // if text has smaller height than icon, center text vertically in icon height, else align tops
   painter->drawText(mRect.x()+iconSize.width()+mParentLegend->iconTextPadding(), mRect.y(), textRect.width(), textHeight, Qt::TextDontClip, mPlottable->name());
   // draw icon:
   painter->save();
@@ -12823,7 +12823,7 @@ QSize QCPPlottableLegendItem::minimumSizeHint() const
   QSize iconSize = mParentLegend->iconSize();
   textRect = fontMetrics.boundingRect(0, 0, 0, iconSize.height(), Qt::TextDontClip, mPlottable->name());
   result.setWidth(iconSize.width() + mParentLegend->iconTextPadding() + textRect.width() + mMargins.left() + mMargins.right());
-  result.setHeight(qMax(textRect.height(), iconSize.height()) + mMargins.top() + mMargins.bottom());
+  result.setHeight(c::max(textRect.height(), iconSize.height()) + mMargins.top() + mMargins.bottom());
   return result;
 }
 
@@ -14464,7 +14464,7 @@ void QCPGraph::setData(const QVector<double> &key, const QVector<double> &value)
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
+  n = c::min(n, value.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14487,8 +14487,8 @@ void QCPGraph::setDataValueError(const QVector<double> &key, const QVector<doubl
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, valueError.size());
+  n = c::min(n, value.size());
+  n = c::min(n, valueError.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14513,9 +14513,9 @@ void QCPGraph::setDataValueError(const QVector<double> &key, const QVector<doubl
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, valueErrorMinus.size());
-  n = qMin(n, valueErrorPlus.size());
+  n = c::min(n, value.size());
+  n = c::min(n, valueErrorMinus.size());
+  n = c::min(n, valueErrorPlus.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14540,8 +14540,8 @@ void QCPGraph::setDataKeyError(const QVector<double> &key, const QVector<double>
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, keyError.size());
+  n = c::min(n, value.size());
+  n = c::min(n, keyError.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14566,9 +14566,9 @@ void QCPGraph::setDataKeyError(const QVector<double> &key, const QVector<double>
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, keyErrorMinus.size());
-  n = qMin(n, keyErrorPlus.size());
+  n = c::min(n, value.size());
+  n = c::min(n, keyErrorMinus.size());
+  n = c::min(n, keyErrorPlus.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14593,9 +14593,9 @@ void QCPGraph::setDataBothError(const QVector<double> &key, const QVector<double
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, valueError.size());
-  n = qMin(n, keyError.size());
+  n = c::min(n, value.size());
+  n = c::min(n, valueError.size());
+  n = c::min(n, keyError.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14622,11 +14622,11 @@ void QCPGraph::setDataBothError(const QVector<double> &key, const QVector<double
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
-  n = qMin(n, valueErrorMinus.size());
-  n = qMin(n, valueErrorPlus.size());
-  n = qMin(n, keyErrorMinus.size());
-  n = qMin(n, keyErrorPlus.size());
+  n = c::min(n, value.size());
+  n = c::min(n, valueErrorMinus.size());
+  n = c::min(n, valueErrorPlus.size());
+  n = c::min(n, keyErrorMinus.size());
+  n = c::min(n, keyErrorPlus.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -14826,7 +14826,7 @@ void QCPGraph::addData(double key, double value)
 */
 void QCPGraph::addData(const QVector<double> &keys, const QVector<double> &values)
 {
-  int n = qMin(keys.size(), values.size());
+  int n = c::min(keys.size(), values.size());
   QCPData newData;
   for (int i=0; i<n; ++i)
   {
@@ -15460,12 +15460,12 @@ void QCPGraph::drawScatterPlot(QCPPainter *painter, QVector<QCPData> *scatterDat
   if (keyAxis->orientation() == Qt::Vertical)
   {
     for (int i=0; i<scatterData->size(); ++i)
-      if (!qIsNaN(scatterData->at(i).value))
+      if (!isnan(scatterData->at(i).value))
         mScatterStyle.drawShape(painter, valueAxis->coordToPixel(scatterData->at(i).value), keyAxis->coordToPixel(scatterData->at(i).key));
   } else
   {
     for (int i=0; i<scatterData->size(); ++i)
-      if (!qIsNaN(scatterData->at(i).value))
+      if (!isnan(scatterData->at(i).value))
         mScatterStyle.drawShape(painter, keyAxis->coordToPixel(scatterData->at(i).key), valueAxis->coordToPixel(scatterData->at(i).value));
   }
 }
@@ -15492,7 +15492,7 @@ void QCPGraph::drawLinePlot(QCPPainter *painter, QVector<QPointF> *lineData) con
     int p = 0;
     while (p < lineData->size())
     {
-      int batch = qMin(25, lineData->size()-p);
+      int batch = c::min(25, lineData->size()-p);
       if (p != 0)
       {
         ++batch;
@@ -15512,12 +15512,12 @@ void QCPGraph::drawLinePlot(QCPPainter *painter, QVector<QPointF> *lineData) con
       int i = 0;
       bool lastIsNan = false;
       const int lineDataSize = lineData->size();
-      while (i < lineDataSize && (qIsNaN(lineData->at(i).y()) || qIsNaN(lineData->at(i).x()))) // make sure first point is not NaN
+      while (i < lineDataSize && (isnan(lineData->at(i).y()) || isnan(lineData->at(i).x()))) // make sure first point is not NaN
         ++i;
       ++i; // because drawing works in 1 point retrospect
       while (i < lineDataSize)
       {
-        if (!qIsNaN(lineData->at(i).y()) && !qIsNaN(lineData->at(i).x())) // NaNs create a gap in the line
+        if (!isnan(lineData->at(i).y()) && !isnan(lineData->at(i).x())) // NaNs create a gap in the line
         {
           if (!lastIsNan)
             painter->drawLine(lineData->at(i-1), lineData->at(i));
@@ -15534,7 +15534,7 @@ void QCPGraph::drawLinePlot(QCPPainter *painter, QVector<QPointF> *lineData) con
       const int lineDataSize = lineData->size();
       while (i < lineDataSize)
       {
-        if (qIsNaN(lineData->at(i).y()) || qIsNaN(lineData->at(i).x())) // NaNs create a gap in the line
+        if (isnan(lineData->at(i).y()) || isnan(lineData->at(i).x())) // NaNs create a gap in the line
         {
           painter->drawPolyline(lineData->constData()+segmentStart, i-segmentStart); // i, because we don't want to include the current NaN point
           segmentStart = i+1;
@@ -15698,7 +15698,7 @@ void QCPGraph::getPreparedData(QVector<QCPData> *lineData, QVector<QCPData> *sca
           {
             // determine value pixel span and add as many points in interval to maintain certain vertical data density (this is specific to scatter plot):
             double valuePixelSpan = qAbs(valueAxis->coordToPixel(minValue)-valueAxis->coordToPixel(maxValue));
-            int dataModulo = qMax(1, qRound(intervalDataCount/(valuePixelSpan/4.0))); // approximately every 4 value pixels one data point on average
+            int dataModulo = c::max(1, qRound(intervalDataCount/(valuePixelSpan/4.0))); // approximately every 4 value pixels one data point on average
             QCPDataMap::const_iterator intervalIt = currentIntervalStart;
             int c = 0;
             while (intervalIt != it)
@@ -15725,7 +15725,7 @@ void QCPGraph::getPreparedData(QVector<QCPData> *lineData, QVector<QCPData> *sca
       {
         // determine value pixel span and add as many points in interval to maintain certain vertical data density (this is specific to scatter plot):
         double valuePixelSpan = qAbs(valueAxis->coordToPixel(minValue)-valueAxis->coordToPixel(maxValue));
-        int dataModulo = qMax(1, qRound(intervalDataCount/(valuePixelSpan/4.0))); // approximately every 4 value pixels one data point on average
+        int dataModulo = c::max(1, qRound(intervalDataCount/(valuePixelSpan/4.0))); // approximately every 4 value pixels one data point on average
         QCPDataMap::const_iterator intervalIt = currentIntervalStart;
         int c = 0;
         while (intervalIt != it)
@@ -15770,7 +15770,7 @@ void QCPGraph::getPreparedData(QVector<QCPData> *lineData, QVector<QCPData> *sca
 */
 void QCPGraph::drawError(QCPPainter *painter, double x, double y, const QCPData &data) const
 {
-  if (qIsNaN(data.value))
+  if (isnan(data.value))
     return;
   QCPAxis *keyAxis = mKeyAxis.data();
   QCPAxis *valueAxis = mValueAxis.data();
@@ -16433,7 +16433,7 @@ QCPRange QCPGraph::getKeyRange(bool &foundRange, SignDomain inSignDomain, bool i
     QCPDataMap::const_iterator it = mData->constBegin();
     while (it != mData->constEnd())
     {
-      if (!qIsNaN(it.value().value))
+      if (!isnan(it.value().value))
       {
         current = it.value().key;
         currentErrorMinus = (includeErrors ? it.value().keyErrorMinus : 0);
@@ -16456,7 +16456,7 @@ QCPRange QCPGraph::getKeyRange(bool &foundRange, SignDomain inSignDomain, bool i
     QCPDataMap::const_iterator it = mData->constBegin();
     while (it != mData->constEnd())
     {
-      if (!qIsNaN(it.value().value))
+      if (!isnan(it.value().value))
       {
         current = it.value().key;
         currentErrorMinus = (includeErrors ? it.value().keyErrorMinus : 0);
@@ -16492,7 +16492,7 @@ QCPRange QCPGraph::getKeyRange(bool &foundRange, SignDomain inSignDomain, bool i
     QCPDataMap::const_iterator it = mData->constBegin();
     while (it != mData->constEnd())
     {
-      if (!qIsNaN(it.value().value))
+      if (!isnan(it.value().value))
       {
         current = it.value().key;
         currentErrorMinus = (includeErrors ? it.value().keyErrorMinus : 0);
@@ -16549,7 +16549,7 @@ QCPRange QCPGraph::getValueRange(bool &foundRange, SignDomain inSignDomain, bool
     while (it != mData->constEnd())
     {
       current = it.value().value;
-      if (!qIsNaN(current))
+      if (!isnan(current))
       {
         currentErrorMinus = (includeErrors ? it.value().valueErrorMinus : 0);
         currentErrorPlus = (includeErrors ? it.value().valueErrorPlus : 0);
@@ -16572,7 +16572,7 @@ QCPRange QCPGraph::getValueRange(bool &foundRange, SignDomain inSignDomain, bool
     while (it != mData->constEnd())
     {
       current = it.value().value;
-      if (!qIsNaN(current))
+      if (!isnan(current))
       {
         currentErrorMinus = (includeErrors ? it.value().valueErrorMinus : 0);
         currentErrorPlus = (includeErrors ? it.value().valueErrorPlus : 0);
@@ -16608,7 +16608,7 @@ QCPRange QCPGraph::getValueRange(bool &foundRange, SignDomain inSignDomain, bool
     while (it != mData->constEnd())
     {
       current = it.value().value;
-      if (!qIsNaN(current))
+      if (!isnan(current))
       {
         currentErrorMinus = (includeErrors ? it.value().valueErrorMinus : 0);
         currentErrorPlus = (includeErrors ? it.value().valueErrorPlus : 0);
@@ -16782,8 +16782,8 @@ void QCPCurve::setData(const QVector<double> &t, const QVector<double> &key, con
 {
   mData->clear();
   int n = t.size();
-  n = qMin(n, key.size());
-  n = qMin(n, value.size());
+  n = c::min(n, key.size());
+  n = c::min(n, value.size());
   QCPCurveData newData;
   for (int i=0; i<n; ++i)
   {
@@ -16803,7 +16803,7 @@ void QCPCurve::setData(const QVector<double> &key, const QVector<double> &value)
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
+  n = c::min(n, value.size());
   QCPCurveData newData;
   for (int i=0; i<n; ++i)
   {
@@ -16896,8 +16896,8 @@ void QCPCurve::addData(double key, double value)
 void QCPCurve::addData(const QVector<double> &ts, const QVector<double> &keys, const QVector<double> &values)
 {
   int n = ts.size();
-  n = qMin(n, keys.size());
-  n = qMin(n, values.size());
+  n = c::min(n, keys.size());
+  n = c::min(n, values.size());
   QCPCurveData newData;
   for (int i=0; i<n; ++i)
   {
@@ -17030,12 +17030,12 @@ void QCPCurve::draw(QCPPainter *painter)
       int i = 0;
       bool lastIsNan = false;
       const int lineDataSize = lineData->size();
-      while (i < lineDataSize && (qIsNaN(lineData->at(i).y()) || qIsNaN(lineData->at(i).x()))) // make sure first point is not NaN
+      while (i < lineDataSize && (isnan(lineData->at(i).y()) || isnan(lineData->at(i).x()))) // make sure first point is not NaN
         ++i;
       ++i; // because drawing works in 1 point retrospect
       while (i < lineDataSize)
       {
-        if (!qIsNaN(lineData->at(i).y()) && !qIsNaN(lineData->at(i).x())) // NaNs create a gap in the line
+        if (!isnan(lineData->at(i).y()) && !isnan(lineData->at(i).x())) // NaNs create a gap in the line
         {
           if (!lastIsNan)
             painter->drawLine(lineData->at(i-1), lineData->at(i));
@@ -17052,7 +17052,7 @@ void QCPCurve::draw(QCPPainter *painter)
       const int lineDataSize = lineData->size();
       while (i < lineDataSize)
       {
-        if (qIsNaN(lineData->at(i).y()) || qIsNaN(lineData->at(i).x())) // NaNs create a gap in the line
+        if (isnan(lineData->at(i).y()) || isnan(lineData->at(i).x())) // NaNs create a gap in the line
         {
           painter->drawPolyline(lineData->constData()+segmentStart, i-segmentStart); // i, because we don't want to include the current NaN point
           segmentStart = i+1;
@@ -17118,7 +17118,7 @@ void QCPCurve::drawScatterPlot(QCPPainter *painter, const QVector<QPointF> *poin
   applyScattersAntialiasingHint(painter);
   mScatterStyle.applyTo(painter, mPen);
   for (int i=0; i<pointData->size(); ++i)
-    if (!qIsNaN(pointData->at(i).x()) && !qIsNaN(pointData->at(i).y()))
+    if (!isnan(pointData->at(i).x()) && !isnan(pointData->at(i).y()))
       mScatterStyle.drawShape(painter,  pointData->at(i));
 }
 
@@ -17142,9 +17142,9 @@ void QCPCurve::getCurveData(QVector<QPointF> *lineData) const
   if (!keyAxis || !valueAxis) { qDebug() << Q_FUNC_INFO << "invalid key or value axis"; return; }
 
   // add margins to rect to compensate for stroke width
-  double strokeMargin = qMax(qreal(1.0), qreal(mainPen().widthF()*0.75)); // stroke radius + 50% safety
+  double strokeMargin = c::max(real(1.0), real(mainPen().widthF()*0.75)); // stroke radius + 50% safety
   if (!mScatterStyle.isNone())
-    strokeMargin = qMax(strokeMargin, mScatterStyle.size());
+    strokeMargin = c::max(strokeMargin, mScatterStyle.size());
   double rectLeft = keyAxis->pixelToCoord(keyAxis->coordToPixel(keyAxis->range().lower)-strokeMargin*((keyAxis->orientation()==Qt::Vertical)!=keyAxis->rangeReversed()?-1:1));
   double rectRight = keyAxis->pixelToCoord(keyAxis->coordToPixel(keyAxis->range().upper)+strokeMargin*((keyAxis->orientation()==Qt::Vertical)!=keyAxis->rangeReversed()?-1:1));
   double rectBottom = valueAxis->pixelToCoord(valueAxis->coordToPixel(valueAxis->range().lower)+strokeMargin*((valueAxis->orientation()==Qt::Horizontal)!=valueAxis->rangeReversed()?-1:1));
@@ -17869,7 +17869,7 @@ QCPRange QCPCurve::getKeyRange(bool &foundRange, SignDomain inSignDomain) const
   while (it != mData->constEnd())
   {
     current = it.value().key;
-    if (!qIsNaN(current) && !qIsNaN(it.value().value))
+    if (!isnan(current) && !isnan(it.value().value))
     {
       if (inSignDomain == sdBoth || (inSignDomain == sdNegative && current < 0) || (inSignDomain == sdPositive && current > 0))
       {
@@ -17905,7 +17905,7 @@ QCPRange QCPCurve::getValueRange(bool &foundRange, SignDomain inSignDomain) cons
   while (it != mData->constEnd())
   {
     current = it.value().value;
-    if (!qIsNaN(current) && !qIsNaN(it.value().key))
+    if (!isnan(current) && !isnan(it.value().key))
     {
       if (inSignDomain == sdBoth || (inSignDomain == sdNegative && current < 0) || (inSignDomain == sdPositive && current > 0))
       {
@@ -18106,7 +18106,7 @@ void QCPBarsGroup::insert(int i, QCPBars *bars)
   if (!mBars.contains(bars))
     bars->setBarsGroup(this);
   // then move to according position:
-  mBars.move(mBars.indexOf(bars), qBound(0, i, mBars.size()-1));
+  mBars.move(mBars.indexOf(bars), c::bound(0, i, mBars.size()-1));
 }
 
 /*!
@@ -18489,7 +18489,7 @@ void QCPBars::setData(const QVector<double> &key, const QVector<double> &value)
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, value.size());
+  n = c::min(n, value.size());
   QCPBarData newData;
   for (int i=0; i<n; ++i)
   {
@@ -18602,7 +18602,7 @@ void QCPBars::addData(double key, double value)
 void QCPBars::addData(const QVector<double> &keys, const QVector<double> &values)
 {
   int n = keys.size();
-  n = qMin(n, values.size());
+  n = c::min(n, values.size());
   QCPBarData newData;
   for (int i=0; i<n; ++i)
   {
@@ -20613,10 +20613,10 @@ void QCPFinancial::setData(const QVector<double> &key, const QVector<double> &op
 {
   mData->clear();
   int n = key.size();
-  n = qMin(n, open.size());
-  n = qMin(n, high.size());
-  n = qMin(n, low.size());
-  n = qMin(n, close.size());
+  n = c::min(n, open.size());
+  n = c::min(n, high.size());
+  n = c::min(n, low.size());
+  n = c::min(n, close.size());
   for (int i=0; i<n; ++i)
   {
     mData->insertMulti(key[i], QCPFinancialData(key[i], open[i], high[i], low[i], close[i]));
@@ -20765,10 +20765,10 @@ void QCPFinancial::addData(double key, double open, double high, double low, dou
 void QCPFinancial::addData(const QVector<double> &key, const QVector<double> &open, const QVector<double> &high, const QVector<double> &low, const QVector<double> &close)
 {
   int n = key.size();
-  n = qMin(n, open.size());
-  n = qMin(n, high.size());
-  n = qMin(n, low.size());
-  n = qMin(n, close.size());
+  n = c::min(n, open.size());
+  n = c::min(n, high.size());
+  n = c::min(n, low.size());
+  n = c::min(n, close.size());
   for (int i=0; i<n; ++i)
   {
     mData->insertMulti(key[i], QCPFinancialData(key[i], open[i], high[i], low[i], close[i]));
@@ -20882,7 +20882,7 @@ double QCPFinancial::selectTest(const QPointF &pos, bool onlySelectable, QVarian
 QCPFinancialDataMap QCPFinancial::timeSeriesToOhlc(const QVector<double> &time, const QVector<double> &value, double timeBinSize, double timeBinOffset)
 {
   QCPFinancialDataMap map;
-  int count = qMin(time.size(), value.size());
+  int count = c::min(time.size(), value.size());
   if (count == 0)
     return QCPFinancialDataMap();
 
@@ -21183,9 +21183,9 @@ void QCPFinancial::drawCandlestickPlot(QCPPainter *painter, const QCPFinancialDa
       double openPixel = valueAxis->coordToPixel(it.value().open);
       double closePixel = valueAxis->coordToPixel(it.value().close);
       // draw high:
-      painter->drawLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().high)), QPointF(keyPixel, valueAxis->coordToPixel(qMax(it.value().open, it.value().close))));
+      painter->drawLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().high)), QPointF(keyPixel, valueAxis->coordToPixel(c::max(it.value().open, it.value().close))));
       // draw low:
-      painter->drawLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().low)), QPointF(keyPixel, valueAxis->coordToPixel(qMin(it.value().open, it.value().close))));
+      painter->drawLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().low)), QPointF(keyPixel, valueAxis->coordToPixel(c::min(it.value().open, it.value().close))));
       // draw open-close box:
       double keyWidthPixels = keyPixel-keyAxis->coordToPixel(it.value().key-mWidth*0.5);
       painter->drawRect(QRectF(QPointF(keyPixel-keyWidthPixels, closePixel), QPointF(keyPixel+keyWidthPixels, openPixel)));
@@ -21220,9 +21220,9 @@ void QCPFinancial::drawCandlestickPlot(QCPPainter *painter, const QCPFinancialDa
       double openPixel = valueAxis->coordToPixel(it.value().open);
       double closePixel = valueAxis->coordToPixel(it.value().close);
       // draw high:
-      painter->drawLine(QPointF(valueAxis->coordToPixel(it.value().high), keyPixel), QPointF(valueAxis->coordToPixel(qMax(it.value().open, it.value().close)), keyPixel));
+      painter->drawLine(QPointF(valueAxis->coordToPixel(it.value().high), keyPixel), QPointF(valueAxis->coordToPixel(c::max(it.value().open, it.value().close)), keyPixel));
       // draw low:
-      painter->drawLine(QPointF(valueAxis->coordToPixel(it.value().low), keyPixel), QPointF(valueAxis->coordToPixel(qMin(it.value().open, it.value().close)), keyPixel));
+      painter->drawLine(QPointF(valueAxis->coordToPixel(it.value().low), keyPixel), QPointF(valueAxis->coordToPixel(c::min(it.value().open, it.value().close)), keyPixel));
       // draw open-close box:
       double keyWidthPixels = keyPixel-keyAxis->coordToPixel(it.value().key-mWidth*0.5);
       painter->drawRect(QRectF(QPointF(closePixel, keyPixel-keyWidthPixels), QPointF(openPixel, keyPixel+keyWidthPixels)));
@@ -21298,9 +21298,9 @@ double QCPFinancial::candlestickSelectTest(const QPointF &pos, const QCPFinancia
       {
         // calculate distance to high/low lines:
         double keyPixel = keyAxis->coordToPixel(it.value().key);
-        double highLineDistSqr = distSqrToLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().high)), QPointF(keyPixel, valueAxis->coordToPixel(qMax(it.value().open, it.value().close))), pos);
-        double lowLineDistSqr = distSqrToLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().low)), QPointF(keyPixel, valueAxis->coordToPixel(qMin(it.value().open, it.value().close))), pos);
-        currentDistSqr = qMin(highLineDistSqr, lowLineDistSqr);
+        double highLineDistSqr = distSqrToLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().high)), QPointF(keyPixel, valueAxis->coordToPixel(c::max(it.value().open, it.value().close))), pos);
+        double lowLineDistSqr = distSqrToLine(QPointF(keyPixel, valueAxis->coordToPixel(it.value().low)), QPointF(keyPixel, valueAxis->coordToPixel(c::min(it.value().open, it.value().close))), pos);
+        currentDistSqr = c::min(highLineDistSqr, lowLineDistSqr);
       }
       if (currentDistSqr < minDistSqr)
         minDistSqr = currentDistSqr;
@@ -21322,9 +21322,9 @@ double QCPFinancial::candlestickSelectTest(const QPointF &pos, const QCPFinancia
       {
         // calculate distance to high/low lines:
         double keyPixel = keyAxis->coordToPixel(it.value().key);
-        double highLineDistSqr = distSqrToLine(QPointF(valueAxis->coordToPixel(it.value().high), keyPixel), QPointF(valueAxis->coordToPixel(qMax(it.value().open, it.value().close)), keyPixel), pos);
-        double lowLineDistSqr = distSqrToLine(QPointF(valueAxis->coordToPixel(it.value().low), keyPixel), QPointF(valueAxis->coordToPixel(qMin(it.value().open, it.value().close)), keyPixel), pos);
-        currentDistSqr = qMin(highLineDistSqr, lowLineDistSqr);
+        double highLineDistSqr = distSqrToLine(QPointF(valueAxis->coordToPixel(it.value().high), keyPixel), QPointF(valueAxis->coordToPixel(c::max(it.value().open, it.value().close)), keyPixel), pos);
+        double lowLineDistSqr = distSqrToLine(QPointF(valueAxis->coordToPixel(it.value().low), keyPixel), QPointF(valueAxis->coordToPixel(c::min(it.value().open, it.value().close)), keyPixel), pos);
+        currentDistSqr = c::min(highLineDistSqr, lowLineDistSqr);
       }
       if (currentDistSqr < minDistSqr)
         minDistSqr = currentDistSqr;
@@ -21657,8 +21657,8 @@ void QCPItemLine::draw(QCPPainter *painter)
   if (startVec.toPoint() == endVec.toPoint())
     return;
   // get visible segment of straight line inside clipRect:
-  double clipPad = qMax(mHead.boundingDistance(), mTail.boundingDistance());
-  clipPad = qMax(clipPad, (double)mainPen().widthF());
+  double clipPad = c::max(mHead.boundingDistance(), mTail.boundingDistance());
+  clipPad = c::max(clipPad, (double)mainPen().widthF());
   QLineF line = getRectClippedLine(startVec, endVec, clipRect().adjusted(-clipPad, -clipPad, clipPad, clipPad));
   // paint visible segment, if existent:
   if (!line.isNull())
@@ -23060,13 +23060,13 @@ double QCPItemTracer::selectTest(const QPointF &pos, bool onlySelectable, QVaria
     case tsPlus:
     {
       if (clipRect().intersects(QRectF(center-QPointF(w, w), center+QPointF(w, w)).toRect()))
-        return qSqrt(qMin(distSqrToLine(center+QPointF(-w, 0), center+QPointF(w, 0), pos),
+        return qSqrt(c::min(distSqrToLine(center+QPointF(-w, 0), center+QPointF(w, 0), pos),
                           distSqrToLine(center+QPointF(0, -w), center+QPointF(0, w), pos)));
       break;
     }
     case tsCrosshair:
     {
-      return qSqrt(qMin(distSqrToLine(QPointF(clip.left(), center.y()), QPointF(clip.right(), center.y()), pos),
+      return qSqrt(c::min(distSqrToLine(QPointF(clip.left(), center.y()), QPointF(clip.right(), center.y()), pos),
                         distSqrToLine(QPointF(center.x(), clip.top()), QPointF(center.x(), clip.bottom()), pos)));
     }
     case tsCircle:
@@ -23349,7 +23349,7 @@ double QCPItemBracket::selectTest(const QPointF &pos, bool onlySelectable, QVari
       double a = distSqrToLine((centerVec-widthVec).toPointF(), (centerVec+widthVec).toPointF(), pos);
       double b = distSqrToLine((centerVec-widthVec+lengthVec).toPointF(), (centerVec-widthVec).toPointF(), pos);
       double c = distSqrToLine((centerVec+widthVec+lengthVec).toPointF(), (centerVec+widthVec).toPointF(), pos);
-      return qSqrt(qMin(qMin(a, b), c));
+      return qSqrt(c::min(c::min(a, b), c));
     }
     case QCPItemBracket::bsCurly:
     case QCPItemBracket::bsCalligraphic:
@@ -23358,7 +23358,7 @@ double QCPItemBracket::selectTest(const QPointF &pos, bool onlySelectable, QVari
       double b = distSqrToLine((centerVec-widthVec+lengthVec*0.7f).toPointF(), (centerVec-widthVec*0.75f+lengthVec*0.15f).toPointF(), pos);
       double c = distSqrToLine((centerVec+widthVec*0.75f+lengthVec*0.15f).toPointF(), (centerVec+lengthVec*0.3f).toPointF(), pos);
       double d = distSqrToLine((centerVec+widthVec+lengthVec*0.7f).toPointF(), (centerVec+widthVec*0.75f+lengthVec*0.15f).toPointF(), pos);
-      return qSqrt(qMin(qMin(a, b), qMin(c, d)));
+      return qSqrt(c::min(c::min(a, b), c::min(c, d)));
     }
   }
   return -1;

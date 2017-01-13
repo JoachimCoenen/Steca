@@ -438,7 +438,7 @@ QVariant TableModel::data(rcIndex index, int role) const {
 
     if (--indexCol < numCols && indexRow < numRows) {
       QVariant var = rows_.at(to_u(indexRow)).at(to_u(indexCol));
-      if (typ::isNumeric(var) && qIsNaN(var.toDouble()))
+      if (typ::isNumeric(var) && isnan(var.toDouble()))
         var = QVariant(); // hide nans
       return var;
     }
@@ -836,7 +836,7 @@ str TabSave::separator() const {
   return rbDat_->isChecked() ? DAT_SEP : CSV_SEP;
 }
 
-str TabSave::fileSetSuffix(rcstr suffix) {
+str TabSave::fileSetSuffix(qstrc suffix) {
   str file = file_->text().trimmed();
   if (!suffix.isEmpty()) {
     file = QFileInfo(file).completeBaseName();
@@ -851,7 +851,7 @@ str TabSave::fileSetSuffix(rcstr suffix) {
 
 //------------------------------------------------------------------------------
 
-Frame::Frame(TheHub& hub, rcstr title, Params* params, QWidget* parent)
+Frame::Frame(TheHub& hub, qstrc title, Params* params, QWidget* parent)
 : super(parent, Qt::Dialog), RefHub(hub)
 {
   setAttribute(Qt::WA_DeleteOnClose);
@@ -968,11 +968,11 @@ void Frame::interpolate() {
   if (pi) {
     typ::deg alphaStep   = pi->stepAlpha->value();
     typ::deg betaStep    = pi->stepBeta->value();
-    qreal    idwRadius   = pi->idwRadius->value();
+    real    idwRadius   = pi->idwRadius->value();
 
-    qreal    avgRadius   = pi->avgRadius->value();
-    qreal    avgAlphaMax = pi->avgAlphaMax->value();
-    qreal    avgTreshold = pi->avgThreshold->value() / 100.0;
+    real    avgRadius   = pi->avgRadius->value();
+    real    avgAlphaMax = pi->avgAlphaMax->value();
+    real    avgTreshold = pi->avgThreshold->value() / 100.0;
 
     Progress progress(calcPoints_.count(), pb_);
 
@@ -1015,7 +1015,7 @@ bool Frame::getInterpolated() const {
   return pi ? pi->rbInterp->isChecked() : false;
 }
 
-void Frame::logMessage(rcstr msg) const {
+void Frame::logMessage(qstrc msg) const {
   MessageLogger::info(msg);
 }
 
@@ -1026,7 +1026,7 @@ void Frame::logSuccess(bool res) const {
     MessageLogger::popup("The output could not be saved.");
 }
 
-bool Frame::logCheckSuccess(rcstr path, bool res) const {
+bool Frame::logCheckSuccess(qstrc path, bool res) const {
   if (!res)
     MessageLogger::popup(str("'%1' could not be saved.").arg(path));
   return res;

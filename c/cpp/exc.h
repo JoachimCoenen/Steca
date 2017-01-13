@@ -6,29 +6,32 @@
 #include <c/c/lib/str.h>
 #include <exception>
 
-_c_cpp_sub_struct(exc, ::std::exception)
-  _c_var(str,  msg)
-  _c_var(bool, silent)
+#define may_exc  noexcept(false)
+#define will_exc noexcept(false)
+
+_nc_sub_struct (exc, ::std::exception)
+  _var (str,  msg)
+  _var (bool, silent)
 
   exc(strc)          noexcept;
   pcstr what() const noexcept;
 
-  [[noreturn]] static void err(strc) noexcept(false);
-_c_cpp_sub_struct_end
+  [[noreturn]] static void err(strc) will_exc;
+_nc_sub_struct_end
 
 /* TODO
 // An exception that carries a message.
 class Exception : public QException {
   CLASS(Exception) SUPER(QException)
 protected:
-  Exception(rcstr msg, bool silent) noexcept;
+  Exception(qstrc msg, bool silent) noexcept;
 public:
 
   Exception()           noexcept;
-  Exception(rcstr msg)  noexcept;
+  Exception(qstrc msg)  noexcept;
   Exception(rc)         noexcept;
 
-  void setMsg(rcstr);
+  void setMsg(qstrc);
 
   Exception* clone() const;
   void       raise() const;

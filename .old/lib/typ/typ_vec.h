@@ -73,7 +73,7 @@ public:
 }
 
 // most useful vectors (that's why they are in the global namespace)
-typedef typ::vec<qreal> qreal_vec;
+typedef typ::vec<real> qreal_vec;
 typedef typ::vec<uint>  uint_vec;
 
 #endif // TYP_VEC_H

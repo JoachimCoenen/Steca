@@ -22,17 +22,17 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-Action::Action(rcstr text, QObject* parent): super(text,parent) {
+Action::Action(qstrc text, QObject* parent): super(text,parent) {
   setToolTip(text.toLower());
 }
 
-Action& Action::text(rcstr text) {
+Action& Action::text(qstrc text) {
   setText(text);
   tip(text);
   return *this;
 }
 
-Action& Action::tip(rcstr tip) {
+Action& Action::tip(qstrc tip) {
   setToolTip(tip.toLower());
   return *this;
 }
@@ -42,34 +42,34 @@ Action& Action::key(QKeySequence key) {
   return *this;
 }
 
-Action& Action::icon(rcstr iconFile) {
+Action& Action::icon(qstrc iconFile) {
   setIcon(QIcon(iconFile));
   return *this;
 }
 
-Action& Action::alt(rcstr /*text2*/) {
+Action& Action::alt(qstrc /*text2*/) {
   return *this;
 }
 
 //------------------------------------------------------------------------------
 
-TriggerAction::TriggerAction(rcstr text, QObject* parent)
+TriggerAction::TriggerAction(qstrc text, QObject* parent)
 : super(text,parent)
 {
 }
 
 //------------------------------------------------------------------------------
 
-ToggleAction::ToggleAction(rcstr text, QObject* parent)
+ToggleAction::ToggleAction(qstrc text, QObject* parent)
 : super(text,parent), text1_(text)
 {
   setCheckable(true);
 }
 
-Action& ToggleAction::alt(rcstr text2) {
+Action& ToggleAction::alt(qstrc text2) {
   text2_ = text2;
   connect(this,&Cls::toggled,[this](bool on) {
-    rcstr text = on ? text2_ : text1_;
+    qstrc text = on ? text2_ : text1_;
     setText(text);
     setToolTip(text);
   });
@@ -188,11 +188,11 @@ Actions::Actions(TheHub& hub): super(hub) {
   });
 }
 
-Action& Actions::trg(Action* &action, rcstr text) {
+Action& Actions::trg(Action* &action, qstrc text) {
   return *(action = new TriggerAction(text,&hub_));
 }
 
-Action& Actions::tgl(Action* &action, rcstr text) {
+Action& Actions::tgl(Action* &action, qstrc text) {
   return *(action = new ToggleAction(text,&hub_));
 }
 

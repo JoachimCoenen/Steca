@@ -28,7 +28,7 @@ deg::deg(rad r) {
 }
 
 TEST("deg(rad)", ({
-  CHECK_EQ(qreal(deg(rad(M_PI_2))), 90);
+  CHECK_EQ(real(deg(rad(M_PI_2))), 90);
 })
 
 rad deg::toRad() const {
@@ -40,14 +40,14 @@ deg& deg::operator+=(deg const& that) {
   return *this;
 }
 
-deg& deg::operator*=(qreal fac) {
+deg& deg::operator*=(real fac) {
   val_ *= fac;
   return *this;
 }
 
 deg deg::normalized() {
-  static qreal const MAX = 360;
-  qreal norm = fmod(val_, MAX);
+  static real const MAX = 360;
+  real norm = fmod(val_, MAX);
   if (norm < 0) norm += MAX;
   return norm;
 }
@@ -59,7 +59,7 @@ rad::rad(deg d) {
 }
 
 TEST("rad(deg)", ({
-  CHECK_EQ(qreal(rad(deg(90))), M_PI_2);
+  CHECK_EQ(real(rad(deg(90))), M_PI_2);
 })
 
 deg rad::toDeg() const {
@@ -71,7 +71,7 @@ rad& rad::operator+=(rad const& that) {
   return *this;
 }
 
-rad& rad::operator*=(qreal fac) {
+rad& rad::operator*=(real fac) {
   val_ *= fac;
   return *this;
 }

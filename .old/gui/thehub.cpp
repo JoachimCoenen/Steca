@@ -32,7 +32,7 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-Settings::Settings(rcstr group) {
+Settings::Settings(qstrc group) {
   setFallbacksEnabled(false);
   beginGroup(group);
 }
@@ -41,91 +41,91 @@ Settings::~Settings() {
   endGroup();
 }
 
-QVariant Settings::readVariant(rcstr key, const QVariant& def) {
+QVariant Settings::readVariant(qstrc key, const QVariant& def) {
   auto val = value(key, def);
   return val;
 }
 
-void Settings::saveVariant(rcstr key, const QVariant& val) {
+void Settings::saveVariant(qstrc key, const QVariant& val) {
   setValue(key, val);
 }
 
-void Settings::read(rcstr key, QAction* act, bool def) {
+void Settings::read(qstrc key, QAction* act, bool def) {
   EXPECT(act->isCheckable())
   if (act)
       act->setChecked(readVariant(key, def).toBool());
 }
 
-void Settings::save(rcstr key, QAction* act) {
+void Settings::save(qstrc key, QAction* act) {
   EXPECT(act->isCheckable())
   if (act)
       saveVariant(key, act->isChecked());
 }
 
-void Settings::read(rcstr key, QSpinBox* box, int def) {
+void Settings::read(qstrc key, QSpinBox* box, int def) {
   if (box)
     box->setValue(readVariant(key, def).toInt());
 }
 
-void Settings::save(rcstr key, QSpinBox* box) {
+void Settings::save(qstrc key, QSpinBox* box) {
   if (box)
     saveVariant(key, box->value());
 }
 
-void Settings::read(rcstr key, QDoubleSpinBox* box, qreal def) {
+void Settings::read(qstrc key, QDoubleSpinBox* box, real def) {
   if (box)
     box->setValue(readVariant(key, def).toDouble());
 }
 
-void Settings::save(rcstr key, QDoubleSpinBox* box) {
+void Settings::save(qstrc key, QDoubleSpinBox* box) {
   if (box)
     saveVariant(key, box->value());
 }
 
-bool Settings::readBool(rcstr key, bool def) {
+bool Settings::readBool(qstrc key, bool def) {
   return readVariant(key, def).toBool();
 }
 
-void Settings::saveBool(rcstr key, bool val) {
+void Settings::saveBool(qstrc key, bool val) {
   saveVariant(key, val);
 }
 
-qreal Settings::readReal(rcstr key, qreal def) {
+real Settings::readReal(qstrc key, real def) {
   auto var = readVariant(key, QVariant());
-  bool ok; qreal val = var.toDouble(&ok);
+  bool ok; real val = var.toDouble(&ok);
   return ok ? val : def;
 }
 
-void Settings::saveReal(rcstr key, qreal val) {
+void Settings::saveReal(qstrc key, real val) {
   saveVariant(key, val);
 }
 
-int Settings::readInt(rcstr key, int def) {
+int Settings::readInt(qstrc key, int def) {
   auto var = readVariant(key, QVariant());
   bool ok; int val = var.toInt(&ok);
   return ok ? val : def;
 }
 
-void Settings::saveInt(rcstr key, int val) {
+void Settings::saveInt(qstrc key, int val) {
   saveVariant(key, val);
 }
 
-str Settings::readStr(rcstr key, rcstr def) {
+str Settings::readStr(qstrc key, qstrc def) {
   return readVariant(key, def).toString();
 }
 
-void Settings::saveStr(rcstr key, rcstr val) {
+void Settings::saveStr(qstrc key, qstrc val) {
   saveVariant(key, val);
 }
 
 //------------------------------------------------------------------------------
 
-ReadFile::ReadFile(rcstr path) THROWS : super(path) {
+ReadFile::ReadFile(qstrc path) may_exc : super(path) {
   RUNTIME_CHECK(super::open(QIODevice::ReadOnly | QIODevice::Text),
     "Cannot open file for reading: " % path);
 }
 
-WriteFile::WriteFile(rcstr path) THROWS : super(path) {
+WriteFile::WriteFile(qstrc path) may_exc : super(path) {
   if (super::exists()) {
     if (QMessageBox::Yes != QMessageBox::question(nullptr,
         "File exists", "Overwrite " % path % " ?"))
@@ -306,14 +306,14 @@ void TheHub::clearSession() {
   tellSessionCleared();
 }
 
-void TheHub::loadSession(QFileInfo const& fileInfo) THROWS {
+void TheHub::loadSession(QFileInfo const& fileInfo) may_exc {
   ReadFile file(fileInfo.absoluteFilePath());
 
   QDir::setCurrent(fileInfo.absolutePath());
   loadSession(file.readAll());
 }
 
-void TheHub::loadSession(QByteArray const& json) THROWS {
+void TheHub::loadSession(QByteArray const& json) may_exc {
   QJsonParseError parseError;
   QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
   RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
@@ -337,7 +337,7 @@ void TheHub::loadSession(QByteArray const& json) THROWS {
   auto sels = top.loadArr(config_key::SELECTED_FILES, true);
   uint_vec selIndexes;
   for (auto sel : sels) {
-    int i = sel.toInt(), index = qBound(0, i, to_i(files.count()));
+    int i = sel.toInt(), index = c::bound(0, i, to_i(files.count()));
     RUNTIME_CHECK(i == index, str("Invalid selection index: %1").arg(i));
     selIndexes.append(to_u(index));
   }
@@ -380,7 +380,7 @@ void TheHub::loadSession(QByteArray const& json) THROWS {
   emit sigReflectionsChanged();
 }
 
-void TheHub::addFile(rcstr filePath) THROWS {
+void TheHub::addFile(qstrc filePath) may_exc {
   if (!filePath.isEmpty() && !session_->hasFile(filePath)) {
     {
       TakesLongTime __;
@@ -391,7 +391,7 @@ void TheHub::addFile(rcstr filePath) THROWS {
   }
 }
 
-void TheHub::addFiles(str_lst::rc filePaths) THROWS {
+void TheHub::addFiles(str_lst::rc filePaths) may_exc {
   TakesLongTime __;
 
   for (auto& filePath : filePaths)
@@ -417,7 +417,7 @@ gma_rge TheHub::collectedDatasetsRgeGma() const {
   return collectedDatasets().rgeGma(*session_);
 }
 
-void TheHub::setCorrFile(rcstr filePath) THROWS {
+void TheHub::setCorrFile(qstrc filePath) may_exc {
   data::shp_File file;
   if (!filePath.isEmpty()) file = io::load(filePath);
 

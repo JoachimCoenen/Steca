@@ -15,10 +15,30 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <gui/app/app.h>
+#ifndef CORE_XY_H
+#define CORE_XY_H
 
-int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
+#include <c/c/h>
+
+namespace core {
+//------------------------------------------------------------------------------
+// 2D point, reals
+
+_struct (XY)
+
+  _var (real, x)
+  _var (real, y)
+
+  XY();               // undef'd
+  XY(real, real);
+
+  COMPARABLE EQ_NE
+
+  void undef();       // make NaN
+  bool isDef() const; // is not NaN
+
+_struct_end
+
+//------------------------------------------------------------------------------
 }
-
-// eof
+#endif

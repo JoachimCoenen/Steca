@@ -6,11 +6,11 @@
 
 //------------------------------------------------------------------------------
 
-_c_con_impl(mem, (size_t size_)) : size(size_), p(nullptr) {
+_c_con_impl(mem, (sz_t size_)) : size(size_), p(nullptr) {
   mut(p) = unsafe::mem::alloc(size);
 }
 
-_c_con_impl(mem, (size_t size_, pcvoid p_)) : size(size_), p(nullptr) {
+_c_con_impl(mem, (sz_t size_, pcvoid p_)) : size(size_), p(nullptr) {
   mut(p) = unsafe::mem::cpy(size, p_);
 }
 
@@ -21,8 +21,8 @@ _c_des_impl(mem){
 namespace c {
 //------------------------------------------------------------------------------
 
-mem::mem(size_t size_)            : c_mem(size_)     {}
-mem::mem(size_t size, pcvoid src) : c_mem(size, src) {}
+mem::mem(sz_t size_)            : c_mem(size_)     {}
+mem::mem(sz_t size, pcvoid src) : c_mem(size, src) {}
 
 mem::mem(rval that) : c_mem(0) {
   unsafe::swap(size, that.size);

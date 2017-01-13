@@ -47,7 +47,7 @@ using OutputDataCollections = typ::vec<OutputDataCollection>;
 class DiffractogramsFrame : public Frame {
   CLASS(DiffractogramsFrame) SUPER(Frame)
 public:
-  DiffractogramsFrame(TheHub&, rcstr title, QWidget*);
+  DiffractogramsFrame(TheHub&, qstrc title, QWidget*);
 
 protected:
   TabDiffractogramsSave *tabSave_;
@@ -59,8 +59,8 @@ protected:
   OutputDataCollections outputAllDiffractograms();
 
   bool saveDiffractogramOutput();
-  bool writeCurrDiffractogramToFile(rcstr filePath, rcstr separator);
-  bool writeAllDiffractogramsToFiles(rcstr filePath, rcstr separator, bool oneFile);
+  bool writeCurrDiffractogramToFile(qstrc filePath, qstrc separator);
+  bool writeAllDiffractogramsToFiles(qstrc filePath, qstrc separator, bool oneFile);
 };
 
 //------------------------------------------------------------------------------

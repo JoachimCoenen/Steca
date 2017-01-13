@@ -53,7 +53,7 @@ shp_File Session::file(uint i) const {
   return files_.at(i);
 }
 
-bool Session::hasFile(rcstr fileName) {
+bool Session::hasFile(qstrc fileName) {
   QFileInfo fileInfo(fileName);
   for (auto& file : files_)
     if (fileInfo == file->fileInfo())
@@ -61,7 +61,7 @@ bool Session::hasFile(rcstr fileName) {
   return false;
 }
 
-void Session::addFile(shp_File file) THROWS {
+void Session::addFile(shp_File file) may_exc {
   setImageSize(file->datasets().imageSize());
   // all ok
   files_.append(file);
@@ -81,22 +81,22 @@ void Session::calcIntensCorr() const {
   uint w = size.w, h = size.h, di = imageCut_.left,
        dj = imageCut_.top;
 
-  qreal sum = 0;
+  real sum = 0;
   for_ij (w, h)
     sum += corrImage_.inten(i + di, j + dj);
 
-  qreal avg = sum / (w * h);
+  real avg = sum / (w * h);
 
   intensCorr_.fill(1, corrImage_.size());
 
   for_ij (w, h) {
     auto  inten = corrImage_.inten(i + di, j + dj);
-    qreal fact;
+    real fact;
 
     if (inten > 0) {
       fact = avg / inten;
     } else {
-      fact = NAN;
+      fact = c::NAN;
       corrHasNaNs_ = true;
     }
 
@@ -114,7 +114,7 @@ Image const* Session::intensCorr() const {
   return &intensCorr_;
 }
 
-void Session::setCorrFile(shp_File file) THROWS {
+void Session::setCorrFile(shp_File file) may_exc {
   if (file.isNull()) {
     remCorrFile();
   } else {
@@ -191,7 +191,7 @@ void Session::updateImageSize() {
     imageSize_ = size2d(0, 0);
 }
 
-void Session::setImageSize(size2d::rc size) THROWS {
+void Session::setImageSize(size2d::rc size) may_exc {
   RUNTIME_CHECK(!size.isEmpty(), "bad image size");
   if (imageSize_.isEmpty())
     imageSize_ = size;  // the first one
@@ -219,10 +219,10 @@ void Session::setImageCut(bool topLeftFirst, bool linked, ImageCut::rc cut) {
   else {
     auto limit = [linked](uint& m1, uint& m2, uint maxTogether) {
       if (linked && m1 + m2 >= maxTogether) {
-        m1 = m2 = qMax((maxTogether - 1) / 2, 0u);
+        m1 = m2 = c::max((maxTogether - 1) / 2, 0u);
       } else {
-        m1 = qMax(qMin(m1, maxTogether - m2 - 1), 0u);
-        m2 = qMax(qMin(m2, maxTogether - m1 - 1), 0u);
+        m1 = c::max(c::min(m1, maxTogether - m2 - 1), 0u);
+        m2 = c::max(c::min(m2, maxTogether - m1 - 1), 0u);
       }
     };
 
@@ -396,19 +396,19 @@ ReflectionInfos Session::makeReflectionInfos(
     auto lens = datasetLens(*dataset, datasets, norm_, true, true);
 
     Range rge = (gmaSlices > 0) ? lens->rgeGma() : lens->rgeGmaFull();
-    if (rgeGma.isValid())
+    if (rgeGma.isDef())
       rge = rge.intersect(rgeGma);
 
     if (rge.isEmpty())
       continue;
 
-    gmaSlices = qMax(1u, gmaSlices);
-    qreal step = rge.width() / gmaSlices;
+    gmaSlices = c::max(1u, gmaSlices);
+    real step = rge.width() / gmaSlices;
     for_i (uint(gmaSlices)) {
-      qreal min = rge.min + i * step;
+      real min = rge.min + i * step;
       gma_rge gmaStripe(min, min + step);
       auto refInfo = makeReflectionInfo(*lens, reflection, gmaStripe, averaged);
-      if (!qIsNaN(refInfo.inten()))
+      if (!isnan(refInfo.inten()))
         infos.append(refInfo);
     }
   }
@@ -445,7 +445,7 @@ void Session::setNorm(eNorm norm) {
   norm_ = norm;
 }
 
-qreal Session::calcAvgBackground(Dataset::rc dataset) const {
+real Session::calcAvgBackground(Dataset::rc dataset) const {
   auto lens = datasetLens(dataset, dataset.datasets(), eNorm::NONE, true, true);
 
   Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
@@ -453,10 +453,10 @@ qreal Session::calcAvgBackground(Dataset::rc dataset) const {
   return bgPolynom.avgY(lens->rgeTth());
 }
 
-qreal Session::calcAvgBackground(Datasets::rc datasets) const {
+real Session::calcAvgBackground(Datasets::rc datasets) const {
   TakesLongTime __;
 
-  qreal bg = 0;
+  real bg = 0;
 
   for (auto& dataset : datasets)
     bg += calcAvgBackground(*dataset);

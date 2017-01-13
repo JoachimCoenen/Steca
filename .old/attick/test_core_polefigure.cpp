@@ -28,7 +28,7 @@
 //              deg radius);
 
 //    template<typename Container>
-//    qreal inverseDistanceWeighing(Container const& distances,
+//    real inverseDistanceWeighing(Container const& distances,
 //                                  Container const& values);
 
 //    void inverseDistanceWeighing(qreal_vec const& distances,
@@ -41,7 +41,7 @@
 
 //    Quadrant remapQuadrant(Quadrant);
 
-//    core::Range gammaRangeAt(calc::shp_Lens lenses, qreal const tth);
+//    core::Range gammaRangeAt(calc::shp_Lens lenses, real const tth);
 
 //    void searchInQuadrants(
 //      Quadrants const& quadrants,
@@ -80,8 +80,8 @@
 //  }
 
 //  {
-//    qreal phiDet = 0;
-//    qreal chiDet = 0;
+//    real phiDet = 0;
+//    real chiDet = 0;
 
 //    auto m1 = matrix3d ::rotationCWz(phiDet);
 //    matrix3d cmpMatrix(1, 0, 0,
@@ -168,8 +168,8 @@
 //  distances.append(2.0);
 
 //  inten_t inten = 2;
-//  qreal tth     = 1;
-//  qreal fwhm    = 4;
+//  real tth     = 1;
+//  real fwhm    = 4;
 //  ReflectionInfos rinfos;
 //  for_i (4) {
 //    rinfos.append(ReflectionInfo(0,0,Range(),inten,tth,fwhm));
@@ -181,14 +181,14 @@
 //  }
 
 //  ReflectionInfo out;
-//  qreal tmp_height = 0;
-//  qreal tmp_offset = 0;
-//  qreal tmp_fwhm   = 0;
+//  real tmp_height = 0;
+//  real tmp_offset = 0;
+//  real tmp_fwhm   = 0;
 //  inverseDistanceWeighing(distances,infos,out);
 //  for_i (NUM_QUADRANTS) {
-//    tmp_height += infos[0]->inten() * (qreal)1/distances[i];
-//    tmp_offset += infos[0]->tth()   * (qreal)1/distances[i];
-//    tmp_fwhm   += infos[0]->fwhm()  * (qreal)1/distances[i];
+//    tmp_height += infos[0]->inten() * (real)1/distances[i];
+//    tmp_offset += infos[0]->tth()   * (real)1/distances[i];
+//    tmp_fwhm   += infos[0]->fwhm()  * (real)1/distances[i];
 //  }
 //  QCOMPARE(out.inten(),tmp_height/3);
 //  QCOMPARE(out.tth(),deg(tmp_offset/3));
@@ -196,7 +196,7 @@
 //}
 
 //void TestCorePolefigure::testSearchInQuadrants() {
-//  qreal alpha = 15, beta = 20, searchRadius = 5;
+//  real alpha = 15, beta = 20, searchRadius = 5;
 //  vec<ReflectionInfo const*> foundInfos;
 //  ReflectionInfos infos;
 //  ReflectionInfo in;
@@ -220,7 +220,7 @@
 //  QVERIFY(!foundInfos.at(3));
 //}
 
-//static data::Dataset testDataset(QSize size, core::inten_t inten, qreal_vec motorAngles, qreal mon, qreal deltaTime) {
+//static data::Dataset testDataset(QSize size, core::inten_t inten, qreal_vec motorAngles, real mon, real deltaTime) {
 //  data::Metadata md;
 //  md.date = "15.03.2016";
 //  md.comment = "comment";
@@ -248,7 +248,7 @@
 //  deg alpha;
 //  deg beta;
 //  qreal_vec angles;
-//  qreal mon = 100, deltaTime = 8, tth = 0, gamma = 0;
+//  real mon = 100, deltaTime = 8, tth = 0, gamma = 0;
 //  Session s;
 //  {
 //    angles.fill(0,10);
@@ -294,7 +294,7 @@
 
 //  {
 //    angles.fill(0,10);
-//    qreal tthRef = 90.0;
+//    real tthRef = 90.0;
 //    auto const dataset = testDataset(QSize(10,10),42,angles,mon,deltaTime);
 //    calculateAlphaBeta(dataset,tthRef, gamma, alpha,beta);
 //    // rotated = 0,-1,0
@@ -304,7 +304,7 @@
 
 //  {
 //    angles.fill(0,10);
-//    qreal gammaRef = 90;
+//    real gammaRef = 90;
 
 //    auto const dataset = testDataset(QSize(10,10),42,angles,mon,deltaTime);
 //    calculateAlphaBeta(dataset,tth, gammaRef, alpha,beta);
@@ -319,8 +319,8 @@
 //    angles[1] = rad(M_PI).toDeg();
 //    angles[2] = rad(M_PI).toDeg();
 
-//    qreal const tthRef = 4*rad(M_PI).toDeg();
-//    qreal const gammaRef = rad(M_PI).toDeg();
+//    real const tthRef = 4*rad(M_PI).toDeg();
+//    real const gammaRef = rad(M_PI).toDeg();
 
 //    auto const dataset = testDataset(QSize(10,10),42,angles,mon,deltaTime);
 //    calculateAlphaBeta(dataset,tthRef, gammaRef, alpha,beta);

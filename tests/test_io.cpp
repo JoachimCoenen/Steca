@@ -4,7 +4,7 @@
 #include <io/io_caress.cpp>
 #include <c/c/cpp>
 
-#ifdef TESTS
+#ifdef WITH_TESTS
 
 #include <QDir>
 #include <QFileInfo>

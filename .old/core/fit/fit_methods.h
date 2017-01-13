@@ -31,16 +31,16 @@ public:
   void fit(typ::Function&, typ::Curve::rc);
 
 protected:
-  virtual void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                           qreal const*, uint) = 0;
+  virtual void approximate(real*, real const*, real const*, real*, uint,
+                           real const*, uint) = 0;
 
   // these pointers are valid during fit() call
   typ::Function* function_;
-  qreal const*   xValues_;
+  real const*   xValues_;
 
 protected:
   // calculate a vector of y(x)
-  void callbackY(qreal*, qreal*, int, int, void*);
+  void callbackY(real*, real*, int, int, void*);
 };
 
 //------------------------------------------------------------------------------
@@ -51,8 +51,8 @@ public:
   LinearLeastSquare();
 
 protected:
-  void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                   qreal const*, uint);
+  void approximate(real*, real const*, real const*, real*, uint,
+                   real const*, uint);
 };
 
 //------------------------------------------------------------------------------
@@ -63,10 +63,10 @@ public:
   LevenbergMarquardt();
 
 protected:
-  void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                   qreal const*, uint);
+  void approximate(real*, real const*, real const*, real*, uint,
+                   real const*, uint);
 private:
-  void callbackJacobianLM(qreal*, qreal*, int, int, void*);
+  void callbackJacobianLM(real*, real*, int, int, void*);
 };
 
 //------------------------------------------------------------------------------

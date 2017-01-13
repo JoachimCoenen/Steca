@@ -28,7 +28,7 @@ str const
 namespace typ {
 //------------------------------------------------------------------------------
 
-owner_not_null<Function*> Function::Factory::make(JsonObj::rc obj) THROWS {
+owner_not_null<Function*> Function::Factory::make(JsonObj::rc obj) may_exc {
   str funType = obj.loadString(json_key::TYPE);
   Function *fun = super::make(funType);
 
@@ -41,7 +41,7 @@ owner_not_null<Function*> Function::Factory::make(JsonObj::rc obj) THROWS {
 
 Function::Factory Function::factory_;
 
-void Function::addFactoryMaker(rcstr key, owner_not_null<Factory::MakerBase*> maker) {
+void Function::addFactoryMaker(qstrc key, owner_not_null<Factory::MakerBase*> maker) {
   factory_.addMaker(key, maker);
 }
 
@@ -63,25 +63,25 @@ Function::Parameter::Parameter()
 }
 
 Range Function::Parameter::valueRange() const {
-  return range_.isValid() ? range_ : Range(value_);
+  return range_.isDef() ? range_ : Range(value_);
 }
 
-void Function::Parameter::setValueRange(qreal min, qreal max) {
+void Function::Parameter::setValueRange(real min, real max) {
   range_.set(min, max);
 }
 
-void Function::Parameter::setValue(qreal value, qreal error) {
+void Function::Parameter::setValue(real value, real error) {
   value_ = value; error_ = error;
 }
 
 JsonObj Function::Parameter::saveJson() const {
   return JsonObj()
-      .saveQreal(json_key::VALUE, value_)
+      .saveReal(json_key::VALUE, value_)
       .saveRange(json_key::RANGE, range_);
 }
 
-void Function::Parameter::loadJson(JsonObj::rc obj) THROWS {
-  value_ = obj.loadQreal(json_key::VALUE);
+void Function::Parameter::loadJson(JsonObj::rc obj) may_exc {
+  value_ = obj.loadReal(json_key::VALUE);
   range_ = obj.loadRange(json_key::RANGE);
 }
 
@@ -95,7 +95,7 @@ JsonObj Function::saveJson() const {
   return JsonObj();
 }
 
-void Function::loadJson(JsonObj::rc) THROWS {
+void Function::loadJson(JsonObj::rc) may_exc {
   // nothing to do
 }
 
@@ -132,7 +132,7 @@ JsonObj SimpleFunction::saveJson() const {
   return super::saveJson() + JsonObj().saveArr(json_key::PARAMS, params);
 }
 
-void SimpleFunction::loadJson(JsonObj::rc obj) THROWS {
+void SimpleFunction::loadJson(JsonObj::rc obj) may_exc {
   super::loadJson(obj);
 
   JsonArr params = obj.loadArr(json_key::PARAMS);
@@ -144,11 +144,11 @@ void SimpleFunction::loadJson(JsonObj::rc obj) THROWS {
     parameters_[i].loadJson(params.objAt(i));
 }
 
-qreal SimpleFunction::parValue(uint i, qreal const* parValues) const {
+real SimpleFunction::parValue(uint i, real const* parValues) const {
   return parValues ? parValues[i] : parameters_.at(i).value();
 }
 
-void SimpleFunction::setValue(uint i, qreal val) {
+void SimpleFunction::setValue(uint i, real val) {
   parameters_[i].setValue(val, 0);
 }
 
@@ -184,8 +184,8 @@ Function::Parameter& SumFunctions::parameterAt(uint i) {
   return *allParameters_.at(i);
 }
 
-qreal SumFunctions::y(qreal x, qreal const* parValues) const {
-  qreal sum = 0;
+real SumFunctions::y(real x, real const* parValues) const {
+  real sum = 0;
 
   for (Function* f : functions_) {
     sum += f->y(x, parValues);
@@ -197,7 +197,7 @@ qreal SumFunctions::y(qreal x, qreal const* parValues) const {
   return sum;
 }
 
-qreal SumFunctions::dy(qreal x, uint parIndex, qreal const* parValues) const {
+real SumFunctions::dy(real x, uint parIndex, real const* parValues) const {
   Function* f = function4parIndex_.at(
       parIndex);  // aggregate parIndex refers to function f
 
@@ -225,7 +225,7 @@ JsonObj SumFunctions::saveJson() const {
   return super::saveJson() + obj;
 }
 
-void SumFunctions::loadJson(JsonObj::rc obj) THROWS {
+void SumFunctions::loadJson(JsonObj::rc obj) may_exc {
   RUNTIME_CHECK(functions_.isEmpty(),
                 "non-empty sum of functions; cannot load twice");
 

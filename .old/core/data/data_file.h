@@ -47,7 +47,7 @@ class Datasets;
 class File final {
   CLASS(File)
 public:
-  File(rcstr fileName);
+  File(qstrc fileName);
 
   QFileInfo const& fileInfo() const;
   str              fileName() const;

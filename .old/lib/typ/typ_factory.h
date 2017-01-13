@@ -48,11 +48,11 @@ private:
 public:
   virtual ~Factory() {}
 
-  void addMaker(rcstr key, owner_not_null<MakerBase*> maker) {
+  void addMaker(qstrc key, owner_not_null<MakerBase*> maker) {
     makers_.insert(key, maker);
   }
 
-  owner_not_null<ProductBase*> make(rcstr key) THROWS {
+  owner_not_null<ProductBase*> make(qstrc key) may_exc {
     MakerBase *maker = makers_.value(key);
     RUNTIME_CHECK(maker, "no maker " % key);
     return maker->make();

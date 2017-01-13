@@ -25,12 +25,12 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 QRgb intenImage(inten_t inten, inten_t maxInten, bool curved) {
-  if (qIsNaN(inten))
+  if (isnan(inten))
     return qRgb(0x00, 0xff, 0xff);
-  if (qIsInf(inten))
+  if (c::isinf(inten))
     return qRgb(0xff, 0xff, 0xff);
 
-  if (qIsNaN(maxInten) || maxInten <= 0)
+  if (isnan(maxInten) || maxInten <= 0)
     return qRgb(0x00, 0x00, 0x00);
 
   inten /= maxInten;
@@ -50,7 +50,7 @@ QRgb intenImage(inten_t inten, inten_t maxInten, bool curved) {
 }
 
 QRgb intenGraph(inten_t inten, inten_t maxInten) {
-  if (!qIsFinite(inten) || qIsNaN(maxInten) || maxInten <= 0)
+  if (!qIsFinite(inten) || isnan(maxInten) || maxInten <= 0)
     return qRgb(0x00, 0x00, 0x00);
 
   inten /= maxInten;
@@ -72,14 +72,14 @@ QRgb heatmapColor(inten_t value) {
     {1.00f, 255, 0,   1  },
   };
 
-  value = qBound(0.0f, value, 1.0f);
+  value = c::bound(0.0f, value, 1.0f);
   uint count = lc.count(), i;
   for (i = 1; i < count; ++i)
     if (value < lc.at(i).limit)
       break;
 
   auto& lc1 = lc.at(i-1);
-  auto& lc2 = lc.at(qMin(i, count-1));
+  auto& lc2 = lc.at(c::min(i, count-1));
 
   auto  frac = (value - lc1.limit) / (lc2.limit - lc1.limit);
 

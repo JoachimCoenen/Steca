@@ -82,7 +82,7 @@ void DiffractogramPlotOverlay::mouseReleaseEvent(QMouseEvent* e) {
 
 void DiffractogramPlotOverlay::mouseMoveEvent(QMouseEvent* e) {
   updateCursorRegion();
-  cursorPos_ = qBound(marginLeft_, e->x(), width() - marginRight_);
+  cursorPos_ = c::bound(marginLeft_, e->x(), width() - marginRight_);
   updateCursorRegion();
   if (mouseDown_) update();
 }
@@ -92,8 +92,8 @@ void DiffractogramPlotOverlay::paintEvent(QPaintEvent*) {
   QRect    g = geometry();
 
   if (mouseDown_) {
-    g.setLeft(qMin(mouseDownPos_, cursorPos_));
-    g.setRight(qMax(mouseDownPos_, cursorPos_));
+    g.setLeft(c::min(mouseDownPos_, cursorPos_));
+    g.setRight(c::max(mouseDownPos_, cursorPos_));
 
     painter.fillRect(g, color_);
   }
@@ -173,7 +173,7 @@ DiffractogramPlot::DiffractogramPlot(TheHub& hub, Diffractogram& diffractogram)
       auto& fun = reflection->peakFunction();
 
       auto gp = fun.guessedPeak();
-      if (gp.isValid()) {
+      if (gp.isDef()) {
         guesses_->addData(gp.x, gp.y);
         auto gw2 = fun.guessedFWHM() / 2;
         guesses_->addData(gp.x - gw2, gp.y / 2);
@@ -181,7 +181,7 @@ DiffractogramPlot::DiffractogramPlot(TheHub& hub, Diffractogram& diffractogram)
       }
 
       auto fp = fun.fittedPeak();
-      if (fp.isValid()) {
+      if (fp.isDef()) {
         fits_->addData(fp.x, fp.y);
         auto fw2 = fun.fittedFWHM() / 2;
         fits_->addData(fp.x - fw2, fp.y / 2);
@@ -234,7 +234,7 @@ void DiffractogramPlot::plot(typ::Curve::rc dgram, typ::Curve::rc dgramBgFitted,
     }
 
     xAxis->setRange(tthRange.min, tthRange.max);
-    yAxis->setRange(qMin(0., intenRange.min), intenRange.max);
+    yAxis->setRange(c::min(0., intenRange.min), intenRange.max);
     yAxis->setNumberFormat("g");
     xAxis->setVisible(true);
     yAxis->setVisible(true);
@@ -504,7 +504,7 @@ void Diffractogram::calcBackground() {
       fit::Polynom::fromFit(hub_.bgPolyDegree(), dgram_, hub_.bgRanges());
 
   for_i (dgram_.count()) {
-    qreal x = dgram_.x(i), y = bgPolynom.y(x);
+    real x = dgram_.x(i), y = bgPolynom.y(x);
     bg_.append(x, y);
     dgramBgFitted_.append(x, dgram_.y(i) - y);
   }
@@ -539,7 +539,7 @@ void Diffractogram::calcReflections() {
     typ::Curve c;
 
     for_i (dgramBgFitted_.count()) {
-      qreal x = dgramBgFitted_.x(i);
+      real x = dgramBgFitted_.x(i);
       if (rge.contains(x))
         c.append(x, fun.y(x));
     }

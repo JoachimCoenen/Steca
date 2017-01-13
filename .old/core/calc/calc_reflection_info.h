@@ -97,7 +97,7 @@ public:
   inten_rge::rc rgeInten()     const;
 
 private:
-  void invalidate();
+  void undef();
 
   mutable inten_t   avgInten_;
   mutable inten_rge rgeInten_;

@@ -2,7 +2,6 @@
 
 #include "async.h"
 #include <c/c/cpp>
-#include <vector>
 
 namespace c {
 //------------------------------------------------------------------------------
@@ -15,8 +14,8 @@ c::threads::threads() : nc(num_cores()), ts(nc) {
 }
 
 void c::threads::join() {
-  for (thread& t: ts)
-    t.join();
+//  for (thread& t: ts)
+//    t.join();
 }
 
 TEST("thread", ({
@@ -24,7 +23,7 @@ TEST("thread", ({
   uint dst[n], src[n];
   for_i(n) src[i] = i;
 
-  auto l = [&dst, &src](size_t from, size_t to) {
+  auto l = [&dst, &src](sz_t from, sz_t to) {
     for (auto i=from; i<to; ++i)
       dst[i] = src[i]*src[i];
   };

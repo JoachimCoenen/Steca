@@ -9,13 +9,13 @@
 typedef void*            pvoid;
 typedef void const*      pcvoid;
 
-#if _c_cpp_
+#if _is_cpp_
 
 namespace unsafe { namespace mem {
 
-pvoid alloc(size_t);
+pvoid alloc(sz_t);
 void  free(pvoid);
-pvoid cpy(size_t, pcvoid);
+pvoid cpy(sz_t, pcvoid);
 
 }}
 

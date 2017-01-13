@@ -13,7 +13,7 @@ pcstr exc::what() const noexcept {
   return msg;
 }
 
-void exc::err(strc msg) {
+void exc::err(strc msg) will_exc {
   throw exc(msg);
 }
 
@@ -23,11 +23,11 @@ TEST("exc", ({
 
 /*
 TODO
-#ifdef TESTS
+#ifdef WITH_TESTS
 #include "def/def_gsl.h"
 #endif
 
-Exception::Exception(rcstr msg, bool silent) noexcept
+Exception::Exception(qstrc msg, bool silent) noexcept
 : silent_(silent) {
   setMsg(msg);
 }
@@ -48,7 +48,7 @@ TEST("Exception()",
   CHECK_THROWS_AS(p->raise(), Exception);
 )
 
-Exception::Exception(rcstr msg) noexcept
+Exception::Exception(qstrc msg) noexcept
 : Cls(msg, false) {
 }
 
@@ -79,7 +79,7 @@ TEST("Exception(\"Hi\")",
   CHECK(false); // not here
 )
 
-void Exception::setMsg(rcstr s) {
+void Exception::setMsg(qstrc s) {
   msg_     = s;
   msg8bit_ = msg_.toLocal8Bit();
 }

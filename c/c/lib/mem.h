@@ -8,22 +8,22 @@
 typedef void*            pvoid;
 typedef void const*      pcvoid;
 
-_c_c_struct(mem)
-  _c_var(size_t, size)
-  _c_ptr(void,   p)
+_c_struct (mem)
+  _var (sz_t, size)
+  _ptr(void,   p)
 
-  _c_con(mem, (size_t))
-  _c_con(mem, (size_t, pcvoid))
+  _c_con (mem, (sz_t))
+  _c_con (mem, (sz_t, pcvoid))
   _c_des(mem)
-_c_c_struct_end(mem)
+_c_struct_end(mem)
 
-_c_cpp_c_struct(mem) NO_COPY(mem)
-  _c_cpp_con(mem, (size_t))
-  _c_cpp_con(mem, (size_t, pcvoid))
-  _c_cpp_con(mem, (rval))
+_nc_sub_c_struct (mem) NO_COPY(mem)
+  _con (mem, (sz_t))
+  _con (mem, (sz_t, pcvoid))
+  _con (mem, (rval))
 
-  _c_cpp_op(pcvoid, p)
-_c_cpp_c_struct_end
+  _op(pcvoid, p)
+_nc_sub_c_struct_end
 
 //------------------------------------------------------------------------------
 #endif

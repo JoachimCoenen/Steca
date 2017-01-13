@@ -29,7 +29,7 @@ void GridLayout::addColumnStretch(int stretch) {
   setColumnStretch(columnCount(), stretch);
 }
 
-GridLayout* GridLayout::groupBox(QLayout &addTo, rcstr title) {
+GridLayout* GridLayout::groupBox(QLayout &addTo, qstrc title) {
   auto group = new QGroupBox(title);
   addTo.addWidget(group);
   auto grid = gridLayout();
@@ -76,14 +76,14 @@ GridLayout* gridLayout() {
   return grid;
 }
 
-QLabel* icon(rcstr fileName) {
+QLabel* icon(qstrc fileName) {
   auto l = new QLabel;
   auto h = l->sizeHint().height();
   l->setPixmap(QIcon(fileName).pixmap(QSize(h, h)));
   return l;
 }
 
-QLabel* label(rcstr text) {
+QLabel* label(qstrc text) {
   return new QLabel(text);
 }
 
@@ -111,7 +111,7 @@ QSpinBox* spinCell(uint emWidth, int min, int max) {
   return cell;
 }
 
-QDoubleSpinBox* spinDoubleCell(uint emWidth, qreal min, qreal max) {
+QDoubleSpinBox* spinDoubleCell(uint emWidth, real min, real max) {
   auto cell = new QDoubleSpinBox;
   setEmWidth(cell, emWidth);
   cell->setMinimum(min);
@@ -119,7 +119,7 @@ QDoubleSpinBox* spinDoubleCell(uint emWidth, qreal min, qreal max) {
   return cell;
 }
 
-QCheckBox* check(rcstr text) {
+QCheckBox* check(qstrc text) {
   return new QCheckBox(text);
 }
 
@@ -156,7 +156,7 @@ QToolButton* iconButton(QAction* action) {
   return b;
 }
 
-QRadioButton* radioButton(rcstr text) {
+QRadioButton* radioButton(qstrc text) {
   return new QRadioButton(text);
 }
 
@@ -200,7 +200,7 @@ LineView::LineView() {
   setReadOnly(true);
 }
 
-void LineView::setText(rcstr text) {
+void LineView::setText(qstrc text) {
   super::setText(text);
   super::setCursorPosition(0);
 }
@@ -213,7 +213,7 @@ BoxWidget::BoxWidget(Qt::Orientation orientation) {
 
 //------------------------------------------------------------------------------
 
-DockWidget::DockWidget(rcstr name, rcstr objectName,
+DockWidget::DockWidget(qstrc name, qstrc objectName,
                        Qt::Orientation orientation) {
   setFeatures(DockWidgetMovable);
   setWindowTitle(name);

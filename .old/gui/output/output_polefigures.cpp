@@ -68,14 +68,14 @@ void TabGraph::paintEvent(QPaintEvent*) {
 
   p_ = &painter;
   c_ = QPointF(0, 0);
-  r_ = qMin(w, h) / 2;
+  r_ = c::min(w, h) / 2;
 
   paintGrid();
   paintPoints();
 }
 
 QPointF TabGraph::p(deg alpha, deg beta) const {
-  qreal r = r_ * alpha / alphaMax_;
+  real r = r_ * alpha / alphaMax_;
 
   rad betaRad = beta.toRad();
   return QPointF(r * cos(betaRad), -r * sin(betaRad));
@@ -90,7 +90,7 @@ TabGraph::deg TabGraph::beta(QPointF const& p) const {
   return b <= 0 ? -b : 360 - b;
 }
 
-void TabGraph::circle(QPointF c, qreal r) {
+void TabGraph::circle(QPointF c, real r) {
   p_->drawEllipse(c, r, r);
 }
 
@@ -98,7 +98,7 @@ void TabGraph::paintGrid() {
   QPen penMajor(Qt::gray), penMinor(Qt::lightGray);
 
   for (int alpha = 10; alpha <= 90; alpha += 10) {
-    qreal r = r_ / alphaMax_ * alpha;
+    real r = r_ / alphaMax_ * alpha;
     p_->setPen(!(alpha % 30) ? penMajor : penMinor);
     circle(c_, r);
   }
@@ -114,7 +114,7 @@ void TabGraph::paintGrid() {
 }
 
 void TabGraph::paintPoints() {
-  qreal rgeMax = rs_.rgeInten().max;
+  real rgeMax = rs_.rgeInten().max;
 
 #ifdef DEVELOPMENT_REBECCA
   // TODO
@@ -141,7 +141,7 @@ void TabGraph::paintPoints() {
 
 #else
   for (auto& r : rs_) {
-    qreal inten = r.inten();
+    real inten = r.inten();
 
     if (qIsFinite(inten)) { // nan comes from interpolartion
       auto pp = p(r.alpha(), r.beta());
@@ -224,7 +224,7 @@ void TabPoleFiguresSave::rawReflSettings(bool on) {
 static const Params::ePanels PANELS = Params::ePanels(
     Params::REFLECTION | Params::GAMMA | Params::POINTS| Params::INTERPOLATION);
 
-PoleFiguresFrame::PoleFiguresFrame(TheHub &hub, rcstr title, QWidget *parent)
+PoleFiguresFrame::PoleFiguresFrame(TheHub &hub, qstrc title, QWidget *parent)
 : super(hub, title, new Params(hub, PANELS), parent)
 {
   tabGraph_ = new TabGraph(hub, *params_);
@@ -280,7 +280,7 @@ bool PoleFiguresFrame::savePoleFigureOutput() {
 static str const OUT_FILE_TAG(".refl%1");
 static int const MAX_LINE_LENGTH_POL(9);
 
-bool PoleFiguresFrame::writePoleFigureOutputFiles(rcstr filePath, uint index) {
+bool PoleFiguresFrame::writePoleFigureOutputFiles(qstrc filePath, uint index) {
   auto refl = hub_.reflections().at(index);
   calc::ReflectionInfos reflInfo;
 
@@ -342,14 +342,14 @@ bool PoleFiguresFrame::writePoleFigureOutputFiles(rcstr filePath, uint index) {
   return check;
 }
 
-void PoleFiguresFrame::writeErrorMask(rcstr filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
+void PoleFiguresFrame::writeErrorMask(qstrc filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
   WriteFile file(filePath + ".errorMask");
   QTextStream stream(&file);
 
   for(uint j = 0, jEnd = reflInfo.count(); j < jEnd; j+=9) {
     uint max = j + MAX_LINE_LENGTH_POL;
     for (uint i = j; i < max; i++) {
-      if (qIsNaN(output.at(i)))
+      if (isnan(output.at(i)))
         stream << "0" << " ";
       else
         stream << "1" << " ";
@@ -358,14 +358,14 @@ void PoleFiguresFrame::writeErrorMask(rcstr filePath, calc::ReflectionInfos refl
   }
 }
 
-void PoleFiguresFrame::writePoleFile(rcstr filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
+void PoleFiguresFrame::writePoleFile(qstrc filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
   WriteFile file(filePath + ".pol");
   QTextStream stream(&file);
 
   for(uint j = 0, jEnd = reflInfo.count(); j < jEnd; j+=9) {
     uint max = j + MAX_LINE_LENGTH_POL;
     for (uint i = j; i < max; i++) {
-      if (qIsNaN(output.at(i)))
+      if (isnan(output.at(i)))
         stream << " -1 " << " ";
       else
         stream << output.at(i) << " ";
@@ -374,13 +374,13 @@ void PoleFiguresFrame::writePoleFile(rcstr filePath, calc::ReflectionInfos reflI
   }
 }
 
-void PoleFiguresFrame::writeListFile(rcstr filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
+void PoleFiguresFrame::writeListFile(qstrc filePath, calc::ReflectionInfos reflInfo, qreal_vec::rc output) {
   WriteFile file(filePath + ".lst");
   QTextStream stream(&file);
 
   for_i (reflInfo.count()) {
-    stream << qreal(reflInfo.at(i).alpha()) << " "
-           << qreal(reflInfo.at(i).beta()) << " "
+    stream << real(reflInfo.at(i).alpha()) << " "
+           << real(reflInfo.at(i).beta()) << " "
            << output.at(i) << '\n';
   }
 }

@@ -8,7 +8,7 @@
 //#define TEST_FIT_CLASS(cls)                 \-
 //  class Test##cls: public core::fit::cls {  \-
 //public:                                     \-
-//  void setValue(uint parIndex, qreal val) { \-
+//  void setValue(uint parIndex, real val) { \-
 //    core::fit::cls::setValue(parIndex,val); \-
 //  }                                         \-
 //};
@@ -20,12 +20,12 @@
 
 //void TestSaveLoadJson::testSaveLoadJson() {
 //  int error = 5;
-//  qreal r1 = 42;
-//  qreal val0 = 0;
-//  qreal val1 = 1;
-//  qreal val2 = 2;
-//  qreal val3 = 3;
-//  qreal val4 = 4;
+//  real r1 = 42;
+//  real val0 = 0;
+//  real val1 = 1;
+//  real val2 = 2;
+//  real val3 = 3;
+//  real val4 = 4;
 
 //  {
 //    core::fit::Function::Parameter p1;
@@ -43,8 +43,8 @@
 //    pObj = p2.saveJson();
 //    core::fit::Function::Parameter p4;
 //    p4.loadJson(pObj);
-//    QVERIFY(qIsInf(p4.valueRange().min));
-//    QVERIFY(qIsInf(p4.valueRange().max));
+//    QVERIFY(c::isinf(p4.valueRange().min));
+//    QVERIFY(c::isinf(p4.valueRange().max));
 //    QCOMPARE(p4.value(), val1);
 //  }
 
@@ -93,7 +93,7 @@
 //    QCOMPARE(pseudoLoad.parameterAt(0).value(),val4);
 //    bool verify = false;
 //    auto max = pseudoLoad.parameterAt(0).valueRange().max;
-//    if ( qIsInf(max))
+//    if ( c::isinf(max))
 //      verify = (max > 0) ? true : false;
 
 //    QVERIFY(verify);

@@ -58,15 +58,15 @@ struct size2d {
   friend size2d operator-(rc s1, rc s2) {
     int w = to_i(s1.w) - to_i(s2.w);
     int h = to_i(s1.h) - to_i(s2.h);
-    return size2d(to_u(qMax(w, 0)), to_u(qMax(h, 0)));
+    return size2d(to_u(c::max(w, 0)), to_u(c::max(h, 0)));
   }
 
   size2d transposed() const {
     return size2d(h, w);
   }
 
-  size2d scaled(qreal f) const {
-    f = qMax(f, .0);
+  size2d scaled(real f) const {
+    f = c::max(f, .0);
     return size2d(to_u(qRound(w*f)), to_u(qRound(h*f)));
   }
 };

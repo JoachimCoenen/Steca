@@ -118,10 +118,10 @@ inten_rge::rc ImageLens::rgeInten(bool fixed) const {
   if (fixed)
     return datasets_.rgeFixedInten(session_, trans_, cut_);
 
-  if (!rgeInten_.isValid()) {
+  if (!rgeInten_.isDef()) {
     auto sz = size();
     for_ij (sz.w, sz.h)
-      rgeInten_.extendBy(qreal(imageInten(i, j)));
+      rgeInten_.extendBy(real(imageInten(i, j)));
   }
 
   return rgeInten_;
@@ -174,14 +174,14 @@ Curve DatasetLens::makeCurve(gma_rge::rc rgeGma, bool averaged) const {
     tth_rge rgeTth = dataset_.rgeTth(session_);
     tth_t minTth = rgeTth.min, deltaTth = rgeTth.width() / count;
     for_i (count)
-      res.append(minTth + deltaTth * i, qreal(intens.at(i) * normFactor_));
+      res.append(minTth + deltaTth * i, real(intens.at(i) * normFactor_));
   }
 
   return res;
 }
 
 void DatasetLens::setNorm(eNorm norm) {
-  qreal num = 1, den = 1;
+  real num = 1, den = 1;
 
   switch (norm) {
   case eNorm::MONITOR:
@@ -204,8 +204,8 @@ void DatasetLens::setNorm(eNorm norm) {
     break;
   }
 
-  normFactor_ = inten_t((num > 0 && den > 0) ? num / den : NAN);
-  if (qIsNaN(normFactor_))
+  normFactor_ = inten_t((num > 0 && den > 0) ? num / den : c::NAN);
+  if (isnan(normFactor_))
     MessageLogger::warn("Bad normalisation value");
 }
 

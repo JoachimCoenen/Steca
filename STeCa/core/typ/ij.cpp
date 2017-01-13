@@ -15,32 +15,47 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef TYP_IJ_H
-#define TYP_IJ_H
+#include "ij.h"
+#include <c/c/cpp>
 
-#include "def/def_cmp.h"
-#include "def/def_macros.h"
-
-namespace typ {
+namespace core {
 //------------------------------------------------------------------------------
-// 2D point, integers
 
-class JsonObj;
+IJ::IJ() : IJ(0, 0) {}
 
-struct IJ {
-  CLASS(IJ)
+TEST("IJ()", ({
+  IJ ij;
+  CHECK_EQ(0, ij.i);
+  CHECK_EQ(0, ij.j);
+});)
 
-  int i, j;
+IJ::IJ(int i_, int j_) : i(i_), j(j_) {}
 
-  IJ();  // (0,0)
-  IJ(int, int);
+TEST("IJ(i,j)", ({
+  IJ ij(2,3);
+  CHECK_EQ(2, ij.i);
+  CHECK_EQ(3, ij.j);
+});)
 
-  COMPARABLE
+int IJ::compare(rc that) const {
+  RET_COMPARE_IF_NE_THAT(i)
+  RET_COMPARE_IF_NE_THAT(j)
+  return 0;
+}
 
-  JsonObj saveJson() const;
-  void loadJson(JsonObj const&) THROWS;
-};
+EQ_NE_IMPL(IJ)
+
+TEST("IJ::compare", ({
+  IJ ij(1,2), ij1(1,2), ij2(1,0), ij3(2,2);
+  CHECK_EQ( 0, ij.compare(ij));
+  CHECK_EQ( 0, ij.compare(ij1));
+  CHECK_EQ( 1, ij.compare(ij2));
+  CHECK_EQ(-1, ij.compare(ij3));
+
+  CHECK_EQ(ij, ij1);
+  CHECK_NE(ij, ij2);
+});)
 
 //------------------------------------------------------------------------------
 }
-#endif // TYP_IJ_H
+// eof

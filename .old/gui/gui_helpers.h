@@ -53,7 +53,7 @@ public:
   void addRowStretch(int = 1);
   void addColumnStretch(int = 1);
 
-  static GridLayout* groupBox(QLayout&, rcstr);
+  static GridLayout* groupBox(QLayout&, qstrc);
 };
 
 //------------------------------------------------------------------------------
@@ -69,22 +69,22 @@ QBoxLayout* vbox();  // vertical box layout
 
 GridLayout* gridLayout();
 
-QLabel*    icon(rcstr);
-QLabel*    label(rcstr);
+QLabel*    icon(qstrc);
+QLabel*    label(qstrc);
 
 QLineEdit* editCell(uint emWidth);  // emWidth: measured in typographical (m)s
 QLineEdit* readCell(uint emWidth);
 
 QSpinBox*  spinCell(uint emWidth, int min = INT_MIN, int max = INT_MAX);
-QDoubleSpinBox* spinDoubleCell(uint emWidth, qreal min = LLONG_MIN, qreal max = LLONG_MAX);
+QDoubleSpinBox* spinDoubleCell(uint emWidth, real min = LLONG_MIN, real max = LLONG_MAX);
 
-QCheckBox* check(rcstr text);
+QCheckBox* check(qstrc text);
 QCheckBox* check(QAction* = nullptr);
 
 QToolButton* textButton(QAction*);
 QToolButton* iconButton(QAction*);
 
-QRadioButton* radioButton(rcstr text);
+QRadioButton* radioButton(qstrc text);
 
 QComboBox* comboBox(str_lst::rc);
 
@@ -120,7 +120,7 @@ class LineView : public QLineEdit {
 public:
   LineView();
 
-  void setText(rcstr);
+  void setText(qstrc);
 };
 
 //------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ protected:
 class DockWidget : public QDockWidget {
   CLASS(DockWidget) SUPER(QDockWidget)
 public:
-  DockWidget(rcstr name, rcstr objectName, Qt::Orientation);
+  DockWidget(qstrc name, qstrc objectName, Qt::Orientation);
 
 protected:
   QBoxLayout* box_;

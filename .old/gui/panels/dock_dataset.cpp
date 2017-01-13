@@ -67,7 +67,7 @@ DockDatasets::DockDatasets(TheHub& hub)
   combineDatasets_->setToolTip("Combine and average number of datasets");
 
   connect(combineDatasets_, slot(QSpinBox,valueChanged,int), [this](int num) {
-    hub_.combineDatasetsBy(pint(qMax(1, num)));
+    hub_.combineDatasetsBy(pint(c::max(1, num)));
   });
 
   onSigDatasetsChanged([this]() {

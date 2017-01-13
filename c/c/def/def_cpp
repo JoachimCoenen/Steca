@@ -8,7 +8,7 @@
 #include "def_h"
 #include "def_debug"
 
-#if !_c_cpp_
+#if !_is_cpp_
 #error this should be used in cpp files
 #endif
 
@@ -27,23 +27,27 @@
 #define COMPARABLE_IMPL(s) \
   int s::compare(rc that) const
 
-#define RETURN_COMPARE_UNEQUAL(v1,v2) \
-  if (v1 < v2) return -1;             \
+#define RET_COMPARE_IF_NE(v1,v2) \
+  if (v1 < v2) return -1;        \
   if (v1 > v2) return +1;
 
-#define RETURN_COMPARE_UNEQUAL_THAT(v) \
-  RETURN_COMPARE_UNEQUAL(v, that.v)
+#define RET_BOOL_IF_LT_GT(v1,v2) \
+  if (v1 < v2) return true;      \
+  if (v1 > v2) return false;
 
-#define RETURN_COMPARABLES_UNEQUAL(o)   \
+#define RET_COMPARE_IF_NE_THAT(v) \
+  RET_COMPARE_IF_NE(v, that.v)
+
+#define RET_COMPARABLES_IF_NE(o)   \
   for (int cmp = o.compare(that.o); cmp; ) \
     return cmp;
 
-#define EQ_NE_IMPL(s) \
+#define EQ_NE_IMPL(T) \
 bool T::operator==(rc that) const { return 0 == compare(that); } \
 bool T::operator!=(rc that) const { return 0 != compare(that); }
 
 #define DEF_EQ_NE_IMPL(T) \
-bool T::operator==(rc that) const { return isDef() && that.isDef() && 0 == compare(that); } \                                                       \
+bool T::operator==(rc that) const { return isDef() && that.isDef() && 0 == compare(that); } \
 bool T::operator!=(rc that) const { return isDef() && that.isDef() && 0 != compare(that); }
 
 //------------------------------------------------------------------------------

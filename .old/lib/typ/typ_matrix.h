@@ -39,9 +39,9 @@ struct vec3f {
 struct vec3r {
   typedef vec3r const& rc;
 
-  qreal _0,_1, _2;
+  real _0,_1, _2;
 
-  vec3r(qreal, qreal, qreal);
+  vec3r(real, real, real);
   vec3r(vec3f::rc);
 
   bool operator==(vec3r::rc) const;
@@ -50,13 +50,13 @@ struct vec3r {
 struct mat3r {
   typedef mat3r const& rc;
 
-  qreal _00, _01, _02,
+  real _00, _01, _02,
         _10, _11, _12,
         _20, _21, _22;
 
-  mat3r(qreal, qreal, qreal,
-        qreal, qreal, qreal,
-        qreal, qreal, qreal);
+  mat3r(real, real, real,
+        real, real, real,
+        real, real, real);
 
   bool  operator==(mat3r::rc) const;
 
@@ -67,9 +67,9 @@ struct mat3r {
   vec3r operator*(vec3r::rc) const;
 
   // factories
-  static mat3r rotationCWx(qreal angle);
-  static mat3r rotationCWz(qreal angle);
-  static mat3r rotationCCWz(qreal angle);
+  static mat3r rotationCWx(real angle);
+  static mat3r rotationCWz(real angle);
+  static mat3r rotationCCWz(real angle);
 };
 
 //------------------------------------------------------------------------------

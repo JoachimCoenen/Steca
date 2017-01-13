@@ -57,15 +57,15 @@ struct OutputData {
   gma_rge gmaStripe_;
   uint picNum_;
 
-  bool isValid() {
-   return (!dataset_.metadata().isNull() || !curve_.isEmpty() || gmaStripe_.isValid());
+  bool isDef() {
+   return (!dataset_.metadata().isNull() || !curve_.isEmpty() || gmaStripe_.isDef());
   }
 };
 
 static const Params::ePanels PANELS = Params::ePanels(
     Params::GAMMA);
 
-DiffractogramsFrame::DiffractogramsFrame(TheHub &hub, rcstr title, QWidget *parent)
+DiffractogramsFrame::DiffractogramsFrame(TheHub &hub, qstrc title, QWidget *parent)
 : super(hub, title, new Params(hub, PANELS), parent)
 {
   tabs_->removeTab(0);
@@ -86,15 +86,15 @@ OutputDataCollection DiffractogramsFrame::collectCurves(
   auto lens = hub_.datasetLens(dataset);
 
   typ::Range rge = (gmaSlices > 0) ? lens->rgeGma() : typ::Range::infinite();
-  if (rgeGma.isValid())
+  if (rgeGma.isDef())
     rge = rge.intersect(rgeGma);
 
   OutputDataCollection outputData;
 
-  gmaSlices = qMax(1u, gmaSlices);
-  qreal step = rge.width() / gmaSlices;
+  gmaSlices = c::max(1u, gmaSlices);
+  real step = rge.width() / gmaSlices;
   for_i (gmaSlices) {
-    qreal min = rge.min + i * step;
+    real min = rge.min + i * step;
     gma_rge gmaStripe(min, min + step);
 
     auto curve = lens->makeCurve(gmaStripe, averaged);
@@ -161,9 +161,9 @@ auto writeMetaData = [](OutputData outputData, QTextStream& stream) {
   }
 };
 
-bool DiffractogramsFrame::writeCurrDiffractogramToFile(rcstr filePath, rcstr separator) {
+bool DiffractogramsFrame::writeCurrDiffractogramToFile(qstrc filePath, qstrc separator) {
   auto outputData = outputCurrDiffractogram();
-  if (!outputData.isValid())
+  if (!outputData.isDef())
     return false;
 
   WriteFile file(filePath);
@@ -180,11 +180,11 @@ bool DiffractogramsFrame::writeCurrDiffractogramToFile(rcstr filePath, rcstr sep
   return true;
 }
 
-bool DiffractogramsFrame::writeAllDiffractogramsToFiles(rcstr filePath, rcstr separator, bool oneFile) {
+bool DiffractogramsFrame::writeAllDiffractogramsToFiles(qstrc filePath, qstrc separator, bool oneFile) {
   auto outputCollections = outputAllDiffractograms();
   for (auto outputCollection : outputCollections) {
     for (auto outputData : outputCollection) {
-      if (!outputData.isValid())
+      if (!outputData.isDef())
         return false;
     }
   }

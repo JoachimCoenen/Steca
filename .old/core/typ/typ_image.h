@@ -70,7 +70,7 @@ public:
   }
 
   // Sum all intensities with new ones.
-  void addIntens(rc) THROWS;
+  void addIntens(rc) may_exc;
 
   inten_rge::rc rgeInten() const {
     return rgeInten_;

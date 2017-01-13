@@ -26,7 +26,7 @@ PanelWidget::PanelWidget(TheHub& hub, Qt::Orientation orientation) : RefHub(hub)
 
 //------------------------------------------------------------------------------
 
-BasicPanel::BasicPanel(TheHub& hub, rcstr title) : super(title), RefHub(hub) {
+BasicPanel::BasicPanel(TheHub& hub, qstrc title) : super(title), RefHub(hub) {
 }
 
 BasicPanel::BasicPanel(TheHub& hub) : Cls(hub, EMPTY_STR) {
@@ -57,7 +57,7 @@ BoxPanel::BoxPanel(TheHub& hub, Qt::Orientation o)
 : Cls(hub, EMPTY_STR, o) {
 }
 
-BoxPanel::BoxPanel(TheHub& hub, rcstr title, Qt::Orientation orientation)
+BoxPanel::BoxPanel(TheHub& hub, qstrc title, Qt::Orientation orientation)
 : super(hub, title)
 {
   setLayout((box_ = boxLayout(orientation)));
@@ -68,7 +68,7 @@ BoxPanel::BoxPanel(TheHub& hub, rcstr title, Qt::Orientation orientation)
 GridPanel::GridPanel(TheHub& hub) : Cls(hub, EMPTY_STR) {
 }
 
-GridPanel::GridPanel(TheHub& hub, rcstr title) : super(hub, title) {
+GridPanel::GridPanel(TheHub& hub, qstrc title) : super(hub, title) {
   setLayout((grid_ = gridLayout()));
 }
 
@@ -84,7 +84,7 @@ TabsPanel::TabsPanel(TheHub& hub) : RefHub(hub) {
 
 //------------------------------------------------------------------------------
 
-Tab& TabsPanel::addTab(rcstr title, Qt::Orientation orientation) {
+Tab& TabsPanel::addTab(qstrc title, Qt::Orientation orientation) {
   auto tab = new Tab(orientation);
   super::addTab(tab, title);
   return *tab;

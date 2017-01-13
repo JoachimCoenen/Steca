@@ -8,14 +8,14 @@
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-_c_c_struct(ptr)
-  _c_ptr(void, p)
+_c_struct (ptr)
+  _ptr(void, p)
 
-  _c_con(ptr, (pcvoid))
-  _c_mth(pcvoid, take, ())
-_c_c_struct_end(ptr)
+  _c_con (ptr, (pcvoid))
+  _mth(pcvoid, take, ())
+_c_struct_end(ptr)
 
-#if _c_cpp_
+#if _is_cpp_
 namespace c {
 
 // parts adapted from https://github.com/Microsoft/GSL.git
@@ -63,10 +63,10 @@ private:
   just_ptr<T>& operator--()       = delete;
   just_ptr<T>  operator++(int)    = delete;
   just_ptr<T>  operator--(int)    = delete;
-  just_ptr<T>& operator+ (size_t) = delete;
-  just_ptr<T>& operator+=(size_t) = delete;
-  just_ptr<T>& operator- (size_t) = delete;
-  just_ptr<T>& operator-=(size_t) = delete;
+  just_ptr<T>& operator+ (sz_t) = delete;
+  just_ptr<T>& operator+=(sz_t) = delete;
+  just_ptr<T>& operator- (sz_t) = delete;
+  just_ptr<T>& operator-=(sz_t) = delete;
 };
 
 template <typename T> // name = a hint

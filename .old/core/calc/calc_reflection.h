@@ -31,7 +31,7 @@ class Reflection final {
 public:
 
   static str_lst::rc typeStrLst();
-  static rcstr       typeTag(fit::ePeakType);
+  static qstrc       typeTag(fit::ePeakType);
 
   Reflection(fit::ePeakType = fit::ePeakType::RAW);
 
@@ -58,7 +58,7 @@ private:
 
 public:
   typ::JsonObj saveJson() const;
-  void loadJson(typ::JsonObj::rc) THROWS;
+  void loadJson(typ::JsonObj::rc) may_exc;
 };
 
 typedef QSharedPointer<Reflection>  shp_Reflection;

@@ -15,42 +15,36 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "typ_xy.h"
+#include "xy.h"
+#include <c/c/cpp>
 
-#include "def/def_cmp_impl.h"
-#include "typ/typ_json.h"
-
-#include "test/tests.h"
-
-namespace typ {
+namespace core {
 //------------------------------------------------------------------------------
 
-XY::XY() {
-  invalidate();
-}
+XY::XY() : x(c::NAN), y(c::NAN)  {}
 
 TEST("XY()", ({
   XY xy;
-  CHECK(qIsNaN(xy.x));
-  CHECK(qIsNaN(xy.y));
-})
+  CHECK(c:isnan(xy.x));
+  CHECK(c:isnan(xy.y));
+});)
 
-XY::XY(qreal x_, qreal y_) : x(x_), y(y_) {}
+XY::XY(real x_, real y_) : x(x_), y(y_) {}
 
 TEST("XY(x,y)", ({
   XY xy(2.3,3.4);
   CHECK_EQ(2.3, xy.x);
   CHECK_EQ(3.4, xy.y);
-})
+});)
 
 int XY::compare(rc that) const {
-  EXPECT(isValid() && that.isValid())
-  RET_COMPARE_VALUE(x)
-  RET_COMPARE_VALUE(y)
+  EXPECT(isDef() && that.isDef())
+  RET_COMPARE_IF_NE_THAT(x)
+  RET_COMPARE_IF_NE_THAT(y)
   return 0;
 }
 
-VALID_EQ_NE_OPERATOR(XY)
+DEF_EQ_NE_IMPL(XY)
 
 TEST("XY::compare", ({
   XY xy(1,2), xy1(1,2), xy2(1,0), xy3(2,2);
@@ -61,41 +55,26 @@ TEST("XY::compare", ({
 
   CHECK_EQ(xy, xy1);
   CHECK_NE(xy, xy2);
-})
+});)
 
-void XY::invalidate() {
-  x = y = NAN;
+void XY::undef() {
+  mut(x) = mut(y) = c::NAN;
 }
 
-bool XY::isValid() const {
-  return !qIsNaN(x) && !qIsNaN(y);
+bool XY::isDef() const {
+  return !c::isnan(x) && !c::isnan(y);
 }
 
 TEST("XY::valid", ({
   XY xy;
-  CHECK(!xy.isValid());
+  CHECK(!xy.isDef());
   xy.x = 0;
-  CHECK(!xy.isValid());
+  CHECK(!xy.isDef());
   xy.y = 0;
-  CHECK(xy.isValid());
-  xy.invalidate();
-  CHECK(!xy.isValid());
-})
-
-JsonObj XY::saveJson() const {
-  return JsonObj().saveQreal(json_key::X, x).saveQreal(json_key::Y, y);
-}
-
-void XY::loadJson(JsonObj::rc obj) THROWS {
-  x = obj.loadQreal(json_key::X);
-  y = obj.loadQreal(json_key::Y);
-}
-
-TEST("XY::json", ({
-  XY xy(-1,2), xy1;
-  xy1.loadJson(xy.saveJson());
-  CHECK_EQ(xy, xy1);
-})
+  CHECK(xy.isDef());
+  xy.undef();
+  CHECK(!xy.isDef());
+});)
 
 //------------------------------------------------------------------------------
 }

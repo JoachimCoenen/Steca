@@ -43,7 +43,7 @@ public:
   void checkUpdate(bool completeReport);
 
 private:
-  void messageDialog(rcstr title, rcstr text);
+  void messageDialog(qstrc title, qstrc text);
 
 public:
   void show();

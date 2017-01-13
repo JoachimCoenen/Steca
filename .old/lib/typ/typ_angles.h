@@ -28,35 +28,35 @@ class rad;
 // angles stored in degrees
 class deg {
 public:
-  deg(qreal val = 0) : val_(val) {}
-  operator qreal() const { return val_; }
+  deg(real val = 0) : val_(val) {}
+  operator real() const { return val_; }
 
   explicit deg(rad);
   rad toRad() const;
 
   deg& operator+=(deg const&);
-  deg& operator*=(qreal);
+  deg& operator*=(real);
 
   deg normalized();
 
 private:
-  qreal val_;
+  real val_;
 };
 
 // trigonometry needs radians
 class rad {
 public:
-  rad(qreal val = 0) : val_(val) {}
-  operator qreal() const { return val_; }
+  rad(real val = 0) : val_(val) {}
+  operator real() const { return val_; }
 
   explicit rad(deg);
   deg toDeg() const;
 
   rad& operator+=(rad const&);
-  rad& operator*=(qreal);
+  rad& operator*=(real);
 
 private:
-  qreal val_;
+  real val_;
 };
 
 //------------------------------------------------------------------------------

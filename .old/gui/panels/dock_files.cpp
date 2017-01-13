@@ -76,7 +76,7 @@ void FilesView::removeSelected() {
 void FilesView::recollect() {
   uint_vec rows;
   for (auto& index : selectionModel()->selectedRows())
-    if (index.isValid())
+    if (index.isDef())
       rows.append(to_u(index.row()));
 
   hub_.collectDatasetsFromFiles(rows);

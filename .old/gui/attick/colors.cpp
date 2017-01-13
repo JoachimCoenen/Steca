@@ -107,7 +107,7 @@ static quint8 viridis_map[256][3] = {
 
 //------------------------------------------------------------------------------
 
-#define cv(m,M,v,V) qBound(0,int(((level-m)/(M-m)*(V-v)+v)*256 +.5f),255)
+#define cv(m,M,v,V) c::bound(0,int(((level-m)/(M-m)*(V-v)+v)*256 +.5f),255)
 QRgb hot(float level) {
   int r, g, b;
   if (level < 0.365079f) {
@@ -128,27 +128,27 @@ QRgb hot(float level) {
 }
 
 QRgb intenImage(inten_t inten, inten_t maxInten, bool curved) {
-  if (qIsNaN(inten))
+  if (isnan(inten))
     return qRgb(0x00, 0xff, 0xff);
-  if (qIsInf(inten))
+  if (c::isinf(inten))
     return qRgb(0xff, 0xff, 0xff);
 
-  if (qIsNaN(maxInten) || maxInten <= 0)
+  if (isnan(maxInten) || maxInten <= 0)
     return qRgb(0x00, 0x00, 0x00);
 
-  qreal level = qMax(.0, qreal(inten) / qreal(maxInten));  // normalize
+  real level = c::max(.0, real(inten) / real(maxInten));  // normalize
 
   if (curved)
     level = qPow(level, .3);
 
   return hot(float(level));
 
-  quint8 *c = viridis_map[qBound(0, int(level*256), 255)];
+  quint8 *c = viridis_map[c::bound(0, int(level*256), 255)];
   return qRgb(c[0],c[1],c[2]);
 }
 
 QRgb intenGraph(inten_t inten, inten_t maxInten) {
-  if (!qIsFinite(inten) || qIsNaN(maxInten) || maxInten <= 0)
+  if (!qIsFinite(inten) || isnan(maxInten) || maxInten <= 0)
     return qRgb(0x00, 0x00, 0x00);
 
   inten /= maxInten;
@@ -170,14 +170,14 @@ QRgb heatmapColor(inten_t value) {
     {1.00f, 255, 0,   1  },
   };
 
-  value = qBound(0.0f, value, 1.0f);
+  value = c::bound(0.0f, value, 1.0f);
   uint count = lc.count(), i;
   for (i = 1; i < count; ++i)
     if (value < lc.at(i).limit)
       break;
 
   auto& lc1 = lc.at(i-1);
-  auto& lc2 = lc.at(qMin(i, count-1));
+  auto& lc2 = lc.at(c::min(i, count-1));
 
   auto  frac = (value - lc1.limit) / (lc2.limit - lc1.limit);
 

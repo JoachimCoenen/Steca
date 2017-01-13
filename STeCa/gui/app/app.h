@@ -20,10 +20,10 @@
 
 #include <c/qt/app.h>
 
-_cpp_sub_struct(App, c::qt::app)
+_sub_struct (App, c::qt::app)
   App(int& argc, char* argv[]);
   int exec();
-_cpp_sub_struct_end
+_sub_struct_end
 
 #endif
 // eof

@@ -9,17 +9,17 @@
 //  // Basic Tests for default constructor
 //  {
 //    core::Range r;
-//    QVERIFY(!r.isValid());
+//    QVERIFY(!r.isDef());
 //  }
 
 //  // Basic Tests using one Argument constructor
 //  {
-//    qreal val1 = 5, val2 = 42;
+//    real val1 = 5, val2 = 42;
 //    core::Range r(val1);
-//    QVERIFY(r.isValid());
+//    QVERIFY(r.isDef());
 
 //    r = core::Range::infinite();
-//    QVERIFY(r.isValid());
+//    QVERIFY(r.isDef());
 
 //    r.set(val2);
 //    QVERIFY(r.contains(val2));
@@ -32,9 +32,9 @@
 
 //  // Basic Tests using two Argument constructor
 //  {
-//    qreal min = 2, max = 42;
+//    real min = 2, max = 42;
 //    core::Range r(min,max);
-//    QVERIFY(r.isValid());
+//    QVERIFY(r.isDef());
 
 //    for (int i = min; i<max; ++i) {
 //      QVERIFY(r.contains(core::Range(min,i)));
@@ -67,7 +67,7 @@
 //    core::Ranges rs;
 //    QVERIFY(rs.isEmpty());
 
-//    qreal min = 0, max = 3;
+//    real min = 0, max = 3;
 //    for (uint i = 0; i<length; ++i) {
 //      rs.add(core::Range(min,max));
 //      min = max + 1;
@@ -95,7 +95,7 @@
 //  //Tests for Curve
 //  {
 //    {
-//      qreal tth = 1.2, inten = 3.14;
+//      real tth = 1.2, inten = 3.14;
 //      core::Curve t;
 
 //      // testing default Constructor, All data is NaN
@@ -103,10 +103,10 @@
 //        QVERIFY(t.isEmpty());
 //        QVERIFY(t.xs().isEmpty());
 //        QVERIFY(t.ys().isEmpty());
-//        QVERIFY(qIsNaN(t.rgeX().min));
-//        QVERIFY(qIsNaN(t.rgeX().max));
-//        QVERIFY(qIsNaN(t.rgeY().min));
-//        QVERIFY(qIsNaN(t.rgeY().max));
+//        QVERIFY(isnan(t.rgeX().min));
+//        QVERIFY(isnan(t.rgeX().max));
+//        QVERIFY(isnan(t.rgeY().min));
+//        QVERIFY(isnan(t.rgeY().max));
 //      }
 
 //      //testing if input of data is correct

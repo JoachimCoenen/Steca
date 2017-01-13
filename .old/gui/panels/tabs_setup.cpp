@@ -54,7 +54,7 @@ ReflectionView::ReflectionView(TheHub &hub) : super(hub) {
 }
 
 void ReflectionView::addReflection(uint type) {
-  type = qBound(0u, type, uint(fit::ePeakType::NUM_TYPES));
+  type = c::bound(0u, type, uint(fit::ePeakType::NUM_TYPES));
   model()->addReflection(fit::ePeakType(type));
   updateSingleSelection();
 }
@@ -105,11 +105,11 @@ void ReflectionView::selectionChanged(QItemSelection const& selected,
 
 //------------------------------------------------------------------------------
 
-static qreal safeReal(qreal val) {
+static real safeReal(real val) {
   return qIsFinite(val) ? val : 0.0;
 }
 
-static str safeRealText(qreal val) {
+static str safeRealText(real val) {
   return qIsFinite(val) ? str::number(val) : EMPTY_STR;
 }
 
@@ -402,9 +402,9 @@ TabsSetup::TabsSetup(TheHub& hub) : super(hub) {
       }
     };
 
-    auto changeReflData0 = [newReflData](qreal) { newReflData(false); };
+    auto changeReflData0 = [newReflData](real) { newReflData(false); };
 
-    auto changeReflData1 = [newReflData](qreal) { newReflData(true); };
+    auto changeReflData1 = [newReflData](real) { newReflData(true); };
 
     connect(spinRangeMin_,   slot(QDoubleSpinBox,valueChanged,double), changeReflData1);
     connect(spinRangeMax_,   slot(QDoubleSpinBox,valueChanged,double), changeReflData1);
@@ -430,8 +430,8 @@ TabsSetup::TabsSetup(TheHub& hub) : super(hub) {
 
 void TabsSetup::setToHub() {
   hub_.setGeometry(
-    preal(qMax(qreal(typ::Geometry::MIN_DETECTOR_DISTANCE),   detDistance_->value())),
-    preal(qMax(qreal(typ::Geometry::MIN_DETECTOR_PIXEL_SIZE), detPixelSize_->value())),
+    preal(c::max(real(typ::Geometry::MIN_DETECTOR_DISTANCE),   detDistance_->value())),
+    preal(c::max(real(typ::Geometry::MIN_DETECTOR_PIXEL_SIZE), detPixelSize_->value())),
     typ::IJ(beamOffsetI_->value(), beamOffsetJ_->value())
   );
 }

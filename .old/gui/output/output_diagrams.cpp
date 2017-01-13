@@ -32,7 +32,7 @@ static void sortColumns(qreal_vec& xs, qreal_vec& ys, uint_vec& is) {
     is[i] = i;
 
   std::sort(is.begin(), is.end(), [&xs,&ys](uint i1,uint i2) {
-    qreal x1 = xs.at(i1), x2 =xs.at(i2);
+    real x1 = xs.at(i1), x2 =xs.at(i2);
     if (x1 < x2)
       return true;
     if (x1 > x2)
@@ -133,7 +133,7 @@ bool TabDiagramsSave::currDiagram() const {
 static const Params::ePanels PANELS = Params::ePanels(
     Params::REFLECTION | Params::GAMMA | Params::DIAGRAM);
 
-DiagramsFrame::DiagramsFrame(TheHub &hub, rcstr title, QWidget *parent)
+DiagramsFrame::DiagramsFrame(TheHub &hub, qstrc title, QWidget *parent)
 : super(hub, title, new Params(hub, PANELS), parent)
 {
   btnInterpolate_->hide();
@@ -203,8 +203,8 @@ void DiagramsFrame::recalculate() {
 
     for_i (count) {
       auto  row   = rs_.at(is.at(i)).data(); // access error over sorted index vec
-      qreal sigma = row.at(uint(attr)).toDouble();
-      qreal y = ys_.at(i);
+      real sigma = row.at(uint(attr)).toDouble();
+      real y = ys_.at(i);
       ysErrorLo_[i] = y - sigma;
       ysErrorUp_[i] = y + sigma;
     }
@@ -248,7 +248,7 @@ bool DiagramsFrame::saveDiagramOutput() {
   return true;
 }
 
-void DiagramsFrame::writeCurrentDiagramOutputFile(rcstr filePath, rcstr separator) {
+void DiagramsFrame::writeCurrentDiagramOutputFile(qstrc filePath, qstrc separator) {
   WriteFile file(filePath);
 
   QTextStream stream(&file);
@@ -267,7 +267,7 @@ void DiagramsFrame::writeCurrentDiagramOutputFile(rcstr filePath, rcstr separato
   }
 }
 
-void DiagramsFrame::writeAllDataOutputFile(rcstr filePath, rcstr separator) {
+void DiagramsFrame::writeAllDataOutputFile(qstrc filePath, qstrc separator) {
   WriteFile file(filePath);
   QTextStream stream(&file);
 

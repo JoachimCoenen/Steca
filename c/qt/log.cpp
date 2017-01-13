@@ -5,22 +5,22 @@
 namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
-void log::info(QString const& msg) {
+void log::info(qstrc msg) {
   if (handler)
     handler(msg, INFO);
 }
 
-void log::warn(QString const& msg) {
+void log::warn(qstrc msg) {
   if (handler)
     handler(msg, WARN);
 }
 
-void log::popup(QString const& msg) {
+void log::popup(qstrc msg) {
   if (handler)
     handler(msg, POPUP);
 }
 
-void (*log::handler)(QString const&, eType) = nullptr;
+void (*log::handler)(qstrc, eType) = nullptr;
 
 //------------------------------------------------------------------------------
 }}

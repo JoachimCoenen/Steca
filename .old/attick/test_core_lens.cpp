@@ -23,8 +23,8 @@ REGISTER_TEST_SUITE(TestCoreLens)
  Session session; \
   qreal_vec motorAngles;\
   IJ midPix(1,1);\
-  qreal midTTh = 2;\
-  qreal motorAngle = 0;\
+  real midTTh = 2;\
+  real motorAngle = 0;\
   core::inten_vec intenVector;\
   for_i (width * height) {\
     intenVector.append(inten/2);\

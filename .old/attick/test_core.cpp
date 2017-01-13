@@ -2,12 +2,12 @@
 //REGISTER_TEST_SUITE(TestCore)
 
 //void TestCore::testNaNs() {
-//  qreal r = qQNaN();
+//  real r = qQNaN();
 //  float f1 = float(qQNaN()), f2 = float(r);
 
-//  QVERIFY(qIsNaN(r));
-//  QVERIFY(qIsNaN(f1));
-//  QVERIFY(qIsNaN(f2));
+//  QVERIFY(isnan(r));
+//  QVERIFY(isnan(f1));
+//  QVERIFY(isnan(f2));
 //}
 
 //// eof

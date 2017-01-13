@@ -39,7 +39,7 @@ protected:
   void resizeEvent(QResizeEvent*);
 
 private:
-  qreal   scale_;
+  real   scale_;
   QPixmap original_, scaled_;
 
   void paintEvent(QPaintEvent*);
@@ -70,7 +70,7 @@ void ImageWidget::setScale() {
   } else {
     auto sz = size();
     auto os = original_.size();
-    scale_  = qMin(qreal(sz.width() - 2) / os.width(), qreal(sz.height() - 2) / os.height());
+    scale_  = c::min(real(sz.width() - 2) / os.width(), real(sz.height() - 2) / os.height());
   }
 
   if (hub_.actions.stepScale->isChecked() && scale_ > 0)
@@ -125,7 +125,7 @@ void ImageWidget::paintEvent(QPaintEvent*) {
     p.drawLine(rl, y, rr, y);
 
     // text annotations
-    auto paintText = [this, &p](QPoint pos, rcstr s, bool alignLeft) {
+    auto paintText = [this, &p](QPoint pos, qstrc s, bool alignLeft) {
       auto fm = fontMetrics();
       if (alignLeft) pos.rx() -= fm.width(s);
       p.drawText(pos, s);
@@ -308,13 +308,13 @@ void TabsImages::render() {
     QPixmap pixMap;
 
     uint nSlices  = to_u(numSlices_->value());
-    numSlice_->setMaximum(qMax(1, to_i(nSlices)));
+    numSlice_->setMaximum(c::max(1, to_i(nSlices)));
     numSlice_->setEnabled(nSlices > 0);
 
     if (dataset_) {
       // 1 - based
-      uint by = qBound(1u, uint(hub_.datasetsGroupedBy()), dataset_->count());
-      uint n  = qBound(1u, to_u(spinN_->value()), by);
+      uint by = c::bound(1u, uint(hub_.datasetsGroupedBy()), dataset_->count());
+      uint n  = c::bound(1u, to_u(spinN_->value()), by);
 
       spinN_->setValue(to_i(n));
       spinN_->setEnabled(by > 1);
@@ -323,7 +323,7 @@ void TabsImages::render() {
 
       typ::Range rge;
       if (nSlices > 0) {
-        uint nSlice  = qMax(1u, to_u(numSlice_->value()));
+        uint nSlice  = c::max(1u, to_u(numSlice_->value()));
         uint iSlice  = nSlice - 1;
 
         auto rgeGma = lens_->rgeGma();
@@ -351,7 +351,7 @@ void TabsImages::render() {
         int count  = to_i(curve.count());
         numBin_->setMaximum(count-1);
         auto min = rgeTth.min, wdt = rgeTth.width();
-        qreal num = qreal(numBin_->value());
+        real num = real(numBin_->value());
         pixMap = makePixmap(*oneDataset, rge, typ::Range(min + wdt * (num/count), min + wdt * ((num+1)/count)));
       } else {
         pixMap = makePixmap(oneDataset->image());

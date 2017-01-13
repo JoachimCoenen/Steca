@@ -24,17 +24,17 @@ namespace io {
 //------------------------------------------------------------------------------
 
 // load a file; file type will be sensed
-data::shp_File load(rcstr filePath) THROWS;
+data::shp_File load(qstrc filePath) may_exc;
 
 // load a Caress file
-data::shp_File loadCaress(rcstr filePath) THROWS;
-data::shp_File loadCaress2(rcstr filePath) THROWS;
+data::shp_File loadCaress(qstrc filePath) may_exc;
+data::shp_File loadCaress2(qstrc filePath) may_exc;
 
 // load a Mar file
-data::shp_File loadMar(rcstr filePath) THROWS;
+data::shp_File loadMar(qstrc filePath) may_exc;
 
 // load a metadata file + tiffs
-data::shp_File loadTiffDat(rcstr filePath) THROWS;
+data::shp_File loadTiffDat(qstrc filePath) may_exc;
 
 //------------------------------------------------------------------------------
 }

@@ -4,7 +4,7 @@
 //#include "types/typ_array2d.h"
 
 //void TestCoreArray2d::testArray2d() {
-//  core::Array2D<qreal> a; // default constructor
+//  core::Array2D<real> a; // default constructor
 
 //  { // basic test
 //    auto aSize = a.size();
@@ -18,7 +18,7 @@
 
 //  { // methods for data input and access
 //    uint const iSize = 10, jSize = 20;
-//    qreal val = 3;
+//    real val = 3;
 
 //    core::size2d size(iSize,jSize);
 //    a.fill(val,size);
@@ -31,18 +31,18 @@
 //      a.setAt(a.index(i,j), i + j*iSize);
 
 //    for_ij (iSize,jSize)
-//      QCOMPARE(a.at(a.index(i,j)), qreal(i + j*iSize));
+//      QCOMPARE(a.at(a.index(i,j)), real(i + j*iSize));
 
 //    uint const count = iSize * jSize;
 //    QCOMPARE(count, a.count());
 
 //    for_i (count) {
-//      QCOMPARE(a[i], qreal(i));
+//      QCOMPARE(a[i], real(i));
 //    }
 
 //    auto data = a.data();
 //    for_i (count)
-//      QCOMPARE(data[i], qreal(i));
+//      QCOMPARE(data[i], real(i));
 //  }
 
 //  { // is Array2D reset to default after clear?

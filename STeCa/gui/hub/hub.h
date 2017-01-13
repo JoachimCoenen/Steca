@@ -26,7 +26,9 @@
 
 struct Hub;
 
-_cpp_sub_struct(Task, QEvent) NO_COPY(Task)
+_sub_struct (Task, QEvent) NO_COPY(Task)
+  using Session = core::Session;
+
   Task();
  ~Task();
 
@@ -37,12 +39,14 @@ _cpp_sub_struct(Task, QEvent) NO_COPY(Task)
   virtual void done() = 0;
 
   Hub* hub; Session* session;
-_cpp_sub_struct_end
+_sub_struct_end
 
 typedef c::shared<Task> shTask;
 Q_DECLARE_METATYPE(shTask)
 
-_cpp_sub_struct(Worker, QObject)
+_sub_struct (Worker, QObject)
+  using Session = core::Session;
+
   Worker(Session&);
 
   void doWork(shTask);
@@ -53,9 +57,11 @@ signals:
 private:
   Session& session;
   Q_OBJECT
-_cpp_sub_struct_end
+_sub_struct_end
 
-_cpp_sub_struct(Hub, QObject)
+_sub_struct (Hub, QObject)
+  using Session = core::Session;
+
   Hub();
  ~Hub();
 
@@ -75,7 +81,7 @@ private:
   QThread thread;
   Worker  worker;
   Q_OBJECT
-_cpp_struct_end
+_struct_end
 
 #endif
 // eof

@@ -20,7 +20,7 @@ void TestCoreApprox::testPolynom() {
     QVERIFY(fm.fit(p,curve));
 
     core::Range r(0,2);
-    qreal average = p.avgY(r);
+    real average = p.avgY(r);
 
     QALMOST_COMPARE(average,1.0);
   }

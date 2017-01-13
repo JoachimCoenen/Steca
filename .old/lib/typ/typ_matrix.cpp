@@ -24,10 +24,10 @@
 namespace typ {
 //------------------------------------------------------------------------------
 
-//#ifdef TESTS
+//#ifdef WITH_TESTS
 //template <typename T, typename O>
 //bool e(T const& t, O const& o) {
-//  return qAbs(qreal(t) - qreal(o)) < .00001;
+//  return qAbs(real(t) - real(o)) < .00001;
 //}
 
 //template <typename T, typename O>
@@ -48,12 +48,12 @@ vec3f::vec3f(vec3r::rc v)
 : vec3f(float(v._0), float(v._1), float(v._2)) {
 }
 
-vec3r::vec3r(qreal _0_, qreal _1_, qreal _2_) {
+vec3r::vec3r(real _0_, real _1_, real _2_) {
   _0 = _0_; _1 = _1_; _2 = _2_;
 }
 
 vec3r::vec3r(vec3f::rc v)
-  : vec3r(qreal(v._0), qreal(v._1), qreal(v._2)) {
+  : vec3r(real(v._0), real(v._1), real(v._2)) {
 }
 
 bool vec3r::operator==(rc that) const {
@@ -72,9 +72,9 @@ TEST("vec3", ({
   CHECK_EQ(fr, rf);
 });
 
-mat3r::mat3r(qreal _00_, qreal _01_, qreal _02_,
-                   qreal _10_, qreal _11_, qreal _12_,
-                   qreal _20_, qreal _21_, qreal _22_) {
+mat3r::mat3r(real _00_, real _01_, real _02_,
+                   real _10_, real _11_, real _12_,
+                   real _20_, real _21_, real _22_) {
   _00 = _00_; _01 = _01_; _02 = _02_;
   _10 = _10_; _11 = _11_; _12 = _12_;
   _20 = _20_; _21 = _21_; _22 = _22_;
@@ -135,24 +135,24 @@ TEST("mat3r", ({
   CHECK_EQ(mat3r(5,14,23, 14,50,86, 23,86,149), m1*mt);
 });
 
-mat3r mat3r::rotationCWx(qreal angle) {
+mat3r mat3r::rotationCWx(real angle) {
   return mat3r(1, 0,           0,
                0, cos(angle), -sin(angle),
                0, sin(angle),  cos(angle));
 }
 
-mat3r mat3r::rotationCWz(qreal angle) {
+mat3r mat3r::rotationCWz(real angle) {
   return mat3r(cos(angle), -sin(angle), 0,
                sin(angle),  cos(angle), 0,
                0,           0,          1);
 }
 
-mat3r mat3r::rotationCCWz(qreal angle) {
+mat3r mat3r::rotationCCWz(real angle) {
   return rotationCWz(angle).transposed();
 }
 
 TEST("mat3r::rotation", ({
-  qreal angle = 1;
+  real angle = 1;
   auto cwx  = mat3r::rotationCWx(angle);
   auto cwz  = mat3r::rotationCWz(angle);
   auto ccwz = mat3r::rotationCCWz(angle);

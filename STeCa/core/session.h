@@ -20,10 +20,15 @@
 
 #include <c/c/h>
 
-_cpp_struct(Session)
+namespace core {
+//------------------------------------------------------------------------------
+
+_struct (Session)
   Session();
   int long_square(int);
-_cpp_struct_end
+_struct_end
 
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

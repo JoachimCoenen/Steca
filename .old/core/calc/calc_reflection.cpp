@@ -26,7 +26,7 @@ str_lst::rc Reflection::typeStrLst() {
   return types;
 }
 
-rcstr Reflection::typeTag(fit::ePeakType type) {
+qstrc Reflection::typeTag(fit::ePeakType type) {
   return typeStrLst().at(uint(type));
 }
 
@@ -57,7 +57,7 @@ void Reflection::setRange(typ::Range::rc range) {
 
 void Reflection::invalidateGuesses() {
   peakFunction_->setGuessedPeak(peak_t());
-  peakFunction_->setGuessedFWHM(NAN);
+  peakFunction_->setGuessedFWHM(c::NAN);
 }
 
 void Reflection::fit(typ::Curve::rc curve) {
@@ -82,7 +82,7 @@ typ::JsonObj Reflection::saveJson() const {
   return peakFunction_->saveJson();
 }
 
-void Reflection::loadJson(typ::JsonObj::rc obj) THROWS {
+void Reflection::loadJson(typ::JsonObj::rc obj) may_exc {
   scoped<typ::Function*> f(typ::Function::make(obj));
 
   RUNTIME_CHECK(dynamic_cast<fit::PeakFunction*>(f.ptr()),

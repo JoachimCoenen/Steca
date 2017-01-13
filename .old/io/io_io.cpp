@@ -74,7 +74,7 @@ static bool couldBeTiffDat(QFileInfo const& info) {
   return couldBe;
 }
 
-data::shp_File load(rcstr filePath) THROWS {
+data::shp_File load(qstrc filePath) may_exc {
   QFileInfo info(filePath);
   RUNTIME_CHECK(info.exists(), "File " % filePath % " does not exist");
 

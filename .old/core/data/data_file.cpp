@@ -20,7 +20,7 @@
 namespace data {
 //------------------------------------------------------------------------------
 
-File::File(rcstr fileName) : fileInfo_(fileName) {
+File::File(qstrc fileName) : fileInfo_(fileName) {
 }
 
 QFileInfo const& File::fileInfo() const {

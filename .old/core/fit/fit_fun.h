@@ -44,17 +44,17 @@ public:
   uint degree() const;
   void setDegree(uint);
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
-  qreal avgY(typ::Range::rc, qreal const* parValues = nullptr) const;
+  real avgY(typ::Range::rc, real const* parValues = nullptr) const;
 
   void fit(typ::Curve::rc, typ::Ranges::rc);
   static Polynom fromFit(uint degree, typ::Curve::rc, typ::Ranges::rc);
 
 public:
   typ::JsonObj saveJson() const;
-  void loadJson(typ::JsonObj::rc) THROWS;
+  void loadJson(typ::JsonObj::rc) may_exc;
 };
 
 //------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ protected:
 
 public:
   typ::JsonObj saveJson() const;
-  void loadJson(typ::JsonObj::rc) THROWS;
+  void loadJson(typ::JsonObj::rc) may_exc;
 
 protected:
   typ::Range range_;
@@ -119,8 +119,8 @@ public:
 
   ePeakType type() const { return ePeakType::RAW; }
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
   peak_t fittedPeak() const;
   fwhm_t fittedFWHM() const;
@@ -136,8 +136,8 @@ private:
   void prepareY();
 
   mutable uint  x_count_;
-  mutable qreal dx_;
-  mutable qreal sum_y_;
+  mutable real dx_;
+  mutable real sum_y_;
 
 public:
   typ::JsonObj saveJson() const;
@@ -150,12 +150,12 @@ class Gaussian : public PeakFunction {
 public:
   enum { parAMPL, parXSHIFT, parSIGMA };
 
-  Gaussian(qreal ampl = 1, qreal xShift = 0, qreal sigma = 1);
+  Gaussian(real ampl = 1, real xShift = 0, real sigma = 1);
 
   ePeakType type() const { return ePeakType::GAUSSIAN; }
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
   void setGuessedPeak(peak_t::rc);
   void setGuessedFWHM(fwhm_t);
@@ -177,12 +177,12 @@ class Lorentzian : public PeakFunction {
 public:
   enum { parAMPL, parXSHIFT, parGAMMA };
 
-  Lorentzian(qreal ampl = 1, qreal xShift = 0, qreal gamma = 1);
+  Lorentzian(real ampl = 1, real xShift = 0, real gamma = 1);
 
   ePeakType type() const { return ePeakType::LORENTZIAN; }
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
   void setGuessedPeak(peak_t::rc);
   void setGuessedFWHM(fwhm_t);
@@ -204,13 +204,13 @@ class PseudoVoigt1 : public PeakFunction {
 public:
   enum { parAMPL, parXSHIFT, parSIGMAGAMMA, parETA };
 
-  PseudoVoigt1(qreal ampl = 1, qreal xShift = 0, qreal sigmaGamma = 1,
-               qreal eta = 0.1);
+  PseudoVoigt1(real ampl = 1, real xShift = 0, real sigmaGamma = 1,
+               real eta = 0.1);
 
   ePeakType type() const { return ePeakType::PSEUDOVOIGT1; }
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
   void setGuessedPeak(peak_t::rc);
   void setGuessedFWHM(fwhm_t);
@@ -232,13 +232,13 @@ class PseudoVoigt2 : public PeakFunction {
 public:
   enum { parAMPL, parXSHIFT, parSIGMA, parGAMMA, parETA };
 
-  PseudoVoigt2(qreal ampl = 1, qreal xShift = 0, qreal sigma = 1,
-               qreal gamma = 1, qreal eta = 0.1);
+  PseudoVoigt2(real ampl = 1, real xShift = 0, real sigma = 1,
+               real gamma = 1, real eta = 0.1);
 
   ePeakType type() const { return ePeakType::PSEUDOVOIGT2; }
 
-  qreal y(qreal x, qreal const* parValues = nullptr) const;
-  qreal dy(qreal x, uint parIndex, qreal const* parValues = nullptr) const;
+  real y(real x, real const* parValues = nullptr) const;
+  real dy(real x, uint parIndex, real const* parValues = nullptr) const;
 
   void setGuessedPeak(peak_t::rc);
   void setGuessedFWHM(fwhm_t);

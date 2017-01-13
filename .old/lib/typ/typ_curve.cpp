@@ -28,8 +28,8 @@ Curve::Curve() {
 void Curve::clear() {
   xs_.clear();
   ys_.clear();
-  rgeX_.invalidate();
-  rgeY_.invalidate();
+  rgeX_.undef();
+  rgeY_.undef();
 }
 
 bool Curve::isEmpty() const {
@@ -45,7 +45,7 @@ bool Curve::isOrdered() const {
   return std::is_sorted(xs_.cbegin(), xs_.cend());
 }
 
-void Curve::append(qreal x, qreal y) {
+void Curve::append(real x, real y) {
   xs_.append(x);
   ys_.append(y);
   rgeX_.extendBy(x);
@@ -117,8 +117,8 @@ uint Curve::maxYindex() const {
   return index;
 }
 
-qreal Curve::sumY() const {
-  qreal sum = 0;
+real Curve::sumY() const {
+  real sum = 0;
   for_i (count())
     sum += ys_.at(i);
   return sum;

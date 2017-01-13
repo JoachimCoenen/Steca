@@ -5,10 +5,10 @@
 
 #include <c/c/h>
 
-_c_cpp_iface(app)
+_nc_iface(app)
   virtual ~app();
   virtual int exec() = 0;
-_c_cpp_iface_end
+_nc_iface_end
 
 #endif
 // eof

@@ -12,7 +12,7 @@
 //class PolePoint: public core::tree::RangeTreeItem<NormalizedDeg> {
 //  SUPER(PolePoint,core::tree::RangeTreeItem<NormalizedDeg>)
 //public:
-//  PolePoint(qreal beta);
+//  PolePoint(real beta);
 
 //  NormalizedDeg val() const { return beta_; }
 //  int compareToEqual(super::rcItem) const;
@@ -21,7 +21,7 @@
 //  NormalizedDeg beta_;
 //};
 
-//PolePoint::PolePoint(qreal beta): beta_(beta) {
+//PolePoint::PolePoint(real beta): beta_(beta) {
 //}
 
 //int PolePoint::compareToEqual(super::rcItem that) const {
@@ -55,7 +55,7 @@
 ////------------------------------------------------------------------------------
 
 //void TestCoreTrees::testIntervalTree() {
-//  qreal minAngle(-10), maxAngle(+10); // range <min,max)
+//  real minAngle(-10), maxAngle(+10); // range <min,max)
 
 //  QList<PolePoint> ps;
 //  uint cnt = 10000, cntInRange = 0;
@@ -63,7 +63,7 @@
 //  // make a random collection
 //  for_i (cnt) {
 //    // REVIEW random() not available on windows build
-//    qreal rnd = 270*((qreal)rand()/RAND_MAX - .5);
+//    real rnd = 270*((real)rand()/RAND_MAX - .5);
 //    if (minAngle <= rnd && rnd < maxAngle)
 //      ++cntInRange;
 

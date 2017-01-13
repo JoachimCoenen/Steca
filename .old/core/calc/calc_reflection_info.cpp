@@ -82,10 +82,10 @@ cmp_vec ReflectionInfo::dataCmps() {
 
 ReflectionInfo::ReflectionInfo()
 : ReflectionInfo(shp_Metadata(),
-                 NAN, NAN, Range(),
-                 inten_t(NAN), inten_t(NAN),
-                 tth_t(NAN),   tth_t(NAN),
-                 NAN, NAN)
+                 c::NAN, c::NAN, Range(),
+                 inten_t(c::NAN), inten_t(c::NAN),
+                 tth_t(c::NAN),   tth_t(c::NAN),
+                 c::NAN, c::NAN)
 {
 }
 
@@ -104,9 +104,9 @@ ReflectionInfo::ReflectionInfo(shp_Metadata md, deg alpha, deg beta,
 ReflectionInfo::ReflectionInfo(shp_Metadata md, deg alpha, deg beta,
                                gma_rge rgeGma)
 : ReflectionInfo(md, alpha, beta, rgeGma,
-                 inten_t(NAN), inten_t(NAN),
-                 tth_t(NAN),   tth_t(NAN),
-                 fwhm_t(NAN),  fwhm_t(NAN))
+                 inten_t(c::NAN), inten_t(c::NAN),
+                 tth_t(c::NAN),   tth_t(c::NAN),
+                 fwhm_t(c::NAN),  fwhm_t(c::NAN))
 {
 }
 
@@ -119,9 +119,9 @@ ReflectionInfo::ReflectionInfo(deg alpha, deg beta, gma_rge rgeGma,
 
 ReflectionInfo::ReflectionInfo(deg alpha, deg beta)
 : ReflectionInfo(alpha, beta, Range(),
-                 inten_t(NAN), inten_t(NAN),
-                 tth_t(NAN), tth_t(NAN),
-                 fwhm_t(NAN), fwhm_t(NAN))
+                 inten_t(c::NAN), inten_t(c::NAN),
+                 tth_t(c::NAN), tth_t(c::NAN),
+                 fwhm_t(c::NAN), fwhm_t(c::NAN))
 {
 }
 
@@ -139,21 +139,21 @@ row_t ReflectionInfo::data() const {
 //------------------------------------------------------------------------------
 
 ReflectionInfos::ReflectionInfos() {
-  invalidate();
+  undef();
 }
 
 void ReflectionInfos::append(ReflectionInfo::rc info) {
   super::append(info);
-  invalidate();
+  undef();
 }
 
 inten_t ReflectionInfos::averageInten() const {
-  if (qIsNaN(avgInten_)) {
+  if (isnan(avgInten_)) {
     avgInten_ = 0;
     uint cnt  = 0;
 
     for (auto& info : *this) {
-      qreal inten = info.inten();
+      real inten = info.inten();
       if (qIsFinite(inten)) {
         avgInten_ += inten;
         ++cnt;
@@ -167,7 +167,7 @@ inten_t ReflectionInfos::averageInten() const {
 }
 
 inten_rge::rc ReflectionInfos::rgeInten() const {
-  if (!rgeInten_.isValid()) {
+  if (!rgeInten_.isDef()) {
     for_i (count())
       rgeInten_.extendBy(at(i).inten());
   }
@@ -175,9 +175,9 @@ inten_rge::rc ReflectionInfos::rgeInten() const {
   return rgeInten_;
 }
 
-void ReflectionInfos::invalidate() {
-  avgInten_ = inten_t(NAN);
-  rgeInten_.invalidate();
+void ReflectionInfos::undef() {
+  avgInten_ = inten_t(c::NAN);
+  rgeInten_.undef();
 }
 
 //------------------------------------------------------------------------------

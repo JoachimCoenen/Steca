@@ -42,17 +42,17 @@ protected:
   deg alpha(QPointF const&)      const;
   deg beta(QPointF  const&)      const;
 
-  void circle(QPointF c, qreal r);
+  void circle(QPointF c, real r);
 
   void paintGrid();
   void paintPoints();
 
   // valid during paintEvent
   QPainter *p_;
-  QPointF   c_; qreal r_;
+  QPointF   c_; real r_;
 
   bool  flat_;
-  qreal alphaMax_, avgAlphaMax_;
+  real alphaMax_, avgAlphaMax_;
 
   QCheckBox    *cbFlat_;
 };
@@ -81,7 +81,7 @@ protected:
 class PoleFiguresFrame : public Frame {
   CLASS(PoleFiguresFrame) SUPER(Frame)
 public:
-  PoleFiguresFrame(TheHub&, rcstr title, QWidget*);
+  PoleFiguresFrame(TheHub&, qstrc title, QWidget*);
 
 protected:
   TabGraph           *tabGraph_;
@@ -90,10 +90,10 @@ protected:
   void displayReflection(uint reflIndex, bool interpolated);
 
   bool savePoleFigureOutput();
-  bool writePoleFigureOutputFiles(rcstr filePath, uint index);
-  void writePoleFile(rcstr filePath,  calc::ReflectionInfos, qreal_vec::rc);
-  void writeListFile(rcstr filePath,  calc::ReflectionInfos, qreal_vec::rc);
-  void writeErrorMask(rcstr filePath, calc::ReflectionInfos, qreal_vec::rc);
+  bool writePoleFigureOutputFiles(qstrc filePath, uint index);
+  void writePoleFile(qstrc filePath,  calc::ReflectionInfos, qreal_vec::rc);
+  void writeListFile(qstrc filePath,  calc::ReflectionInfos, qreal_vec::rc);
+  void writeErrorMask(qstrc filePath, calc::ReflectionInfos, qreal_vec::rc);
 };
 
 //------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 
 #include "def_h"
 
-#if !_c_cpp_
+#if !_is_cpp_
 #error this should be used in cpp files
 #endif
 

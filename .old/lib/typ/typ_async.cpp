@@ -45,7 +45,7 @@ void Progress::setTotal(uint total) {
 void Progress::setProgress(uint i) {
   if (bar_) {
     bar_->setRange(0, to_i(total_));
-    bar_->setValue(to_i((i_ = qBound(0u, i, total_))));
+    bar_->setValue(to_i((i_ = c::bound(0u, i, total_))));
   }
 }
 

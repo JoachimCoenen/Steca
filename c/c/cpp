@@ -4,4 +4,8 @@
 #include "def/def_alg"
 #include "test/test.h"
 
+// once more - std defines those
+#undef NAN
+#undef INF
+
 // eof

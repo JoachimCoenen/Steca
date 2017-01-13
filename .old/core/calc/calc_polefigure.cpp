@@ -29,8 +29,8 @@ typedef vec<ReflectionInfo const*> info_vec;
 // Calculates the difference of two angles. Parameters should be in [0, 360].
 deg calculateDeltaBeta(deg beta1, deg beta2) {
   // Due to cyclicity of angles (360 is equivalent to 0), some magic is needed.
-  qreal deltaBeta = beta1 - beta2;
-  qreal tempDelta = deltaBeta - 360;
+  real deltaBeta = beta1 - beta2;
+  real tempDelta = deltaBeta - 360;
 
   if (qAbs(tempDelta) < qAbs(deltaBeta)) deltaBeta = tempDelta;
 
@@ -103,11 +103,11 @@ eQuadrant remapQuadrant(eQuadrant q) {
 // Checks if (alpha,beta) is inside radius from (centerAlpha,centerBeta).
 bool inRadius(deg alpha, deg beta, deg centerAlpha, deg centerBeta,
               deg radius) {
-  qreal a = angle(alpha, centerAlpha, calculateDeltaBeta(beta, centerBeta));
+  real a = angle(alpha, centerAlpha, calculateDeltaBeta(beta, centerBeta));
   return qAbs(a) < radius;
 }
 
-itf_t::itf_t() : itf_t(inten_t(NAN), tth_t(NAN), fwhm_t(NAN)) {
+itf_t::itf_t() : itf_t(inten_t(c::NAN), tth_t(c::NAN), fwhm_t(c::NAN)) {
 }
 
 itf_t::itf_t(inten_t inten_, tth_t tth_, fwhm_t fwhm_)
@@ -139,8 +139,8 @@ void searchInQuadrants(Quadrants::rc quadrants, deg alpha, deg beta,
   ENSURE(quadrants.count() <= NUM_QUADRANTS);
   // Take only reflection infos with beta within +/- BETA_LIMIT degrees into
   // account. Original STeCa used something like +/- 1.5*36 degrees.
-  qreal const BETA_LIMIT = 30;
-  distances.fill(std::numeric_limits<qreal>::max(), quadrants.count());
+  real const BETA_LIMIT = 30;
+  distances.fill(std::numeric_limits<real>::max(), quadrants.count());
   foundInfos.fill(nullptr, quadrants.count());
   // Find infos closest to given alpha and beta in each quadrant.
   for (auto& info : infos) {
@@ -154,7 +154,7 @@ void searchInQuadrants(Quadrants::rc quadrants, deg alpha, deg beta,
       if (inQuadrant(quadrants.at(i), deltaAlpha, deltaBeta)) {
         if (d >= distances.at(i)) continue;
         distances[i] = d;
-        if (qIsNaN(searchRadius) || d < searchRadius) {
+        if (isnan(searchRadius) || d < searchRadius) {
           foundInfos[i] = &info;
         }
       }
@@ -170,7 +170,7 @@ itf_t inverseDistanceWeighing(qreal_vec::rc distances, info_vec::rc infos) {
   RUNTIME_CHECK(distances.count() == N, "distances size should be 4");
   RUNTIME_CHECK(infos.count() == N, "infos size should be 4");
   qreal_vec inverseDistances(N);
-  qreal     inverseDistanceSum = 0;
+  real     inverseDistanceSum = 0;
   for_i (NUM_QUADRANTS) {
     if (distances.at(i) == .0) {
       // Points coincide; no need to interpolate.
@@ -184,9 +184,9 @@ itf_t inverseDistanceWeighing(qreal_vec::rc distances, info_vec::rc infos) {
     inverseDistanceSum += inverseDistances.at(i);
   }
   // REVIEW The RAW peak may need different handling.
-  qreal offset = 0;
-  qreal height = 0;
-  qreal fwhm   = 0;
+  real offset = 0;
+  real height = 0;
+  real fwhm   = 0;
   for_i (N) {
     auto& in = infos.at(i);
     auto& d  = inverseDistances.at(i);
@@ -217,11 +217,11 @@ itf_t interpolateValues(deg searchRadius, ReflectionInfos::rc infos,
     // No info found in quadrant? Try another quadrant. See
     // [J.Appl.Cryst.(2011),44,641] for the angle mapping.
     eQuadrant newQ = remapQuadrant(eQuadrant(i));
-    qreal const newAlpha =
+    real const newAlpha =
         i == uint(eQuadrant::NORTHEAST) || i == uint(eQuadrant::SOUTHEAST)
             ? 180 - alpha
             : -alpha;
-    qreal newBeta = beta < 180 ? beta + 180 : beta - 180;
+    real newBeta = beta < 180 ? beta + 180 : beta - 180;
     info_vec  renewedSearch;
     qreal_vec newDistance;
     searchInQuadrants({newQ}, newAlpha, newBeta, searchRadius, infos,
@@ -244,7 +244,7 @@ itf_t interpolateValues(deg searchRadius, ReflectionInfos::rc infos,
 // Interpolates infos to equidistant grid in alpha and beta.
 ReflectionInfos interpolate(ReflectionInfos::rc infos,
                             deg alphaStep, deg betaStep, deg idwRadius,
-                            deg averagingAlphaMax, deg averagingRadius, qreal inclusionTreshold,
+                            deg averagingAlphaMax, deg averagingRadius, real inclusionTreshold,
                             Progress* progress) {
   // Two interpolation methods are used here:
   // If grid point alpha <= averagingAlphaMax, points within averagingRadius
@@ -258,7 +258,7 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
   EXPECT(0 <= averagingRadius);
   // Setting idwRadius = NaN disables idw radius checks and falling back to
   // idw when averaging fails.
-  EXPECT(qIsNaN(idwRadius) || 0 <= idwRadius);
+  EXPECT(isnan(idwRadius) || 0 <= idwRadius);
   EXPECT(0 <= inclusionTreshold && inclusionTreshold <= 1);
 
   // NOTE We expect all infos to have the same gamma range.
@@ -303,7 +303,7 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
           itf_t avg(0, 0, 0);
 
           uint iEnd = itfs.count();
-          uint iBegin = qMin(to_u(qRound(itfs.count() * (1. - inclusionTreshold))), iEnd-1);
+          uint iBegin = c::min(to_u(qRound(itfs.count() * (1. - inclusionTreshold))), iEnd-1);
           EXPECT(iBegin < iEnd)
           uint n = iEnd - iBegin;
 
@@ -311,13 +311,13 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
             avg += itfs.at(i);
 
           interpolatedInfos.append(ReflectionInfo(alpha, beta, infos.first().rgeGma(),
-              avg.inten / n, inten_t(NAN),
-              avg.tth   / n, tth_t(NAN),
-              avg.fwhm  / n, fwhm_t(NAN)));
+              avg.inten / n, inten_t(c::NAN),
+              avg.tth   / n, tth_t(c::NAN),
+              avg.fwhm  / n, fwhm_t(c::NAN)));
           continue;
         }
 
-        if (!qIsNaN(idwRadius)) {
+        if (!isnan(idwRadius)) {
           // Don't fall back to idw, just add an unmeasured info.
           interpolatedInfos.append(ReflectionInfo(alpha, beta));
           continue;
@@ -329,9 +329,9 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
       itf_t itf = interpolateValues(idwRadius, infos, alpha, beta);
       interpolatedInfos.append(
         ReflectionInfo(alpha, beta, infos.first().rgeGma(),
-                       itf.inten, inten_t(NAN),
-                       itf.tth,   tth_t(NAN),
-                       itf.fwhm,  fwhm_t(NAN)));
+                       itf.inten, inten_t(c::NAN),
+                       itf.tth,   tth_t(c::NAN),
+                       itf.fwhm,  fwhm_t(c::NAN)));
     }
   }
 

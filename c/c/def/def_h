@@ -15,6 +15,8 @@
 #else
 
 #include <stddef.h> // size_t, wchar_t, ...
+typedef size_t sz_t;
+
 #include <assert.h>
 #define EXPECT(cond) assert(cond);
 #define ENSURE(cond) assert(cond);
@@ -26,13 +28,13 @@
 
 #ifdef __cplusplus
 
-#define _c_cpp_ (1)
+#define _is_cpp_ (1)
 #define EXTERN_C extern "C" {
 #define EXTERN_C_END }
 
 #else
 
-#define _c_cpp_ (0)
+#define _is_cpp_ (0)
 #define EXTERN_C
 #define EXTERN_C_END
 
@@ -41,139 +43,138 @@
 //------------------------------------------------------------------------------
 // "C" structs
 
-#define _c_c_struct(name)       \
-  EXTERN_C                      \
+#define _c_struct(name)       \
+  EXTERN_C                    \
   struct c_##name {
-#define _c_c_struct_end(name)   \
-  };                            \
+#define _c_struct_end(name)   \
+  };                          \
   EXTERN_C_END
 
-#define _c_var(typ, name)       \
+#define _var(typ, name)       \
   typ const name;
 
-#define _c_ptr(typ, name)       \
+#define _ptr(typ, name)       \
   typ const * const name;
 
-#if _c_cpp_
+#if _is_cpp_
 
-#define _c_con(name, args)      \
+#define _c_con(name, args)    \
   c_##name args;
-#define _c_des(name)            \
+#define _c_des(name)          \
  ~c_##name();
 
-#define _c_mth(typ, mth, args)  \
+#define _mth(typ, mth, args)  \
   typ mth args;
 
-#define _c_op(typ, expr)  \
+#define _op(typ, expr)    \
   operator typ() const { return expr; }
 
-#define _c_cpp_con(name, args)  \
+#define _con(name, args)  \
   name args;
 
-#define _c_cpp_des(name)        \
+#define _fry(name, mth, args)  \
+  static name mth args;
+
+#define _des(name)        \
   ~name();
 
 #else
 
 #define _c_con(name, args)
 #define _c_des(name)
-#define _c_mth(typ, mth, args)
-#define _c_cpp_con(name, args)
-#define _c_cpp_des(name)
+#define _mth(typ, mth, args)
+#define _con(name, args)
+#define _des(name)
 
 #endif
 
 //------------------------------------------------------------------------------
 // c-cpp structs
 
-#if _c_cpp_
-
-#define _cpp_struct_typedefs(name)  \
-  typedef name typ;                 \
-  typedef typ& ref;                 \
-  typedef typ const& rc;            \
-  typedef typ&& rval;
-
-#define _c_cpp_c_struct(name) \
-  namespace c { struct name : protected c_##name { _cpp_struct_typedefs(name)
-#define _c_cpp_c_struct_end   \
-  };}
-
-#define _c_cpp_struct(name)   \
-  namespace c { struct name  { _cpp_struct_typedefs(name)
-#define _c_cpp_struct_end     \
-  };}
-
-#define _c_cpp_sub_struct(name, base) \
-  namespace c { struct name : base { THIS(name) BASE(base) _cpp_struct_typedefs(name)
-#define _c_cpp_sub_struct_end         \
-  };}
-
-#else
-
-#define _cpp_struct_typedefs(name)
-#define _c_cpp_c_struct(name)
-#define _c_cpp_c_struct_end
-#define _c_cpp_struct(name)
-#define _c_cpp_struct_end
-#define _c_cpp_sub_struct(name, base)
-#define _c_cpp_sub_struct_end
-
-#endif
-
-#define _c_cpp_iface(name)         _c_cpp_struct(name)
-#define _c_cpp_iface_end           _c_cpp_struct_end
-
-#define _c_cpp_mth(typ, mth, args) _c_mth(typ, mth, args)
-#define _c_cpp_op(typ, expr)       _c_op(typ, expr)
-
-//------------------------------------------------------------------------------
-// cpp structs
-
-#if _c_cpp_
+#if _is_cpp_
 
 #define THIS(name) using This = name;
 #define BASE(name) using base = name;
 #define BASE_CONS  using base::base;
 
-#define _cpp_c_struct(name) \
-  struct name : protected c_##name { _cpp_struct_typedefs(name)
-#define _cpp_c_struct_end   \
+#define THIS_BASE_DEFS(name, base) \
+  THIS(name) BASE(base) _struct_typedefs(name)
+
+#define _struct_typedefs(name)  \
+  typedef name typ;             \
+  typedef typ& ref;             \
+  typedef typ const& rc;        \
+  typedef typ&& rval;
+
+#define _struct(name)   \
+  struct name  { _struct_typedefs(name)
+#define _struct_end     \
   };
 
-#define _cpp_struct(name)   \
-  struct name  { _cpp_struct_typedefs(name)
-#define _cpp_struct_end     \
+#define _nc_struct(name)  \
+  namespace c { struct name  { _struct_typedefs(name)
+#define _nc_struct_end    \
+  };}
+
+#define _sub_struct(name, base) \
+  struct name : base { THIS_BASE_DEFS(name, base)
+#define _sub_struct_end         \
   };
 
-#define _cpp_sub_struct(name, base) \
-  struct name : base { THIS(name) BASE(base) _cpp_struct_typedefs(name)
-#define _cpp_sub_struct_end         \
+#define _sub_struct_reimpl(name, base) \
+  struct name : protected base { THIS_BASE_DEFS(name, base)
+#define _sub_struct_reimpl_end         \
   };
+
+#define _sub_c_struct(name) \
+  struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
+#define _sub_c_struct_end   \
+  };
+
+#define _nc_sub_struct(name, base) \
+  namespace c { struct name : base { THIS_BASE_DEFS(name, base)
+#define _nc_sub_struct_end         \
+  };}
+
+#define _nc_sub_c_struct(name)  \
+  namespace c { struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
+#define _nc_sub_c_struct_end    \
+  };}
 
 #else
 
-#define _cpp_c_struct(name)
-#define _cpp_c_struct_end
+#define _struct_typedefs(name)
 
-#define _cpp_struct(name)
-#define _cpp_struct_end
+#define _struct(name)
+#define _struct_end
 
-#define _cpp_sub_struct(name, base)
-#define _cpp_sub_struct_end
+#define _nc_struct(name)
+#define _nc_struct_end
+
+#define _sub_struct(name, base)
+#define _sub_struct_end
+
+#define _sub_c_struct(name)
+#define _sub_c_struct_end
+
+#define _nc_sub_struct(name, base)
+#define _nc_sub_struct_end
+
+#define _nc_sub_c_struct(name)
+#define _nc_sub_c_struct_end
 
 #endif
 
-#define _cpp_iface(name)          _cpp_struct(name)
-#define _cpp_iface_end            _cpp_struct_end
+#define _iface(name)    _struct(name)
+#define _iface_end      _struct_end
 
-#define _cpp_mth(typ, mth, args)  _c_mth(typ, mth, args)
-#define _cpp_op(typ, expr)        _c_op(typ, expr)
+#define _nc_iface(name) _nc_struct(name)
+#define _nc_iface_end   _nc_struct_end
 
 //------------------------------------------------------------------------------
 // handy helpers
 
-#if _c_cpp_
+#if _is_cpp_
 
 #define NO_MOVE(s)              \
   s(rval)           = delete;   \
@@ -214,7 +215,7 @@
 //------------------------------------------------------------------------------
 // mutability
 
-#if _c_cpp_
+#if _is_cpp_
 
 template <typename T> struct mut_typ           { typedef T typ; };
 template <typename T> struct mut_typ<T const>  { typedef T typ; };

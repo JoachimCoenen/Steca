@@ -65,7 +65,7 @@ struct Metadata {
   // attribute list - will be dynamic
   static uint numAttributes(bool onlyNum);
 
-  static rcstr        attributeTag(uint, bool out);
+  static qstrc        attributeTag(uint, bool out);
   static str_lst      attributeTags(bool out);
   static typ::cmp_vec attributeCmps();
 
@@ -80,8 +80,8 @@ struct Metadata {
   typ::deg motorXT, motorYT, motorZT, motorOmg, motorTth, motorPhi, motorChi,
            motorPST, motorSST, motorOMGM;
 
-  qreal monitorCount, deltaMonitorCount;
-  qreal time, deltaTime;
+  real monitorCount, deltaMonitorCount;
+  real time, deltaTime;
 };
 
 //------------------------------------------------------------------------------
@@ -99,9 +99,9 @@ public:
 
   tth_t midTth()            const { return md_->motorTth;          }
 
-  qreal monitorCount()      const { return md_->monitorCount;      }
-  qreal deltaMonitorCount() const { return md_->deltaMonitorCount; }
-  qreal deltaTime()         const { return md_->deltaTime;         }
+  real monitorCount()      const { return md_->monitorCount;      }
+  real deltaMonitorCount() const { return md_->deltaMonitorCount; }
+  real deltaTime()         const { return md_->deltaTime;         }
 
   typ::deg omg()            const { return md_->motorOmg; }
   typ::deg phi()            const { return md_->motorPhi; }
@@ -155,9 +155,9 @@ public:
 
   inten_rge rgeInten() const;
 
-  qreal    avgMonitorCount()      const;
-  qreal    avgDeltaMonitorCount() const;
-  qreal    avgDeltaTime()         const;
+  real    avgMonitorCount()      const;
+  real    avgDeltaMonitorCount() const;
+  real    avgDeltaTime()         const;
 
   inten_vec collectIntens(core::Session const&, typ::Image const* intensCorr,
                           gma_rge::rc, bool averaged) const;
@@ -181,9 +181,9 @@ public:
 
   typ::size2d imageSize() const;
 
-  qreal avgMonitorCount()      const;
-  qreal avgDeltaMonitorCount() const;
-  qreal avgDeltaTime()         const;
+  real avgMonitorCount()      const;
+  real avgDeltaMonitorCount() const;
+  real avgDeltaTime()         const;
 
   inten_rge::rc  rgeGma(core::Session const&) const;
   inten_rge::rc  rgeFixedInten(core::Session const&, bool trans, bool cut) const;
@@ -194,10 +194,10 @@ public:
 
 private:
   shp_Dataset combineAll() const;
-  qreal calcAvgMutable(qreal (Dataset::*avgMth)() const) const;
+  real calcAvgMutable(real (Dataset::*avgMth)() const) const;
 
   // computed on demand (NaNs or emptiness indicate yet unknown values)
-  mutable qreal avgMonitorCount_, avgDeltaMonitorCount_, avgDeltaTime_;
+  mutable real avgMonitorCount_, avgDeltaMonitorCount_, avgDeltaTime_;
   mutable inten_rge rgeFixedInten_;
   mutable gma_rge   rgeGma_;
   mutable typ::Curve avgCurve_;

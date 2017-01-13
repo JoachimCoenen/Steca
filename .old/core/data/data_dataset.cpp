@@ -58,7 +58,7 @@ uint Metadata::numAttributes(bool onlyNum) {
       : eAttr::NUM_ALL_ATTRIBUTES);
 }
 
-rcstr Metadata::attributeTag(uint i, bool out) {
+qstrc Metadata::attributeTag(uint i, bool out) {
   return attributeTags(out).at(i);
 }
 
@@ -98,7 +98,7 @@ cmp_vec Metadata::attributeCmps() {
 }
 
 str Metadata::attributeStrValue(uint i) const {
-  qreal value = 0;
+  real value = 0;
 
   switch (eAttr(i)) {
   case eAttr::MOTOR_XT:    value = motorXT;   break;
@@ -129,16 +129,16 @@ QVariant Metadata::attributeValue(uint i) const {
   switch (eAttr(i)) {
   case eAttr::DATE:       return date;
   case eAttr::COMMENT:    return comment;
-  case eAttr::MOTOR_XT:   return qreal(motorXT);
-  case eAttr::MOTOR_YT:   return qreal(motorYT);
-  case eAttr::MOTOR_ZT:   return qreal(motorZT);
-  case eAttr::MOTOR_OMG:  return qreal(motorOmg);
-  case eAttr::MOTOR_TTH:  return qreal(motorTth);
-  case eAttr::MOTOR_PHI:  return qreal(motorPhi);
-  case eAttr::MOTOR_CHI:  return qreal(motorChi);
-  case eAttr::MOTOR_PST:  return qreal(motorPST);
-  case eAttr::MOTOR_SST:  return qreal(motorSST);
-  case eAttr::MOTOR_OMGM: return qreal(motorOMGM);
+  case eAttr::MOTOR_XT:   return real(motorXT);
+  case eAttr::MOTOR_YT:   return real(motorYT);
+  case eAttr::MOTOR_ZT:   return real(motorZT);
+  case eAttr::MOTOR_OMG:  return real(motorOmg);
+  case eAttr::MOTOR_TTH:  return real(motorTth);
+  case eAttr::MOTOR_PHI:  return real(motorPhi);
+  case eAttr::MOTOR_CHI:  return real(motorChi);
+  case eAttr::MOTOR_PST:  return real(motorPST);
+  case eAttr::MOTOR_SST:  return real(motorSST);
+  case eAttr::MOTOR_OMGM: return real(motorOMGM);
   case eAttr::MONITOR_COUNT: return monitorCount;
   case eAttr::DELTA_MONITOR_COUNT: return deltaMonitorCount;
   case eAttr::TIME:       return time;
@@ -159,7 +159,7 @@ row_t Metadata::attributeNaNs() {
   static row_t row;
   if (row.isEmpty())
     for_i (uint(eAttr::NUM_ALL_ATTRIBUTES))
-      row.append(NAN);
+      row.append(c::NAN);
   return row;
 }
 
@@ -228,11 +228,11 @@ void OneDataset::collectIntens(core::Session::rc session, typ::Image const* inte
   for (uint i = gmaIndexMin; i < gmaIndexMax; ++i) {
     uint ind = gmaIndexes->at(i);
     inten_t inten = image_.inten(ind);
-    if (qIsNaN(inten))
+    if (isnan(inten))
       continue;
 
     inten_t corr = intensCorr ? intensCorr->inten(ind) : 1;
-    if (qIsNaN(corr))
+    if (isnan(corr))
       continue;
 
     inten *= corr;
@@ -242,7 +242,7 @@ void OneDataset::collectIntens(core::Session::rc session, typ::Image const* inte
     // bin index
     uint ti = to_u(qFloor((tth - minTth) / deltaTth));
     EXPECT(ti <= count)
-    ti = qMin(ti, count-1); // it can overshoot due to floating point calculation
+    ti = c::min(ti, count-1); // it can overshoot due to floating point calculation
 
     intens[ti] += inten;
     counts[ti] += 1;
@@ -298,7 +298,7 @@ shp_Metadata Dataset::metadata() const {
        m->time         = d->time;
     }
 
-    qreal fac = 1.0 / count();
+    real fac = 1.0 / count();
 
     m->motorXT   *= fac;
     m->motorYT   *= fac;
@@ -324,7 +324,7 @@ Datasets::rc Dataset::datasets() const {
 
 #define AVG_ONES(what)    \
   EXPECT(!isEmpty())      \
-  qreal avg = 0;          \
+  real avg = 0;          \
   for (auto& one : *this) \
     avg += one->what();   \
   avg /= count();         \
@@ -366,15 +366,15 @@ inten_rge Dataset::rgeInten() const {
   RGE_COMBINE(intersect, rgeInten())
 }
 
-qreal Dataset::avgMonitorCount() const {
+real Dataset::avgMonitorCount() const {
   AVG_ONES(monitorCount)
 }
 
-qreal Dataset::avgDeltaMonitorCount() const {
+real Dataset::avgDeltaMonitorCount() const {
   AVG_ONES(deltaMonitorCount)
 }
 
-qreal Dataset::avgDeltaTime() const {
+real Dataset::avgDeltaTime() const {
   AVG_ONES(deltaTime)
 }
 
@@ -444,29 +444,29 @@ size2d Datasets::imageSize() const {
   return first()->imageSize();
 }
 
-qreal Datasets::avgMonitorCount() const {
-  if (qIsNaN(avgMonitorCount_))
+real Datasets::avgMonitorCount() const {
+  if (isnan(avgMonitorCount_))
     avgMonitorCount_ = calcAvgMutable(&Dataset::avgMonitorCount);
 
   return avgMonitorCount_;
 }
 
-qreal Datasets::avgDeltaMonitorCount() const {
-  if (qIsNaN(avgDeltaMonitorCount_))
+real Datasets::avgDeltaMonitorCount() const {
+  if (isnan(avgDeltaMonitorCount_))
     avgDeltaMonitorCount_ = calcAvgMutable(&Dataset::avgDeltaMonitorCount);
 
   return avgDeltaMonitorCount_;
 }
 
-qreal Datasets::avgDeltaTime() const {
-  if (qIsNaN(avgDeltaTime_))
+real Datasets::avgDeltaTime() const {
+  if (isnan(avgDeltaTime_))
     avgDeltaTime_ = calcAvgMutable(&Dataset::avgDeltaTime);
 
   return avgDeltaTime_;
 }
 
 inten_rge::rc Datasets::rgeGma(core::Session::rc session) const {
-  if (!rgeGma_.isValid())
+  if (!rgeGma_.isDef())
     for (auto& dataset: *this)
       rgeGma_.extendBy(dataset->rgeGma(session));
 
@@ -474,7 +474,7 @@ inten_rge::rc Datasets::rgeGma(core::Session::rc session) const {
 }
 
 inten_rge::rc Datasets::rgeFixedInten(core::Session::rc session, bool trans, bool cut) const {
-  if (!rgeFixedInten_.isValid()) {
+  if (!rgeFixedInten_.isDef()) {
 
     TakesLongTime __;
 
@@ -491,7 +491,7 @@ inten_rge::rc Datasets::rgeFixedInten(core::Session::rc session, bool trans, boo
 
 Curve Datasets::avgCurve(core::Session::rc session, bool averaged) const {
   if (avgCurve_.isEmpty()) {
-    // TODO invalidate when combinedDgram is unchecked
+    // TODO undef when combinedDgram is unchecked
 
     TakesLongTime __;
 
@@ -502,9 +502,9 @@ Curve Datasets::avgCurve(core::Session::rc session, bool averaged) const {
 }
 
 void Datasets::invalidateAvgMutables() const {
-  avgMonitorCount_ = avgDeltaMonitorCount_ = avgDeltaTime_ = NAN;
-  rgeFixedInten_.invalidate();
-  rgeGma_.invalidate();
+  avgMonitorCount_ = avgDeltaMonitorCount_ = avgDeltaTime_ = c::NAN;
+  rgeFixedInten_.undef();
+  rgeGma_.undef();
   avgCurve_.clear();
 }
 
@@ -518,8 +518,8 @@ shp_Dataset Datasets::combineAll() const {
   return d;
 }
 
-qreal Datasets::calcAvgMutable(qreal (Dataset::*avgMth)() const) const {
-  qreal avg = 0;
+real Datasets::calcAvgMutable(real (Dataset::*avgMth)() const) const {
+  real avg = 0;
 
   if (!isEmpty()) {
     for (auto& dataset: *this)

@@ -5,7 +5,7 @@
 
 //void TestCoreImage::testImage(uint w, uint h) {
 //  // Testing if data is corectly added and can be accessed again
-//  uint const specialI = qMin(2u,w-1), specialJ = qMin(4u,h-1); // that's 42!
+//  uint const specialI = c::min(2u,w-1), specialJ = c::min(4u,h-1); // that's 42!
 
 //  ENSURE(specialI<w && specialJ<h)
 

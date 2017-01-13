@@ -15,35 +15,27 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef TYP_XY_H
-#define TYP_XY_H
+#ifndef CORE_IJ_H
+#define CORE_IJ_H
 
-#include "def/def_cmp.h"
-#include "def/def_macros.h"
+#include <c/c/h>
 
-namespace typ {
+namespace core {
 //------------------------------------------------------------------------------
-// 2D point, reals
+// 2D point, integers
 
-class JsonObj;
+_struct (IJ)
 
-struct XY {
-  CLASS(XY)
+  _var (int, i)
+  _var (int, j)
 
-  qreal x, y;
+  IJ();           // (0,0)
+  IJ(int, int);
 
-  XY();  // invalid (NaN)
-  XY(qreal, qreal);
+  COMPARABLE EQ_NE
 
-  COMPARABLE
-
-  void invalidate();     // make invalid (NaN)
-  bool isValid() const;  // is not NaN
-
-  JsonObj saveJson() const;
-  void loadJson(JsonObj const&) THROWS;
-};
+_struct_end
 
 //------------------------------------------------------------------------------
 }
-#endif // TYP_XY_H
+#endif

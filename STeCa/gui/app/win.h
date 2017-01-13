@@ -21,10 +21,10 @@
 #include <c/qt/win.h>
 #include <gui/hub/hub.h>
 
-_cpp_sub_struct(Win, c::qt::win) BASE_CONS
+_sub_struct (Win, c::qt::win) BASE_CONS
   Win();
   Hub hub;
-_cpp_sub_struct_end
+_sub_struct_end
 
 #endif
 // eof
