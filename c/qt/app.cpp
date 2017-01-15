@@ -1,8 +1,8 @@
 // c
 
-#include "app.h"
-#include "log.h"
-#include "win.h"
+#include "app.hpp"
+#include "log.hpp"
+#include "win.hpp"
 #include <c/c/cpp>
 #include <c/cpp/exc.h>
 

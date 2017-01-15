@@ -1,0 +1,252 @@
+// c
+
+#ifndef C_C_DEF_DATA
+#define C_C_DEF_DATA
+
+#include "def_h"
+
+//------------------------------------------------------------------------------
+// names
+
+#define CAT_(a, b, c) a ## b ## c
+#define CAT3(a, b, c) CAT_(a, b, c)
+
+#define NS_NAME_C   CAT3(DATA_NS, _, DATA_NAME)
+#define NS_NAME_CPP CAT3(DATA_NS, :, DATA_NAME)
+
+//------------------------------------------------------------------------------
+// declarations
+
+// "C" ns-prefixed struct with the very default constructor ...
+#define _c_data     \
+  EXTERN_C struct NS_NAME_C {
+#define _c_data_end \
+  }; EXTERN_C_END
+
+// ... that has only immutable data ...
+#define _var(typ, name)     \
+  typ const name;
+#define _ptr(typ, name)     \
+  typ const * const name;
+
+// ... and perhaps constructors ...
+#if _is_cpp_
+#define _c_con(...) protected: NS_NAME_C(__VA_ARGS__);
+#else
+#define _c_con
+#endif
+
+// ... in cpp ...
+#if _is_cpp_
+
+// ... with handy typedefs ...
+#define _typedefs(s)      \
+  typedef s typ;          \
+  typedef typ& ref;       \
+  typedef typ const& rc;  \
+  typedef typ&& rval;
+
+#define _cpp_struct_typedefs _typedefs(DATA_NAME)
+
+// ... extended ...
+#define _cpp_struct     \
+  namespace DATA_NS {   \
+  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs
+#define _cpp_struct_end \
+  };}
+
+// ... by constructors and destructor ...
+#define _con(...)  \
+  DATA_NAME(__VA_ARGS__);
+#define _des        \
+ ~DATA_NAME();
+
+// ... methods ...
+#define _mth_inline(typ, mth, args, ...)  \
+  typ mth args const { __VA_ARGS__ }
+#define _mth(typ, mth, args)              \
+  typ mth args const;
+
+#define _mth_mut_inline(typ, mth, args, ...)  \
+  typ mth args { __VA_ARGS__ }
+#define _mth_mut(typ, mth, args)              \
+  typ mth args;
+
+// ... operators ...
+#define _op_inline(op, expr)  \
+  operator op const { return expr; }
+#define _op(op)               \
+  operator op const;
+
+#define _op_mut_inline(op, expr)  \
+  operator op { return expr; }
+#define _op_mut(op)               \
+  operator op;
+
+// ... not covered by the above ...
+#define _extra(...)     __VA_ARGS__
+#define _ns_extra(...)  namespace DATA_NS { __VA_ARGS__ }
+
+#else
+
+#define _typedefs
+#define _cpp_struct_typedefs
+#define _cpp_struct
+#define _cpp_struct_end
+#define _con(...)
+#define _des
+#define _mth(typ, mth, args)
+#define _mth_inline(typ, mth, args, code)
+#define _mth_mut(typ, mth, args)
+#define _mth_mut_inline(typ, mth, args, code)
+#define _op(typ, expr)
+#define _op_inline(op, code)
+#define _op_mut(typ, expr)
+#define _op_mut_inline(op, code)
+#define _extra(...)
+#define _ns_extra(...)
+
+#endif
+
+//------------------------------------------------------------------------------
+// cpp subclassing
+
+#if _is_cpp_
+
+#define _struct _struct_pref()
+#define _struct_pref(pref)     \
+  namespace DATA_NS { pref struct DATA_NAME { _cpp_struct_typedefs
+#define _struct_end \
+  };}
+
+#define _iface     \
+  _struct virtual ~DATA_NAME();
+#define _iface_end \
+  };}
+
+#define _iface_mth(typ, mth, args)     \
+  virtual typ mth args const = 0;
+#define _iface_mth_mut(typ, mth, args) \
+  virtual typ mth args = 0;
+
+#define _struct_sub(s) _struct_sub_pref(,s)
+#define _struct_sub_pref(pref,s)  \
+  namespace DATA_NS { pref struct DATA_NAME : s { _cpp_struct_typedefs using base = s;
+#define _struct_sub_end \
+  };}
+
+#else
+
+#define _struct
+#define _struct_pref
+#define _struct_end
+
+#define _iface
+#define _iface_end
+#define _iface_mth(typ, mth, args)
+#define _iface_mth_mut(typ, mth, args)
+
+#define _struct_sub(s)
+#define _struct_sub_pref(s)
+#define _struct_sub_end
+
+#endif
+
+/*
+
+#define _nc_struct(name)  \
+  namespace c { struct name  { _cpp_struct_typedefs(name)
+#define _nc_struct_end    \
+  };}
+
+#define _sub_struct_reimpl(name, base) \
+  struct name : protected base { THIS_BASE_DEFS(name, base) \
+  base const& base_rc() const { return *this; }
+#define _sub_struct_reimpl_end         \
+  };
+
+#define _sub_c_struct(name) \
+  struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
+#define _sub_c_struct_end   \
+  };
+
+#define _nc_sub_struct(name, base) \
+  namespace c { struct name : base { THIS_BASE_DEFS(name, base)
+#define _nc_sub_struct_end         \
+  };}
+
+#define _nc_sub_c_struct(name)  \
+  namespace c { struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
+#define _nc_sub_c_struct_end    \
+  };}
+
+#else
+
+#define _cpp_struct_typedefs(name)
+
+#define _nc_struct(name)
+#define _nc_struct_end
+
+#define _sub_struct(name, base)
+#define _sub_struct_end
+
+#define _sub_c_struct(name)
+#define _sub_c_struct_end
+
+#define _nc_sub_struct(name, base)
+#define _nc_sub_struct_end
+
+#define _nc_sub_c_struct(name)
+#define _nc_sub_c_struct_end
+
+#endif
+
+
+#define _nc_iface(name) _nc_struct(name)
+#define _nc_iface_end   _nc_struct_end
+*/
+
+//------------------------------------------------------------------------------
+// handy helpers
+
+#if _is_cpp_
+
+#define NO_MOVE(s)              \
+  s(rval)           = delete;   \
+  r operator=(rval) = delete;
+
+#define NO_COPY(s)              \
+  s(rc)               = delete; \
+  ref operator=(rc)   = delete; \
+  ref operator=(rval) = delete;
+
+#define NO_GEN(s)               \
+  s(rc)               = delete; \
+  ref operator=(rc)   = delete; \
+  s(rval)             = delete; \
+  ref operator=(rval) = delete;
+
+#define COMPARABLE              \
+  int compare(rc)     const;
+#define EQ_NE                   \
+  bool operator==(rc) const;    \
+  bool operator!=(rc) const;
+
+#define _cpp_code(...) __VA_ARGS__
+
+#else
+
+#define BASE(s)
+#define NO_MOVE(s)
+#define NO_COPY(s)
+#define NO_GEN(s)
+#define COMPARABLE
+#define EQ_NE
+
+#define _cpp_code(...)
+
+#endif
+
+//------------------------------------------------------------------------------
+#endif
+// eof

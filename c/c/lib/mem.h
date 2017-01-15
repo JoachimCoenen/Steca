@@ -3,28 +3,33 @@
 #ifndef C_C_MEM_H
 #define C_C_MEM_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
-typedef void*            pvoid;
-typedef void const*      pcvoid;
+typedef void*       pvoid;
+typedef void const* pcvoid;
 
-_c_struct (mem)
-  _var (sz_t, size)
-  _ptr(void,   p)
+#define DATA_NS    c
+#define DATA_NAME  mem
 
-  _c_con (mem, (sz_t))
-  _c_con (mem, (sz_t, pcvoid))
-  _c_des(mem)
-_c_struct_end(mem)
+_c_data
+  _var (sz_t, sz)
+  _ptr (void, p)
 
-_nc_sub_c_struct (mem) NO_COPY(mem)
-  _con (mem, (sz_t))
-  _con (mem, (sz_t, pcvoid))
-  _con (mem, (rval))
+  _c_con (sz_t, pcvoid)
+_c_data_end
 
-  _op(pcvoid, p)
-_nc_sub_c_struct_end
+_cpp_struct
+  _con (sz_t)
+  _con (sz_t, pcvoid)
+  _con (rc)
+  _con (rval)
+  _des
 
-//------------------------------------------------------------------------------
+  _op_inline (pcvoid(), p)
+_cpp_struct_end
+
+#undef DATA_NS
+#undef DATA_NAME
+
 #endif
 // eof

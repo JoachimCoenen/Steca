@@ -18,27 +18,26 @@
 #ifndef CORE_XY_H
 #define CORE_XY_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
+#include <c/c/def/def_num>
 
-namespace core {
-//------------------------------------------------------------------------------
-// 2D point, reals
+#define DATA_NS    core
+#define DATA_NAME  XY
 
-_struct (XY)
-
+_c_data
   _var (real, x)
   _var (real, y)
 
-  XY();               // undef'd
-  XY(real, real);
+  _c_con ()
+  _c_con (real, real)
+_c_data_end
 
+_cpp_struct
   COMPARABLE EQ_NE
+_cpp_struct_end
 
-  void undef();       // make NaN
-  bool isDef() const; // is not NaN
+#undef DATA_NS
+#undef DATA_NAME
 
-_struct_end
-
-//------------------------------------------------------------------------------
-}
 #endif
+// eof

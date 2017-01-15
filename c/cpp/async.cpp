@@ -1,6 +1,6 @@
 // c
 
-#include "async.h"
+#include "async.hpp"
 #include <c/c/cpp>
 
 namespace c {
@@ -14,11 +14,11 @@ c::threads::threads() : nc(num_cores()), ts(nc) {
 }
 
 void c::threads::join() {
-//  for (thread& t: ts)
-//    t.join();
+  for (thread& t: ts)
+    t.join();
 }
 
-TEST("thread", ({
+TEST("thread",
   uint const n = 10000;
   uint dst[n], src[n];
   for_i(n) src[i] = i;
@@ -29,11 +29,11 @@ TEST("thread", ({
   };
 
   threads ts;
-  ts.split(l, n);
+  ts.distribute(l, n);
 
   for_i(n) src[i] = dst[i];
 
-  ts.split(l, n);
+  ts.distribute(l, n);
 
   bool ok = true;
   for_i(n)
@@ -41,12 +41,6 @@ TEST("thread", ({
       ok = false;
 
   CHECK(ok);
-});
-
-
-
-
-
 )
 
 //------------------------------------------------------------------------------

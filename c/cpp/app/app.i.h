@@ -3,12 +3,17 @@
 #ifndef C_CPP_APP_I_H
 #define C_CPP_APP_I_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
-_nc_iface(app)
-  virtual ~app();
-  virtual int exec() = 0;
-_nc_iface_end
+#define DATA_NS    c
+#define DATA_NAME  app
+
+_iface
+  _iface_mth(int, exec, ())
+_iface_end
+
+#undef DATA_NS
+#undef DATA_NAME
 
 #endif
 // eof

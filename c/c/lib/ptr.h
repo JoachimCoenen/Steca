@@ -3,20 +3,31 @@
 #ifndef C_C_PTR_H
 #define C_C_PTR_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-_c_struct (ptr)
-  _ptr(void, p)
+#define DATA_NS    c
+#define DATA_NAME  ptr
 
-  _c_con (ptr, (pcvoid))
-  _mth(pcvoid, take, ())
-_c_struct_end(ptr)
+_c_data
+  _ptr (void, p)
 
+  _c_con (pcvoid)
+_c_data_end
+
+#undef DATA_NS
+#undef DATA_NAME
+
+//------------------------------------------------------------------------------
 #if _is_cpp_
 namespace c {
+
+// mutable take
+template <typename T> T const*const take_p(T const*const& p) {
+  auto _ = p; mut(p) = nullptr; return _;
+}
 
 // parts adapted from https://github.com/Microsoft/GSL.git
 
@@ -71,8 +82,8 @@ private:
 
 template <typename T> // name = a hint
 struct own_ptr : c_ptr {
-  own_ptr()     : c_ptr(nullptr) {}
-  own_ptr(T const*const p) : c_ptr(p)       {}
+  own_ptr()    : c_ptr(nullptr) {}
+  own_ptr(T const*const p) : c_ptr(p) {}
 
   T const* ptr()        const { return static_cast<T const*>(p); }
   operator T const*()   const { return ptr(); }
@@ -120,7 +131,7 @@ struct scoped : c_ptr {
   }
 
   own_ptr<T> take() {
-    return own_ptr<T>(static_cast<T const*>(c_ptr::take()));
+    return own_ptr<T>(static_cast<T const*>(take_p(c_ptr::p)));
   }
 
   T const* ptr()        const { return static_cast<T const*>(p); }

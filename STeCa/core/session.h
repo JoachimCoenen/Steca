@@ -18,17 +18,21 @@
 #ifndef CORE_SESSION_H
 #define CORE_SESSION_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
-namespace core {
-//------------------------------------------------------------------------------
+#define DATA_NS    core
+#define DATA_NAME  Session
 
-_struct (Session)
-  Session();
-  int long_square(int);
-_struct_end
+_c_data
+_c_data_end
 
-//------------------------------------------------------------------------------
-}
+_cpp_struct
+  _con ()
+  _mth (int, long_square, (int))
+_cpp_struct_end
+
+#undef DATA_NS
+#undef DATA_NAME
+
 #endif
 // eof

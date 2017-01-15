@@ -4,17 +4,13 @@
 #include <c/c/cpp>
 #include <atomic>
 
-_c_con_impl(ptr, (pcvoid p_)) : p(p_) {}
+c_ptr::c_ptr(pcvoid p_) : p(p_) {}
 
-_c_mth_impl(ptr, pcvoid, take, ()) {
-  auto _ = mut(p); mut(p) = nullptr; return _;
-}
-
-//------------------------------------------------------------------------------
 
 namespace c {
+//------------------------------------------------------------------------------
 
-TEST("just_ptr", ({
+TEST("just_ptr",
   int i = 0;
   auto p1 = just_ptr<int>::from(&i), p2(p1);
   CHECK_EQ(p1, p2);
@@ -22,7 +18,7 @@ TEST("just_ptr", ({
   ++(mut(*p1));
   ++(mut(*p1.ptr()));
   CHECK_EQ(2, *p2);
-});)
+)
 
 // object ptr + counter
 struct o_cnt {
@@ -36,13 +32,13 @@ struct o_cnt {
   }
 };
 
-TEST("o_cnt", ({
+TEST("o_cnt",
   typedef uint t;
   scoped<t> n(new t);
   o_cnt oc(n);
   CHECK_EQ(n, oc.o);
   CHECK_EQ(0, oc.cnt);
-});)
+)
 
 _shared_base_::_shared_base_(pcvoid o) : c_ptr(nullptr) {
   mut(c_ptr::p) = new o_cnt(o);
@@ -69,7 +65,7 @@ void _shared_base_::cleanup() {
   delete static_cast<o_cnt*>(mut(c_ptr::p));
 }
 
-#ifdef WITH_TESTS
+TEST_CODE(
 struct __test_instance_cnt {
   static int cnt;
   __test_instance_cnt() { ++cnt; }
@@ -77,9 +73,9 @@ struct __test_instance_cnt {
 };
 
 int __test_instance_cnt::cnt = 0;
-#endif
+)
 
-TEST("scoped", ({
+TEST("scoped",
   scoped<uint> s1(new uint(8)), s2(new uint(9));
   CHECK_EQ(8, *s1);
   CHECK(bool(s1));
@@ -119,17 +115,16 @@ TEST("scoped", ({
   }
 
   CHECK_EQ(0, cnt::cnt);
-});)
+)
 
-
-TEST("shared", ({
+TEST("shared",
   typedef uint t;
   auto n = new t(8);
   shared<t> s1(n);
   shared<t> s2(s1);
   CHECK_EQ(*s1, *s2);
   CHECK_EQ(8,   *s2);
-});)
+)
 
 //------------------------------------------------------------------------------
 }

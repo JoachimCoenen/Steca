@@ -4,13 +4,13 @@
 #define C_QT_APP_H
 
 #include <c/cpp/app/app.i.h>
-#include "win.h"
+#include "win.hpp"
 #include <QApplication>
 
 namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
-struct app : c::app, QApplication { BASE(QApplication)
+struct app : c::app, QApplication { using base = QApplication;
   app(int& argc, char* argv[]);
   int exec(win*);
 

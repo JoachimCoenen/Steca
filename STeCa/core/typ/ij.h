@@ -18,24 +18,25 @@
 #ifndef CORE_IJ_H
 #define CORE_IJ_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
-namespace core {
-//------------------------------------------------------------------------------
-// 2D point, integers
+#define DATA_NS    core
+#define DATA_NAME  IJ
 
-_struct (IJ)
-
+_c_data
   _var (int, i)
   _var (int, j)
 
-  IJ();           // (0,0)
-  IJ(int, int);
+  _c_con ()
+  _c_con (int, int)
+_c_data_end
 
+_cpp_struct
   COMPARABLE EQ_NE
+_cpp_struct_end
 
-_struct_end
+#undef DATA_NS
+#undef DATA_NAME
 
-//------------------------------------------------------------------------------
-}
 #endif
+// eof

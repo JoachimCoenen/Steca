@@ -59,6 +59,8 @@ TEST("Range(min, max)", ({
   CHECK_EQ(7, r.max);
 });)
 
+Range::Range(rc that) : Range(that.min, that.max) {}
+
 Range Range::infinite() {
   return Range(-c::INF, +c::INF);
 }
@@ -88,9 +90,9 @@ bool Range::isDef() const {
 TEST("Range::valid", ({
   Range r;
   CHECK(!r.isDef());
-  r.min = 0;
+  r.set(0, c::NAN);
   CHECK(!r.isDef());
-  r.max = 0;
+  r.set(0,1);
   CHECK(r.isDef());
   r.undef();
   CHECK(!r.isDef());
@@ -103,17 +105,15 @@ bool Range::empty() const {
 }
 
 TEST("Range::empty", ({
-  CHECK(Range().isEmpty());
-  CHECK(!Range::infinite().isEmpty());
+  CHECK(Range().empty());
+  CHECK(!Range::infinite().empty());
 
   Range r(0);
-  CHECK(r.isEmpty());
-  r.max = 1;
-  CHECK(!r.isEmpty());
-  r.min = 2;
-  CHECK(r.isEmpty());
-  r.max = c::NAN;
-  CHECK(r.isEmpty());
+  CHECK(r.empty());
+  r.set(0,1);
+  CHECK(!r.empty());
+  r.set(2, c::NAN);
+  CHECK(r.empty());
 });)
 
 real Range::width() const {
@@ -121,19 +121,10 @@ real Range::width() const {
 }
 
 TEST("Range::width", ({
-  CHECK(isnan(Range().width()));
+  CHECK(c::isnan(Range().width()));
   CHECK_EQ(0, Range(0).width());
-  CHECK(c::isinf(Range(0,INF).width()));
+  CHECK(c::isinf(Range(0,c::INF).width()));
   CHECK(c::isinf(Range::infinite().width()));
-
-  Range r(0);
-  CHECK(r.isEmpty());
-  r.max = 1;
-  CHECK(!r.isEmpty());
-  r.min = 2;
-  CHECK(r.isEmpty());
-  r.max = c::NAN;
-  CHECK(r.isEmpty());
 });)
 
 real Range::center() const {
@@ -141,11 +132,11 @@ real Range::center() const {
 }
 
 TEST("Range::center", ({
-  CHECK(isnan(Range().center()));
+  CHECK(c::isnan(Range().center()));
   CHECK_EQ(0, Range(0).center());
-  CHECK(isnan(Range(0,c::NAN).center()));
-  CHECK(c::isinf(Range(0,INF).center()));
-  CHECK(isnan(Range::infinite().center()));
+  CHECK(c::isnan(Range(0,c::NAN).center()));
+  CHECK(c::isinf(Range(0,c::INF).center()));
+  CHECK(c::isnan(Range::infinite().center()));
 });)
 
 void Range::set(rc that) {
@@ -177,13 +168,13 @@ Range Range::safeFrom(real v1, real v2) {
 TEST("Range::safe", ({
   auto r = Range::safeFrom(2,3);
   RANGE_EQ(r, Range(2,3));
-  r = Range::safeFrom(3,2);
+  r.set(Range::safeFrom(3,2));
   RANGE_EQ(r, Range(2,3));
   r.safeSet(3,4);
   RANGE_EQ(r, Range(3,4));
   r.safeSet(4,3);
   RANGE_EQ(r, Range(3,4));
-  r.safeSet(+INF, -INF);
+  r.safeSet(+c::INF, -c::INF);
   RANGE_EQ(r, Range::infinite());
 });)
 
@@ -227,7 +218,7 @@ TEST("Range::contains", ({
   CHECK(!r.contains(Range()));
   CHECK(!r.contains(Range::infinite()));
   CHECK(!r.contains(c::NAN));
-  CHECK(!r.contains(INF));
+  CHECK(!r.contains(c::INF));
 
   CHECK(r.contains(r));
 
@@ -295,7 +286,7 @@ TEST("Range::intersect", ({
   CHECK_EQ(Range(-1,0), r.intersect(Range(-2,0)));
 
   auto disjoint = Range(-3,-2);
-  CHECK(r.intersect(disjoint).isEmpty());
+  CHECK(r.intersect(disjoint).empty());
   CHECK_EQ(r.min, r.intersect(disjoint).min);
 });)
 
@@ -305,27 +296,34 @@ real Range::bound(real value) const {
   return c::NAN;
 }
 
+Range::ref Range::operator=(rc that) {
+  mut(min) = that.min;
+  mut(max) = that.max;
+  return *this;
+}
+
 TEST("Range::bound", ({
   auto r = Range(-1, +1);
 
-  CHECK(isnan(Range().bound(0)));
-  CHECK(isnan(Range().bound(INF)));
-  CHECK(isnan(Range().bound(c::NAN)));
+  CHECK(c::isnan(Range().bound(0)));
+  CHECK(c::isnan(Range().bound(c::INF)));
+  CHECK(c::isnan(Range().bound(c::NAN)));
   CHECK_EQ(0, Range::infinite().bound(0));
-  CHECK(c::isinf(Range::infinite().bound(INF)));
-  CHECK(isnan(Range::infinite().bound(c::NAN)));
+  CHECK(c::isinf(Range::infinite().bound(c::INF)));
+  CHECK(c::isnan(Range::infinite().bound(c::NAN)));
 
   CHECK_EQ(0,  r.bound(0));
   CHECK_EQ(-1, r.bound(-10));
-  CHECK_EQ(-1, r.bound(-INF));
+  CHECK_EQ(-1, r.bound(-c::INF));
   CHECK_EQ(+1, r.bound(+10));
-  CHECK_EQ(+1, r.bound(+INF));
+  CHECK_EQ(+1, r.bound(+c::INF));
 });)
 
 //------------------------------------------------------------------------------
 
-Ranges::Ranges() {
-}
+Ranges::Ranges() {}
+
+Ranges::Ranges(rval that) : rs(std::move(that.rs)) {}
 
 bool Ranges::add(Range::rc range) {
   c::vec<Range> newRanges;
@@ -381,7 +379,7 @@ static bool lessThan(r_::rc r1, r_::rc r2) {
 }
 
 void Ranges::sort() {
-//  reinterpret_cast<c::vec<r_>*>(&rs)->sort(lessThan); TODO
+//TODO  reinterpret_cast<c::vec<r_>*>(&rs)->sort(lessThan); TODO
 }
 
 #ifdef WITH_TESTS
@@ -390,8 +388,8 @@ typedef struct {
   real min, max;
 } min_max;
 
-static bool RANGES_EQ(Ranges::rc rs, vec<min_max> mm) {
-  if (rs.count() != mm.count())
+static bool RANGES_EQ(Ranges::rc rs, c::vec<min_max> mm) {
+  if (rs.count() != mm.size())
     return false;
 
   for_i (rs.count()) {
@@ -420,25 +418,25 @@ static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
 
 TEST("Ranges", ({
   Ranges rs;
-  REQUIRE(rs.isEmpty());
+  CHECK(rs.empty());
   CHECK(RANGES_EQ(rs, rs));
   CHECK(RANGES_EQ(rs, Ranges()));
 
   Range r1(0,1), r2(1,2), r3(2,3), r4(3,4);
 
-  REQUIRE(rs.add(r4)); CHECK_FALSE(rs.add(r4));
+  CHECK(rs.add(r4)); CHECK_FALSE(rs.add(r4));
   CHECK(RANGES_EQ(rs, {{3,4}} ));
 
-  REQUIRE(rs.add(r1)); CHECK_FALSE(rs.add(r1));
+  CHECK(rs.add(r1)); CHECK_FALSE(rs.add(r1));
   CHECK(RANGES_EQ(rs, {{0,1}, {3,4}} ));
 
-  REQUIRE(rs.add(r2));
+  CHECK(rs.add(r2));
   CHECK(RANGES_EQ(rs, {{0,2}, {3,4}} ));
 
-  REQUIRE(rs.add(r3));
+  CHECK(rs.add(r3));
   CHECK(RANGES_EQ(rs, {{0,4}} ));
 
-  REQUIRE(rs.rem(r2)); CHECK_FALSE(rs.rem(r2));
+  CHECK(rs.rem(r2)); CHECK_FALSE(rs.rem(r2));
   CHECK(RANGES_EQ(rs, {{0,1}, {2,4}} ));
 
   rs.clear(); CHECK_FALSE(rs.rem(r1));

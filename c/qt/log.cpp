@@ -1,6 +1,6 @@
 // c
 
-#include "log.h"
+#include "log.hpp"
 
 namespace c { namespace qt {
 //------------------------------------------------------------------------------

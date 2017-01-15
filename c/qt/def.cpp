@@ -1,20 +1,14 @@
 // c
 
-#ifndef C_QT_WIN_H
-#define C_QT_WIN_H
-
-#include <c/cpp/app/win.i.h>
-#include <QMainWindow>
+#include "def.hpp"
 
 namespace c { namespace qt {
 //------------------------------------------------------------------------------
 
-struct win : c::win, QMainWindow { BASE(QMainWindow)
-  win();
-  void show();
-};
+[[noreturn]] void err(qstrc msg) will_exc {
+  c::err(msg.toLocal8Bit());
+}
 
 //------------------------------------------------------------------------------
 }}
-#endif
 // eof

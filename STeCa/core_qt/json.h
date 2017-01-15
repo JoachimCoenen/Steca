@@ -19,7 +19,7 @@
 #define CORE_JSON_H
 
 #include <c/c/h>
-#include <c/qt/def.h>
+#include <c/qt/def.hpp>
 #include <c/cpp/exc.h>
 #include <core/typ/ij.h>
 #include <core/typ/xy.h>
@@ -118,8 +118,6 @@ Ranges  toRanges(JsonArr::rc) may_exc;
 
 IJ      toIJ(JsonObj::rc) may_exc;
 XY      toXY(JsonObj::rc) may_exc;
-
-IJ loadJson(JsonObj const&) may_exc;
 
 //------------------------------------------------------------------------------
 }

@@ -12,11 +12,10 @@
 #pragma GCC diagnostic ignored "-Wgnu-statement-expression"
 #endif
 
-#define TEST(name, code)  \
-namespace {               \
-DOCTEST_TEST_CASE(name) { \
-  code                    \
-}                         \
+#define TEST_CODE(...)  __VA_ARGS__
+#define TEST(name, ...)                 \
+namespace {                             \
+DOCTEST_TEST_CASE(name) { __VA_ARGS__ } \
 }
 
 #define CHECK           DOCTEST_CHECK
@@ -33,7 +32,8 @@ DOCTEST_TEST_CASE(name) { \
 
 #else
 
-#define TEST(name, code)
+#define TEST_CODE(...)
+#define TEST(name, ...)
 
 #endif
 

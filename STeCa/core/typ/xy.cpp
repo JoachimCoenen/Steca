@@ -18,18 +18,25 @@
 #include "xy.h"
 #include <c/c/cpp>
 
+core_XY::core_XY() : core_XY(c::NAN, c::NAN)  {}
+
+core_XY::core_XY(real x_, real y_) : x(x_), y(y_) {}
+
+
 namespace core {
 //------------------------------------------------------------------------------
 
-XY::XY() : x(c::NAN), y(c::NAN)  {}
-
+/*
 TEST("XY()", ({
   XY xy;
-  CHECK(c:isnan(xy.x));
-  CHECK(c:isnan(xy.y));
+  CHECK(c::isnan(xy.x));
+  CHECK(c::isnan(xy.y));
 });)
 
-XY::XY(real x_, real y_) : x(x_), y(y_) {}
+
+void XY::set(real x_, real y_) {
+  mut(x) = x_; mut(y) = y_;
+}
 
 TEST("XY(x,y)", ({
   XY xy(2.3,3.4);
@@ -68,14 +75,14 @@ bool XY::isDef() const {
 TEST("XY::valid", ({
   XY xy;
   CHECK(!xy.isDef());
-  xy.x = 0;
+  xy.set(0, xy.y);
   CHECK(!xy.isDef());
-  xy.y = 0;
+  xy.set(xy.x, 0);
   CHECK(xy.isDef());
   xy.undef();
   CHECK(!xy.isDef());
 });)
-
+*/
 //------------------------------------------------------------------------------
 }
 // eof

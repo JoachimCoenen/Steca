@@ -18,7 +18,7 @@
 #ifndef GUI_WIN_H
 #define GUI_WIN_H
 
-#include <c/qt/win.h>
+#include <c/qt/win.hpp>
 #include <gui/hub/hub.h>
 
 _sub_struct (Win, c::qt::win) BASE_CONS

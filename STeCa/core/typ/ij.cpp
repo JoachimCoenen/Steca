@@ -18,18 +18,20 @@
 #include "ij.h"
 #include <c/c/cpp>
 
+core_IJ::core_IJ() : core_IJ(0, 0) {}
+
+core_IJ::core_IJ(int i_, int j_) : i(i_), j(j_) {}
+
 namespace core {
 //------------------------------------------------------------------------------
 
-IJ::IJ() : IJ(0, 0) {}
-
+/*
 TEST("IJ()", ({
   IJ ij;
   CHECK_EQ(0, ij.i);
   CHECK_EQ(0, ij.j);
 });)
 
-IJ::IJ(int i_, int j_) : i(i_), j(j_) {}
 
 TEST("IJ(i,j)", ({
   IJ ij(2,3);
@@ -55,7 +57,7 @@ TEST("IJ::compare", ({
   CHECK_EQ(ij, ij1);
   CHECK_NE(ij, ij2);
 });)
-
+*/
 //------------------------------------------------------------------------------
 }
 // eof

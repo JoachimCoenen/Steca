@@ -3,29 +3,34 @@
 #ifndef C_C_STR_H
 #define C_C_STR_H
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 
 typedef char*       pstr;
 typedef char const* pcstr;
 
-_c_struct (str)
-  _var (sz_t, size)
-  _ptr(char,   p)
+#define DATA_NS    c
+#define DATA_NAME  str
 
-  _c_con (str, (pcstr))
-  _c_des(str)
-_c_struct_end(str)
+_c_data
+  _var (sz_t, sz)
+  _ptr (char, p)
 
-_nc_sub_c_struct (str)
-  _con (str, (pcstr))
-  _con (str, (rc))
-  _con (str, (rval))
+  _c_con (sz_t, pcstr)
+_c_data_end
 
-  _op(pcstr, p)
-_nc_sub_c_struct_end
+_cpp_struct
+  _con (pcstr)
+  _con (rc)
+  _con (rval)
+  _des
 
-C_CPP(typedef c::str::rc strc;)
+  _op_inline (pcstr(), p)
+_cpp_struct_end
 
-//------------------------------------------------------------------------------
+_cpp_code (typedef c::str::rc strc;)
+
+#undef DATA_NS
+#undef DATA_NAME
+
 #endif
 // eof

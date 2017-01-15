@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "session.h"
-#include <c/cpp/async.h>
+#include <c/cpp/async.hpp>
 #include <chrono>
 #include <c/c/cpp>
 
@@ -26,7 +26,7 @@ namespace core {
 Session::Session() {
 }
 
-int Session::long_square(int i) {
+int Session::long_square(int i) const {
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   return i*i;
 }

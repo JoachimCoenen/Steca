@@ -1,6 +1,6 @@
 // c
 
-#include "vec.h"
+#include "vec.hpp"
 #include <c/c/cpp>
 
 namespace c {

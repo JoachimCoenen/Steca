@@ -18,75 +18,88 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c/c/h>
-#include <c/cpp/vec.h>
+#include <c/c/def/def_num>
+#include <c/cpp/vec.hpp>
 
-namespace core {
-//------------------------------------------------------------------------------
-// a range of values - a closed interval
+#define DATA_NS    core
+#define DATA_NAME  Range
 
-_struct (Range)
-  Range();                          // undef'd (NaN)
-  Range(real val);                  // singular, min == max
-  Range(real min, real max);        // normal
-
-  Range(Range const&);
-  Range(Range&&);
-
-  static Range infinite();          // -inf .. +inf
-
-  COMPARABLE EQ_NE
-
-  void  undef();                    // make NaNs
-  bool  isDef() const;              // is not NaNs
-  bool  empty() const;              // not def'd or empty
-
-  real  width()  const;
-  real  center() const;
-
+_c_data
   _var (real, min) _var (real, max) // this is the range
+_c_data_end
 
-  void  set(rc);
-  void  set(real val);              // make singular
-  void  set(real min, real max);    // must be: min <= max
-  void  safeSet(real, real);        // will be set in the right order min <= max
+_cpp_struct
+Range();                          // undef'd (NaN)
+Range(real val);                  // singular, min == max
+Range(real min, real max);        // normal
 
-  static Range safeFrom(real, real); // safe factory
+Range(rc);
 
-  void  extendBy(real);             // extend to include the number
-  void  extendBy(rc);               // extend to include the range
+static Range infinite();          // -inf .. +inf
 
-  bool  contains(real)  const;
-  bool  contains(rc)    const;
-  bool  intersects(rc)  const;
-  Range intersect(rc)   const;
+COMPARABLE EQ_NE
 
-  real bound(real)      const;      // limit the number to the interval
-};
+void  undef();                    // make NaNs
+bool  isDef() const;              // is not NaNs
+bool  empty() const;              // not def'd or empty
 
-//------------------------------------------------------------------------------
-// A set of *sorted* *non-overlapping* ranges
+real  width()  const;
+real  center() const;
 
-_struct (Ranges)
-  Ranges();
 
-  void   clear()             { rs.clear();            }
-  bool   is_empty()    const { return rs.empty();  }
-  sz_t   count()       const { return rs.size();     }
+void  set(rc);
+void  set(real val);              // make singular
+void  set(real min, real max);    // must be: min <= max
+void  safeSet(real, real);        // will be set in the right order min <= max
 
-  Range::rc at(uint i) const { return rs.at(i);       }
+static Range safeFrom(real, real); // safe factory
 
-  // collapses overlapping ranges into one; true if there was a change
-  bool add(Range::rc);
+void  extendBy(real);             // extend to include the number
+void  extendBy(rc);               // extend to include the range
 
-  // removes (cuts out) a range; true if there was a change
-  bool rem(Range::rc);
+bool  contains(real)  const;
+bool  contains(rc)    const;
+bool  intersects(rc)  const;
+Range intersect(rc)   const;
+
+real bound(real)      const;      // limit the number to the interval
+
+protected:
+ref operator=(rc);
+_cpp_struct_end
+
+#undef DATA_NS
+#undef DATA_NAME
+
+#define DATA_NS    core
+#define DATA_NAME  Ranges
+
+_c_data
+_c_data_end
+
+_cpp_struct
+Ranges();
+Ranges(rval);
+
+void clear()             { rs.clear();        }
+bool is_empty()    const { return rs.empty(); }
+sz_t count()       const { return rs.size();  }
+bool empty()       const { return rs.empty(); }
+
+Range::rc at(sz_t i) const { return rs.at(i);       }
+
+// collapses overlapping ranges into one; true if there was a change
+bool add(Range::rc);
+
+// removes (cuts out) a range; true if there was a change
+bool rem(Range::rc);
 
 private:
-  void sort();
-  c::vec<Range> rs;
-};
+void sort();
+c::vec<Range> rs;
+_cpp_struct_end
 
-//------------------------------------------------------------------------------
-}
+#undef DATA_NS
+#undef DATA_NAME
+
 #endif

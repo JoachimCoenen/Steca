@@ -1,46 +1,38 @@
 // c
 
 #include "mem.h"
-#include "unsafe.h"
 #include <c/c/cpp>
+#include "unsafe.h"
 
-//------------------------------------------------------------------------------
-
-_c_con_impl(mem, (sz_t size_)) : size(size_), p(nullptr) {
-  mut(p) = unsafe::mem::alloc(size);
-}
-
-_c_con_impl(mem, (sz_t size_, pcvoid p_)) : size(size_), p(nullptr) {
-  mut(p) = unsafe::mem::cpy(size, p_);
-}
-
-_c_des_impl(mem){
-  unsafe::mem::free(zerop(p));
-}
+c_mem::c_mem(sz_t sz_, pcvoid p_) : sz(sz_), p(p_) {}
 
 namespace c {
 //------------------------------------------------------------------------------
 
-mem::mem(sz_t size_)            : c_mem(size_)     {}
-mem::mem(sz_t size, pcvoid src) : c_mem(size, src) {}
+mem::mem(sz_t sz) : c_mem(sz, unsafe::mem::alloc(sz)) {}
 
-mem::mem(rval that) : c_mem(0) {
-  unsafe::swap(size, that.size);
-  unsafe::swap(p,    that.p);
+mem::mem(sz_t sz, pcvoid p) : c_mem(sz, unsafe::mem::cpy(sz, p)) {}
+
+mem::mem(rc that) : mem(that.sz, that.p) {}
+
+mem::mem(rval that) : c_mem (that.sz, nullptr) {
+  unsafe::swap(p, that.p);
 }
 
-#ifdef WITH_TESTS
+mem::~mem() {
+  unsafe::mem::free(mut(p));
+}
 
+TEST_CODE(
 mem mem_move() {
   return mem(99);
 }
+)
 
-#endif
-
-TEST("mem", ({
+TEST("mem",
   mem m0(0), m1(1), mX(12345678);
   mem mm(mem_move());
-});)
+)
 
 //------------------------------------------------------------------------------
 }

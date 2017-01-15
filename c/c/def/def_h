@@ -5,10 +5,10 @@
 
 #if defined(__GNUC__) && !defined(__APPLE__)
 //TODO #pragma GCC diagnostic ignored "-Wpragmas"
-//#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #endif
 
-#ifdef PROCESS_I_H
+#ifdef GENERATE_INTERFACE
 
 #define NDEBUG
 
@@ -41,192 +41,17 @@ typedef size_t sz_t;
 #endif
 
 //------------------------------------------------------------------------------
-// "C" structs
-
-#define _c_struct(name)       \
-  EXTERN_C                    \
-  struct c_##name {
-#define _c_struct_end(name)   \
-  };                          \
-  EXTERN_C_END
-
-#define _var(typ, name)       \
-  typ const name;
-
-#define _ptr(typ, name)       \
-  typ const * const name;
+// explicit mutability
 
 #if _is_cpp_
 
-#define _c_con(name, args)    \
-  c_##name args;
-#define _c_des(name)          \
- ~c_##name();
+// make a type mutable
+template <typename T> struct mut_typ            { typedef T typ; };
+template <typename T> struct mut_typ<T const>   { typedef T typ; };
 
-#define _mth(typ, mth, args)  \
-  typ mth args;
-
-#define _op(typ, expr)    \
-  operator typ() const { return expr; }
-
-#define _con(name, args)  \
-  name args;
-
-#define _fry(name, mth, args)  \
-  static name mth args;
-
-#define _des(name)        \
-  ~name();
-
-#else
-
-#define _c_con(name, args)
-#define _c_des(name)
-#define _mth(typ, mth, args)
-#define _con(name, args)
-#define _des(name)
-
-#endif
-
-//------------------------------------------------------------------------------
-// c-cpp structs
-
-#if _is_cpp_
-
-#define THIS(name) using This = name;
-#define BASE(name) using base = name;
-#define BASE_CONS  using base::base;
-
-#define THIS_BASE_DEFS(name, base) \
-  THIS(name) BASE(base) _struct_typedefs(name)
-
-#define _struct_typedefs(name)  \
-  typedef name typ;             \
-  typedef typ& ref;             \
-  typedef typ const& rc;        \
-  typedef typ&& rval;
-
-#define _struct(name)   \
-  struct name  { _struct_typedefs(name)
-#define _struct_end     \
-  };
-
-#define _nc_struct(name)  \
-  namespace c { struct name  { _struct_typedefs(name)
-#define _nc_struct_end    \
-  };}
-
-#define _sub_struct(name, base) \
-  struct name : base { THIS_BASE_DEFS(name, base)
-#define _sub_struct_end         \
-  };
-
-#define _sub_struct_reimpl(name, base) \
-  struct name : protected base { THIS_BASE_DEFS(name, base)
-#define _sub_struct_reimpl_end         \
-  };
-
-#define _sub_c_struct(name) \
-  struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
-#define _sub_c_struct_end   \
-  };
-
-#define _nc_sub_struct(name, base) \
-  namespace c { struct name : base { THIS_BASE_DEFS(name, base)
-#define _nc_sub_struct_end         \
-  };}
-
-#define _nc_sub_c_struct(name)  \
-  namespace c { struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
-#define _nc_sub_c_struct_end    \
-  };}
-
-#else
-
-#define _struct_typedefs(name)
-
-#define _struct(name)
-#define _struct_end
-
-#define _nc_struct(name)
-#define _nc_struct_end
-
-#define _sub_struct(name, base)
-#define _sub_struct_end
-
-#define _sub_c_struct(name)
-#define _sub_c_struct_end
-
-#define _nc_sub_struct(name, base)
-#define _nc_sub_struct_end
-
-#define _nc_sub_c_struct(name)
-#define _nc_sub_c_struct_end
-
-#endif
-
-#define _iface(name)    _struct(name)
-#define _iface_end      _struct_end
-
-#define _nc_iface(name) _nc_struct(name)
-#define _nc_iface_end   _nc_struct_end
-
-//------------------------------------------------------------------------------
-// handy helpers
-
-#if _is_cpp_
-
-#define NO_MOVE(s)              \
-  s(rval)           = delete;   \
-  r operator=(rval) = delete;
-
-#define NO_COPY(s)              \
-  s(rc)               = delete; \
-  ref operator=(rc)   = delete; \
-  ref operator=(rval) = delete;
-
-#define NO_GEN(s)               \
-  s(rc)               = delete; \
-  ref operator=(rc)   = delete; \
-  s(rval)             = delete; \
-  ref operator=(rval) = delete;
-
-#define COMPARABLE              \
-  int compare(rc)     const;
-#define EQ_NE                   \
-  bool operator==(rc) const;    \
-  bool operator!=(rc) const;
-
-#define C_CPP(code) code
-
-#else
-
-#define BASE(s)
-#define NO_MOVE(s)
-#define NO_COPY(s)
-#define NO_GEN(s)
-#define COMPARABLE
-#define EQ_NE
-
-#define C_CPP(code)
-
-#endif
-
-//------------------------------------------------------------------------------
-// mutability
-
-#if _is_cpp_
-
-template <typename T> struct mut_typ           { typedef T typ; };
-template <typename T> struct mut_typ<T const>  { typedef T typ; };
-
-template<typename T> T*& mut(T const*const& t) { return const_cast<T*&>(t); }
-template<typename T> T&  mut(T const& t)       { return const_cast<T&> (t); }
-
-template<typename T> T*  zerop(T const*const& t) {
-  auto& m = mut(t); auto _ = m; m = 0;
-  return _;
-}
+// make a var mutable
+template <typename T> T*& mut(T const*const& t) { return const_cast<T*&>(t); }
+template <typename T> T&  mut(T const& t)       { return const_cast<T&> (t); }
 
 #endif
 

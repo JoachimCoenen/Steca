@@ -4,7 +4,7 @@
 #define C_QT_LOG_H
 
 #include <c/cpp/app/app.i.h>
-#include <c/qt/def.h>
+#include <c/qt/def.hpp>
 #include <QApplication>
 
 namespace c { namespace qt {

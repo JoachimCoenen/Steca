@@ -35,14 +35,14 @@ namespace c {
 flt64 const NAN = std::numeric_limits<flt64>::quiet_NaN();
 flt64 const INF = std::numeric_limits<flt64>::infinity();
 
-TEST("c::NAN/INF", ({
+TEST("c::NAN/INF",
   double d;
   d = float(c::NAN); CHECK(isnan(d));
   d = float(INF); CHECK(isinf(d));
   float f;
   f = float(c::NAN); CHECK(isnan(f));
   f = float(INF); CHECK(isinf(f));
-});)
+)
 
 bool isnan(flt32 f) {
   return std::isnan(f);

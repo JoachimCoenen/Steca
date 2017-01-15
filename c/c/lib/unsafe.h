@@ -4,10 +4,9 @@
 #define C_C_UNSAFE_H
 
 #include <c/c/h>
-#include <utility>
 
-typedef void*            pvoid;
-typedef void const*      pcvoid;
+typedef void*       pvoid;
+typedef void const* pcvoid;
 
 #if _is_cpp_
 

@@ -1,21 +1,31 @@
 // c
 
-#ifndef C_CPP_VEC_H
-#define C_CPP_VEC_H
+#ifndef C_CPP_VEC_HPP
+#define C_CPP_VEC_HPP
 
-#include <c/c/h>
+#include <c/c/def/def_data>
 #include <vector>
-//#include <algorithm>
 
-namespace c {
-//------------------------------------------------------------------------------
+#define DATA_NS   c
+#define DATA_NAME vec
 
-template<typename T>
-_sub_struct(vec, std::vector<T>)
-using base::base;
-void set(rc);
-_sub_struct_end
+_struct_sub_pref(template <typename T>, std::vector<T>)
+  using base::base;
 
+  _mth_mut_inline(void, set, (rc that),
+    base::operator=(that);
+  )
+
+  _mth_mut_inline(void, set, (rval that),
+    base::operator=(std::move(that));
+  )
+
+_struct_sub_end
+
+#undef DATA_NS
+#undef DATA_NAME
+
+// TODO
 //_struct(vec) //, std::vector<T const>)
 
 //  vec(sz_t);
@@ -49,6 +59,5 @@ _sub_struct_end
 //}
 
 //------------------------------------------------------------------------------
-}
 #endif
 // eof

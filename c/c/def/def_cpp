@@ -15,15 +15,6 @@
 //------------------------------------------------------------------------------
 // cpp structs
 
-#define _c_con_impl(name, args) \
-  c_##name::c_##name args
-
-#define _c_des_impl(name)       \
-  c_##name::~c_##name()
-
-#define _c_mth_impl(name, type, mth, args) \
-  type c_##name::mth args
-
 #define COMPARABLE_IMPL(s) \
   int s::compare(rc that) const
 
