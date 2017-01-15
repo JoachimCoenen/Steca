@@ -40,7 +40,7 @@ JsonObj& JsonObj::saveObj(qstrc key, JsonObj::rc obj) {
   return *this;
 }
 
-#define ERR(msg)     c::qt::err(msg);
+#define ERR(msg)     c_qt::err(msg);
 #define KEY_ERR(msg) ERR(key + ": " + msg)
 
 JsonObj JsonObj::loadObj(qstrc key, bool defEmpty) const may_exc {

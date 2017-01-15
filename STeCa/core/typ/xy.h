@@ -33,6 +33,7 @@ _c_data
 _c_data_end
 
 _cpp_struct
+  using base::base;
   COMPARABLE EQ_NE
 _cpp_struct_end
 

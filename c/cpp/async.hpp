@@ -9,7 +9,7 @@
 #define DATA_NS   c
 #define DATA_NAME thread
 
-_struct_sub(std::thread)
+_struct_sub (std::thread)
   using base::base;
 _struct_sub_end
 

@@ -19,12 +19,19 @@
 #define GUI_WIN_H
 
 #include <c/qt/win.hpp>
-#include <gui/hub/hub.h>
+#include <gui/hub/hub.hpp>
 
-_sub_struct (Win, c::qt::win) BASE_CONS
+#define DATA_NS   gui
+#define DATA_NAME Win
+
+_struct_sub (c_qt::win)
+  using base::base;
   Win();
   Hub hub;
-_sub_struct_end
+_struct_sub_end
+
+#undef DATA_NS
+#undef DATA_NAME
 
 #endif
 // eof

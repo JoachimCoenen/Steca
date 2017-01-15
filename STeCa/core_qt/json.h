@@ -20,7 +20,7 @@
 
 #include <c/c/h>
 #include <c/qt/def.hpp>
-#include <c/cpp/exc.h>
+#include <c/cpp/exc.hpp>
 #include <core/typ/ij.h>
 #include <core/typ/xy.h>
 #include <core/typ/range.h>
@@ -28,11 +28,11 @@
 #include <QJsonObject>
 
 namespace core {
+//------------------------------------------------------------------------------
 
 struct JsonArr;
 
-_sub_struct_reimpl (JsonObj, QJsonObject)
-
+sub_struct_reimpl (JsonObj, QJsonObject)
   using pint  = c::pint;
   using preal = c::preal;
 
@@ -85,11 +85,11 @@ _sub_struct_reimpl (JsonObj, QJsonObject)
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
 
-_sub_struct_reimpl_end
+sub_struct_reimpl_end
 
 //------------------------------------------------------------------------------
 
-_sub_struct_reimpl (JsonArr, QJsonArray)
+sub_struct_reimpl (JsonArr, QJsonArray)
   JsonArr();
   JsonArr(QJsonArray const&);
 
@@ -103,7 +103,7 @@ _sub_struct_reimpl (JsonArr, QJsonArray)
 
   uint  count() const;
   JsonObj objAt(uint) const;
-_sub_struct_reimpl_end
+sub_struct_reimpl_end
 
 //------------------------------------------------------------------------------
 

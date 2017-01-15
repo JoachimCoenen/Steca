@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_CPP_EXC_H
-#define C_CPP_EXC_H
+#ifndef C_CPP_EXC_HPP
+#define C_CPP_EXC_HPP
 
 #include <c/c/lib/str.h>
 #include <exception>
@@ -9,7 +9,7 @@
 #define DATA_NS    c
 #define DATA_NAME  exc
 
-_struct_sub(::std::exception)
+_struct_sub (::std::exception)
   _var (str,  msg)
   _var (bool, silent)
 

@@ -19,14 +19,18 @@
 #define GUI_HUB_H
 
 #include <core/session.h>
+#include <c/c/lib/ptr.h>
 
 #include <QObject>
 #include <QEvent>
 #include <QThread>
 
+namespace gui {
+//------------------------------------------------------------------------------
+
 struct Hub;
 
-_sub_struct (Task, QEvent) NO_COPY(Task)
+sub_struct (Task, QEvent)
   using Session = core::Session;
 
   Task();
@@ -39,12 +43,18 @@ _sub_struct (Task, QEvent) NO_COPY(Task)
   virtual void done() = 0;
 
   Hub* hub; Session* session;
-_sub_struct_end
+sub_struct_end
 
 typedef c::shared<Task> shTask;
-Q_DECLARE_METATYPE(shTask)
+//------------------------------------------------------------------------------
+}
 
-_sub_struct (Worker, QObject)
+Q_DECLARE_METATYPE(gui::shTask)
+
+namespace gui {
+//------------------------------------------------------------------------------
+
+sub_struct (Worker, QObject)
   using Session = core::Session;
 
   Worker(Session&);
@@ -57,9 +67,9 @@ signals:
 private:
   Session& session;
   Q_OBJECT
-_sub_struct_end
+sub_struct_end
 
-_sub_struct (Hub, QObject)
+sub_struct (Hub, QObject)
   using Session = core::Session;
 
   Hub();
@@ -81,7 +91,9 @@ private:
   QThread thread;
   Worker  worker;
   Q_OBJECT
-_struct_end
+sub_struct_end
 
 #endif
+//------------------------------------------------------------------------------
+}
 // eof

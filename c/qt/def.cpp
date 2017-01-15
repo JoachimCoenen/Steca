@@ -2,7 +2,7 @@
 
 #include "def.hpp"
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 [[noreturn]] void err(qstrc msg) will_exc {
@@ -10,5 +10,5 @@ namespace c { namespace qt {
 }
 
 //------------------------------------------------------------------------------
-}}
+}
 // eof

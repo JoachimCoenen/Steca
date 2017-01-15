@@ -4,14 +4,14 @@
 #include "log.hpp"
 #include "win.hpp"
 #include <c/c/cpp>
-#include <c/cpp/exc.h>
+#include <c/cpp/exc.hpp>
 
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QStyleFactory>
 #include <iostream>
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 app::app(int& argc, char* argv[]) : base(argc, argv) {
@@ -98,7 +98,7 @@ int app::exec(win* w) {
 bool app::notify(QObject* receiver, QEvent* event) {
   try {
     return base::notify(receiver, event);
-  } catch (exc::rc e) {
+  } catch (c::exc::rc e) {
     if (!e.silent)
       qWarning("%s", e.what());
   } catch (std::exception const& e) {
@@ -123,5 +123,5 @@ busy_indicator::~busy_indicator() {
 void (*busy_indicator::handler)(bool) = nullptr;
 
 //------------------------------------------------------------------------------
-}}
+}
 // eof

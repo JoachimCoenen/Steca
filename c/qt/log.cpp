@@ -2,7 +2,7 @@
 
 #include "log.hpp"
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 void log::info(qstrc msg) {
@@ -23,5 +23,5 @@ void log::popup(qstrc msg) {
 void (*log::handler)(qstrc, eType) = nullptr;
 
 //------------------------------------------------------------------------------
-}}
+}
 // eof

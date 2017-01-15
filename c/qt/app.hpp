@@ -7,7 +7,7 @@
 #include "win.hpp"
 #include <QApplication>
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 struct app : c::app, QApplication { using base = QApplication;
@@ -29,6 +29,6 @@ public:
 };
 
 //------------------------------------------------------------------------------
-}}
+}
 #endif
 // eof

@@ -1,13 +1,13 @@
 // c
 
-#ifndef C_QT_LOG_H
-#define C_QT_LOG_H
+#ifndef C_QT_LOG_HPP
+#define C_QT_LOG_HPP
 
 #include <c/cpp/app/app.i.h>
 #include <c/qt/def.hpp>
 #include <QApplication>
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 struct log {
@@ -20,6 +20,6 @@ struct log {
 };
 
 //------------------------------------------------------------------------------
-}}
+}
 #endif
 // eof

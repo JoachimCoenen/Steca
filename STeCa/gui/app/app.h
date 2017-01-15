@@ -18,12 +18,18 @@
 #ifndef GUI_APP_H
 #define GUI_APP_H
 
-#include <c/qt/app.h>
+#include <c/qt/app.hpp>
 
-_sub_struct (App, c::qt::app)
+#define DATA_NS   gui
+#define DATA_NAME App
+
+_struct_sub (c_qt::win)
   App(int& argc, char* argv[]);
   int exec();
-_sub_struct_end
+_struct_sub_end
+
+#undef DATA_NS
+#undef DATA_NAME
 
 #endif
 // eof

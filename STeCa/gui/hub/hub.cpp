@@ -15,10 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "hub.h"
+#include "hub.hpp"
 #include <QApplication>
 #include <c/c/cpp>
 
+namespace gui {
 //------------------------------------------------------------------------------
 
 Task::Task() : base(base::User), hub(nullptr), session(nullptr) {
@@ -48,8 +49,8 @@ Hub::Hub() : session(), thread(), worker(session) {
   registerMetaTypes();
 
   worker.moveToThread(&thread);
-  connect(this,    &This::doWork,     &worker, &Worker::doWork);
-  connect(&worker, &Worker::workDone, this,    &This::workDone);
+  connect(this,    &typ::doWork,     &worker, &Worker::doWork);
+  connect(&worker, &Worker::workDone, this,   &typ::workDone);
 
   thread.start();
 }
@@ -85,4 +86,5 @@ bool Hub::event(QEvent* e) {
 }
 
 //------------------------------------------------------------------------------
+}
 // eof

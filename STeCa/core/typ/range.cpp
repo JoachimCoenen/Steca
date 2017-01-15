@@ -368,7 +368,7 @@ bool Ranges::rem(Range::rc remRange) {
   return changed;
 }
 
-_sub_struct(r_, Range)
+_sub_struct (r_, Range)
   r_(rc)            = default;
   ref operator=(rc) = default;
 _sub_struct_end

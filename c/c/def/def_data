@@ -51,7 +51,7 @@
 // ... extended ...
 #define _cpp_struct     \
   namespace DATA_NS {   \
-  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs
+  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs using base = NS_NAME_C;
 #define _cpp_struct_end \
   };}
 
@@ -135,6 +135,13 @@
 #define _struct_sub_end \
   };}
 
+#define sub_struct(s, b) struct s : b { _typedefs(s) using base = b;
+#define sub_struct_end };
+
+#define sub_struct_reimpl(s, b) struct s : protected b { _typedefs(s) using base = b; \
+  base const& base_rc() const { return *this; }
+#define sub_struct_reimpl_end };
+
 #else
 
 #define _struct
@@ -159,11 +166,6 @@
 #define _nc_struct_end    \
   };}
 
-#define _sub_struct_reimpl(name, base) \
-  struct name : protected base { THIS_BASE_DEFS(name, base) \
-  base const& base_rc() const { return *this; }
-#define _sub_struct_reimpl_end         \
-  };
 
 #define _sub_c_struct(name) \
   struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)

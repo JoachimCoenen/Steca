@@ -1,7 +1,7 @@
 // c
 
-#ifndef C_QT_DEF_H
-#define C_QT_DEF_H
+#ifndef C_QT_DEF_HPP
+#define C_QT_DEF_HPP
 
 #include <c/c/lib/str.h>
 #include <c/cpp/exc.hpp>
@@ -10,13 +10,12 @@
 typedef QString     qstr;
 typedef qstr const& qstrc;
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 [[noreturn]] void err(qstrc msg) will_exc;
 
 //------------------------------------------------------------------------------
-}}
-
+}
 #endif
 // eof

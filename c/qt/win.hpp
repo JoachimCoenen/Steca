@@ -1,12 +1,12 @@
 // c
 
-#ifndef C_QT_WIN_H
-#define C_QT_WIN_H
+#ifndef C_QT_WIN_HPP
+#define C_QT_WIN_HPP
 
 #include <c/cpp/app/win.i.h>
 #include <QMainWindow>
 
-namespace c { namespace qt {
+namespace c_qt {
 //------------------------------------------------------------------------------
 
 struct win : c::win, QMainWindow { using base = QMainWindow;
@@ -15,6 +15,6 @@ struct win : c::win, QMainWindow { using base = QMainWindow;
 };
 
 //------------------------------------------------------------------------------
-}}
+}
 #endif
 // eof
