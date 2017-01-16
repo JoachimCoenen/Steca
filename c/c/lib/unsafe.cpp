@@ -17,6 +17,7 @@ void free(pvoid p) {
 }
 
 pvoid cpy(sz_t size, pcvoid src) {
+  if (!src) return nullptr;
   pvoid p = alloc(size);
   ::memcpy(p, src, size);
   return p;

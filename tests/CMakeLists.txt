@@ -7,7 +7,7 @@ find_package (Qt5Widgets REQUIRED)
 
 set (CMAKE_AUTOMOC ON)
 
-set (srcdirs STeCa)
+set (srcdirs STeCa c)
 foreach (dir ${srcdirs})
   set (d ${CMAKE_HOME_DIRECTORY}/${dir})
   file (GLOB_RECURSE fs ${d}/*.cpp)

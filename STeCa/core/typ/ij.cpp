@@ -25,21 +25,19 @@ core_IJ::core_IJ(int i_, int j_) : i(i_), j(j_) {}
 namespace core {
 //------------------------------------------------------------------------------
 
-/*
-TEST("IJ()", ({
+TEST("IJ()",
   IJ ij;
   CHECK_EQ(0, ij.i);
   CHECK_EQ(0, ij.j);
-});)
+)
 
-
-TEST("IJ(i,j)", ({
+TEST("IJ(i,j)",
   IJ ij(2,3);
   CHECK_EQ(2, ij.i);
   CHECK_EQ(3, ij.j);
-});)
+)
 
-int IJ::compare(rc that) const {
+COMPARABLE_IMPL(IJ) {
   RET_COMPARE_IF_NE_THAT(i)
   RET_COMPARE_IF_NE_THAT(j)
   return 0;
@@ -47,7 +45,7 @@ int IJ::compare(rc that) const {
 
 EQ_NE_IMPL(IJ)
 
-TEST("IJ::compare", ({
+TEST("IJ::compare",
   IJ ij(1,2), ij1(1,2), ij2(1,0), ij3(2,2);
   CHECK_EQ( 0, ij.compare(ij));
   CHECK_EQ( 0, ij.compare(ij1));
@@ -56,8 +54,8 @@ TEST("IJ::compare", ({
 
   CHECK_EQ(ij, ij1);
   CHECK_NE(ij, ij2);
-});)
-*/
+)
+
 //------------------------------------------------------------------------------
 }
 // eof

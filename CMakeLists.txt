@@ -12,8 +12,11 @@ endif ()
 
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
-file (GLOB_RECURSE old_files .old/*)
-add_custom_target (.old SOURCES ${old_files})
+#file (GLOB_RECURSE old_files .old/*)
+#add_custom_target (.old SOURCES ${old_files})
+
+file (GLOB_RECURSE ci_files .travis/*)
+add_custom_target (.ci SOURCES .travis.yml ${ci_files})
 
 set (txt_files AUTHORS CHANGELOG COPYING README.md VERSION manifest)
 add_custom_target (.txt SOURCES ${txt_files})

@@ -23,7 +23,7 @@
 #define DATA_NS   gui
 #define DATA_NAME App
 
-_struct_sub (c_qt::win)
+_struct_sub (c_qt::app)
   App(int& argc, char* argv[]);
   int exec();
 _struct_sub_end

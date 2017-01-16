@@ -25,47 +25,39 @@
 #define DATA_NAME  Range
 
 _c_data
-  _var (real, min) _var (real, max) // this is the range
+  _c_var(real, min)
+  _c_var(real, max)
+  _c_con(real, real)
 _c_data_end
 
-_cpp_struct
-Range();                          // undef'd (NaN)
-Range(real val);                  // singular, min == max
-Range(real min, real max);        // normal
+_cpp_struct COMPARABLE EQ_NE
+  Range();                          // undef'd (NaN)
+  Range(real);                      // singular, min == max
+  Range(real, real);                // the usual
 
-Range(rc);
+  Range(rc);
 
-static Range infinite();          // -inf .. +inf
+  static Range inf();               // -inf .. +inf
 
-COMPARABLE EQ_NE
+  bool  isDef()  const;             // is not NaNs
+  bool  empty()  const;             // not def'd or empty
 
-void  undef();                    // make NaNs
-bool  isDef() const;              // is not NaNs
-bool  empty() const;              // not def'd or empty
+  real  width()  const;
+  real  center() const;
 
-real  width()  const;
-real  center() const;
+  static Range safeFrom(real, real); // safe factory
 
+  void  extendBy(real);             // extend to include the number
+  void  extendBy(rc);               // extend to include the range
 
-void  set(rc);
-void  set(real val);              // make singular
-void  set(real min, real max);    // must be: min <= max
-void  safeSet(real, real);        // will be set in the right order min <= max
+  bool  contains(real)  const;
+  bool  contains(rc)    const;
+  bool  intersects(rc)  const;
+  Range intersect(rc)   const;
 
-static Range safeFrom(real, real); // safe factory
+  real  bound(real)     const;      // limit the number to the interval
 
-void  extendBy(real);             // extend to include the number
-void  extendBy(rc);               // extend to include the range
-
-bool  contains(real)  const;
-bool  contains(rc)    const;
-bool  intersects(rc)  const;
-Range intersect(rc)   const;
-
-real bound(real)      const;      // limit the number to the interval
-
-protected:
-ref operator=(rc);
+  ref   operator=(rc);
 _cpp_struct_end
 
 #undef DATA_NS
@@ -74,30 +66,27 @@ _cpp_struct_end
 #define DATA_NS    core
 #define DATA_NAME  Ranges
 
-_c_data
-_c_data_end
+_struct
+  Ranges();
+  Ranges(rval);
 
-_cpp_struct
-Ranges();
-Ranges(rval);
+  void clear()          { rs.clear();        }
+  bool is_empty() const { return rs.empty(); }
+  sz_t size()     const { return rs.size();  }
+  bool empty()    const { return rs.empty(); }
 
-void clear()             { rs.clear();        }
-bool is_empty()    const { return rs.empty(); }
-sz_t count()       const { return rs.size();  }
-bool empty()       const { return rs.empty(); }
+  Range::rc at(sz_t i) const { return rs.at(i); }
 
-Range::rc at(sz_t i) const { return rs.at(i);       }
+  // collapses overlapping ranges into one; true if there was a change
+  bool add(Range::rc);
 
-// collapses overlapping ranges into one; true if there was a change
-bool add(Range::rc);
-
-// removes (cuts out) a range; true if there was a change
-bool rem(Range::rc);
+  // removes (cuts out) a range; true if there was a change
+  bool rem(Range::rc);
 
 private:
-void sort();
-c::vec<Range> rs;
-_cpp_struct_end
+  void sort();
+  c::vec<Range> rs;
+_struct_end
 
 #undef DATA_NS
 #undef DATA_NAME

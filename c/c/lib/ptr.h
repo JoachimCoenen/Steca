@@ -12,38 +12,35 @@ typedef void const* pcvoid;
 #define DATA_NAME  ptr
 
 _c_data
-  _ptr (void, p)
-
-  _c_con (pcvoid)
+  _c_ptr(void, p)
+  _c_con(pcvoid)
 _c_data_end
 
 #undef DATA_NS
 #undef DATA_NAME
 
-//------------------------------------------------------------------------------
 #if _is_cpp_
 namespace c {
+//------------------------------------------------------------------------------
 
-// mutable take
+// mutable take & null
 template <typename T> T const*const take_p(T const*const& p) {
   auto _ = p; mut(p) = nullptr; return _;
 }
 
 // parts adapted from https://github.com/Microsoft/GSL.git
-
 template <typename T>
 struct just_ptr : c_ptr { // not null
   static just_ptr from(T const* p) {
     return just_ptr(p);
   }
 
-  just_ptr(just_ptr const&)   = default;
+  just_ptr(just_ptr const&)            = default;
   just_ptr& operator=(just_ptr const&) = default;
 
   // from another type just_ptr
   template <typename O>
-  just_ptr(just_ptr<O> const& that) : c_ptr(static_cast<O const*>(that.p)) {
-  }
+  just_ptr(just_ptr<O> const& that) : c_ptr(static_cast<O const*>(that.p)) {}
 
   template <typename O>
   just_ptr& operator=(just_ptr<O> const& that) {
@@ -70,17 +67,19 @@ protected:
 
 private:
   // no pointer arithmetics
-  just_ptr<T>& operator++()       = delete;
-  just_ptr<T>& operator--()       = delete;
-  just_ptr<T>  operator++(int)    = delete;
-  just_ptr<T>  operator--(int)    = delete;
+  just_ptr<T>& operator++()     = delete;
+  just_ptr<T>& operator--()     = delete;
+  just_ptr<T>  operator++(int)  = delete;
+  just_ptr<T>  operator--(int)  = delete;
   just_ptr<T>& operator+ (sz_t) = delete;
   just_ptr<T>& operator+=(sz_t) = delete;
   just_ptr<T>& operator- (sz_t) = delete;
   just_ptr<T>& operator-=(sz_t) = delete;
 };
 
-template <typename T> // name = a hint
+// the name 'own_ptr' is only a hint, not a service
+// may be null
+template <typename T>
 struct own_ptr : c_ptr {
   own_ptr()    : c_ptr(nullptr) {}
   own_ptr(T const*const p) : c_ptr(p) {}
@@ -92,19 +91,19 @@ struct own_ptr : c_ptr {
   void set(T const*const p_)  { mut(p) = mut(p_); }
 };
 
-template <typename T> // name = a hint
+// the name 'own_ptr' is only a hint, not a service
+template <typename T>
 struct own : just_ptr<T> {
   static own from(T* p) {
     return own(p);
   }
 
-  own(own const&)   = default;
+  own(own const&)            = default;
   own& operator=(own const&) = default;
 
   // from another type
   template <typename O>
-  own(own<O> const& that) : just_ptr<T>(static_cast<O*>(that.p)) {
-  }
+  own(own<O> const& that) : just_ptr<T>(static_cast<O*>(that.p)) {}
 
   template <typename O>
   own& operator=(just_ptr<O> const& that) {
@@ -115,6 +114,7 @@ protected:
   own(T* p) : just_ptr<T>(p) {}
 };
 
+// scoped
 template <typename T>
 struct scoped : c_ptr {
   scoped(T* p)          : c_ptr(p) {}
@@ -123,7 +123,9 @@ struct scoped : c_ptr {
   scoped(own<T> p)      : c_ptr(p) {}
   scoped(scoped&& that) : c_ptr(that.take()) {}
   scoped(scoped const&) = delete;
- ~scoped() { reset(nullptr); }
+ ~scoped() {
+    reset(nullptr);
+  }
 
   void reset(T* p_) {
     delete static_cast<T*>(mut(p));
@@ -139,8 +141,10 @@ struct scoped : c_ptr {
   T const* operator->() const { return ptr(); }
 };
 
+// a handy way to make a pointer self-destructing
 #define scope(p) c::scoped<decltype(p)>(p)
 
+// shared - the main way to handle large immutable data
 struct _shared_base_ : c_ptr {
 protected:
   _shared_base_(pcvoid);
@@ -150,13 +154,14 @@ protected:
 
   pcvoid p() const;
 
+protected:
   void inc();
-  bool dec();
+  bool dec(); // tgrue when reaches zero
   void cleanup();
 };
 
 template <typename T>
-struct shared : protected _shared_base_ {
+struct shared final : protected _shared_base_ {
   shared(T const* p = nullptr) : _shared_base_(p) {}
   shared(shared const& that)   : _shared_base_(that) {}
  ~shared() {

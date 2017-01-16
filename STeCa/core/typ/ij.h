@@ -24,15 +24,13 @@
 #define DATA_NAME  IJ
 
 _c_data
-  _var (int, i)
-  _var (int, j)
-
-  _c_con ()
-  _c_con (int, int)
+  _c_var(int, i)
+  _c_var(int, j)
+  _c_con()
+  _c_con(int, int)
 _c_data_end
 
-_cpp_struct
-  COMPARABLE EQ_NE
+_cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
 #undef DATA_NS

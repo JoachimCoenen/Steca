@@ -9,7 +9,7 @@
 #define DATA_NAME  app
 
 _iface
-  _iface_mth(int, exec, ())
+  _iface_mth_mut(int, exec, ())
 _iface_end
 
 #undef DATA_NS

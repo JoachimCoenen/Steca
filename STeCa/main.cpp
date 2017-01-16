@@ -18,7 +18,7 @@
 #include <gui/app/app.h>
 
 int main(int argc, char* argv[]) {
-  App(argc, argv).exec();
+  gui::App(argc, argv).exec();
 }
 
 // eof

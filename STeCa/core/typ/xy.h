@@ -25,16 +25,14 @@
 #define DATA_NAME  XY
 
 _c_data
-  _var (real, x)
-  _var (real, y)
-
-  _c_con ()
-  _c_con (real, real)
+  _c_var(real, x)
+  _c_var(real, y)
+  _c_con()
+  _c_con(real, real)
 _c_data_end
 
-_cpp_struct
-  using base::base;
-  COMPARABLE EQ_NE
+_cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
+  _mth(bool, isDef, ())
 _cpp_struct_end
 
 #undef DATA_NS

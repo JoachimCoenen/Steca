@@ -24,8 +24,7 @@
 #define DATA_NS   gui
 #define DATA_NAME Win
 
-_struct_sub (c_qt::win)
-  using base::base;
+_struct_sub (c_qt::win) WITH_BASE_CONS
   Win();
   Hub hub;
 _struct_sub_end

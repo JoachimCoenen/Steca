@@ -24,14 +24,17 @@
   }; EXTERN_C_END
 
 // ... that has only immutable data ...
-#define _var(typ, name)     \
+#define _c_var(typ, name)     \
   typ const name;
-#define _ptr(typ, name)     \
+#define _c_ptr(typ, name)     \
   typ const * const name;
+
+#define _var _c_var
+#define _ptr _c_ptr
 
 // ... and perhaps constructors ...
 #if _is_cpp_
-#define _c_con(...) protected: NS_NAME_C(__VA_ARGS__);
+#define _c_con(...) NS_NAME_C(__VA_ARGS__);
 #else
 #define _c_con
 #endif
@@ -51,7 +54,7 @@
 // ... extended ...
 #define _cpp_struct     \
   namespace DATA_NS {   \
-  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs using base = NS_NAME_C;
+  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs using c_base = NS_NAME_C;
 #define _cpp_struct_end \
   };}
 
@@ -84,8 +87,8 @@
   operator op;
 
 // ... not covered by the above ...
-#define _extra(...)     __VA_ARGS__
-#define _ns_extra(...)  namespace DATA_NS { __VA_ARGS__ }
+#define _dcl(...)     __VA_ARGS__
+#define _ns_dcl(...)  namespace DATA_NS { __VA_ARGS__ }
 
 #else
 
@@ -129,11 +132,12 @@
 #define _iface_mth_mut(typ, mth, args) \
   virtual typ mth args = 0;
 
-#define _struct_sub(s) _struct_sub_pref(,s)
-#define _struct_sub_pref(pref,s)  \
-  namespace DATA_NS { pref struct DATA_NAME : s { _cpp_struct_typedefs using base = s;
-#define _struct_sub_end \
-  };}
+#define _struct_sub_pre_pre(pre,pre_s,s)  \
+  namespace DATA_NS { pre struct DATA_NAME : pre_s s { _cpp_struct_typedefs using base = s;
+
+#define _struct_sub(s)         _struct_sub_pre_pre(,,s)
+#define _struct_sub_retempl(s) _struct_sub_pre_pre(template <typename T>,protected,s)
+#define _struct_sub_end        };}
 
 #define sub_struct(s, b) struct s : b { _typedefs(s) using base = b;
 #define sub_struct_end };
@@ -213,6 +217,9 @@
 
 #if _is_cpp_
 
+#define WITH_C_BASE_CONS using c_base::c_base;
+#define WITH_BASE_CONS   using base::base;
+
 #define NO_MOVE(s)              \
   s(rval)           = delete;   \
   r operator=(rval) = delete;
@@ -233,6 +240,13 @@
 #define EQ_NE                   \
   bool operator==(rc) const;    \
   bool operator!=(rc) const;
+#define LGTE                    \
+  bool operator< (rc) const;    \
+  bool operator<=(rc) const;    \
+  bool operator> (rc) const;    \
+  bool operator>=(rc) const;
+
+#define COMP_OPS EQ_NE LGTE
 
 #define _cpp_code(...) __VA_ARGS__
 

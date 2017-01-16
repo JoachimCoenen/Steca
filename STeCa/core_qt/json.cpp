@@ -296,7 +296,7 @@ JsonObj toJson(Range::rc range) {
 JsonArr toJson(Ranges::rc rs) {
   JsonArr arr;
 
-  for_i (rs.count())
+  for_i (rs.size())
     arr.append(toJson(rs.at(i)));
 
   return arr;
@@ -342,47 +342,46 @@ XY toXY(JsonObj::rc obj) may_exc {
   );
 }
 
-#ifdef WITH_TESTS
+TEST_CODE(
 
 static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
-  if (rs1.count() != rs2.count())
+  if (rs1.size() != rs2.size())
     return false;
 
-  for_i (rs1.count()) {
+  for_i (rs1.size()) {
     if (rs1.at(i) != rs2.at(i))
       return false;
   }
 
   return true;
 }
+)
 
-#endif
-
-TEST("IJ::json", ({
+TEST("IJ::json",
   IJ ij(-1,2), ij1(toIJ(toJson(ij)));
   CHECK_EQ(ij, ij1);
-});)
+)
 
-TEST("XY::json", ({
+TEST("XY::json",
   XY xy(-1,2), xy1(toXY(toJson(xy)));
   CHECK_EQ(xy, xy1);
-});)
+)
 
-TEST("Range::json", ({
+TEST("Range::json",
   Range r(-1,2), r1(toRange(toJson(r)));
   CHECK_EQ(r, r1);
-});)
+)
 
-TEST("Ranges::json", ({
+TEST("Ranges::json",
   Ranges rs;
   rs.add(Range());
   rs.add(Range(9));
   rs.add(Range(-3, -2));
-  rs.add(Range::infinite());
+  rs.add(Range::inf());
 
   Ranges rs1(toRanges(toJson(rs)));
   CHECK(RANGES_EQ(rs, rs1));
-});)
+)
 
 //------------------------------------------------------------------------------
 }

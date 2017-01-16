@@ -20,6 +20,8 @@
 #include <chrono>
 #include <c/c/cpp>
 
+core_Session::core_Session() : dummy(0) {}
+
 namespace core {
 //------------------------------------------------------------------------------
 

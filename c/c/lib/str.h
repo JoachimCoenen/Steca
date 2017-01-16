@@ -12,16 +12,15 @@ typedef char const* pcstr;
 #define DATA_NAME  str
 
 _c_data
-  _var (sz_t, sz)
-  _ptr (char, p)
-
-  _c_con (sz_t, pcstr)
+  _c_var(sz_t, sz)
+  _c_ptr(char, p)
+  _c_con(sz_t, pcstr)
 _c_data_end
 
-_cpp_struct
-  _con (pcstr)
-  _con (rc)
-  _con (rval)
+_cpp_struct COMPARABLE COMP_OPS
+  _con(pcstr)
+  _con(rc)
+  _con(rval)
   _des
 
   _op_inline (pcstr(), p)

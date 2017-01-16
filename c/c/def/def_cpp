@@ -37,9 +37,25 @@
 bool T::operator==(rc that) const { return 0 == compare(that); } \
 bool T::operator!=(rc that) const { return 0 != compare(that); }
 
+#define LGTE_IMPL(T) \
+bool T::operator< (rc that) const { return 0 >  compare(that); } \
+bool T::operator<=(rc that) const { return 0 >= compare(that); } \
+bool T::operator> (rc that) const { return 0 <  compare(that); } \
+bool T::operator>=(rc that) const { return 0 <= compare(that); }
+
+#define COMP_OPS_IMPL(T) EQ_NE_IMPL(T) LGTE_IMPL(T)
+
 #define DEF_EQ_NE_IMPL(T) \
 bool T::operator==(rc that) const { return isDef() && that.isDef() && 0 == compare(that); } \
 bool T::operator!=(rc that) const { return isDef() && that.isDef() && 0 != compare(that); }
+
+#define DEF_LGTE_IMPL(T) \
+bool T::operator< (rc that) const { return isDef() && that.isDef() && 0 >  compare(that); } \
+bool T::operator<=(rc that) const { return isDef() && that.isDef() && 0 >= compare(that); } \
+bool T::operator> (rc that) const { return isDef() && that.isDef() && 0 <  compare(that); } \
+bool T::operator>=(rc that) const { return isDef() && that.isDef() && 0 <= compare(that); }
+
+#define DEF_COMP_OPS_IMPL(T) DEF_EQ_NE_IMPL(T) DEF_LGTE_IMPL(T)
 
 //------------------------------------------------------------------------------
 // unsafe

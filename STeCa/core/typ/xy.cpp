@@ -26,25 +26,19 @@ core_XY::core_XY(real x_, real y_) : x(x_), y(y_) {}
 namespace core {
 //------------------------------------------------------------------------------
 
-/*
-TEST("XY()", ({
+TEST("XY()",
   XY xy;
   CHECK(c::isnan(xy.x));
   CHECK(c::isnan(xy.y));
-});)
+)
 
-
-void XY::set(real x_, real y_) {
-  mut(x) = x_; mut(y) = y_;
-}
-
-TEST("XY(x,y)", ({
+TEST("XY(x,y)",
   XY xy(2.3,3.4);
   CHECK_EQ(2.3, xy.x);
   CHECK_EQ(3.4, xy.y);
-});)
+)
 
-int XY::compare(rc that) const {
+COMPARABLE_IMPL(XY) {
   EXPECT(isDef() && that.isDef())
   RET_COMPARE_IF_NE_THAT(x)
   RET_COMPARE_IF_NE_THAT(y)
@@ -53,7 +47,7 @@ int XY::compare(rc that) const {
 
 DEF_EQ_NE_IMPL(XY)
 
-TEST("XY::compare", ({
+TEST("XY::compare",
   XY xy(1,2), xy1(1,2), xy2(1,0), xy3(2,2);
   CHECK_EQ( 0, xy.compare(xy));
   CHECK_EQ( 0, xy.compare(xy1));
@@ -62,27 +56,19 @@ TEST("XY::compare", ({
 
   CHECK_EQ(xy, xy1);
   CHECK_NE(xy, xy2);
-});)
-
-void XY::undef() {
-  mut(x) = mut(y) = c::NAN;
-}
+)
 
 bool XY::isDef() const {
-  return !c::isnan(x) && !c::isnan(y);
+  return !(c::isnan(x) || c::isnan(y));
 }
 
-TEST("XY::valid", ({
-  XY xy;
-  CHECK(!xy.isDef());
-  xy.set(0, xy.y);
-  CHECK(!xy.isDef());
-  xy.set(xy.x, 0);
-  CHECK(xy.isDef());
-  xy.undef();
-  CHECK(!xy.isDef());
-});)
-*/
+TEST("XY::isDef",
+  XY undef;
+  CHECK(!undef.isDef());
+  CHECK(!XY(0,undef.y).isDef());
+  CHECK(XY(0,0).isDef());
+)
+
 //------------------------------------------------------------------------------
 }
 // eof

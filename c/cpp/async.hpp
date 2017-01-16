@@ -9,8 +9,7 @@
 #define DATA_NS   c
 #define DATA_NAME thread
 
-_struct_sub (std::thread)
-  using base::base;
+_struct_sub (std::thread) WITH_BASE_CONS
 _struct_sub_end
 
 #undef DATA_NS
@@ -28,7 +27,7 @@ struct threads {
   void distribute(L l, sz_t n) {
     sz_t m = n / nc, mr = n % nc;
     for (sz_t i=0, from=0, to; i<nc; ++i, from=to)
-      ts[i] = thread(l, from, (to = from + (i ? m : m+mr)));
+      ts.setAt(i, thread(l, from, (to = from + (i ? m : m+mr))));
     join();
   }
 
