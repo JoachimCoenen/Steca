@@ -8,9 +8,9 @@
 
 #include "doctest.h"
 
-#if defined(__GNUC__) && !defined(__APPLE__)
-#pragma GCC diagnostic ignored "-Wgnu-statement-expression"
-#endif
+//#if defined(__GNUC__) && !defined(__APPLE__)
+//#pragma GCC diagnostic ignored "-Wgnu-statement-expression"
+//#endif
 
 #define TEST_CODE(...)  __VA_ARGS__
 #define TEST(name, ...)                 \

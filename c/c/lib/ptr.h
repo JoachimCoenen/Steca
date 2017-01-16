@@ -24,7 +24,7 @@ namespace c {
 //------------------------------------------------------------------------------
 
 // mutable take & null
-template <typename T> T const*const take_p(T const*const& p) {
+template <typename T> T const* take_p(T const*const& p) {
   auto _ = p; mut(p) = nullptr; return _;
 }
 
