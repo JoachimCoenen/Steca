@@ -13,6 +13,7 @@ typedef void const* pcvoid;
 namespace unsafe { namespace mem {
 
 pvoid alloc(sz_t);
+pvoid realloc(pvoid, sz_t);
 void  free(pvoid);
 pvoid cpy(sz_t, pcvoid);
 

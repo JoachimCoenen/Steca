@@ -75,6 +75,9 @@
 #define _mth_mut(typ, mth, args)              \
   typ mth args;
 
+#define _static_mth(typ, mth, args) \
+  static typ mth args;
+
 // ... operators ...
 #define _op_inline(op, expr)  \
   operator op const { return expr; }
@@ -249,6 +252,7 @@
 #define COMP_OPS EQ_NE LGTE
 
 #define _cpp_code(...) __VA_ARGS__
+#define _cpp_private  private:
 
 #else
 
@@ -260,6 +264,7 @@
 #define EQ_NE
 
 #define _cpp_code(...)
+#define _cpp_private
 
 #endif
 
