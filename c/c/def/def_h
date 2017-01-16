@@ -4,7 +4,6 @@
 #define C_C_DEF_H
 
 #if defined(__GNUC__) && !defined(__APPLE__)
-//TODO #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wswitch-enum"
 #endif
 
