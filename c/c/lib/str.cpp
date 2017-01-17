@@ -45,13 +45,15 @@ str::~str() {
 }
 
 TEST("str",
-  str s1(0), s2(""), s3("s");
+  str s1(0), s2(""), s3("s"), s4(s3), s5(str("s"));
   CHECK_EQ(s1, s2);
   CHECK_NE(s1, s3);
   CHECK_LT(s1, s3);
   CHECK_LE(s1, s3);
   CHECK_GT(s3, s2);
   CHECK_GE(s3, s2);
+  CHECK_EQ(s3, s4);
+  CHECK_EQ(s3, s5);
 )
 
 str str::trim() const {
@@ -78,7 +80,7 @@ str str::format(pcstr f, ...) {
      va_end(marker);
 
      if (cnt < 0)
-       return "<encoding error>";
+       return "";
 
      WT(sz << cnt)
      if (sz < to_u(cnt)) {
@@ -97,6 +99,7 @@ TEST("str::trim",
 TEST("str::format",
   CHECK_EQ(str("abc 2 3 -4"), str::format("abc %d %d %d", 2, 3, -4));
   CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str::format("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
+  CHECK_EQ(str(""), str::format("abc %-", 5)); // encoding error
 )
 
 //------------------------------------------------------------------------------

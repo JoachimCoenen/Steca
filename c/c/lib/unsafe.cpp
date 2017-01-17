@@ -27,6 +27,11 @@ pvoid cpy(sz_t size, pcvoid src) {
   return p;
 }
 
+TEST("unsafe",
+  free(alloc(0));
+  free(realloc(nullptr, 9));
+)
+
 //------------------------------------------------------------------------------
 }}
 // eof
