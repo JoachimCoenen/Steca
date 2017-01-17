@@ -3,8 +3,8 @@
 #include "app.hpp"
 #include "log.hpp"
 #include "win.hpp"
-#include <c/c/cpp>
-#include <c/cpp/exc.hpp>
+#include "../c/cpp"
+#include "../cpp/exc.hpp"
 
 #include <QMessageBox>
 #include <QStatusBar>

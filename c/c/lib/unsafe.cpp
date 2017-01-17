@@ -1,7 +1,7 @@
 // c
 
 #include "unsafe.h"
-#include <c/c/cpp>
+#include "../cpp"
 #include <memory>
 #include <string.h>
 

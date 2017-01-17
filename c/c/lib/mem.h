@@ -3,7 +3,7 @@
 #ifndef C_C_MEM_H
 #define C_C_MEM_H
 
-#include <c/c/def/def_data>
+#include "../def/def_data"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;

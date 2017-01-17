@@ -1,7 +1,7 @@
 // c
 
 #include "def_num"
-#include <c/c/cpp>
+#include "../../c/cpp"
 #include <cmath>
 #include <limits>
 

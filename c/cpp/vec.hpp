@@ -3,7 +3,7 @@
 #ifndef C_CPP_VEC_HPP
 #define C_CPP_VEC_HPP
 
-#include <c/c/def/def_data>
+#include "../c/def/def_data"
 #include <vector>
 
 #define DATA_NS   c

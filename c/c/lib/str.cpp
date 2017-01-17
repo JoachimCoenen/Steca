@@ -2,7 +2,7 @@
 
 #include "str.h"
 #include "mem.h"
-#include <c/c/cpp>
+#include "../cpp"
 #include "unsafe.h"
 #include <string.h>
 #include <cstdarg>

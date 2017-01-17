@@ -18,7 +18,7 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c/c/def/def_num>
+#include <c/c/h>
 #include <c/cpp/vec.hpp>
 
 #define DATA_NS    core

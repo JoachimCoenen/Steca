@@ -3,7 +3,7 @@
 #ifndef C_CPP_WIN_I_H
 #define C_CPP_WIN_I_H
 
-#include <c/c/def/def_data>
+#include "../../c/def/def_data"
 
 #define DATA_NS    c
 #define DATA_NAME  win

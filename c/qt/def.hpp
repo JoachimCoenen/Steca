@@ -3,8 +3,8 @@
 #ifndef C_QT_DEF_HPP
 #define C_QT_DEF_HPP
 
-#include <c/c/lib/str.h>
-#include <c/cpp/exc.hpp>
+#include "../c/lib/str.h"
+#include "../cpp/exc.hpp"
 #include <QString>
 
 typedef QString     qstr;

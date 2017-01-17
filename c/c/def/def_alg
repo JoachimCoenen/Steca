@@ -18,10 +18,6 @@
 #define for_int_down(n) \
   for (mut_typ<decltype(n)>::typ i = (num); i-- > decltype(n)(0); )
 
-#define for_i(n)        for_int (i, n)
-#define for_i_down(n)   for_int_down (i, n)
-#define for_ij(ni, nj)  for_int (i, ni) for_int (j, nj)
-
 #else // msvc fails the above
 
 #define for_int(i, n) \
@@ -30,6 +26,10 @@
   for (int i = (num); i-- > 0; )
 
 #endif
+
+#define for_i(n)        for_int (i, n)
+#define for_i_down(n)   for_int_down (i, n)
+#define for_ij(ni, nj)  for_int (i, ni) for_int (j, nj)
 
 #define ONLY_ONCE \
 { static bool once = false; if (once) return; once = true; }

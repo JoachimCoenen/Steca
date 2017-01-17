@@ -3,7 +3,7 @@
 #ifndef C_C_UNSAFE_H
 #define C_C_UNSAFE_H
 
-#include <c/c/h>
+#include "../h"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;

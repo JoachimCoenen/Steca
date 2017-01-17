@@ -1,7 +1,7 @@
 // c
 
 #include "async.hpp"
-#include <c/c/cpp>
+#include "../c/cpp"
 
 namespace c {
 //------------------------------------------------------------------------------

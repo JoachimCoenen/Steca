@@ -3,8 +3,8 @@
 #ifndef C_QT_LOG_HPP
 #define C_QT_LOG_HPP
 
-#include <c/cpp/app/app.i.h>
-#include <c/qt/def.hpp>
+#include "../cpp/app/app.i.h"
+#include "def.hpp"
 #include <QApplication>
 
 namespace c_qt {

@@ -3,7 +3,7 @@
 #ifndef C_QT_APP_H
 #define C_QT_APP_H
 
-#include <c/cpp/app/app.i.h>
+#include "../cpp/app/app.i.h"
 #include "win.hpp"
 #include <QApplication>
 

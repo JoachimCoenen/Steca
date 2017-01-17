@@ -1,7 +1,7 @@
 // c
 
 #include "mem.h"
-#include <c/c/cpp>
+#include "../cpp"
 #include "unsafe.h"
 
 c_mem::c_mem(sz_t sz_, pcvoid p_) : sz(sz_), p(p_) {}

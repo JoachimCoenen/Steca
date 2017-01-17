@@ -3,7 +3,7 @@
 #ifndef C_QT_WIN_HPP
 #define C_QT_WIN_HPP
 
-#include <c/cpp/app/win.i.h>
+#include "../cpp/app/win.i.h"
 #include <QMainWindow>
 
 namespace c_qt {

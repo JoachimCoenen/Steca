@@ -3,7 +3,7 @@
 #ifndef C_CPP_EXC_HPP
 #define C_CPP_EXC_HPP
 
-#include <c/c/lib/str.h>
+#include "../c/lib/str.h"
 #include <exception>
 
 #define DATA_NS    c

@@ -3,7 +3,7 @@
 #ifndef C_CPP_ASYNC_HPP
 #define C_CPP_ASYNC_HPP
 
-#include <c/cpp/vec.hpp>
+#include "../../c/cpp/vec.hpp"
 #include <thread>
 
 #define DATA_NS   c

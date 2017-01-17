@@ -3,7 +3,7 @@
 #ifndef C_C_STR_H
 #define C_C_STR_H
 
-#include <c/c/def/def_data>
+#include "../def/def_data"
 
 typedef char*       pstr;
 typedef char const* pcstr;

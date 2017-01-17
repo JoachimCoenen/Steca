@@ -1,7 +1,7 @@
 // c
 
 #include "ptr.h"
-#include <c/c/cpp>
+#include "../cpp"
 #include <atomic>
 
 c_ptr::c_ptr(pcvoid p_) : p(p_) {}
