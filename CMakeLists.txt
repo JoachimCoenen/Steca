@@ -12,8 +12,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   endif()
 endif ()
 
-set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG)
-
 #file (GLOB_RECURSE old_files .old/*)
 #add_custom_target (.old SOURCES ${old_files})
 

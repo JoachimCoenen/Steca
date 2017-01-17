@@ -5,7 +5,8 @@
 #include <c/c/cpp>
 #include "unsafe.h"
 #include <string.h>
-#include <stdarg.h>
+#include <cstdarg>
+#include <cstdio>
 
 c_str::c_str(sz_t sz_, pcstr p_) : sz(sz_), p(p_) {}
 
