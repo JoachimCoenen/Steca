@@ -44,16 +44,25 @@ str::~str() {
   unsafe::mem::free(mut(p));
 }
 
+TEST_CODE(
+  str rval_str(pcstr p) {
+    return p;
+  }
+)
+
 TEST("str",
-  str s1(0), s2(""), s3("s"), s4(s3), s5(str("s"));
+  str s1(0), s2(""), s3("s"), s4(s3), s5(rval_str("s")), s6(1, 0), s7(1, "sd");
   CHECK_EQ(s1, s2);
+  CHECK_EQ(s1, s6);
   CHECK_NE(s1, s3);
   CHECK_LT(s1, s3);
   CHECK_LE(s1, s3);
+  CHECK_EQ(0, strcmp(s3, "s"));
   CHECK_GT(s3, s2);
   CHECK_GE(s3, s2);
   CHECK_EQ(s3, s4);
   CHECK_EQ(s3, s5);
+  CHECK_EQ(s3, s7);
 )
 
 str str::trim() const {
@@ -82,7 +91,6 @@ str str::format(pcstr f, ...) {
      if (cnt < 0)
        return "";
 
-     WT(sz << cnt)
      if (sz < to_u(cnt)) {
        sz = to_u(cnt);
        continue;

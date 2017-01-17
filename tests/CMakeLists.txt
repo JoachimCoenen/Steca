@@ -27,9 +27,12 @@ endif ()
 add_executable (${app} ${files} ${test_files})
 
 target_link_libraries (${app}
-  pthread
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
+
+if (UNIX)
+  target_link_libraries (${app} pthread)
+endif ()
 
 if (WITH_COVERAGE)
   target_link_libraries (${app} gcov)

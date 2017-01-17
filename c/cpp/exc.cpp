@@ -19,6 +19,15 @@ pcstr exc::what() const noexcept {
 
 TEST("exc",
   CHECK_THROWS_AS(err(""), exc&);
+  bool caught = false;
+  try {
+    err("Hello");
+  } catch (std::exception const& e) {
+    caught = true;
+    CHECK_EQ(str("Hello"), str(e.what()));
+  }
+
+  CHECK(caught);
 )
 
 //------------------------------------------------------------------------------

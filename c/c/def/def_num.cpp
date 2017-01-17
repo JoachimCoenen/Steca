@@ -35,15 +35,6 @@ namespace c {
 flt64 const NAN = std::numeric_limits<flt64>::quiet_NaN();
 flt64 const INF = std::numeric_limits<flt64>::infinity();
 
-TEST("c::NAN/INF",
-  double d;
-  d = float(c::NAN); CHECK(isnan(d));
-  d = float(INF); CHECK(isinf(d));
-  float f;
-  f = float(c::NAN); CHECK(isnan(f));
-  f = float(INF); CHECK(isinf(f));
-)
-
 bool isnan(flt32 f) {
   return std::isnan(f);
 }
@@ -67,6 +58,28 @@ bool isnormal(flt32 f) {
 bool isnormal(flt64 f) {
   return std::isnormal(f);
 }
+
+TEST("def_num",
+  double d;
+  d = float(c::NAN); CHECK(isnan(d));
+  d = float(INF); CHECK(isinf(d));
+  float f;
+  f = float(c::NAN); CHECK(isnan(f));
+  f = float(INF); CHECK(isinf(f));
+  CHECK(isnormal(1.0));
+  CHECK(isnormal(1.0f));
+  CHECK(!isnormal(0.0));
+  CHECK(!isnormal(INF));
+  CHECK(!isnormal(NAN));
+  double subnormal = 1e-323;
+  CHECK_NE(0.0, subnormal);
+  CHECK(!isnormal(subnormal));
+)
+
+TEST("p",
+  CHECK_EQ(real(1), preal(1));
+  CHECK_EQ(uint(1), pint(1));
+)
 
 //------------------------------------------------------------------------------
 }

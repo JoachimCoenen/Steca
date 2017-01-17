@@ -9,7 +9,7 @@ namespace unsafe { namespace mem {
 //------------------------------------------------------------------------------
 
 pvoid alloc(sz_t sz) {
-  return ::malloc(sz); // TODO abrt if null
+  return (sz > 0) ? ::malloc(sz) : nullptr; // TODO abrt if null
 }
 
 pvoid realloc(pvoid p, sz_t sz) {

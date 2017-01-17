@@ -28,12 +28,12 @@ mem::~mem() {
 }
 
 TEST_CODE(
-mem mem_rval() { return mem(99); }
+  mem rval_mem() { return mem(99); }
 )
 
 TEST("mem",
-  mem m0(0), m1(1), mX(12345678);
-  mem mm(mem_rval());
+  mem m0(0), m1(1), mX(12345678), mc(3, "Hello");
+  mem mm(rval_mem());
 )
 
 //------------------------------------------------------------------------------
