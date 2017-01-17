@@ -2,6 +2,7 @@
 
 #include "str.h"
 #include "mem.h"
+#include "num.h"
 #include "../cpp"
 #include "unsafe.h"
 #include <string.h>

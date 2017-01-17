@@ -18,8 +18,8 @@
 #ifndef CORE_XY_H
 #define CORE_XY_H
 
-#include <c/c/def/def_data>
-#include <c/c/def/def_num>
+#include <c/c/h_data>
+#include <c/c/lib/num.h>
 
 #define DATA_NS    core
 #define DATA_NAME  XY
@@ -35,8 +35,8 @@ _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _mth(bool, isDef, ())
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

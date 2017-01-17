@@ -28,8 +28,8 @@ _struct_sub (c_qt::app)
   int exec();
 _struct_sub_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

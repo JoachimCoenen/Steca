@@ -19,6 +19,7 @@
 #define CORE_RANGE_H
 
 #include <c/c/h>
+#include <c/c/lib/num.h>
 #include <c/cpp/vec.hpp>
 
 #define DATA_NS    core
@@ -60,10 +61,8 @@ _cpp_struct COMPARABLE EQ_NE
   ref   operator=(rc);
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
 
-#define DATA_NS    core
 #define DATA_NAME  Ranges
 
 _struct
@@ -88,7 +87,7 @@ private:
   c::vec<Range> rs;
 _struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif

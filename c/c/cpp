@@ -1,11 +1,16 @@
-// c
+// c - include into any .cpp file
 
-#include "def/def_cpp"
-#include "def/def_alg"
+#if !_is_cpp_
+#error should be used in cpp files
+#endif
+
+#if defined(__GNUC__) && !defined(__APPLE__)
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+#endif
+
+#include "cpp_data"
+#include "cpp_alg"
+#include "cpp_debug"
 #include "test/test.h"
-
-// once more - std defines those
-#undef NAN
-#undef INF
 
 // eof

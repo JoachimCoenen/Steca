@@ -18,8 +18,8 @@
 #ifndef CORE_MAT_H
 #define CORE_MAT_H
 
-#include <c/c/def/def_data>
-#include <c/c/def/def_num>
+#include <c/c/h_data>
+#include <c/c/lib/num.h>
 
 #define DATA_NS    core
 #define DATA_NAME  vec3
@@ -32,10 +32,8 @@ _c_data_end
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
 
-#define DATA_NS    core
 #define DATA_NAME  mat3
 
 _c_data
@@ -57,7 +55,7 @@ _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _fry(mat3, rotationCCWz, (real angle))
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif

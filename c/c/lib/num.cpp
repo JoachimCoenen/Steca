@@ -1,6 +1,6 @@
 // c
 
-#include "def_num"
+#include "num.h"
 #include "../../c/cpp"
 #include <cmath>
 #include <limits>
@@ -59,7 +59,7 @@ bool isnormal(flt64 f) {
   return std::isnormal(f);
 }
 
-TEST("def_num",
+TEST("num",
   double d;
   d = float(c::NAN); CHECK(isnan(d));
   d = float(INF); CHECK(isinf(d));

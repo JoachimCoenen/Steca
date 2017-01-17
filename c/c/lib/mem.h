@@ -3,7 +3,7 @@
 #ifndef C_C_MEM_H
 #define C_C_MEM_H
 
-#include "../def/def_data"
+#include "../h_data"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
@@ -27,8 +27,8 @@ _cpp_struct
   _op_inline (pcvoid(), p)
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

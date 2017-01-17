@@ -16,8 +16,10 @@
  ******************************************************************************/
 
 #include "range.h"
-#include <algorithm>
 #include <c/c/cpp>
+
+#include <algorithm>
+#undef NAN
 
 core_Range::core_Range(real min_, real max_) : min(min_), max(max_) {}
 

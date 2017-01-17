@@ -1,13 +1,13 @@
 // c
 
-#ifndef C_C_DEF_DEBUG
-#define C_C_DEF_DEBUG
-
-#include "def_h"
-
 #if !_is_cpp_
 #error this should be used in cpp files
 #endif
+
+#ifdef C_C_CPP_DEBUG
+#error include only once
+#endif
+#define C_C_CPP_DEBUG
 
 #ifndef NDEBUG
 
@@ -52,5 +52,4 @@ private:
 #define WT(what) TR(#what ":" << what)
 #define NEVER    EXPECT(false)
 
-#endif
 // eof

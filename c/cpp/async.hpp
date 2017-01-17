@@ -12,8 +12,8 @@
 _struct_sub (std::thread) WITH_BASE_CONS
 _struct_sub_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 namespace c {
 //------------------------------------------------------------------------------

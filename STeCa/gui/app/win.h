@@ -29,8 +29,8 @@ _struct_sub (c_qt::win) WITH_BASE_CONS
   Hub hub;
 _struct_sub_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

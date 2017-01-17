@@ -1,16 +1,13 @@
-// c
-
-#ifdef C_C_DEF_CPP
-#error include only once
-#endif
-#define C_C_DEF_CPP
-
-#include "def_h"
-#include "def_debug"
+// c - cpp side of data declarations
 
 #if !_is_cpp_
 #error this should be used in cpp files
 #endif
+
+#ifdef C_C_CPP_DATA
+#error include only once
+#endif
+#define C_C_CPP_DATA
 
 //------------------------------------------------------------------------------
 // cpp structs
@@ -58,13 +55,15 @@ bool T::operator>=(rc that) const { return isDef() && that.isDef() && 0 <= compa
 #define DEF_COMP_OPS_IMPL(T) DEF_EQ_NE_IMPL(T) DEF_LGTE_IMPL(T)
 
 //------------------------------------------------------------------------------
-// unsafe
+// mutability
 
 #include <utility>
 namespace mutate {
-  template<typename T> void swap(T& t1, T& t2) {
-    std::swap(mut(t1), mut(t2));
-  }
+
+template<typename T> void swap(T& t1, T& t2) {
+  std::swap(mut(t1), mut(t2));
+}
+
 }
 
 //------------------------------------------------------------------------------

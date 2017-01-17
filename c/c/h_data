@@ -1,9 +1,9 @@
-// c
+// c - inculde into .h files; data declarations
 
-#ifndef C_C_DEF_DATA
-#define C_C_DEF_DATA
+#ifndef C_C_H_DATA
+#define C_C_H_DATA
 
-#include "def_h"
+#include "h"
 
 //------------------------------------------------------------------------------
 // names
@@ -169,55 +169,6 @@
 
 #endif
 
-/*
-
-#define _nc_struct(name)  \
-  namespace c { struct name  { _cpp_struct_typedefs(name)
-#define _nc_struct_end    \
-  };}
-
-
-#define _sub_c_struct(name) \
-  struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
-#define _sub_c_struct_end   \
-  };
-
-#define _nc_sub_struct(name, base) \
-  namespace c { struct name : base { THIS_BASE_DEFS(name, base)
-#define _nc_sub_struct_end         \
-  };}
-
-#define _nc_sub_c_struct(name)  \
-  namespace c { struct name : protected c_##name { THIS_BASE_DEFS(name, c_##name)
-#define _nc_sub_c_struct_end    \
-  };}
-
-#else
-
-#define _cpp_struct_typedefs(name)
-
-#define _nc_struct(name)
-#define _nc_struct_end
-
-#define _sub_struct(name, base)
-#define _sub_struct_end
-
-#define _sub_c_struct(name)
-#define _sub_c_struct_end
-
-#define _nc_sub_struct(name, base)
-#define _nc_sub_struct_end
-
-#define _nc_sub_c_struct(name)
-#define _nc_sub_c_struct_end
-
-#endif
-
-
-#define _nc_iface(name) _nc_struct(name)
-#define _nc_iface_end   _nc_struct_end
-*/
-
 //------------------------------------------------------------------------------
 // handy helpers
 
@@ -268,6 +219,18 @@
 
 #define _cpp_code(...)
 #define _cpp_private
+
+#endif
+
+#if _is_cpp_
+
+// make a type mutable
+template <typename T> struct mut_typ            { typedef T typ; };
+template <typename T> struct mut_typ<T const>   { typedef T typ; };
+
+// make a var mutable
+template <typename T> T*& mut(T const*const& t) { return const_cast<T*&>(t); }
+template <typename T> T&  mut(T const& t)       { return const_cast<T&> (t); }
 
 #endif
 

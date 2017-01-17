@@ -3,7 +3,7 @@
 #ifndef C_C_PTR_H
 #define C_C_PTR_H
 
-#include "../def/def_data"
+#include "../h_data"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
@@ -16,8 +16,8 @@ _c_data
   _c_con(pcvoid)
 _c_data_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #if _is_cpp_
 namespace c {

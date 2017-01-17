@@ -18,7 +18,7 @@
 #ifndef CORE_SESSION_H
 #define CORE_SESSION_H
 
-#include <c/c/def/def_data>
+#include <c/c/h_data>
 
 #define DATA_NS    core
 #define DATA_NAME  Session
@@ -33,8 +33,8 @@ _cpp_struct
   _mth (int, long_square, (int))
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

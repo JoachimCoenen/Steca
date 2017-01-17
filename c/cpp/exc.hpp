@@ -22,8 +22,8 @@ _struct_sub_end
 
 _ns_dcl([[noreturn]] void err(pcstr) will_exc;)
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

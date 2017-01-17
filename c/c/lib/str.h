@@ -3,7 +3,7 @@
 #ifndef C_C_STR_H
 #define C_C_STR_H
 
-#include "../def/def_data"
+#include "../h_data"
 
 typedef char*       pstr;
 typedef char const* pcstr;
@@ -30,13 +30,12 @@ _cpp_struct COMPARABLE COMP_OPS
   _fry(str, format, (pcstr, ...))
 
   _cst(str, nul)
-
 _cpp_struct_end
 
 _cpp_code (typedef c::str::rc strc;)
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

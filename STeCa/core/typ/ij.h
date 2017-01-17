@@ -18,7 +18,7 @@
 #ifndef CORE_IJ_H
 #define CORE_IJ_H
 
-#include <c/c/def/def_data>
+#include <c/c/h_data>
 
 #define DATA_NS    core
 #define DATA_NAME  IJ
@@ -33,8 +33,8 @@ _c_data_end
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef DATA_NS
 #undef DATA_NAME
+#undef DATA_NS
 
 #endif
 // eof

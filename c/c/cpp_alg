@@ -1,15 +1,13 @@
 // c
 
-#ifdef C_C_DEF_ALG
+#if !_is_cpp_
+#error should be used in cpp files
+#endif
+
+#ifdef C_C_CPP_ALG
 #error include only once
 #endif
-#define C_C_DEF_ALG
-
-#include "def_h"
-
-#if !_is_cpp_
-#error this should be used in cpp files
-#endif
+#define C_C_CPP_ALG
 
 #ifdef __GNUC__
 
@@ -20,7 +18,7 @@
 
 #else // msvc fails the above
 
-#define for_int(i, n) \
+#define for_int(i, n)   \
   for (int i = 0, i##End = (n); i < i##End; ++i)
 #define for_int_down(n) \
   for (int i = (num); i-- > 0; )
