@@ -61,7 +61,7 @@ bool T::operator>=(rc that) const { return isDef() && that.isDef() && 0 <= compa
 // unsafe
 
 #include <utility>
-namespace unsafe {
+namespace mutate {
   template<typename T> void swap(T& t1, T& t2) {
     std::swap(mut(t1), mut(t2));
   }

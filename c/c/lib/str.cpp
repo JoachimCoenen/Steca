@@ -20,28 +20,28 @@ COMPARABLE_IMPL(str) {
 COMP_OPS_IMPL(str)
 
 str::str(pcstr p_) : c_base(p_ ? strlen(p_) : 0, nullptr) {
-  mut(p) = static_cast<pstr>(::unsafe::mem::cpy(sz + 1, p_ ? p_ : ""));
+  mut(p) = static_cast<pstr>(::unsafe::memcpy(sz + 1, p_ ? p_ : ""));
 }
 
 str::str(sz_t maxSz, pcstr p_) : c_base(0, nullptr) {
   if (p_) {
     mut(sz) = c::min(maxSz, strlen(p_));
-    mut(p) = static_cast<pstr>(::unsafe::mem::cpy(sz + 1, p_));
+    mut(p) = static_cast<pstr>(::unsafe::memcpy(sz + 1, p_));
     mut(*(p+sz)) = '\0';
   } else {
     EXPECT(0 == sz)
-    mut(p) = static_cast<pstr>(::unsafe::mem::cpy(1, ""));
+    mut(p) = static_cast<pstr>(::unsafe::memcpy(1, ""));
   }
 }
 
 str::str(rc that) : str(pcstr(that)) {}
 
 str::str(rval that) : c_base(that.sz, nullptr) {
-  unsafe::swap(p, that.p);
+  mutate::swap(p, that.p);
 }
 
 str::~str() {
-  unsafe::mem::free(mut(p));
+  unsafe::free(mut(p));
 }
 
 TEST_CODE(

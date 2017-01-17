@@ -10,14 +10,14 @@ typedef void const* pcvoid;
 
 #if _is_cpp_
 
-namespace unsafe { namespace mem {
+namespace unsafe {
 
 pvoid alloc(sz_t);
 pvoid realloc(pvoid, sz_t);
 void  free(pvoid);
-pvoid cpy(sz_t, pcvoid);
+pvoid memcpy(sz_t, pcvoid);
 
-}}
+}
 
 #endif
 

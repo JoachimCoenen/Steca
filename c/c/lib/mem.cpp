@@ -10,21 +10,21 @@ namespace c {
 //------------------------------------------------------------------------------
 
 mem::mem(sz_t sz)
-: c_base(sz, unsafe::mem::alloc(sz)) {}
+: c_base(sz, unsafe::alloc(sz)) {}
 
 mem::mem(sz_t sz, pcvoid p)
-: c_base(sz, unsafe::mem::cpy(sz, p)) {
+: c_base(sz, unsafe::memcpy(sz, p)) {
   EXPECT(p || !sz)
 }
 
 mem::mem(rc that) : mem(that.sz, that.p) {}
 
 mem::mem(rval that) : c_base(that.sz, nullptr) {
-  unsafe::swap(p, that.p);
+  mutate::swap(p, that.p);
 }
 
 mem::~mem() {
-  unsafe::mem::free(mut(p));
+  unsafe::free(mut(p));
 }
 
 TEST_CODE(
