@@ -22,7 +22,6 @@ core_XY::core_XY() : core_XY(c::NAN, c::NAN)  {}
 
 core_XY::core_XY(real x_, real y_) : x(x_), y(y_) {}
 
-
 namespace core {
 //------------------------------------------------------------------------------
 

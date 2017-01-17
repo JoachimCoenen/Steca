@@ -75,30 +75,32 @@ str str::trim() const {
 }
 
 str str::format(pcstr f, ...) {
-   sz_t sz = 96;  // initial size
+  sz_t sz = 96;  // initial size
 
-   for(;;) {
-     mem m(sz+1); pstr p = static_cast<pstr>(mut(m.p));
+  for(;;) {
+    mem m(sz+1); pstr p = static_cast<pstr>(mut(m.p));
 
-     va_list marker;
-     va_start(marker, f);
+    va_list marker;
+    va_start(marker, f);
 
-     #pragma GCC diagnostic ignored "-Wformat-nonliteral"
-     int cnt = vsnprintf(p, sz, f, marker);
+    #pragma GCC diagnostic ignored "-Wformat-nonliteral"
+    int cnt = vsnprintf(p, sz, f, marker);
 
-     va_end(marker);
+    va_end(marker);
 
-     if (cnt < 0)
-       return "";
+    if (cnt < 0)
+    return "";
 
-     if (sz < to_u(cnt)) {
-       sz = to_u(cnt);
-       continue;
-     }
+    if (sz < to_u(cnt)) {
+    sz = to_u(cnt);
+    continue;
+    }
 
-     return str(to_u(cnt), p);
-   }
- }
+    return str(to_u(cnt), p);
+  }
+}
+
+str const str::nul = "";
 
 TEST("str::trim",
   CHECK_EQ(str("abc"), str(" \nabc \t").trim());
@@ -108,6 +110,10 @@ TEST("str::format",
   CHECK_EQ(str("abc 2 3 -4"), str::format("abc %d %d %d", 2, 3, -4));
   CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str::format("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
   CHECK_EQ(str(""), str::format("abc %-", 5)); // encoding error
+)
+
+TEST("std::nul",
+  CHECK_EQ(str(""), str::nul);
 )
 
 //------------------------------------------------------------------------------

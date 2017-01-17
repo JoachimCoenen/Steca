@@ -75,8 +75,11 @@
 #define _mth_mut(typ, mth, args)              \
   typ mth args;
 
-#define _static_mth(typ, mth, args) \
+#define _fry(typ, mth, args) \
   static typ mth args;
+
+#define _cst(typ, name) \
+  static _var(typ, name)
 
 // ... operators ...
 #define _op_inline(op, expr)  \
@@ -105,9 +108,9 @@
 #define _mth_inline(typ, mth, args, code)
 #define _mth_mut(typ, mth, args)
 #define _mth_mut_inline(typ, mth, args, code)
-#define _op(typ, expr)
+#define _op(op)
 #define _op_inline(op, code)
-#define _op_mut(typ, expr)
+#define _op_mut(op)
 #define _op_mut_inline(op, code)
 #define _extra(...)
 #define _ns_extra(...)

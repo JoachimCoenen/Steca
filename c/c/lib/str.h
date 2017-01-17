@@ -27,7 +27,9 @@ _cpp_struct COMPARABLE COMP_OPS
   _op_inline (pcstr(), p)
 
   _mth(str, trim, ())
-  _static_mth(str, format, (pcstr, ...))
+  _fry(str, format, (pcstr, ...))
+
+  _cst(str, nul)
 
 _cpp_struct_end
 
