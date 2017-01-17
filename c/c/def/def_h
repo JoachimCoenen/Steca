@@ -16,6 +16,8 @@
 #include <stddef.h> // size_t, wchar_t, ...
 typedef size_t sz_t;
 
+typedef unsigned int uint;
+
 #include <assert.h>
 #define EXPECT(cond) assert(cond);
 #define ENSURE(cond) assert(cond);
