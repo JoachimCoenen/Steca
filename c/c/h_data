@@ -24,17 +24,17 @@
   }; EXTERN_C_END
 
 // ... that has only immutable data ...
-#define _c_var(typ, name)     \
+#define _c_atr(typ, name)     \
   typ const name;
 #define _c_ptr(typ, name)     \
   typ const * const name;
 
-#define _var _c_var
+#define _atr _c_atr
 #define _ptr _c_ptr
 
 // ... and perhaps constructors ...
 #if _is_cpp_
-#define _c_con(...) NS_NAME_C(__VA_ARGS__);
+#define _c_con(args) NS_NAME_C args;
 #else
 #define _c_con
 #endif
@@ -59,9 +59,15 @@
   };}
 
 // ... by constructors and destructor ...
-#define _con(...)  \
-  DATA_NAME(__VA_ARGS__);
-#define _des        \
+#define _con(args)              \
+  DATA_NAME args;
+#define _con_fwd(args, fwd)     \
+  DATA_NAME args : base fwd {}
+#define _con_c_fwd(args, fwd)   \
+  DATA_NAME args : c_base fwd {}
+#define _xon(args)              \
+  explicit _con(args)
+#define _des                    \
  ~DATA_NAME();
 
 // ... methods ...
@@ -79,7 +85,7 @@
   static typ mth args;
 
 #define _cst(typ, name) \
-  static _var(typ, name)
+  static _atr(typ, name)
 
 // ... operators ...
 #define _op_inline(op, expr)  \
@@ -122,9 +128,10 @@
 
 #if _is_cpp_
 
-#define _struct _struct_pref()
 #define _struct_pref(pref)     \
   namespace DATA_NS { pref struct DATA_NAME { _cpp_struct_typedefs
+#define _struct _struct_pref()
+#define _struct_templ _struct_pref(template <typename T>)
 #define _struct_end \
   };}
 

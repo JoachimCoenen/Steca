@@ -20,14 +20,14 @@
 
 #include <c/c/h_data>
 
-#define DATA_NS    core
-#define DATA_NAME  IJ
+#define DATA_NS   core
+#define DATA_NAME IJ
 
 _c_data
-  _c_var(int, i)
-  _c_var(int, j)
-  _c_con()
-  _c_con(int, int)
+  _c_atr(int, i)
+  _c_atr(int, j)
+  _c_con(())
+  _c_con((int, int))
 _c_data_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE

@@ -1,7 +1,7 @@
 // c
 
 #if !_is_cpp_
-#error should be used in cpp files
+#error this should be used in cpp files
 #endif
 
 #ifdef C_C_CPP_ALG

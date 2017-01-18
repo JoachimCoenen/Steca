@@ -15,37 +15,44 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "typ_array2d.h"
+#ifndef CORE_FRY_H
+#define CORE_FRY_H
 
-#include "def/def_cmp_impl.h"
-#include "typ/typ_json.h"
+#include <c/c/h_data>
+#include <c/c/lib/ptr.h>
+#include <c/c/lib/str.h>
+#include <c/cpp/exc.hpp>
+#include <map>
 
-#include "test/tests.h"
+#define DATA_NS   core
+#define DATA_NAME fry
 
-namespace typ {
-//------------------------------------------------------------------------------
+_struct_templ
+  using str = c::str;
 
-int size2d::compare(rc that) const {
-  RET_COMPARE_VALUE(w)
-  RET_COMPARE_VALUE(h)
-  return 0;
-}
+  struct maker {
+    c::own<T> make() { return c::own<T>::from(new T); }
+  };
 
-EQ_NE_OPERATOR(size2d)
+  typedef c::shared<maker> shMaker;
 
-//------------------------------------------------------------------------------
+  void add(strc key, shMaker m) {
+    makers[key] = m;
+  }
 
-TEST("size2d", ({
-  size2d sz;
-  CHECK((0==sz.w && 0==sz.h && sz.isEmpty() && 0==sz.count()));
+  c::own<T> make(strc key) may_exc {
+    maker *m = makers[key];
+    if (!m) c::err(str::cat("no maker ", key));
+    return m->make();
+  }
 
-  size2d sz1(1,2);
-  CHECK((1==sz1.w && 2==sz1.h && !sz1.isEmpty() && 2==sz1.count()));
+private:
+  std::map<str, shMaker> makers;
 
-  sz = sz1.transposed();
-  CHECK((sz.w==sz1.h && sz.h==sz1.w));
-})
+_struct_end
 
-//------------------------------------------------------------------------------
-}
+#undef DATA_NAME
+#undef DATA_NS
+
+#endif
 // eof

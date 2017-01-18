@@ -27,7 +27,11 @@ _struct_sub_retempl(std::vector<T>)
   }
 
   void setAt(sz_t i, T&& t) {
-     base::operator[](i) = std::move(t);
+    base::operator[](i) = std::move(t);
+  }
+
+  void setAt(sz_t i, T const& t) {
+    base::operator[](i) = t;
   }
 _struct_sub_end
 

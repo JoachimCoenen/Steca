@@ -21,14 +21,14 @@
 #include <c/c/h_data>
 #include <c/c/lib/num.h>
 
-#define DATA_NS    core
-#define DATA_NAME  XY
+#define DATA_NS   core
+#define DATA_NAME XY
 
 _c_data
-  _c_var(real, x)
-  _c_var(real, y)
-  _c_con()
-  _c_con(real, real)
+  _c_atr(real, x)
+  _c_atr(real, y)
+  _c_con(())
+  _c_con((real, real))
 _c_data_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE

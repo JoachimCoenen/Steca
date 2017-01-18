@@ -20,13 +20,14 @@
 
 #include <c/c/h_data>
 #include <c/c/lib/num.h>
+#include <c/c/lib/trg.h>
 
-#define DATA_NS    core
-#define DATA_NAME  vec3
+#define DATA_NS   core
+#define DATA_NAME vec3
 
 _c_data
-  _c_var(real, _0) _c_var(real, _1) _c_var(real, _2)
-  _c_con(real, real, real)
+  _c_atr(real, _0) _c_atr(real, _1) _c_atr(real, _2)
+  _c_con((real, real, real))
 _c_data_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
@@ -34,15 +35,15 @@ _cpp_struct_end
 
 #undef DATA_NAME
 
-#define DATA_NAME  mat3
+#define DATA_NAME mat3
 
 _c_data
-  _c_var(real, _00) _c_var(real, _01) _c_var(real, _02)
-  _c_var(real, _10) _c_var(real, _11) _c_var(real, _12)
-  _c_var(real, _20) _c_var(real, _21) _c_var(real, _22)
-  _c_con(real, real, real,
-         real, real, real,
-         real, real, real)
+  _c_atr(real, _00) _c_atr(real, _01) _c_atr(real, _02)
+  _c_atr(real, _10) _c_atr(real, _11) _c_atr(real, _12)
+  _c_atr(real, _20) _c_atr(real, _21) _c_atr(real, _22)
+  _c_con((real, real, real,
+          real, real, real,
+          real, real, real))
 _c_data_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
@@ -50,9 +51,9 @@ _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _mth(mat3, operator*,  (rc))
   _mth(vec3, operator*,  (vec3::rc))
 
-  _fry(mat3, rotationCWx,  (real angle))
-  _fry(mat3, rotationCWz,  (real angle))
-  _fry(mat3, rotationCCWz, (real angle))
+  _fry(mat3, rotationCWx,  (c::rad))
+  _fry(mat3, rotationCWz,  (c::rad))
+  _fry(mat3, rotationCCWz, (c::rad))
 _cpp_struct_end
 
 #undef DATA_NAME

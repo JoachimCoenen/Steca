@@ -75,6 +75,10 @@ str str::trim() const {
   return str(sz_t(p2-p1), p1);
 }
 
+TEST("str::trim",
+  CHECK_EQ(str("abc"), str(" \nabc \t").trim());
+)
+
 str str::format(pcstr f, ...) {
   sz_t sz = 96;  // initial size
 
@@ -101,17 +105,33 @@ str str::format(pcstr f, ...) {
   }
 }
 
-str const str::nul = "";
-
-TEST("str::trim",
-  CHECK_EQ(str("abc"), str(" \nabc \t").trim());
-)
-
 TEST("str::format",
   CHECK_EQ(str("abc 2 3 -4"), str::format("abc %d %d %d", 2, 3, -4));
   CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str::format("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
   CHECK_EQ(str(""), str::format("abc %-", 5)); // encoding error
 )
+
+str str::cat(pcstr p1, pcstr p2) {
+  if (!p1)
+    return str(p2);
+  if (!p2)
+    return str(p1);
+
+  sz_t sz1 = strlen(p1), sz2 = strlen(p2), sz = sz1 + sz2 + 1;
+  mem m(sz);
+
+  pstr p = static_cast<pstr>(mut(m.p));
+  strcpy(p,       p1);
+  strcpy(p + sz1, p2);
+
+  return str(p);
+}
+
+TEST("str::cat",
+  CHECK_EQ(str("comes back"), str::cat("comes ", "back"));
+)
+
+str const str::nul = "";
 
 TEST("std::nul",
   CHECK_EQ(str(""), str::nul);

@@ -20,16 +20,16 @@
 
 #include <c/c/h_data>
 
-#define DATA_NS    core
-#define DATA_NAME  Session
+#define DATA_NS   core
+#define DATA_NAME Session
 
 _c_data
-  _c_var(int, dummy)
-  _c_con()
+  _c_atr(int, dummy)
+  _c_con(())
 _c_data_end
 
 _cpp_struct
-  _con()
+  _con(())
   _mth (int, long_square, (int))
 _cpp_struct_end
 

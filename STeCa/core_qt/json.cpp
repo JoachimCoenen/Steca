@@ -15,10 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "json.h"
+#include "json.hpp"
 #include <c/c/cpp>
 #include <c/c/lib/str.h>
 #include <QStringList>
+#undef NAN
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -253,6 +254,24 @@ XY JsonObj::loadXY(qstrc key) const may_exc {
   return toXY(loadObj(key));
 }
 
+JsonObj& JsonObj::savePar(qstrc key, Fun::par::rc par) {
+  insert(key, toJson(par));
+  return *this;
+}
+
+Fun::par JsonObj::loadPar(qstrc key) const may_exc {
+  return toPar(loadObj(key));
+}
+
+JsonObj& JsonObj::saveFun(qstrc key, Fun::rc fun) {
+  insert(key, toJson(fun));
+  return *this;
+}
+
+shFun JsonObj::loadFun(qstrc key) const may_exc {
+  return toFun(loadObj(key));
+}
+
 JsonObj& JsonObj::operator+=(JsonObj::rc that) {
   for (auto& key : that.keys())
     insert(key, that[key]);
@@ -314,6 +333,19 @@ JsonObj toJson(XY::rc xy) {
     .saveReal(json_key::Y, xy.y);
 }
 
+JsonObj toJson(Fun::par::rc par) {
+  return JsonObj()
+    .saveReal(json_key::VALUE, par.val);
+}
+
+JsonObj toJson(SimpleFun::rc f) {
+  JsonArr params;
+  for_i (f.parCount())
+    params.append(toJson(f.parAt(i)));
+
+  return JsonObj().saveArr(json_key::PARAMS, params);
+}
+
 Range toRange(JsonObj::rc obj) may_exc {
   return Range(
     obj.loadReal(json_key::MIN),
@@ -342,8 +374,21 @@ XY toXY(JsonObj::rc obj) may_exc {
   );
 }
 
-TEST_CODE(
+Fun::par toPar(JsonObj::rc obj) may_exc {
+  return Fun::par(
+    obj.loadReal(json_key::VALUE), 0
+  );
+}
 
+shFun toSimpleFun(JsonObj::rc obj) may_exc {
+  c::shared<SimpleFun> f(new SimpleFun);
+
+  JsonArr params = obj.loadArr(json_key::PARAMS);
+  for_i (params.count())
+    f.mut_ptr()->add(toPar(params.objAt(i)));
+}
+
+TEST_CODE(
 static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
   if (rs1.size() != rs2.size())
     return false;

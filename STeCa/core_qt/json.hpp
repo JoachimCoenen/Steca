@@ -19,11 +19,16 @@
 #define CORE_JSON_H
 
 #include <c/c/h>
-#include <c/qt/def.hpp>
+#include <c/c/lib/num.h>
+
 #include <c/cpp/exc.hpp>
+#include <c/qt/def.hpp>
+
+#include <core/typ/fun.hpp>
 #include <core/typ/ij.h>
+#include <core/typ/range.hpp>
 #include <core/typ/xy.h>
-#include <core/typ/range.h>
+
 #include <QJsonArray>
 #include <QJsonObject>
 
@@ -73,14 +78,20 @@ sub_struct_reimpl (JsonObj, QJsonObject)
   qstr     loadString(qstrc key)            const may_exc;
   qstr     loadString(qstrc key, qstrc def) const may_exc;
 
-  JsonObj& saveRange(qstrc key, Range const&);
+  JsonObj& saveRange(qstrc key, Range::rc);
   Range    loadRange(qstrc key)             const may_exc;
 
-  JsonObj& saveIJ(qstrc key, IJ const&);
+  JsonObj& saveIJ(qstrc key, IJ::rc);
   IJ       loadIJ(qstrc key)                const may_exc;
 
-  JsonObj& saveXY(qstrc key, XY const&);
+  JsonObj& saveXY(qstrc key, XY::rc);
   XY       loadXY(qstrc key)                const may_exc;
+
+  JsonObj& savePar(qstrc key, Fun::par::rc);
+  Fun::par loadPar(qstrc key)               const may_exc;
+
+  JsonObj& saveFun(qstrc key, Fun::rc);
+  shFun    loadFun(qstrc key)               const may_exc;
 
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
@@ -113,11 +124,17 @@ JsonArr toJson(Ranges::rc);
 JsonObj toJson(IJ::rc);
 JsonObj toJson(XY::rc);
 
+JsonObj toJson(Fun::par::rc);
+JsonObj toJson(SimpleFun::rc);
+
 Range   toRange(JsonObj::rc)  may_exc;
 Ranges  toRanges(JsonArr::rc) may_exc;
 
 IJ      toIJ(JsonObj::rc) may_exc;
 XY      toXY(JsonObj::rc) may_exc;
+
+Fun::par toPar(JsonObj::rc) may_exc;
+shFun    toSimpleFun(JsonObj::rc) may_exc;
 
 //------------------------------------------------------------------------------
 }

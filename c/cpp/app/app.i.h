@@ -5,8 +5,8 @@
 
 #include "../../c/h_data"
 
-#define DATA_NS    c
-#define DATA_NAME  app
+#define DATA_NS   c
+#define DATA_NAME app
 
 _iface
   _iface_mth_mut(int, exec, ())

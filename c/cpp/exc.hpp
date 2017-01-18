@@ -6,12 +6,12 @@
 #include "../c/lib/str.h"
 #include <exception>
 
-#define DATA_NS    c
-#define DATA_NAME  exc
+#define DATA_NS   c
+#define DATA_NAME exc
 
 _struct_sub (::std::exception)
-  _var(str,  msg)
-  _var(bool, silent)
+  _atr(str,  msg)
+  _atr(bool, silent)
 
   _dcl(exc(pcstr)         noexcept;)
   _dcl(pcstr what() const noexcept;)

@@ -8,12 +8,12 @@
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-#define DATA_NS    c
-#define DATA_NAME  ptr
+#define DATA_NS   c
+#define DATA_NAME ptr
 
 _c_data
   _c_ptr(void, p)
-  _c_con(pcvoid)
+  _c_con((pcvoid))
 _c_data_end
 
 #undef DATA_NAME
@@ -77,7 +77,7 @@ private:
   just_ptr<T>& operator-=(sz_t) = delete;
 };
 
-// the name 'own_ptr' is only a hint, not a service
+// the name 'own_ptr' is only a hint, not enforced
 // may be null
 template <typename T>
 struct own_ptr : c_ptr {
@@ -91,7 +91,7 @@ struct own_ptr : c_ptr {
   void set(T const*const p_)  { mut(p) = mut(p_); }
 };
 
-// the name 'own_ptr' is only a hint, not a service
+// the name 'own_ptr' is only a hint, not enforced
 template <typename T>
 struct own : just_ptr<T> {
   static own from(T* p) {
@@ -112,6 +112,12 @@ struct own : just_ptr<T> {
 
 protected:
   own(T* p) : just_ptr<T>(p) {}
+};
+
+// the name 'give_me' is only a hint, not enforced
+template <typename T>
+struct give_me : own<T> {
+  using own<T>::own;
 };
 
 // scoped

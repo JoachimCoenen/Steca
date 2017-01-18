@@ -17,7 +17,6 @@
 
 #include "mat.h"
 #include <c/c/cpp>
-#include <cmath>
 
 core_vec3::core_vec3(real _0_, real _1_, real _2_)
 : _0(_0_), _1(_1_), _2(_2_) {}
@@ -90,19 +89,19 @@ vec3 mat3::operator*(vec3::rc v) const {
   );
 }
 
-mat3 mat3::rotationCWx(real angle) {
-  return mat3(1, 0,           0,
-               0, cos(angle), -sin(angle),
-               0, sin(angle),  cos(angle));
+mat3 mat3::rotationCWx(c::rad angle) {
+  return mat3(1, 0,            0,
+              0, angle.cos(), -angle.sin(),
+              0, angle.sin(),  angle.cos());
 }
 
-mat3 mat3::rotationCWz(real angle) {
-  return mat3(cos(angle), -sin(angle), 0,
-              sin(angle),  cos(angle), 0,
-              0,           0,          1);
+mat3 mat3::rotationCWz(c::rad angle) {
+  return mat3(angle.cos(), -angle.sin(), 0,
+              angle.sin(),  angle.cos(), 0,
+              0,            0,           1);
 }
 
-mat3 mat3::rotationCCWz(real angle) {
+mat3 mat3::rotationCCWz(c::rad angle) {
   return rotationCWz(angle).transposed();
 }
 

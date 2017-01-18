@@ -22,13 +22,13 @@
 #include <c/c/lib/num.h>
 #include <c/cpp/vec.hpp>
 
-#define DATA_NS    core
-#define DATA_NAME  Range
+#define DATA_NS   core
+#define DATA_NAME Range
 
 _c_data
-  _c_var(real, min)
-  _c_var(real, max)
-  _c_con(real, real)
+  _c_atr(real, min)
+  _c_atr(real, max)
+  _c_con((real, real))
 _c_data_end
 
 _cpp_struct COMPARABLE EQ_NE
@@ -63,7 +63,7 @@ _cpp_struct_end
 
 #undef DATA_NAME
 
-#define DATA_NAME  Ranges
+#define DATA_NAME Ranges
 
 _struct
   Ranges();

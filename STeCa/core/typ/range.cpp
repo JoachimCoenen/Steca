@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "range.h"
+#include "range.hpp"
 #include <c/c/cpp>
 
 #include <algorithm>

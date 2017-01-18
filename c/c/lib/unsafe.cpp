@@ -12,6 +12,10 @@ pvoid alloc(sz_t sz) {
   return (sz > 0) ? ::malloc(sz) : nullptr; // TODO abrt if null
 }
 
+pvoid calloc(sz_t n, sz_t sz) {
+  return (sz > 0) ? ::calloc(n, sz) : nullptr; // TODO abrt if null
+}
+
 pvoid realloc(pvoid p, sz_t sz) {
   return ::realloc(p, sz); // TODO abrt if null
 }
