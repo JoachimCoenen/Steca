@@ -5,10 +5,13 @@
 
 #include "../c/lib/str.h"
 #include "../cpp/exc.hpp"
-#include <QString>
+
+class QString;
 
 typedef QString     qstr;
 typedef qstr const& qstrc;
+
+c::str toStr(qstrc);
 
 namespace c_qt {
 //------------------------------------------------------------------------------

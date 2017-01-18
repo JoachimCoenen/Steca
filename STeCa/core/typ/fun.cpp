@@ -21,18 +21,18 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-Fun::par::par(real val_, real err_) : val(val_), err(err_) {}
+Fun::Par::Par(real val_, real err_) : val(val_), err(err_) {}
 
-void Fun::par::set(real val_, real err_) {
+void Fun::Par::set(real val_, real err_) {
   mut(val) = val_;
   mut(err) = err_;
 }
 
-void Fun::par::setVal(real val_) {
+void Fun::Par::setVal(real val_) {
   mut(val) = val_;
 }
 
-Fun::par::ref Fun::par::operator=(rc that) {
+Fun::Par::ref Fun::Par::operator=(rc that) {
   mut(val) = that.val;
   mut(err) = that.err;
   return *this;
@@ -43,11 +43,21 @@ Fun::par::ref Fun::par::operator=(rc that) {
 Fun::Fun()  {}
 Fun::~Fun() {}
 
+Fun::fryFun Fun::factory;
+
+void Fun::addMaker(strc key, c::give_me<fryFun::someMaker const> maker) {
+  factory.add(key, maker);
+}
+
+c::own<Fun> Fun::make(strc key) may_exc {
+  return factory.make(key);
+}
+
 //------------------------------------------------------------------------------
 
-SimpleFun::SimpleFun() {}
+SimpleFun::SimpleFun() : pars() {}
 
-void SimpleFun::add(par::rc par) {
+void SimpleFun::add(Par::rc par) {
   mut(pars).push(par);
 }
 
@@ -55,13 +65,13 @@ sz_t SimpleFun::parCount() const {
   return pars.size();
 }
 
-Fun::par::rc SimpleFun::parAt(sz_t i) const {
+Fun::Par::rc SimpleFun::parAt(sz_t i) const {
   return pars.at(i);
 }
 
 void SimpleFun::resetPars() {
   for_i (parCount())
-    mut(pars).setAt(i, Fun::par(0, 0));
+    mut(pars).setAt(i, Par(0, 0));
 }
 
 real SimpleFun::parVal(sz_t i, real const* parVals) const {
@@ -91,7 +101,7 @@ sz_t SumFuns::parCount() const {
   return allPars.size();
 }
 
-Fun::par::rc SumFuns::parAt(sz_t i) const {
+Fun::Par::rc SumFuns::parAt(sz_t i) const {
   return *allPars.at(i);
 }
 
@@ -135,35 +145,6 @@ str const
 
 namespace typ {
 //------------------------------------------------------------------------------
-
-owner_not_null<fun*> fun::Factory::make(JsonObj::rc obj) may_exc {
-  str funType = obj.loadString(json_key::TYPE);
-  fun *fun = super::make(funType);
-
-  RUNTIME_CHECK(fun, "factory does not know " % funType);
-
-  scoped<fun*> f(fun);
-  fun->loadJson(obj); // may throw
-  return owner_not_null<fun*>::from(f.take());
-}
-
-fun::Factory fun::factory_;
-
-void fun::addFactoryMaker(qstrc key, owner_not_null<Factory::MakerBase*> maker) {
-  factory_.addMaker(key, maker);
-}
-
-void fun::initFactory() {
-  ONLY_ONCE
-
-  addFactoryMaker(json_fun_key::SUM,
-      owner_not_null<Factory::MakerBase*>::from(new Factory::Maker<Sumfuns>));
-}
-
-owner_not_null<fun*> fun::make(JsonObj::rc obj) {
-  return factory_.make(obj);
-}
-
 
 //------------------------------------------------------------------------------
 

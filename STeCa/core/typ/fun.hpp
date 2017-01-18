@@ -26,13 +26,15 @@
 namespace core {
 //------------------------------------------------------------------------------
 
+struct JsonObj;
+
 struct Fun { _typedefs(Fun)
 
-  struct par final { _typedefs(par)
+  struct Par final { _typedefs(Par)
     _atr(real, val)
     _atr(real, err)
 
-    par(real, real);
+    Par(real, real);
     void set(real, real);
     void setVal(real);
 
@@ -42,8 +44,11 @@ struct Fun { _typedefs(Fun)
   Fun();
   virtual ~Fun();
 
+  virtual void    fromJson(JsonObj const&) may_exc;
+  virtual JsonObj toJson() const;
+
   virtual sz_t parCount()     const = 0;
-  virtual par::rc parAt(sz_t) const = 0;
+  virtual Par::rc parAt(sz_t) const = 0;
   virtual void resetPars()    {}
 
   // evaluate the fun y = f(x), with given (parVals) or own pars
@@ -52,21 +57,30 @@ struct Fun { _typedefs(Fun)
   // partial derivative / par, with given (parVals) or own pars
   virtual real dy(real x, sz_t parIdx, real const* parVals = nullptr) const = 0;
 
+  typedef fry<Fun> fryFun;
+
 protected:
-  static fry<Fun> factory_;
+  static fryFun factory;
+
+public:
+  static void addMaker(strc key, c::give_me<fryFun::someMaker const>);
+  static c::own<Fun> make(strc key) may_exc;
 };
 
 typedef c::shared<Fun> shFun;
 
 struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
-  _atr(c::vec<par>, pars)
+  _atr(c::vec<Par>, pars)
 
   SimpleFun();
 
-  void    add(par::rc);
+  void    fromJson(JsonObj const&) may_exc;
+  JsonObj toJson() const;
+
+  void    add(Par::rc);
 
   sz_t    parCount()  const;
-  par::rc parAt(sz_t) const;
+  Par::rc parAt(sz_t) const;
   void    resetPars();
 
   real    parVal(sz_t parIdx, real const* parVals) const;
@@ -80,7 +94,7 @@ struct SumFuns final : Fun { _typedefs(SumFuns) using base = Fun;
 
   // aggregate par list for all added funs
   sz_t    parCount()  const;
-  par::rc parAt(sz_t) const;
+  Par::rc parAt(sz_t) const;
 
   real  y(real x, real const* parVals = nullptr)              const;
   real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
@@ -89,7 +103,7 @@ protected:
   // summed funs
   c::vec<shFun>      funs;
   // the aggregate par list
-  c::vec<par const*> allPars;
+  c::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index
   c::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate

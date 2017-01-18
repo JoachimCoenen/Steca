@@ -84,9 +84,9 @@ struct own_ptr : c_ptr {
   own_ptr()    : c_ptr(nullptr) {}
   own_ptr(T const*const p) : c_ptr(p) {}
 
-  T const* ptr()        const { return static_cast<T const*>(p); }
-  operator T const*()   const { return ptr(); }
-  T const* operator->() const { return ptr(); }
+  T* ptr()        const { return static_cast<T*>(mut(p)); }
+  operator T*()   const { return ptr(); }
+  T* operator->() const { return ptr(); }
 
   void set(T const*const p_)  { mut(p) = mut(p_); }
 };
@@ -127,24 +127,31 @@ struct scoped : c_ptr {
   scoped(just_ptr<T> p) : c_ptr(p) {}
   scoped(own_ptr<T> p)  : c_ptr(p) {}
   scoped(own<T> p)      : c_ptr(p) {}
-  scoped(scoped&& that) : c_ptr(that.take()) {}
   scoped(scoped const&) = delete;
  ~scoped() {
     reset(nullptr);
   }
 
+  scoped& operator=(scoped<T>&& that) {
+    reset(that.take());
+  }
+
   void reset(T* p_) {
     delete static_cast<T*>(mut(p));
-    mut(p) = p_;
+    mut(p) = mut(p_);
   }
 
   own_ptr<T> take() {
-    return own_ptr<T>(static_cast<T const*>(take_p(c_ptr::p)));
+    // T may be const and put const back
+    return own_ptr<T>(static_cast<T*>(mut(take_p(p))));
   }
 
-  T const* ptr()        const { return static_cast<T const*>(p); }
-  operator T const*()   const { return ptr(); }
-  T const* operator->() const { return ptr(); }
+  T* ptr() const {
+    // T may be const and put const back
+    return static_cast<T*>(mut(p));
+  }
+  operator T*()   const { return ptr(); }
+  T* operator->() const { return ptr(); }
 };
 
 // a handy way to make a pointer self-destructing

@@ -24,35 +24,39 @@
 #include <c/cpp/exc.hpp>
 #include <map>
 
-#define DATA_NS   core
-#define DATA_NAME fry
+namespace core {
+//-----------------------------------------------------------------------------
 
-_struct_templ
+template <typename T>
+struct fry { _typedefs(fry)
   using str = c::str;
 
-  struct maker {
-    c::own<T> make() { return c::own<T>::from(new T); }
+  struct someMaker {
+    virtual ~someMaker() {}
+    virtual c::own<T> make() const = 0;
   };
 
-  typedef c::shared<maker> shMaker;
+  template <typename TT>
+  struct maker : someMaker {
+    c::own<T> make() const { return c::own<T>::from(new TT); }
+  };
 
-  void add(strc key, shMaker m) {
-    makers[key] = m;
+private:
+  typedef c::scoped<someMaker const> scm;
+  std::map<str, scm> makers;
+
+public:
+  void add(strc key, c::give_me<someMaker const> m) {
+//  TODO  makers[key] = scm(m);
   }
 
-  c::own<T> make(strc key) may_exc {
-    maker *m = makers[key];
+  c::own<T> make(strc key) const may_exc {
+    someMaker const *m = makers.at(key).ptr();
     if (!m) c::err(str::cat("no maker ", key));
     return m->make();
   }
-
-private:
-  std::map<str, shMaker> makers;
-
-_struct_end
-
-#undef DATA_NAME
-#undef DATA_NS
-
+};
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

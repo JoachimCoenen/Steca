@@ -32,6 +32,131 @@ static qstrc
   PEAK("guessed peak"), FWHM("guessed fwhm");
 }
 
+//------------------------------------------------------------------------------
+
+static JsonObj toJson(Range::rc range) {
+  return JsonObj()
+    .saveReal(json_key::MIN, range.min)
+    .saveReal(json_key::MAX, range.max);
+}
+
+static JsonArr toJson(Ranges::rc rs) {
+  JsonArr arr;
+
+  for_i (rs.size())
+    arr.append(toJson(rs.at(i)));
+
+  return arr;
+}
+
+static JsonObj toJson(IJ::rc ij) {
+  return JsonObj()
+    .saveInt(json_key::I, ij.i)
+    .saveInt(json_key::J, ij.j);
+}
+
+static JsonObj toJson(XY::rc xy) {
+  return JsonObj()
+    .saveReal(json_key::X, xy.x)
+    .saveReal(json_key::Y, xy.y);
+}
+
+static JsonObj toJson(Fun::Par::rc par) {
+  return JsonObj()
+    .saveReal(json_key::VALUE, par.val);
+}
+
+static JsonObj toJson(SimpleFun::rc f) {
+  JsonArr params;
+  for_i (f.parCount())
+    params.append(toJson(f.parAt(i)));
+
+  return JsonObj().saveArr(json_key::PARAMS, params);
+}
+
+static Range toRange(JsonObj::rc obj) may_exc {
+  return Range(
+    obj.loadReal(json_key::MIN),
+    obj.loadReal(json_key::MAX)
+  );
+}
+
+static Ranges toRanges(JsonArr::rc arr) may_exc {
+  Ranges res;
+  for_i (arr.count())
+    res.add(toRange(arr.objAt(i)));
+  return res;
+}
+
+static IJ toIJ(JsonObj::rc obj) may_exc {
+  return IJ(
+    obj.loadInt(json_key::I),
+    obj.loadInt(json_key::J)
+  );
+}
+
+static XY toXY(JsonObj::rc obj) may_exc {
+  return XY(
+    obj.loadInt(json_key::X),
+    obj.loadInt(json_key::Y)
+  );
+}
+
+static Fun::Par toPar(JsonObj::rc obj) may_exc {
+  return Fun::Par(
+    obj.loadReal(json_key::VALUE), 0
+  );
+}
+
+static c::own<Fun> toFun(JsonObj::rc obj) may_exc {
+  qstr funTyp = obj.loadStr(json_key::TYPE);
+  c::scoped<Fun> fun(Fun::make(toStr(funTyp)));
+  fun->fromJson(obj); // may throw
+  return c::own<Fun>::from(fun.take());
+}
+
+TEST_CODE(
+static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
+  if (rs1.size() != rs2.size())
+    return false;
+
+  for_i (rs1.size()) {
+    if (rs1.at(i) != rs2.at(i))
+      return false;
+  }
+
+  return true;
+}
+)
+
+TEST("IJ::json",
+  IJ ij(-1,2), ij1(toIJ(toJson(ij)));
+  CHECK_EQ(ij, ij1);
+)
+
+TEST("XY::json",
+  XY xy(-1,2), xy1(toXY(toJson(xy)));
+  CHECK_EQ(xy, xy1);
+)
+
+TEST("Range::json",
+  Range r(-1,2), r1(toRange(toJson(r)));
+  CHECK_EQ(r, r1);
+)
+
+TEST("Ranges::json",
+  Ranges rs;
+  rs.add(Range());
+  rs.add(Range(9));
+  rs.add(Range(-3, -2));
+  rs.add(Range::inf());
+
+  Ranges rs1(toRanges(toJson(rs)));
+  CHECK(RANGES_EQ(rs, rs1));
+)
+
+//------------------------------------------------------------------------------
+
 JsonObj::JsonObj() {}
 
 JsonObj::JsonObj(QJsonObject const& obj) : base(obj) {}
@@ -207,12 +332,12 @@ bool JsonObj::loadBool(qstrc key, bool def) const may_exc {
   RET_LOAD_DEF(Bool)
 }
 
-JsonObj& JsonObj::saveString(qstrc key, qstrc s) {
+JsonObj& JsonObj::saveStr(qstrc key, qstrc s) {
   insert(key, s);
   return *this;
 }
 
-qstr JsonObj::loadString(qstrc key) const may_exc {
+qstr JsonObj::loadStr(qstrc key) const may_exc {
   auto val = value(key);
 
   switch (val.type()) {
@@ -223,8 +348,8 @@ qstr JsonObj::loadString(qstrc key) const may_exc {
   }
 }
 
-qstr JsonObj::loadString(qstrc key, qstrc def) const may_exc {
-  RET_LOAD_DEF(String)
+qstr JsonObj::loadStr(qstrc key, qstrc def) const may_exc {
+  RET_LOAD_DEF(Str)
 }
 
 JsonObj& JsonObj::saveRange(qstrc key, Range::rc range) {
@@ -254,21 +379,21 @@ XY JsonObj::loadXY(qstrc key) const may_exc {
   return toXY(loadObj(key));
 }
 
-JsonObj& JsonObj::savePar(qstrc key, Fun::par::rc par) {
+JsonObj& JsonObj::savePar(qstrc key, Fun::Par::rc par) {
   insert(key, toJson(par));
   return *this;
 }
 
-Fun::par JsonObj::loadPar(qstrc key) const may_exc {
+Fun::Par JsonObj::loadPar(qstrc key) const may_exc {
   return toPar(loadObj(key));
 }
 
 JsonObj& JsonObj::saveFun(qstrc key, Fun::rc fun) {
-  insert(key, toJson(fun));
+  insert(key, fun.toJson());
   return *this;
 }
 
-shFun JsonObj::loadFun(qstrc key) const may_exc {
+c::own<Fun> JsonObj::loadFun(qstrc key) const may_exc {
   return toFun(loadObj(key));
 }
 
@@ -305,128 +430,29 @@ JsonObj JsonArr::objAt(uint i) const {
 }
 
 //------------------------------------------------------------------------------
+// TODO impl from fun.cpp
 
-JsonObj toJson(Range::rc range) {
-  return JsonObj()
-    .saveReal(json_key::MIN, range.min)
-    .saveReal(json_key::MAX, range.max);
+void Fun::fromJson(JsonObj::rc) {
+  // nothing
 }
 
-JsonArr toJson(Ranges::rc rs) {
-  JsonArr arr;
-
-  for_i (rs.size())
-    arr.append(toJson(rs.at(i)));
-
-  return arr;
+JsonObj Fun::toJson() const {
+  // nothing
+  return JsonObj();
 }
 
-JsonObj toJson(IJ::rc ij) {
-  return JsonObj()
-    .saveInt(json_key::I, ij.i)
-    .saveInt(json_key::J, ij.j);
-}
-
-JsonObj toJson(XY::rc xy) {
-  return JsonObj()
-    .saveReal(json_key::X, xy.x)
-    .saveReal(json_key::Y, xy.y);
-}
-
-JsonObj toJson(Fun::par::rc par) {
-  return JsonObj()
-    .saveReal(json_key::VALUE, par.val);
-}
-
-JsonObj toJson(SimpleFun::rc f) {
-  JsonArr params;
-  for_i (f.parCount())
-    params.append(toJson(f.parAt(i)));
-
-  return JsonObj().saveArr(json_key::PARAMS, params);
-}
-
-Range toRange(JsonObj::rc obj) may_exc {
-  return Range(
-    obj.loadReal(json_key::MIN),
-    obj.loadReal(json_key::MAX)
-  );
-}
-
-Ranges toRanges(JsonArr::rc arr) may_exc {
-  Ranges res;
-  for_i (arr.count())
-    res.add(toRange(arr.objAt(i)));
-  return res;
-}
-
-IJ toIJ(JsonObj::rc obj) may_exc {
-  return IJ(
-    obj.loadInt(json_key::I),
-    obj.loadInt(json_key::J)
-  );
-}
-
-XY toXY(JsonObj::rc obj) may_exc {
-  return XY(
-    obj.loadInt(json_key::X),
-    obj.loadInt(json_key::Y)
-  );
-}
-
-Fun::par toPar(JsonObj::rc obj) may_exc {
-  return Fun::par(
-    obj.loadReal(json_key::VALUE), 0
-  );
-}
-
-shFun toSimpleFun(JsonObj::rc obj) may_exc {
-  c::shared<SimpleFun> f(new SimpleFun);
-
+void SimpleFun::fromJson(JsonObj::rc obj) {
+  // TODO
+  base::fromJson(obj);
   JsonArr params = obj.loadArr(json_key::PARAMS);
   for_i (params.count())
-    f.mut_ptr()->add(toPar(params.objAt(i)));
+    add(toPar(params.objAt(i)));
 }
 
-TEST_CODE(
-static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
-  if (rs1.size() != rs2.size())
-    return false;
-
-  for_i (rs1.size()) {
-    if (rs1.at(i) != rs2.at(i))
-      return false;
-  }
-
-  return true;
+JsonObj SimpleFun::toJson() const {
+  // TODO
+  return base::toJson();
 }
-)
-
-TEST("IJ::json",
-  IJ ij(-1,2), ij1(toIJ(toJson(ij)));
-  CHECK_EQ(ij, ij1);
-)
-
-TEST("XY::json",
-  XY xy(-1,2), xy1(toXY(toJson(xy)));
-  CHECK_EQ(xy, xy1);
-)
-
-TEST("Range::json",
-  Range r(-1,2), r1(toRange(toJson(r)));
-  CHECK_EQ(r, r1);
-)
-
-TEST("Ranges::json",
-  Ranges rs;
-  rs.add(Range());
-  rs.add(Range(9));
-  rs.add(Range(-3, -2));
-  rs.add(Range::inf());
-
-  Ranges rs1(toRanges(toJson(rs)));
-  CHECK(RANGES_EQ(rs, rs1));
-)
 
 //------------------------------------------------------------------------------
 }
