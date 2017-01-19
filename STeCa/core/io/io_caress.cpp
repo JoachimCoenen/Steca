@@ -15,28 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-//#include "data/data_dataset.h"
-//#include "Caress/raw.h"
-//#include "typ/typ_types.h"
-//#include "io_io.h"
-
-//#include <sstream>
-//#include <qmath.h>
-
 #include "io.hpp"
 #include <c/c/cpp>
+#include <fstream>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-void loadCaress(strc) {
+void loadCaress(strc filePath) may_exc {
+  std::fstream is(filePath);
+  if (!is.good())
+    c::err("");
 }
 
 //------------------------------------------------------------------------------
 }}
 // eof
 
-//// Code taken from the original STeCa, only slightly modified.
 
 
 //data::shp_File loadCaress2(qstrc filePath) may_exc {

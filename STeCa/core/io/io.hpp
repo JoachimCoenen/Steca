@@ -19,11 +19,12 @@
 #define CORE_IO_H
 
 #include <c/c/lib/str.h>
+#include <c/cpp/exc.hpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-void loadCaress(strc);
+void loadCaress(strc) may_exc;
 
 //------------------------------------------------------------------------------
 }}

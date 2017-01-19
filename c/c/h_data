@@ -140,10 +140,13 @@
 #define _iface_end \
   };}
 
-#define _iface_mth(typ, mth, args)     \
-  virtual typ mth args const = 0;
-#define _iface_mth_mut(typ, mth, args) \
-  virtual typ mth args = 0;
+#define _iface_mth_body(typ, mth, args, body) \
+  virtual typ mth args const body
+#define _iface_mth_mut_body(typ, mth, args, body) \
+  virtual typ mth args body
+
+#define _iface_mth(typ, mth, args)     _iface_mth_body(typ, mth, args, = 0;)
+#define _iface_mth_mut(typ, mth, args) _iface_mth_mut_body(typ, mth, args, = 0;)
 
 #define _struct_sub_pre_pre(pre,pre_s,s)  \
   namespace DATA_NS { pre struct DATA_NAME : pre_s s { _cpp_struct_typedefs using base = s;
@@ -167,6 +170,9 @@
 
 #define _iface
 #define _iface_end
+
+#define _iface_mth_body(typ, mth, args, body)
+#define _iface_mth_mut_body(typ, mth, args, body)
 #define _iface_mth(typ, mth, args)
 #define _iface_mth_mut(typ, mth, args)
 

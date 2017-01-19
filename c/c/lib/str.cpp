@@ -46,13 +46,11 @@ str::~str() {
 }
 
 TEST_CODE(
-  str rval_str(pcstr p) {
-    return p;
-  }
+  str str_move(str&& s) { return std::move(s); }
 )
 
 TEST("str",
-  str s1(0), s2(""), s3("s"), s4(s3), s5(rval_str("s")), s6(1, 0), s7(1, "sd");
+  str s1(0), s2(""), s3("s"), s4(s3), s5(str_move(str("s"))), s6(1, 0), s7(1, "sd");
   CHECK_EQ(s1, s2);
   CHECK_EQ(s1, s6);
   CHECK_NE(s1, s3);

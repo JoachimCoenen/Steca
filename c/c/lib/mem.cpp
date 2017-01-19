@@ -28,12 +28,12 @@ mem::~mem() {
 }
 
 TEST_CODE(
-  mem rval_mem() { return mem(99); }
+  mem mem_move(mem&& m) { return std::move(m); }
 )
 
 TEST("mem",
-  mem m0(0), m1(1), mX(12345678), mc(3, "Hello");
-  mem mm(rval_mem());
+  mem m0(0), m1(1), mX(12345678), mc(3, "Hello"), mcc(mc);
+  mem mm(mem_move(mem(3, "  ")));
 )
 
 //------------------------------------------------------------------------------

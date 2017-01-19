@@ -2,6 +2,9 @@
 
 #include "trg.h"
 #include "../cpp"
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 c_deg::c_deg(real val_) : val(val_) {}
@@ -29,9 +32,9 @@ deg deg::operator*(real fac) const {
 }
 
 deg deg::normalized() const {
-  static real const MAX = 360;
-  real norm = fmod(val, MAX);
-  if (norm < 0) norm += MAX;
+  static real const over = 360;
+  real norm = fmod(val, over);
+  if (norm < 0) norm += over;
   return norm;
 }
 
@@ -64,9 +67,9 @@ rad rad::operator*(real fac) const {
 }
 
 rad rad::normalized() const {
-  static real const MAX = 2 * M_PI;
-  real norm = fmod(val, MAX);
-  if (norm < 0) norm += MAX;
+  static real const over = 2 * M_PI;
+  real norm = fmod(val, over);
+  if (norm < 0) norm += over;
   return norm;
 }
 

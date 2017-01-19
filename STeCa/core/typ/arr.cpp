@@ -61,6 +61,11 @@ sz2 operator-(sz2::rc s1, sz2::rc s2) {
   return sz2(c::to_u(i), c::to_u(j));
 }
 
+TEST("sz2-",
+  sz2 sz = sz2(4,3) - sz2(3,4);
+  CHECK_EQ(sz2(1,0), sz);
+)
+
 //------------------------------------------------------------------------------
 
 arr2base::arr2base(sz2 sz_, sz_t tsize) : sz(sz_), ts(nullptr) {

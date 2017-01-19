@@ -67,7 +67,6 @@ _cpp_struct_end
 
 _struct EQ_NE
   Ranges();
-  Ranges(rval);
 
   void clear()          { rs.clear();        }
   bool is_empty() const { return rs.empty(); }

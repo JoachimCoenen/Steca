@@ -298,13 +298,27 @@ bool Ranges::operator==(rc that) const {
   return true;
 }
 
+TEST("Ranges:=",
+  Ranges rs0, rs1, rs2, rs22;
+  CHECK(rs1.add(Range(0,1)));
+  CHECK(rs2.add(Range(0,1)));  CHECK(rs2.add(Range(3,4)));
+  CHECK(rs22.add(Range(3,4))); CHECK(rs22.add(Range(0,1)));
+  CHECK_EQ(rs0, Ranges());
+  CHECK_NE(rs0, rs1);
+  CHECK_NE(rs1, rs0);
+  CHECK_NE(rs1, rs2);
+  CHECK_EQ(rs2, rs22);
+  CHECK_EQ(rs22, rs2);
+  CHECK(rs22.add(Range(-c::INF, -1)));
+
+  CHECK_NE(rs22, rs2);
+)
+
 bool Ranges::operator!=(rc that) const {
   return !operator==(that);
 }
 
 Ranges::Ranges() {}
-
-Ranges::Ranges(rval that) : rs(std::move(that.rs)) {}
 
 bool Ranges::add(Range::rc range) {
   if (!range.isDef())
