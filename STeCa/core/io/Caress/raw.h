@@ -52,9 +52,6 @@ struct raw_infovars /* storage type for persistent variables */
 #endif
     int32 m_bConvertInt64ToDouble;
     int32 m_flag;
-#ifdef RAW_ONLINE
-    int32 m_re_read_flag;
-#endif
 
 /* local number representation: 3 definitions to force compile error, if more than 1 is defined */
 #if defined(BIG_ENDIAN)
@@ -83,9 +80,6 @@ struct raw_infovars* allocate_raw_infovars(void);
 void free_raw_infovars(struct raw_infovars* pVars);
 int32 open_data_file_r(struct raw_infovars* pVars, const char* file_name);
 int32 close_data_file_r(struct raw_infovars* pVars);
-#ifdef RAW_ONLINE
-void re_read_r(struct raw_infovars* pVars);
-#endif
 int32 next_data_unit_r(struct raw_infovars* pVars, int32* e_number, int32* e_type,
                        modname_t element, modname_t node, int32* d_type, int64* number);
 int32 get_data_unit_r(struct raw_infovars* pVars, void* addr);
@@ -96,9 +90,6 @@ int32 last_data_of_element_r(struct raw_infovars* pVars);
 /* non-reentrant (old) interface */
 int32 open_data_file(const char* file_name, int32* mode);
 int32 close_data_file(void);
-#ifdef RAW_ONLINE
-void re_read(void);
-#endif
 int32 next_data_unit(int32* e_number, int32* e_type, modname_t element, modname_t node,
                      int32* d_type, int32* number);
 int32 get_data_unit(void* addr);
@@ -110,9 +101,6 @@ int32 last_data_of_element(void);
 int genwave(int argc, char* argv[]);
 int32 open_data_file_pv(int32 argc, char* argv[]);
 int32 close_data_file_pv(void);
-#ifdef RAW_ONLINE
-void re_read_pv(void);
-#endif
 int32 next_data_unit_pv(int32 argc, char* argv[]);
 int32 get_data_unit_pv(int32 argc, char* argv[]);
 int32 get_data_partition_pv(int32 argc, char* argv[]);
