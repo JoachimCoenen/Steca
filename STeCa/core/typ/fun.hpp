@@ -39,13 +39,13 @@ struct Fun { _typedefs(Fun)
     void setVal(real);
 
     ref operator=(rc);
+
+    JsonObj    toJson() const;
+    static Par fromJson(JsonObj const&) may_exc;
   };
 
   Fun();
   virtual ~Fun();
-
-  virtual void    fromJson(JsonObj const&) may_exc;
-  virtual JsonObj toJson() const;
 
   virtual sz_t parCount()     const = 0;
   virtual Par::rc parAt(sz_t) const = 0;
@@ -64,7 +64,11 @@ protected:
 
 public:
   static void addMaker(strc key, c::give_me<fryFun::someMaker const>);
-  static c::own<Fun> make(strc key) may_exc;
+  static c::own<Fun> make(strc key)       may_exc;
+  static c::own<Fun> make(JsonObj const&) may_exc;
+
+  virtual JsonObj toJson() const;
+  virtual void    loadJson(JsonObj const&) may_exc;
 };
 
 typedef c::shared<Fun> shFun;
@@ -74,9 +78,6 @@ struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
 
   SimpleFun();
 
-  void    fromJson(JsonObj const&) may_exc;
-  JsonObj toJson() const;
-
   void    add(Par::rc);
 
   sz_t    parCount()  const;
@@ -85,6 +86,9 @@ struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
 
   real    parVal(sz_t parIdx, real const* parVals) const;
   void    setParVal(sz_t parIdx, real val);
+
+  JsonObj toJson() const;
+  void    loadJson(JsonObj const&) may_exc;
 };
 
 // a fun that is a sum of other funs
@@ -99,6 +103,9 @@ struct SumFuns final : Fun { _typedefs(SumFuns) using base = Fun;
   real  y(real x, real const* parVals = nullptr)              const;
   real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
 
+  JsonObj toJson() const;
+  void    loadJson(JsonObj const&) may_exc;
+
 protected:
   // summed funs
   c::vec<shFun>      funs;
@@ -106,9 +113,8 @@ protected:
   c::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index
   c::vec<Fun const*> fun4parIdx;
-  // the starting index of pars of a summed fun, given the aggregate
-  // par index
-  c::vec<sz_t>    firstParIdx4parIdx;
+  // the starting index of pars of a summed fun, given the aggregate par index
+  c::vec<sz_t> firstParIdx4parIdx;
 };
 
 //------------------------------------------------------------------------------

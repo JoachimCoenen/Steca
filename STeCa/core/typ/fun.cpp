@@ -138,10 +138,6 @@ real SumFuns::dy(real x, sz_t i, real const* parVals) const {
 
 /*
 
-namespace json_fun_key {
-str const
-  SUM("sum");
-}
 
 namespace typ {
 //------------------------------------------------------------------------------

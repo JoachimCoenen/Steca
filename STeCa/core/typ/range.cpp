@@ -282,6 +282,26 @@ Range::ref Range::operator=(rc that) {
 
 //------------------------------------------------------------------------------
 
+bool Ranges::operator==(rc that) const {
+  if (empty())
+    return that.empty();
+  if (that.empty())
+    return empty();
+
+  if (size() != that.size())
+    return false;
+
+  for_i (size())
+    if (at(i) != that.at(i))
+      return false;
+
+  return true;
+}
+
+bool Ranges::operator!=(rc that) const {
+  return !operator==(that);
+}
+
 Ranges::Ranges() {}
 
 Ranges::Ranges(rval that) : rs(std::move(that.rs)) {}

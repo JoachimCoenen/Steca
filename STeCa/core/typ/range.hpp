@@ -65,7 +65,7 @@ _cpp_struct_end
 
 #define DATA_NAME Ranges
 
-_struct
+_struct EQ_NE
   Ranges();
   Ranges(rval);
 

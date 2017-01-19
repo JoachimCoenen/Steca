@@ -47,7 +47,7 @@ private:
 
 public:
   void add(strc key, c::give_me<someMaker const> m) {
-//  TODO  makers[key] = scm(m);
+    makers[key] = m;
   }
 
   c::own<T> make(strc key) const may_exc {

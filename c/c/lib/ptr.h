@@ -77,21 +77,7 @@ private:
   just_ptr<T>& operator-=(sz_t) = delete;
 };
 
-// the name 'own_ptr' is only a hint, not enforced
-// may be null
-template <typename T>
-struct own_ptr : c_ptr {
-  own_ptr()    : c_ptr(nullptr) {}
-  own_ptr(T const*const p) : c_ptr(p) {}
-
-  T* ptr()        const { return static_cast<T*>(mut(p)); }
-  operator T*()   const { return ptr(); }
-  T* operator->() const { return ptr(); }
-
-  void set(T const*const p_)  { mut(p) = mut(p_); }
-};
-
-// the name 'own_ptr' is only a hint, not enforced
+// the name 'own' is only a hint, not enforced
 template <typename T>
 struct own : just_ptr<T> {
   static own from(T* p) {
@@ -114,6 +100,25 @@ protected:
   own(T* p) : just_ptr<T>(p) {}
 };
 
+// the name 'own_ptr' is only a hint, not enforced
+// may be null
+template <typename T>
+struct own_ptr : c_ptr {
+  own_ptr()    : c_ptr(nullptr) {}
+  own_ptr(T const*const p) : c_ptr(p) {}
+
+  T* ptr()        const { return static_cast<T*>(mut(p)); }
+  operator T*()   const { return ptr(); }
+  T* operator->() const { return ptr(); }
+
+  void set(T const*const p_)  { mut(p) = mut(p_); }
+
+  own<T> justOwn() const {
+    EXPECT(p)
+    return own<T>::from(*this);
+  }
+};
+
 // the name 'give_me' is only a hint, not enforced
 template <typename T>
 struct give_me : own<T> {
@@ -123,17 +128,25 @@ struct give_me : own<T> {
 // scoped
 template <typename T>
 struct scoped : c_ptr {
-  scoped(T* p)          : c_ptr(p) {}
+  scoped(T* p = nullptr): c_ptr(p) {}
   scoped(just_ptr<T> p) : c_ptr(p) {}
   scoped(own_ptr<T> p)  : c_ptr(p) {}
   scoped(own<T> p)      : c_ptr(p) {}
+  scoped(scoped&& that) : c_ptr(that.take()) {}
   scoped(scoped const&) = delete;
- ~scoped() {
+
+  ~scoped() {
     reset(nullptr);
   }
 
   scoped& operator=(scoped<T>&& that) {
     reset(that.take());
+    return *this;
+  }
+
+  scoped& operator=(own<T>&& that) {
+    reset(that.take());
+    return *this;
   }
 
   void reset(T* p_) {
@@ -155,7 +168,8 @@ struct scoped : c_ptr {
 };
 
 // a handy way to make a pointer self-destructing
-#define scope(p) c::scoped<decltype(p)>(p)
+template <typename T> scoped<T> scope(T* p)        { return c::scoped<T>(p); }
+template <typename T> scoped<T> scope(c::own<T> p) { return scope(p);        }
 
 // shared - the main way to handle large immutable data
 struct _shared_base_ : c_ptr {

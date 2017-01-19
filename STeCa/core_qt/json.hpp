@@ -37,8 +37,6 @@ namespace core {
 //------------------------------------------------------------------------------
 
 struct JsonArr;
-struct Fun;
-struct Par;
 
 sub_struct_reimpl (JsonObj, QJsonObject)
   using pint  = c::pint;
@@ -47,6 +45,7 @@ sub_struct_reimpl (JsonObj, QJsonObject)
   JsonObj();
   JsonObj(QJsonObject const&);
 
+  // plain types
   JsonObj& saveObj(qstrc key, JsonObj const&);
   JsonObj  loadObj(qstrc key, bool defEmpty=false) const may_exc;
 
@@ -81,20 +80,18 @@ sub_struct_reimpl (JsonObj, QJsonObject)
   qstr     loadStr(qstrc key)               const may_exc;
   qstr     loadStr(qstrc key, qstrc def)    const may_exc;
 
-  JsonObj& saveRange(qstrc key, Range::rc);
-  Range    loadRange(qstrc key)             const may_exc;
-
+  // more custom types
   JsonObj& saveIJ(qstrc key, IJ::rc);
   IJ       loadIJ(qstrc key)                const may_exc;
 
   JsonObj& saveXY(qstrc key, XY::rc);
   XY       loadXY(qstrc key)                const may_exc;
 
-  JsonObj& savePar(qstrc key, Fun::Par::rc);
-  Fun::Par loadPar(qstrc key)               const may_exc;
+  JsonObj& saveRange(qstrc key, Range::rc);
+  Range    loadRange(qstrc key)             const may_exc;
 
-  JsonObj& saveFun(qstrc key, Fun::rc);
-  c::own<Fun> loadFun(qstrc key)            const may_exc;
+  JsonObj& saveRanges(qstrc key, Ranges::rc);
+  Ranges   loadRanges(qstrc key)            const may_exc;
 
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
@@ -117,6 +114,7 @@ sub_struct_reimpl (JsonArr, QJsonArray)
 
   uint  count() const;
   JsonObj objAt(uint) const;
+
 sub_struct_reimpl_end
 
 //------------------------------------------------------------------------------
