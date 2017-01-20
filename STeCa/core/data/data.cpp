@@ -21,22 +21,58 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-Set::Set() : idx(0) {
+Meta::Meta(Dict::sh dict_, float tth_, float omg_, float chi_, float phi_)
+: dict(dict_), vals(), tth(tth_), omg(omg_), chi(chi_), phi(phi_) {
+  mut(vals).reserve(dict->size());
+}
+
+uint Meta::Dict::size() const {
+  return uint(base::size());
+}
+
+uint Meta::Dict::add(strc key) {
+  return base::add(key, size());
+}
+
+uint Meta::Dict::idx(strc key) const {
+  return base::at(key);
+}
+
+TEST("dict",
+  Meta::Dict dict;
+  CHECK_EQ(0, dict.size());
+
+
+  CHECK_EQ(0, dict.add("0"));
+  CHECK_EQ(1, dict.add("1"));
+  CHECK_EQ(0, dict.add("0"));
+  CHECK_EQ(2, dict.add("2"));
+
+  CHECK_EQ(3, dict.size());
+
+  CHECK_THROWS_AS(dict.idx("3"), c::exc&);
+)
+
+//------------------------------------------------------------------------------
+
+Set::Set(Meta::rc meta_) : idx(0), meta(meta_) {
 }
 
 //------------------------------------------------------------------------------
 
 File::File() : idx(0), sets() {
-  TR("+F" << this)
 }
 
 File::~File() {
-  TR("-F" << this)
+}
+
+void File::addSet(Set::sh set) {
+  mut(sets).push(set);
 }
 
 //------------------------------------------------------------------------------
 
-Files::Files() : files() {
+Files::Files() : files(), dict(new Meta::Dict) {
 }
 
 void Files::addFile(c::give_me<File> file) {
@@ -72,6 +108,10 @@ TEST("data",
   fs.addFile(c::give_me<File>::from(f2));
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
+
+  Meta meta(fs.dict, 0, 0, 0, 0);
+
+  f1->addSet(new Set(meta));
 
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);

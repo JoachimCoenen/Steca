@@ -13,4 +13,5 @@
 #include "cpp_debug"
 #include "test/test.h"
 
+#undef NAN
 // eof

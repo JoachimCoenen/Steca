@@ -67,6 +67,17 @@ TEST("str",
   CHECK_EQ(s3, s7);
 )
 
+bool str::empty() const {
+  return !*p;
+}
+
+
+bool str::eq(pcstr p_) const {
+  if (!p_)
+    return empty();
+  return 0 == strcmp(p, p_);
+}
+
 str::rc str::set(pcstr p) {
   return set(str(p));
 }

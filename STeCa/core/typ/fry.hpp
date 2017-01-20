@@ -22,7 +22,7 @@
 #include <c/c/lib/ptr.h>
 #include <c/c/lib/str.h>
 #include <c/cpp/exc.hpp>
-#include <map>
+#include <c/cpp/map.hpp>
 
 namespace core {
 //-----------------------------------------------------------------------------
@@ -43,7 +43,7 @@ struct fry { _typedefs(fry)
 
 private:
   typedef c::scoped<someMaker const> scm;
-  std::map<str, scm> makers;
+  c::map<str, scm> makers;
 
 public:
   void add(strc key, c::give_me<someMaker const> m) {

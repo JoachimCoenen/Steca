@@ -13,6 +13,7 @@ _struct_sub_retempl(std::vector<T>)
   using base::base;
   using base::begin;
   using base::end;
+  using base::reserve;
   using base::size;
   using base::erase;
   using base::clear;

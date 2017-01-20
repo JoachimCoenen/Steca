@@ -26,7 +26,7 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-void loadCaress(strc filePath) may_exc {
+void loadCaress(data::Files& files, strc filePath) may_exc {
   using c::str;
 
   auto err = [](pcstr p1, pcstr p2) {
@@ -38,30 +38,6 @@ void loadCaress(strc filePath) may_exc {
     err("Cannot open ", filePath);
 
   modname_t element, node;
-
-  // p has to start with c, then padded by ' ' to length=8
-  auto cmp8 = [](pcstr p, pcstr c) {
-    uint i=0;
-    while (*c) {
-      if (*p++ != *c++)
-        return false;
-      ++i;
-    }
-
-    while (i++ < 8)
-      if (' ' != *p++)
-        return false;
-
-    return true;
-  };
-
-  auto el = [&](pcstr c) {
-    return cmp8(element, c);
-  };
-
-  auto en = [&](pcstr c) {
-    return cmp8(node, c);
-  };
 
   int32 e_number, // element number
         e_type,   // element type
@@ -113,51 +89,61 @@ void loadCaress(strc filePath) may_exc {
 
     WT(element << node << e_number << e_type << d_type << d_number)
 
-    if (el("MM1")) {
+    str el(str(8, element).trim()); WT(el)
+    str en(str(8, node).trim());    WT(en)
+
+    if (el.eq("MM1")) {
       s_masterCounter.set(node);
       continue;
     }
 
-    if (el("COM")) {
+    if (el.eq("COM")) {
       s_comment.set(gds());
       continue;
     }
 
-    if (el("DATE ")) {
+    if (el.eq("DATE")) {
       s_date.set(gds());
       continue;
     }
 
-    if (el("READ")) {
-      if (en("TTHS")) {
-        checkTable(); tthAxis = gdf();
+    if (el.eq("READ")) {
+      if (en.empty())
+        err("empty node for: ", el);
+
+      float f = gdf();
+
+//      files.dict->add(en);
+
+      if (en.eq("TTHS")) {
+        checkTable(); tthAxis = f;
       } else
-      if (en("OMGS")) {
-        checkTable(); omgAxis = gdf();
+      if (en.eq("OMGS")) {
+        checkTable(); omgAxis = f;
       } else
-      if (en("CHIS")) {
-        checkTable(); chiAxis = gdf();
+      if (en.eq("CHIS")) {
+        checkTable(); chiAxis = f;
       } else
-      if (en("PHIS")) {
-        checkTable(); phiAxis = gdf();
+      if (en.eq("PHIS")) {
+        checkTable(); phiAxis = f;
       } else
-      if (en("TTHR")) {
-        checkRobot(); tthAxis = gdf();
+      if (en.eq("TTHR")) {
+        checkRobot(); tthAxis = f;
       } else
-      if (en("OMGR")) {
-        checkRobot(); omgAxis = gdf();
+      if (en.eq("OMGR")) {
+        checkRobot(); omgAxis = f;
       } else
-      if (en("CHIR")) {
-        checkRobot(); chiAxis = gdf();
+      if (en.eq("CHIR")) {
+        checkRobot(); chiAxis = f;
       } else
-      if (en("PHIR")) {
-        checkRobot(); phiAxis = gdf();
+      if (en.eq("PHIR")) {
+        checkRobot(); phiAxis = f;
       };
       continue;
     }
 
-    if (el("SETVALUE")) {
-      workAfterStep = en("STEP");
+    if (el.eq("SETVALUE")) {
+      workAfterStep = en.eq("STEP");
       // new dataset
       if (workAfterStep) {
         if (!collectData) {
@@ -505,6 +491,7 @@ void loadCaress(strc filePath) may_exc {
 //        if (get_data_unit(&yAxis) != 0)
 //          yAxis = 0;
 //      if (!strncmp(node, "ZT    ", 6))
+
 //        if (get_data_unit(&zAxis) != 0)
 //          zAxis = 0;
 //      if (!strncmp(node, "ZR    ", 6))

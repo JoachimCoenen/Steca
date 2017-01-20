@@ -151,9 +151,9 @@
 #define _struct_sub_pre_pre(pre,pre_s,s)  \
   namespace DATA_NS { pre struct DATA_NAME : pre_s s { _cpp_struct_typedefs using base = s;
 
-#define _struct_sub(s)         _struct_sub_pre_pre(,,s)
-#define _struct_sub_retempl(s) _struct_sub_pre_pre(template <typename T>,protected,s)
-#define _struct_sub_end        };}
+#define _struct_sub(s)          _struct_sub_pre_pre(,,s)
+#define _struct_sub_retempl(s)  _struct_sub_pre_pre(template <typename T>,protected,s)
+#define _struct_sub_end  };}
 
 #define sub_struct(s, b) struct s : b { _typedefs(s) using base = b;
 #define sub_struct_end };

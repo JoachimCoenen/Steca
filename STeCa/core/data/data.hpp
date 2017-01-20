@@ -19,21 +19,44 @@
 #define CORE_DATA_HPP
 
 #include <c/c/lib/ptr.h>
+#include <c/c/lib/str.h>
 #include <c/cpp/vec.hpp>
-
+#include <c/cpp/map.hpp>
+#include <c/cpp/exc.hpp>
 
 namespace core {
+#define DATA_NS   data
 //------------------------------------------------------------------------------
 
 #define _sh_struct _struct typedef c::shared<typ> sh;
 
-#define DATA_NS   data
+#define DATA_NAME Meta
+
+_sh_struct                      // metadata
+  struct Dict : private c::map<c::str, uint> {
+    typedef c::shared<Dict> sh; using base = c::map<c::str, uint>;
+
+    uint size()    const;
+    uint add(strc);
+    uint idx(strc) const may_exc;
+  };
+
+  _atr(Dict::sh,      dict)
+  _atr(c::vec<float>, vals)
+  _atr(float, tth) _atr(float, omg) _atr(float, chi) _atr(float, phi)
+
+  _con((Dict::sh, float, float, float, float))
+_struct_end
+
+#undef  DATA_NAME
+
 #define DATA_NAME Set
 
 _sh_struct                      // one read dataset
   _atr(uint, idx)               // this order in File, 1..; 0 = not
+  _atr(Meta, meta)
 
-  _con(())
+  _con((Meta::rc))
 _struct_end
 
 #undef  DATA_NAME
@@ -44,6 +67,8 @@ _sh_struct                      // one file
   _atr(c::vec<Set::sh>, sets)
 
   _con(())
+
+  _mth_mut(void, addSet, (Set::sh))
 _des
 _struct_end
 
@@ -52,6 +77,7 @@ _struct_end
 
 _sh_struct                      // the whole file group
   _atr(c::vec<File::sh>, files)
+  _atr(Meta::Dict::sh,   dict)
 
   _con(())
 
@@ -59,6 +85,9 @@ _sh_struct                      // the whole file group
   _mth_mut(void, remFile, (uint))
 _struct_end
 
+#undef  DATA_NAME
+
 //------------------------------------------------------------------------------
+#undef DATA_NS
 }
 #endif

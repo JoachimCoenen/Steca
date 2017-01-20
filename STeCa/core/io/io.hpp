@@ -18,13 +18,12 @@
 #ifndef CORE_IO_HPP
 #define CORE_IO_HPP
 
-#include <c/c/lib/str.h>
-#include <c/cpp/exc.hpp>
+#include <core/data/data.hpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-void loadCaress(strc) may_exc;
+void loadCaress(data::Files&, strc filePath) may_exc;
 
 //------------------------------------------------------------------------------
 }}

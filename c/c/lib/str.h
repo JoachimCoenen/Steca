@@ -25,6 +25,9 @@ _cpp_struct COMPARABLE COMP_OPS
   _con((rval))
   _des
 
+  _mth(bool, empty, ())
+  _mth(bool, eq,    (pcstr))
+
   _mth_mut(rc, set, (pcstr))
   _mth_mut(rc, set, (rval))
 
