@@ -17,15 +17,166 @@
 
 #include "io.hpp"
 #include <c/c/cpp>
-#include <fstream>
+#include <c/c/lib/num.h>
+#include <c/c/lib/str.h>
+#include <c/c/lib/mem.h>
+#include "Caress/raw.i"
+#include <string.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
 void loadCaress(strc filePath) may_exc {
-  std::fstream is(filePath);
-  if (!is.good())
-    c::err("");
+  using c::str;
+
+  auto err = [](pcstr p1, pcstr p2) {
+    c::err(str::cat(p1, p2));
+  };
+
+  struct _close_data_file { ~_close_data_file() { close_data_file(); } } _auto_close;
+  if (0 /*OK*/ != open_data_file(filePath,nullptr))
+    err("Cannot open ", filePath);
+
+  modname_t element, node;
+
+  // p has to start with c, then padded by ' ' to length=8
+  auto cmp8 = [](pcstr p, pcstr c) {
+    uint i=0;
+    while (*c) {
+      if (*p++ != *c++)
+        return false;
+      ++i;
+    }
+
+    while (i++ < 8)
+      if (' ' != *p++)
+        return false;
+
+    return true;
+  };
+
+  auto el = [&](pcstr c) {
+    return cmp8(element, c);
+  };
+
+  auto en = [&](pcstr c) {
+    return cmp8(node, c);
+  };
+
+  int32 e_number, // element number
+        e_type,   // element type
+        d_type,   // data type
+        d_number; // data length (?)
+
+  auto gds = [&]() -> str {
+    if (d_number < 1)
+      err("bad d_number: ", element);
+    c::mem m(c::to_u(d_number) + 1);
+
+    if (0 != get_data_unit(mut(m.p)))
+      err("bad: ", "string data");
+
+    return str(pcstr(m.p));
+  };
+
+  auto gdf = [&]() -> float {
+    float f;
+    if (0 != get_data_unit(&f))
+      err("bad: ", "float data");
+    return f;
+  };
+
+  bool newObject = false, workAfterStep = false, collectData = false;
+  str s_masterCounter, s_date, s_comment;
+
+  float tthAxis = 0, omgAxis = 0, chiAxis = 0, phiAxis = 0;
+  bool  isRobot = false, isTable = false;
+
+  auto checkRobot = [&]() {
+    if (isTable)
+      err("bad: ", "already have table");
+    isRobot = true;
+  };
+
+  auto checkTable = [&]() {
+    if (isRobot)
+      err("bad: ", "already have robot");
+    isTable = true;
+  };
+
+  for (;;) {
+    auto resNextUnit = next_data_unit(&e_number, &e_type, element, node, &d_type, &d_number);
+    if (2 /*END_OF_FILE_DETECTED*/ == resNextUnit)
+      break;
+    if (0 /*OK*/ != resNextUnit)
+      err("Error in ", filePath);
+
+    WT(element << node << e_number << e_type << d_type << d_number)
+
+    if (el("MM1")) {
+      s_masterCounter.set(node);
+      continue;
+    }
+
+    if (el("COM")) {
+      s_comment.set(gds());
+      continue;
+    }
+
+    if (el("DATE ")) {
+      s_date.set(gds());
+      continue;
+    }
+
+    if (el("READ")) {
+      if (en("TTHS")) {
+        checkTable(); tthAxis = gdf();
+      } else
+      if (en("OMGS")) {
+        checkTable(); omgAxis = gdf();
+      } else
+      if (en("CHIS")) {
+        checkTable(); chiAxis = gdf();
+      } else
+      if (en("PHIS")) {
+        checkTable(); phiAxis = gdf();
+      } else
+      if (en("TTHR")) {
+        checkRobot(); tthAxis = gdf();
+      } else
+      if (en("OMGR")) {
+        checkRobot(); omgAxis = gdf();
+      } else
+      if (en("CHIR")) {
+        checkRobot(); chiAxis = gdf();
+      } else
+      if (en("PHIR")) {
+        checkRobot(); phiAxis = gdf();
+      };
+      continue;
+    }
+
+    if (el("SETVALUE")) {
+      workAfterStep = en("STEP");
+      // new dataset
+      if (workAfterStep) {
+        if (!collectData) {
+          collectData = true;
+        } else {
+          newObject = true;
+        }
+      } else {
+        if (collectData) {
+          collectData = false;
+          newObject = true;
+        }
+      }
+    }
+  }
+
+  //  data::shp_File file(new data::File(filePath));
+  //  return file;
+  //}
 }
 
 //------------------------------------------------------------------------------
@@ -33,52 +184,10 @@ void loadCaress(strc filePath) may_exc {
 // eof
 
 
-
-//data::shp_File loadCaress2(qstrc filePath) may_exc {
-
-//  RUNTIME_CHECK(0 == open_data_file(filePath.toLocal8Bit().data(), nullptr),
-//                "Cannot open file " + filePath);
-
-//  struct CloseFile {
-//    ~CloseFile() { close_data_file(); }
-//  } __;
-
-//  for (;;) {
-//    int32 e_number, // element number
-//          e_type,   // element type
-//          d_type,   // data type
-//          number;
-//    modname_t element, node;
-
-//    auto resNextUnit = next_data_unit(&e_number, &e_type, element, node, &d_type, &number);
-//    if (2 /*END_OF_FILE_DETECTED*/ == resNextUnit)
-//      break;
-
-//    RUNTIME_CHECK(0 /*OK*/ == resNextUnit, "Error processing " + filePath);
-
-//    WT(str('[')+element+']' << str('[')+node+']' << e_number << e_type << d_type << number)
-//  }
-
-//  data::shp_File file(new data::File(filePath));
-//  return file;
-//}
-
-//data::shp_File loadCaress(qstrc filePath) may_exc {
-//  data::shp_File file(new data::File(filePath));
-
-//  RUNTIME_CHECK(0 == open_data_file(filePath.toLocal8Bit().data(),nullptr),
-//                "Cannot open data file " + filePath);
-
-//  struct CloseFile { // TODO remove, replace with QFile etc.
-//    ~CloseFile() {
-//      close_data_file();
-//    }
-//  } _;
-
-//  bool newObject = false;
-//  bool workAfterStep = false;
-//  bool collectData = false;
-//  std::string s_masterCounter;
+      //  bool newObject = false;
+      //  bool workAfterStep = false;
+      //  bool collectData = false;
+      //  std::string s_masterCounter;
 //  bool isRobot = false, isTable = false;
 
 //  float tthAxis = 0, omgAxis = 0, phiAxis = 0, chiAxis = 0, tths = 0, omgs = 0, chis = 0,
@@ -248,31 +357,31 @@ void loadCaress(strc filePath) may_exc {
 //      }
 //    }
 
-//    // Read Master Counter
-//    if (!strncmp(element, "MM1 ", 4)) {
-//      s_masterCounter = node; // Master Counter steht in Node
-//    }
-//    if (!strncmp(element, "COM ", 4)) {
-//      c_comment = new char[d_number + 1];
-//      if (get_data_unit(c_comment) != 0)
-//        s_comment = "no comment";
-//      else {
-//        c_comment[d_number] = '\0'; // terminiere Char-Array
-//        s_comment = c_comment;
-//      }
-//      delete[] c_comment;
-//    }
-//    if (!strncmp(element, "DATE ", 5)) {
-//      char* c_date = NULL;
-//      c_date = new char[d_number + 1];
-//      if (get_data_unit(c_date) != 0)
-//        s_date = "unknown";
-//      else {
-//        c_date[d_number] = '\0'; // terminiere Char-Array
-//        s_date = c_date;
-//      }
-//      delete[] c_date;
-//    }
+        //    // Read Master Counter
+        //    if (!strncmp(element, "MM1 ", 4)) {
+        //      s_masterCounter = node; // Master Counter steht in Node
+        //    }
+        //    if (!strncmp(element, "COM ", 4)) {
+        //      c_comment = new char[d_number + 1];
+        //      if (get_data_unit(c_comment) != 0)
+        //        s_comment = "no comment";
+        //      else {
+        //        c_comment[d_number] = '\0'; // terminiere Char-Array
+        //        s_comment = c_comment;
+        //      }
+        //      delete[] c_comment;
+        //    }
+        //    if (!strncmp(element, "DATE ", 5)) {
+        //      char* c_date = NULL;
+        //      c_date = new char[d_number + 1];
+        //      if (get_data_unit(c_date) != 0)
+        //        s_date = "unknown";
+        //      else {
+        //        c_date[d_number] = '\0'; // terminiere Char-Array
+        //        s_date = c_date;
+        //      }
+        //      delete[] c_date;
+        //    }
 //    if (!strncmp(element, "READ  ", 6)) {
 //      if (!strncmp(node, "TTHS  ", 6)) {
 //        if (get_data_unit(&tths) != 0)

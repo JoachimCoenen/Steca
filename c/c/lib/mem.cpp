@@ -10,7 +10,7 @@ namespace c {
 //------------------------------------------------------------------------------
 
 mem::mem(sz_t sz)
-: c_base(sz, unsafe::alloc(sz)) {}
+: c_base(sz, unsafe::calloc(1,sz)) {}
 
 mem::mem(sz_t sz, pcvoid p)
 : c_base(sz, unsafe::memcpy(sz, p)) {

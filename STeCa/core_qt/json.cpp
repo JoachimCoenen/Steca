@@ -125,8 +125,8 @@ JsonObj::JsonObj() {}
 
 JsonObj::JsonObj(QJsonObject const& obj) : base(obj) {}
 
-#define ERR(msg)     c_qt::err(msg);
-#define KEY_ERR(msg) ERR(key + ": " + msg)
+#define ERR(qmsg)     c::err(toStr(qmsg));
+#define KEY_ERR(msg)  ERR(key + ": " + msg)
 
 #define LOAD_DEF(type)      value(key).isUndefined() ? def : load##type(key)
 #define RET_LOAD_DEF(type)  return LOAD_DEF(type);

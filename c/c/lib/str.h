@@ -18,11 +18,15 @@ _c_data
 _c_data_end
 
 _cpp_struct COMPARABLE COMP_OPS
+  _con(())
   _con((pcstr))
   _con((sz_t maxSz, pcstr))
   _con((rc))
   _con((rval))
   _des
+
+  _mth_mut(rc, set, (pcstr))
+  _mth_mut(rc, set, (rval))
 
   _op_inline (pcstr(), p)
 

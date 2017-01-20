@@ -15,17 +15,50 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_IO_HPP
-#define CORE_IO_HPP
+#ifndef CORE_DATA_HPP
+#define CORE_DATA_HPP
 
-#include <c/c/lib/str.h>
-#include <c/cpp/exc.hpp>
+#include <c/c/lib/ptr.h>
+#include <c/cpp/vec.hpp>
 
-namespace core { namespace io {
+
+namespace core {
 //------------------------------------------------------------------------------
 
-void loadCaress(strc) may_exc;
+#define _sh_struct _struct typedef c::shared<typ> sh;
+
+#define DATA_NS   data
+#define DATA_NAME Set
+
+_sh_struct                      // one read dataset
+  _atr(uint, idx)               // this order in File, 1..; 0 = not
+
+  _con(())
+_struct_end
+
+#undef  DATA_NAME
+#define DATA_NAME File
+
+_sh_struct                      // one file
+  _atr(uint, idx)               // this order in Files, 1..; 0 = not
+  _atr(c::vec<Set::sh>, sets)
+
+  _con(())
+_des
+_struct_end
+
+#undef  DATA_NAME
+#define DATA_NAME Files
+
+_sh_struct                      // the whole file group
+  _atr(c::vec<File::sh>, files)
+
+  _con(())
+
+  _mth_mut(void, addFile, (c::give_me<File>))
+  _mth_mut(void, remFile, (uint))
+_struct_end
 
 //------------------------------------------------------------------------------
-}}
+}
 #endif

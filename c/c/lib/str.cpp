@@ -20,6 +20,8 @@ COMPARABLE_IMPL(str) {
 
 COMP_OPS_IMPL(str)
 
+str::str() : str(nullptr) {}
+
 str::str(pcstr p_) : c_base(p_ ? strlen(p_) : 0, nullptr) {
   mut(p) = static_cast<pstr>(::unsafe::memcpy(sz + 1, p_ ? p_ : ""));
 }
@@ -35,7 +37,8 @@ str::str(sz_t maxSz, pcstr p_) : c_base(0, nullptr) {
   }
 }
 
-str::str(rc that) : str(pcstr(that)) {}
+str::str(rc that)
+: c_base(that.sz, static_cast<pstr>(::unsafe::memcpy(that.sz + 1, that.p))) {}
 
 str::str(rval that) : c_base(that.sz, nullptr) {
   mutate::swap(p, that.p);
@@ -63,6 +66,16 @@ TEST("str",
   CHECK_EQ(s3, s5);
   CHECK_EQ(s3, s7);
 )
+
+str::rc str::set(pcstr p) {
+  return set(str(p));
+}
+
+str::rc str::set(rval that) {
+  mutate::swap(sz, that.sz);
+  mutate::swap(p,  that.p);
+  return *this;
+}
 
 str str::trim() const {
   pcstr p1 = p, p2 = p + sz; char c;

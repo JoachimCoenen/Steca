@@ -177,13 +177,11 @@ protected:
   _shared_base_(pcvoid);
   _shared_base_(_shared_base_ const&);
 
-  _shared_base_& operator=(_shared_base_ const&);
-
   pcvoid p() const;
 
 protected:
   void inc();
-  bool dec(); // tgrue when reaches zero
+  bool dec(); // true when reaches zero
   void cleanup();
 };
 
@@ -191,21 +189,31 @@ template <typename T>
 struct shared final : protected _shared_base_ {
   shared(T const* p = nullptr) : _shared_base_(p) {}
   shared(shared const& that)   : _shared_base_(that) {}
- ~shared() {
-    if (dec()) {
-      delete static_cast<T*>(mut(p()));
-      cleanup();
-    }
+ ~shared() { _drop(); }
+
+  void drop() {
+    *this = shared();
   }
 
   shared& operator=(shared const& that) {
-    return _shared_base_::operator=(that);
+    if (this != &that) {
+      _drop(); mut(c_ptr::p) = mut(c_ptr(that).p); inc();
+    }
+    return *this;
   }
 
   T const* ptr()        const { return static_cast<T const*>(p()); }
   T*       mut_ptr()    const { return mut(ptr()); }
   operator T const*()   const { return ptr(); }
   T const* operator->() const { return ptr(); }
+
+private:
+  void _drop() {
+     if (dec()) {
+       delete static_cast<T*>(mut(p()));
+       cleanup();
+     }
+   }
 };
 
 }

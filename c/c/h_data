@@ -111,9 +111,9 @@
 #define _con(...)
 #define _des
 #define _mth(typ, mth, args)
-#define _mth_inline(typ, mth, args, code)
+#define _mth_inline(typ, mth, args, ...)
 #define _mth_mut(typ, mth, args)
-#define _mth_mut_inline(typ, mth, args, code)
+#define _mth_mut_inline(typ, mth, args, ...)
 #define _op(op)
 #define _op_inline(op, code)
 #define _op_mut(op)
