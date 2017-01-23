@@ -21,8 +21,8 @@ add_custom_target (.old SOURCES ${old_files})
 #file (GLOB_RECURSE sh_files *.sh)
 #add_custom_target (.sh SOURCES ${sh_files})
 
-#set (txt_files AUTHORS CHANGELOG COPYING README.md VERSION manifest)
-#add_custom_target (.txt SOURCES ${txt_files})
+set (txt_files AUTHORS CHANGELOG COPYING README.md VERSION manifest)
+add_custom_target (.txt SOURCES ${txt_files})
 
 include_directories (${CMAKE_HOME_DIRECTORY})
 

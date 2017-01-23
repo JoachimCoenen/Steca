@@ -38,7 +38,7 @@ _sh_struct                      // metadata
 
     uint size()    const;
     uint add(strc);
-    uint idx(strc) const may_exc;
+    uint at(strc)  const may_exc;
   };
 
   _atr(Dict::sh,      dict)

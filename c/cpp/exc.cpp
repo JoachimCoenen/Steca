@@ -17,6 +17,10 @@ pcstr exc::what() const noexcept {
   throw exc(msg);
 }
 
+[[noreturn]] void err(pcstr msg, pcstr s) will_exc {
+  throw exc(str::cat(msg, s));
+}
+
 TEST("exc",
   CHECK_THROWS_AS(err(""), exc&);
   bool caught = false;

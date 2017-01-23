@@ -4,7 +4,6 @@
 #include "mem.h"
 #include "num.h"
 #include "../cpp"
-#include "unsafe.h"
 #include <string.h>
 #include <cstdarg>
 #include <cstdio>
@@ -23,22 +22,22 @@ COMP_OPS_IMPL(str)
 str::str() : str(nullptr) {}
 
 str::str(pcstr p_) : c_base(p_ ? strlen(p_) : 0, nullptr) {
-  mut(p) = static_cast<pstr>(::unsafe::memcpy(sz + 1, p_ ? p_ : ""));
+  mut(p) = static_cast<pstr>(unsafe::memcpy(sz + 1, p_ ? p_ : ""));
 }
 
 str::str(sz_t maxSz, pcstr p_) : c_base(0, nullptr) {
   if (p_) {
     mut(sz) = c::min(maxSz, strlen(p_));
-    mut(p) = static_cast<pstr>(::unsafe::memcpy(sz + 1, p_));
+    mut(p) = static_cast<pstr>(unsafe::memcpy(sz + 1, p_));
     mut(*(p+sz)) = '\0';
   } else {
     EXPECT(0 == sz)
-    mut(p) = static_cast<pstr>(::unsafe::memcpy(1, ""));
+    mut(p) = static_cast<pstr>(unsafe::memcpy(1, ""));
   }
 }
 
 str::str(rc that)
-: c_base(that.sz, static_cast<pstr>(::unsafe::memcpy(that.sz + 1, that.p))) {}
+: c_base(that.sz, static_cast<pstr>(unsafe::memcpy(that.sz + 1, that.p))) {}
 
 str::str(rval that) : c_base(that.sz, nullptr) {
   mutate::swap(p, that.p);
@@ -101,7 +100,29 @@ TEST("str::trim",
   CHECK_EQ(str("abc"), str(" \nabc \t").trim());
 )
 
-str str::format(pcstr f, ...) {
+str str::cat(pcstr p1, pcstr p2) {
+  if (!p1 || !*p1)
+    return str(p2);
+  if (!p2 || !*p2)
+    return str(p1);
+
+  return unsafe::str_cat(p1, p2, 0);
+}
+
+TEST("str::cat",
+  CHECK_EQ(str("comes back"), str::cat("comes ", "back"));
+)
+
+str const str::nul = "";
+
+TEST("std::nul",
+  CHECK_EQ(str(""), str::nul);
+)
+
+namespace unsafe {
+//------------------------------------------------------------------------------
+
+str str_frm(pcstr f, ...) {
   sz_t sz = 96;  // initial size
 
   for(;;) {
@@ -128,36 +149,45 @@ str str::format(pcstr f, ...) {
 }
 
 TEST("str::format",
-  CHECK_EQ(str("abc 2 3 -4"), str::format("abc %d %d %d", 2, 3, -4));
-  CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str::format("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
-  CHECK_EQ(str(""), str::format("abc %-", 5)); // encoding error
+  CHECK_EQ(str("abc 2 3 -4"), str_frm("abc %d %d %d", 2, 3, -4));
+  CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str_frm("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
+  CHECK_EQ(str(""), str_frm("abc %-", 5)); // encoding error
 )
 
-str str::cat(pcstr p1, pcstr p2) {
-  if (!p1)
-    return str(p2);
-  if (!p2)
-    return str(p1);
+str str_cat(pcstr p, ...) {
+  EXPECT(p)
 
-  sz_t sz1 = strlen(p1), sz2 = strlen(p2), sz = sz1 + sz2 + 1;
-  mem m(sz);
+  va_list marker;
+  va_start(marker, p); pcstr pp = p;
 
-  pstr p = static_cast<pstr>(mut(m.p));
-  strcpy(p,       p1);
-  strcpy(p + sz1, p2);
+  sz_t sz = 0;
+  for (;;) {
+    sz += strlen(pp);
+    pp = va_arg(marker, pcstr);
+    if (!pp) break;
+  }
 
-  return str(p);
+  va_end(marker);
+
+  mem m(sz + 1);
+  pstr s = static_cast<pstr>(mut(m.p)), sp = s;
+
+  va_start(marker, p); pp = p;
+
+  for (;;) {
+    strcpy(sp, pp);
+    sp += strlen(pp);
+    pp = va_arg(marker, pcstr);
+    if (!pp) break;
+  }
+
+  va_end(marker);
+
+  return str(s);
 }
 
-TEST("str::cat",
-  CHECK_EQ(str("comes back"), str::cat("comes ", "back"));
-)
-
-str const str::nul = "";
-
-TEST("std::nul",
-  CHECK_EQ(str(""), str::nul);
-)
+//------------------------------------------------------------------------------
+}
 
 //------------------------------------------------------------------------------
 }

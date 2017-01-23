@@ -2,7 +2,8 @@
 
 #include "mem.h"
 #include "../cpp"
-#include "unsafe.h"
+#include <memory>
+#include <string.h>
 
 c_mem::c_mem(sz_t sz_, pcvoid p_) : sz(sz_), p(p_) {}
 
@@ -35,6 +36,40 @@ TEST("mem",
   mem m0(0), m1(1), mX(12345678), mc(3, "Hello"), mcc(mc);
   mem mm(mem_move(mem(3, "  ")));
 )
+
+namespace unsafe {
+//------------------------------------------------------------------------------
+
+pvoid alloc(sz_t sz) {
+  return (sz > 0) ? ::malloc(sz) : nullptr; // TODO abrt if null
+}
+
+pvoid calloc(sz_t n, sz_t sz) {
+  return (sz > 0) ? ::calloc(n, sz) : nullptr; // TODO abrt if null
+}
+
+pvoid realloc(pvoid p, sz_t sz) {
+  return ::realloc(p, sz); // TODO abrt if null
+}
+
+void free(pvoid p) {
+  if (p) ::free(p);
+}
+
+pvoid memcpy(sz_t size, pcvoid src) {
+  if (!src) return nullptr;
+  pvoid p = alloc(size);
+  ::memcpy(p, src, size);
+  return p;
+}
+
+TEST("unsafe",
+  free(alloc(0));
+  free(realloc(nullptr, 9));
+)
+
+//------------------------------------------------------------------------------
+}
 
 //------------------------------------------------------------------------------
 }

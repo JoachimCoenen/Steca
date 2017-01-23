@@ -34,13 +34,18 @@ _cpp_struct COMPARABLE COMP_OPS
   _op_inline (pcstr(), p)
 
   _mth(str, trim, ())
-  _fry(str, format, (pcstr, ...))
-  _fry(str, cat,    (pcstr, pcstr))
+  _fry(str, cat,  (pcstr, pcstr))
 
   _cst(str, nul)
 _cpp_struct_end
 
-_cpp_code (typedef c::str::rc strc;)
+_cpp_code(typedef c::str::rc strc;)
+
+_cpp_code(
+namespace c { namespace unsafe {
+str str_frm(pcstr, ...);
+str str_cat(pcstr, ...);
+}})
 
 #undef DATA_NAME
 #undef DATA_NS

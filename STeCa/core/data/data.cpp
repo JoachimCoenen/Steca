@@ -31,17 +31,24 @@ uint Meta::Dict::size() const {
 }
 
 uint Meta::Dict::add(strc key) {
-  return base::add(key, size());
+  try {
+    return base::at(key);
+  } catch (std::exception const&) {
+    return base::add(key, size());
+  }
 }
 
-uint Meta::Dict::idx(strc key) const {
-  return base::at(key);
+uint Meta::Dict::at(strc key) const may_exc {
+  try {
+    return base::at(key);
+  } catch (std::exception const&) {
+    c::err("Dict has no ", key);
+  }
 }
 
 TEST("dict",
   Meta::Dict dict;
   CHECK_EQ(0, dict.size());
-
 
   CHECK_EQ(0, dict.add("0"));
   CHECK_EQ(1, dict.add("1"));
@@ -50,7 +57,7 @@ TEST("dict",
 
   CHECK_EQ(3, dict.size());
 
-  CHECK_THROWS_AS(dict.idx("3"), c::exc&);
+  CHECK_THROWS_AS(dict.at(""), c::exc::rc);
 )
 
 //------------------------------------------------------------------------------

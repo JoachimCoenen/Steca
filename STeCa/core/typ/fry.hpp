@@ -52,7 +52,7 @@ public:
 
   c::own<T> make(strc key) const may_exc {
     someMaker const *m = makers.at(key).ptr();
-    if (!m) c::err(str::cat("no maker ", key));
+    if (!m) c::err("no maker ", key);
     return m->make();
   }
 };

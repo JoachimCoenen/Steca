@@ -17,8 +17,8 @@
 
 #include "arr.hpp"
 #include <c/c/cpp>
+#include <c/c/lib/mem.h>
 #include <c/c/lib/num.h>
-#include <c/c/lib/unsafe.h>
 
 core_sz2::core_sz2() : core_sz2(0, 0) {}
 core_sz2::core_sz2(sz_t i_, sz_t j_) : i(i_), j(j_) {}
@@ -73,16 +73,16 @@ arr2base::arr2base(sz2 sz_, sz_t tsize) : sz(sz_), ts(nullptr) {
     return;
 
   // allocate in smaller blocks (by columns) to avoid memory fragmentation
-  mut(ts) = unsafe::calloc(sz.i, sizeof(void*));
+  mut(ts) = c::unsafe::calloc(sz.i, sizeof(void*));
   for_i (sz.i)
-    static_cast<void**>(mut(ts))[i] = unsafe::calloc(sz.j, tsize);
+    static_cast<void**>(mut(ts))[i] = c::unsafe::calloc(sz.j, tsize);
 }
 
 arr2base::~arr2base() {
   if (ts) {
     for_i (sz.i)
-      unsafe::free(static_cast<void**>(mut(ts))[i]);
-    unsafe::free(static_cast<void*>(mut(ts)));
+      c::unsafe::free(static_cast<void**>(mut(ts))[i]);
+    c::unsafe::free(static_cast<void*>(mut(ts)));
   }
 }
 

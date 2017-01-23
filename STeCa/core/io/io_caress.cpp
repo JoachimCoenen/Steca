@@ -29,10 +29,6 @@ namespace core { namespace io {
 void loadCaress(data::Files& files, strc filePath) may_exc {
   using c::str;
 
-  auto err = [](pcstr p1, pcstr p2) {
-    c::err(str::cat(p1, p2));
-  };
-
   struct _close_data_file { ~_close_data_file() { close_data_file(); } } _auto_close;
   if (0 /*OK*/ != open_data_file(filePath,nullptr))
     err("Cannot open ", filePath);
@@ -46,11 +42,11 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
 
   auto gds = [&]() -> str {
     if (d_number < 1)
-      err("bad d_number: ", element);
+      c::err("bad d_number: ", element);
     c::mem m(c::to_u(d_number) + 1);
 
     if (0 != get_data_unit(mut(m.p)))
-      err("bad: ", "string data");
+      c::err("bad: ", "string data");
 
     return str(pcstr(m.p));
   };
@@ -58,7 +54,7 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
   auto gdf = [&]() -> float {
     float f;
     if (0 != get_data_unit(&f))
-      err("bad: ", "float data");
+      c::err("bad: ", "float data");
     return f;
   };
 
@@ -70,13 +66,13 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
 
   auto checkRobot = [&]() {
     if (isTable)
-      err("bad: ", "already have table");
+      c::err("bad: ", "already have table");
     isRobot = true;
   };
 
   auto checkTable = [&]() {
     if (isRobot)
-      err("bad: ", "already have robot");
+      c::err("bad: ", "already have robot");
     isTable = true;
   };
 
@@ -87,7 +83,7 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
     if (0 /*OK*/ != resNextUnit)
       err("Error in ", filePath);
 
-    WT(element << node << e_number << e_type << d_type << d_number)
+//    WT(element << node << e_number << e_type << d_type << d_number)
 
     str el(str(8, element).trim()); WT(el)
     str en(str(8, node).trim());    WT(en)
@@ -113,7 +109,7 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
 
       float f = gdf();
 
-//      files.dict->add(en);
+      mut(*files.dict).add(en);
 
       if (en.eq("TTHS")) {
         checkTable(); tthAxis = f;

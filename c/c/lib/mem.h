@@ -30,5 +30,16 @@ _cpp_struct_end
 #undef DATA_NAME
 #undef DATA_NS
 
+_cpp_code(
+namespace c { namespace unsafe {
+
+pvoid alloc(sz_t);
+pvoid calloc(sz_t, sz_t);
+pvoid realloc(pvoid, sz_t);
+void  free(pvoid);
+pvoid memcpy(sz_t, pcvoid);
+
+}})
+
 #endif
 // eof
