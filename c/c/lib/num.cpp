@@ -60,12 +60,14 @@ bool isnormal(flt64 f) {
 }
 
 TEST("num",
-  double d;
-  d = float(c::NAN); CHECK(isnan(d));
-  d = float(INF); CHECK(isinf(d));
   float f;
   f = float(c::NAN); CHECK(isnan(f));
-  f = float(INF); CHECK(isinf(f));
+  f = float(INF);    CHECK(isinf(f));
+
+  double d;
+  d = double(float(c::NAN)); CHECK(isnan(d));
+  d = double(float(INF));    CHECK(isinf(d));
+
   CHECK(isnormal(1.0));
   CHECK(isnormal(1.0f));
   CHECK(!isnormal(0.0));

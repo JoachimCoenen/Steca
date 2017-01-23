@@ -2,9 +2,6 @@
 
 #include "trg.h"
 #include "../cpp"
-#ifdef _MSC_VER
-#define _USE_MATH_DEFINES
-#endif
 #include <cmath>
 
 c_deg::c_deg(real val_) : val(val_) {}

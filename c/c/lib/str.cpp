@@ -151,8 +151,13 @@ str str_frm(pcstr f, ...) {
 TEST("str::format",
   CHECK_EQ(str("abc 2 3 -4"), str_frm("abc %d %d %d", 2, 3, -4));
   CHECK_EQ(str("abc 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 429496729"), str_frm("abc %u %u %u %u %u %u %u %u %u %u %u %u", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1));
+)
+
+#ifndef _MSC_VER
+TEST("str::format-error",
   CHECK_EQ(str(""), str_frm("abc %-", 5)); // encoding error
 )
+#endif
 
 str str_cat(pcstr p, ...) {
   EXPECT(p)
