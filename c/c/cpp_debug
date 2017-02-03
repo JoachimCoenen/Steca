@@ -25,7 +25,7 @@ struct _DebugOut_ {
   template<typename T>
   _DebugOut_& operator<<(T const& t) {
     if (have)
-      std::cout << ":";
+      std::cout << " :";
     have = true;
     std::cout << t;
     return *this;
@@ -49,7 +49,7 @@ private:
 
 #endif
 
-#define WT(what) TR(#what ":" << what)
+#define WT(what) TR(#what ">" << what)
 #define NEVER    EXPECT(false)
 
 // eof
