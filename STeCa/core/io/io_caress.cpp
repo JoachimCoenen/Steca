@@ -24,22 +24,22 @@
 #include <string.h>
 
 /* Mirko Boin says:
-
-... the status of the instrument before a measurement/scan ... refers to all
-nodes in the CARESS file whose elementName equals "READ".
-... the data associated with a scan step ... should refer to all nodes whose
-elementName is "SETVALUE", "MASTER1V" or "PROTOCOL".
+ * ... the status of the instrument before a measurement/scan ... refers to all
+ * nodes in the CARESS file whose elementName equals "READ".
+ * ... the data associated with a scan step ... should refer to all nodes whose
+ * elementName is "SETVALUE", "MASTER1V" or "PROTOCOL".
 */
+
+/*
+ * This is our best attempt at wrapping nicely the "raw" Caress data handling
+ * routines. jb.
+ */
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-void loadCaress(data::Files& files, strc filePath) may_exc {
+static data::File::sh loadCaress() may_exc {
   using c::str;
-
-  struct _close_data_file { ~_close_data_file() { close_data_file(); } } _auto_close;
-  if (0 /*OK*/ != open_data_file(filePath,nullptr))
-    err("Cannot open ", filePath);
 
   modname_t element, node;
 
@@ -88,14 +88,22 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
     if (2 /*END_OF_FILE_DETECTED*/ == resNextUnit)
       break;
     if (0 /*OK*/ != resNextUnit)
-      err("Error in ", filePath);
+      c::err();
 
-    WT(element << node << e_number << e_type << d_type << d_number)
+    TR(element << node << e_number << e_type << d_type << d_number)
 
     str el(str(8, element).trim());
-//    WT(el)
     str en(str(8, node).trim());
-//    WT(en)
+
+    if (el.eq("DAT")) {
+      TR(gds())
+      continue;
+    }
+
+    if (el.eq("EXPTYPE")) {
+      TR(gds())
+      continue;
+    }
 
     if (el.eq("MM1")) {
       s_masterCounter.set(node);
@@ -123,7 +131,7 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
 
       float f = gdf();
 
-      mut(*files.dict).add(en);
+//      mut(*files.dict).add(en);
 
       if (en.eq("TTHS")) {
         checkTable(); tthAxis = f;
@@ -156,9 +164,25 @@ void loadCaress(data::Files& files, strc filePath) may_exc {
     }
   }
 
-  //  data::shp_File file(new data::File(filePath));
-  //  return file;
-  //}
+  data::File::sh file(new data::File);
+  return file;
+}
+
+data::File::sh loadCaress(strc filePath) may_exc {
+  if (0 /*OK*/ != open_data_file(filePath, nullptr))
+    err("Cannot open ", filePath);
+
+  try {
+    auto res = loadCaress();
+    close_data_file();
+    return res;
+  } catch (c::exc& e) {
+    mut(e.msg).set(c::str::cat(filePath, e.msg));
+    throw; // ?
+  } catch (...) {
+    close_data_file();
+    throw;
+  }
 }
 
 //------------------------------------------------------------------------------

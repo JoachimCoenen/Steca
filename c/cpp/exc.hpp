@@ -20,6 +20,7 @@ _struct_sub_end
 #define may_exc  noexcept(false)
 #define will_exc noexcept(false)
 
+_ns_dcl([[noreturn]] void err()             will_exc;)
 _ns_dcl([[noreturn]] void err(pcstr)        will_exc;)
 _ns_dcl([[noreturn]] void err(pcstr, pcstr) will_exc;)
 

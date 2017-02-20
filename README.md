@@ -1,7 +1,9 @@
 # STeCa2
-StressTextureCalculator, version 2.
+StressTextureCalculator, version 2. (`STeCa2`, or simply **Steca**)
 
-[Online documentation](http://apps.jcns.fz-juelich.de/steca2)
+[Online STeCa user documentation](http://apps.jcns.fz-juelich.de/steca2)
+
+[Developers' documentation](doc.md)
 
 ## CI Status
 

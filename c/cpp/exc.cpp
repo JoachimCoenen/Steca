@@ -13,6 +13,10 @@ pcstr exc::what() const noexcept {
   return msg;
 }
 
+[[noreturn]] void err() will_exc {
+  throw exc(str::nul);
+}
+
 [[noreturn]] void err(pcstr msg) will_exc {
   throw exc(msg);
 }
