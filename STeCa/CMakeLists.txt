@@ -6,9 +6,9 @@ find_package (Qt5Widgets REQUIRED)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory (core)
-add_subdirectory (core_qt)  # Qt(Core)-dependent parts
-add_subdirectory (gui)
+add_subdirectory (core)     # computing and data core
+add_subdirectory (core_qt)  # Qt-dependent core parts
+add_subdirectory (gui)      # Qt-gui
 
 add_executable (${app} main.cpp)
 

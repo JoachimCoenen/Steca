@@ -1,9 +1,8 @@
 # STeCa2
 StressTextureCalculator, version 2. (`STeCa2`, or simply **Steca**)
 
-[Online STeCa user documentation](http://apps.jcns.fz-juelich.de/steca2)
-
-[Developers' documentation](doc.md)
+* [[Online STeCa user documentation]](http://apps.jcns.fz-juelich.de/steca2)
+* [[Developers' documentation]](doc.md)
 
 ## CI Status
 
@@ -17,3 +16,5 @@ StressTextureCalculator, version 2. (`STeCa2`, or simply **Steca**)
 [![Travis-CI Build Status](https://travis-ci.org/scgmlz/STeCa2.svg?branch=develop)](https://travis-ci.org/scgmlz/STeCa2)
 [![AppVeyor-CI Build Status](https://ci.appveyor.com/api/projects/status/github/scgmlz/steca2?branch=develop&svg=true)](https://ci.appveyor.com/project/jburle/steca2)
 [![Coverage Status](https://coveralls.io/repos/github/scgmlz/STeCa2/badge.svg)](https://coveralls.io/github/scgmlz/STeCa2)
+
+◆

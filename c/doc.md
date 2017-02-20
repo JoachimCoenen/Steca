@@ -1,9 +1,6 @@
-# a
-## [a](man.md)
+# c - the supporting *c*ommon library
+  [↩](../doc.md)
 
-asas
-asassa
-asassa
-aa
-aaa
-aa
+* [[c]](c/doc.md) - C-related
+* [[cpp]](cpp/doc.md) - C++-related
+* [[qt]](qt/doc.md) - Qt-related
