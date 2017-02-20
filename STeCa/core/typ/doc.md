@@ -1,2 +1,3 @@
-# STeCa/core/typ - useful types
-  [↩](../doc.md)
+# STeCa/core/typ - useful types [↩](../doc.md)
+
+♦

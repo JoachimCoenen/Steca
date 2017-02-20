@@ -1,2 +1,3 @@
-# c/cpp/app - abstract application & gui
-  [↩](../doc.md)
+# c/cpp/app - abstract application & gui [↩](../doc.md)
+
+♦

@@ -1,2 +1,3 @@
-# c/qt - Qt-related
-  [↩](../doc.md)
+# c/qt - Qt-related [↩](../doc.md)
+
+♦

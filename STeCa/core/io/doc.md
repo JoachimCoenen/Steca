@@ -1,4 +1,5 @@
-# STeCa/core/io - read data files
-  [↩](../doc.md)
+# STeCa/core/io - read data files [↩](../doc.md)
 
-* [typ](Caress/doc.md) - read Caress data files
+* [[Caress]](Caress/doc.md) - read Caress data files
+
+♦

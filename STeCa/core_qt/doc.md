@@ -1,2 +1,3 @@
-# STeCa/core_qt - Qt-dependent core parts
-  [↩](../doc.md)
+# STeCa/core_qt - Qt-dependent core parts [↩](../doc.md)
+
+♦

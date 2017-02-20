@@ -1,2 +1,3 @@
-# c/c/lib - fundamentals
-  [↩](../doc.md)
+# c/c/lib - fundamentals [↩](../doc.md)
+
+♦

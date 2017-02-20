@@ -1,2 +1,3 @@
-# STeCa/core/data - data structures
-  [↩](../doc.md)
+# STeCa/core/data - data structures [↩](../doc.md)
+
+♦
