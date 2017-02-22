@@ -18,17 +18,17 @@
 #ifndef CORE_ARR_H
 #define CORE_ARR_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 
-#define DATA_NS   core
-#define DATA_NAME sz2
+#define NS___ core
+#define DS___ sz2
 
-_c_data
+_c_struct
   _atr(sz_t, i)
   _atr(sz_t, j)
-  _c_con(())
-  _c_con((sz_t, sz_t))
-_c_data_end
+  _c_con()
+  _c_con(sz_t, sz_t)
+_c_struct_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _mth(bool, empty, ())
@@ -38,22 +38,22 @@ _cpp_struct_end
 
 _ns_dcl(sz2 operator-(sz2::rc, sz2::rc);)
 
-#undef DATA_NAME
+#undef DS___
 
-#define DATA_NAME arr2base
+#define DS___ arr2base
 
 _struct
   _atr(sz2, sz)
 protected:
   _ptr(void, ts)
-  _con((sz2, sz_t))
-  _des
+  _con(sz2, sz_t)
+  _des()
   _mth(void const*, colAt, (sz_t))
 _struct_end
 
-#undef DATA_NAME
+#undef DS___
 
-#define DATA_NAME arr2
+#define DS___ arr2
 
 _struct_sub_retempl(arr2base)
   _cpp_code(typedef T const& Trc;)
@@ -78,8 +78,8 @@ _struct_sub_retempl(arr2base)
   })
 _struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

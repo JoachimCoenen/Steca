@@ -18,23 +18,23 @@
 #ifndef CORE_IJ_H
 #define CORE_IJ_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 
-#define DATA_NS   core
-#define DATA_NAME IJ
+#define NS___ core
+#define DS___ IJ
 
-_c_data
-  _c_atr(int, i)
-  _c_atr(int, j)
-  _c_con(())
-  _c_con((int, int))
-_c_data_end
+_c_struct
+  _atr(int, i)
+  _atr(int, j)
+  _c_con()
+  _c_con(int, int)
+_c_struct_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

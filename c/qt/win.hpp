@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #ifndef C_QT_WIN_HPP
 #define C_QT_WIN_HPP

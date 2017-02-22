@@ -18,33 +18,33 @@
 #ifndef CORE_MAT_H
 #define CORE_MAT_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 #include <c/c/lib/num.h>
 #include <c/c/lib/trg.h>
 
-#define DATA_NS   core
-#define DATA_NAME vec3
+#define NS___ core
+#define DS___ vec3
 
-_c_data
-  _c_atr(real, _0) _c_atr(real, _1) _c_atr(real, _2)
-  _c_con((real, real, real))
-_c_data_end
+_c_struct
+  _atr(real, _0) _atr(real, _1) _atr(real, _2)
+  _c_con(real, real, real)
+_c_struct_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef DATA_NAME
+#undef DS___
 
-#define DATA_NAME mat3
+#define DS___ mat3
 
-_c_data
-  _c_atr(real, _00) _c_atr(real, _01) _c_atr(real, _02)
-  _c_atr(real, _10) _c_atr(real, _11) _c_atr(real, _12)
-  _c_atr(real, _20) _c_atr(real, _21) _c_atr(real, _22)
-  _c_con((real, real, real,
-          real, real, real,
-          real, real, real))
-_c_data_end
+_c_struct
+  _atr(real, _00) _atr(real, _01) _atr(real, _02)
+  _atr(real, _10) _atr(real, _11) _atr(real, _12)
+  _atr(real, _20) _atr(real, _21) _atr(real, _22)
+  _c_con(real, real, real,
+         real, real, real,
+         real, real, real)
+_c_struct_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _mth(mat3, transposed, ())
@@ -56,7 +56,7 @@ _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _fry(mat3, rotationCCWz, (c::rad))
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif

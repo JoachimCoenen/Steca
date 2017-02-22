@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "def.hpp"
 #include <QString>

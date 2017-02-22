@@ -1,34 +1,35 @@
-// c
+// (c)
 
 #ifndef C_C_MEM_H
 #define C_C_MEM_H
 
-#include "../h_data"
+#include "../c_def.h"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-#define DATA_NS   c
-#define DATA_NAME mem
+#define NS___ c
+#define DS___ mem
 
-_c_data
-  _c_atr(sz_t, sz)
-  _c_ptr(void, p)
-  _c_con((sz_t, pcvoid))
-_c_data_end
+_c_struct
+  _atr(sz_t, sz)
+  _ptr(void, p)
+
+  _c_con(sz_t, pcvoid)
+_c_struct_end
 
 _cpp_struct
-  _con((sz_t))
-  _con((sz_t, pcvoid))
-  _con((rc))
-  _con((rval))
-  _des
+  _con(sz_t)
+  _con(sz_t, pcvoid)
+  _con(rc)
+  _con(rval)
+  _des()
 
   _op_inline (pcvoid(), p)
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 _cpp_code(
 namespace c { namespace unsafe {

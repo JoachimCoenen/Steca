@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "trg.h"
 #include "../cpp"

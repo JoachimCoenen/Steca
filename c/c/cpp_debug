@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #if !_is_cpp_
 #error this should be used in cpp files

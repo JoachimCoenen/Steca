@@ -1,9 +1,14 @@
-// c - inculde into .h files; data declarations
+// (c)
+// data defining macros
 
-#ifndef C_C_H_DATA
-#define C_C_H_DATA
+#ifndef C_C_DEF_H
+#define C_C_DEF_H
 
-#include "h"
+#include "c.h"
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+#endif
 
 //------------------------------------------------------------------------------
 // names
@@ -11,32 +16,30 @@
 #define CAT_(a, b, c) a ## b ## c
 #define CAT3(a, b, c) CAT_(a, b, c)
 
-#define NS_NAME_C   CAT3(DATA_NS, _, DATA_NAME)
-#define NS_NAME_CPP CAT3(DATA_NS, :, DATA_NAME)
+#define NS_NAME_C   CAT3(NS___, _, DS___)
+#define NS_NAME_CPP CAT3(NS___, :, DS___)
 
 //------------------------------------------------------------------------------
 // declarations
 
 // "C" ns-prefixed struct with the very default constructor ...
-#define _c_data     \
+#define _c_struct     \
   EXTERN_C struct NS_NAME_C {
-#define _c_data_end \
+#define _c_struct_end \
   }; EXTERN_C_END
 
 // ... that has only immutable data ...
-#define _c_atr(typ, name)     \
+#define _atr(typ, name)     \
   typ const name;
-#define _c_ptr(typ, name)     \
+#define _ptr(typ, name)     \
   typ const * const name;
-
-#define _atr _c_atr
-#define _ptr _c_ptr
 
 // ... and perhaps constructors ...
 #if _is_cpp_
-#define _c_con(args) NS_NAME_C args;
+#define _c_o(...) __VA_ARGS__;
+#define _c_con(...) NS_NAME_C(__VA_ARGS__);
 #else
-#define _c_con
+#define _c_con(...)
 #endif
 
 // ... in cpp ...
@@ -45,30 +48,30 @@
 // ... with handy typedefs ...
 #define _typedefs(s)      \
   typedef s typ;          \
-  typedef typ& ref;       \
   typedef typ const& rc;  \
+  typedef typ& ref;       \
   typedef typ&& rval;
 
-#define _cpp_struct_typedefs _typedefs(DATA_NAME)
+#define _cpp_struct_typedefs _typedefs(DS___)
 
 // ... extended ...
 #define _cpp_struct     \
-  namespace DATA_NS {   \
-  struct DATA_NAME : NS_NAME_C { _cpp_struct_typedefs using c_base = NS_NAME_C;
+  namespace NS___ {   \
+  struct DS___ : NS_NAME_C { _cpp_struct_typedefs using c_base = NS_NAME_C;
 #define _cpp_struct_end \
   };}
 
 // ... by constructors and destructor ...
-#define _con(args)              \
-  DATA_NAME args;
+#define _con(...)               \
+  DS___(__VA_ARGS__);
 #define _con_fwd(args, fwd)     \
-  DATA_NAME args : base fwd {}
+  DS___ args : base fwd {}
 #define _con_c_fwd(args, fwd)   \
-  DATA_NAME args : c_base fwd {}
-#define _xon(args)              \
-  explicit _con(args)
-#define _des                    \
- ~DATA_NAME();
+  DS___ args : c_base fwd {}
+#define _xon(...)               \
+  explicit _con(__VA_ARGS__)
+#define _des()                    \
+ ~DS___();
 
 // ... methods ...
 #define _mth_inline(typ, mth, args, ...)  \
@@ -88,19 +91,16 @@
   static _atr(typ, name)
 
 // ... operators ...
-#define _op_inline(op, expr)  \
-  operator op const { return expr; }
 #define _op(op)               \
   operator op const;
-
-#define _op_mut_inline(op, expr)  \
-  operator op { return expr; }
-#define _op_mut(op)               \
+#define _op_mut(op)           \
   operator op;
+#define _op_inline(op, expr)  \
+  operator op const { return expr; }
 
 // ... not covered by the above ...
 #define _dcl(...)     __VA_ARGS__
-#define _ns_dcl(...)  namespace DATA_NS { __VA_ARGS__ }
+#define _ns_dcl(...)  namespace NS___ { __VA_ARGS__ }
 
 #else
 
@@ -109,7 +109,7 @@
 #define _cpp_struct
 #define _cpp_struct_end
 #define _con(...)
-#define _des
+#define _des()
 #define _mth(typ, mth, args)
 #define _mth_inline(typ, mth, args, ...)
 #define _mth_mut(typ, mth, args)
@@ -129,14 +129,14 @@
 #if _is_cpp_
 
 #define _struct_pref(pref)     \
-  namespace DATA_NS { pref struct DATA_NAME { _cpp_struct_typedefs
+  namespace NS___ { pref struct DS___ { _cpp_struct_typedefs
 #define _struct _struct_pref()
 #define _struct_templ _struct_pref(template <typename T>)
 #define _struct_end \
   };}
 
 #define _iface     \
-  _struct virtual ~DATA_NAME();
+  _struct virtual ~DS___();
 #define _iface_end \
   };}
 
@@ -149,7 +149,7 @@
 #define _iface_mth_mut(typ, mth, args) _iface_mth_mut_body(typ, mth, args, = 0;)
 
 #define _struct_sub_pre_pre(pre,pre_s,s)  \
-  namespace DATA_NS { pre struct DATA_NAME : pre_s s { _cpp_struct_typedefs using base = s;
+  namespace NS___ { pre struct DS___ : pre_s s { _cpp_struct_typedefs using base = s;
 
 #define _struct_sub(s)          _struct_sub_pre_pre(,,s)
 #define _struct_sub_retempl(s)  _struct_sub_pre_pre(template <typename T>,protected,s)
@@ -191,8 +191,8 @@
 #define WITH_BASE_CONS   using base::base;
 
 #define NO_MOVE(s)              \
-  s(rval)           = delete;   \
-  r operator=(rval) = delete;
+  s(rval)             = delete;   \
+  ref operator=(rval) = delete;
 
 #define NO_COPY(s)              \
   s(rc)               = delete; \

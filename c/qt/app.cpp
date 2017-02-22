@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "app.hpp"
 #include "log.hpp"

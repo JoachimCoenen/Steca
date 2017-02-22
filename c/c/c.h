@@ -1,4 +1,6 @@
-// c - incude into any .h file; h_data includes this
+// (c)
+// The most important definitions that *everyone* needs.
+// Include everywhere (indirectly).
 
 #ifndef C_C_H
 #define C_C_H
@@ -7,12 +9,12 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#ifdef GENERATE_INTERFACE
+#ifdef GENERATE_INTERFACE // to produce .i files; not to compile
 #define NDEBUG
 #else
 
-#include <stddef.h> // size_t, wchar_t, ...
-typedef size_t sz_t;
+#include <stddef.h>
+typedef size_t       sz_t;
 
 typedef unsigned int uint;
 

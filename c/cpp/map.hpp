@@ -1,9 +1,9 @@
-// c
+// (c)
 
 #ifndef C_CPP_MAP_HPP
 #define C_CPP_MAP_HPP
 
-#include "../c/h_data"
+#include "../c/c_def.h"
 #include <map>
 
 namespace c {

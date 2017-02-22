@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "num.h"
 #include "../../c/cpp"

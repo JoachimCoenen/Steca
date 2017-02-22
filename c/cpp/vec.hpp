@@ -1,13 +1,13 @@
-// c
+// (c)
 
 #ifndef C_CPP_VEC_HPP
 #define C_CPP_VEC_HPP
 
-#include "../c/h_data"
+#include "../c/c_def.h"
 #include <vector>
 
-#define DATA_NS   c
-#define DATA_NAME vec
+#define NS___ c
+#define DS___ vec
 
 _struct_sub_retempl(std::vector<T>)
   using base::base;
@@ -41,8 +41,8 @@ _struct_sub_retempl(std::vector<T>)
   }
 _struct_sub_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

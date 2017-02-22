@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #ifndef C_QT_APP_H
 #define C_QT_APP_H

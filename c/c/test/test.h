@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #ifndef C_C_TEST_H
 #define C_C_TEST_H

@@ -1,23 +1,23 @@
-// c
+// (c)
 
 #ifndef C_C_PTR_H
 #define C_C_PTR_H
 
-#include "../h_data"
+#include "../c_def.h"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-#define DATA_NS   c
-#define DATA_NAME ptr
+#define NS___ c
+#define DS___ ptr
 
-_c_data
-  _c_ptr(void, p)
-  _c_con((pcvoid))
-_c_data_end
+_c_struct
+  _ptr(void, p)
+  _c_con(pcvoid)
+_c_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #if _is_cpp_
 namespace c {

@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #ifndef C_CPP_ASYNC_HPP
 #define C_CPP_ASYNC_HPP
@@ -6,14 +6,14 @@
 #include "../../c/cpp/vec.hpp"
 #include <thread>
 
-#define DATA_NS   c
-#define DATA_NAME thread
+#define NS___ c
+#define DS___ thread
 
 _struct_sub (std::thread) WITH_BASE_CONS
 _struct_sub_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 namespace c {
 //------------------------------------------------------------------------------

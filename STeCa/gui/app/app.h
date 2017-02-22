@@ -20,16 +20,16 @@
 
 #include <c/qt/app.hpp>
 
-#define DATA_NS   gui
-#define DATA_NAME App
+#define NS___ gui
+#define DS___ App
 
 _struct_sub (c_qt::app)
   App(int& argc, char* argv[]);
   int exec();
 _struct_sub_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "exc.hpp"
 #include "../c/cpp"

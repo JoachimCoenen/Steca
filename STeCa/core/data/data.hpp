@@ -25,12 +25,12 @@
 #include <c/cpp/exc.hpp>
 
 namespace core {
-#define DATA_NS   data
+#define NS___ data
 //------------------------------------------------------------------------------
 
 #define _sh_struct _struct typedef c::shared<typ> sh;
 
-#define DATA_NAME Meta
+#define DS___ Meta
 
 _sh_struct                      // metadata
   struct Dict : private c::map<c::str, uint> {
@@ -45,49 +45,49 @@ _sh_struct                      // metadata
   _atr(c::vec<float>, vals)
   _atr(float, tth) _atr(float, omg) _atr(float, chi) _atr(float, phi)
 
-  _con((Dict::sh, float, float, float, float))
+  _con(Dict::sh, float, float, float, float)
 _struct_end
 
-#undef  DATA_NAME
+#undef  DS___
 
-#define DATA_NAME Set
+#define DS___ Set
 
 _sh_struct                      // one read dataset
   _atr(uint, idx)               // this order in File, 1..; 0 = not
   _atr(Meta, meta)
 
-  _con((Meta::rc))
+  _con(Meta::rc)
 _struct_end
 
-#undef  DATA_NAME
-#define DATA_NAME File
+#undef  DS___
+#define DS___ File
 
 _sh_struct                      // one file
   _atr(uint, idx)               // this order in Files, 1..; 0 = not
   _atr(c::vec<Set::sh>, sets)
 
-  _con(())
+  _con()
 
   _mth_mut(void, addSet, (Set::sh))
-_des
+  _des()
 _struct_end
 
-#undef  DATA_NAME
-#define DATA_NAME Files
+#undef  DS___
+#define DS___ Files
 
 _sh_struct                      // the whole file group
   _atr(c::vec<File::sh>, files)
   _atr(Meta::Dict::sh,   dict)
 
-  _con(())
+  _con()
 
   _mth_mut(void, addFile, (c::give_me<File>))
   _mth_mut(void, remFile, (uint))
 _struct_end
 
-#undef  DATA_NAME
+#undef  DS___
 
 //------------------------------------------------------------------------------
-#undef DATA_NS
+#undef NS___
 }
 #endif

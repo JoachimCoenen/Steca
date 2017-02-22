@@ -18,25 +18,25 @@
 #ifndef CORE_XY_H
 #define CORE_XY_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 #include <c/c/lib/num.h>
 
-#define DATA_NS   core
-#define DATA_NAME XY
+#define NS___ core
+#define DS___ XY
 
-_c_data
-  _c_atr(real, x)
-  _c_atr(real, y)
-  _c_con(())
-  _c_con((real, real))
-_c_data_end
+_c_struct
+  _atr(real, x)
+  _atr(real, y)
+  _c_con()
+  _c_con(real, real)
+_c_struct_end
 
 _cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
   _mth(bool, isDef, ())
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

@@ -18,23 +18,23 @@
 #ifndef CORE_SESSION_H
 #define CORE_SESSION_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 
-#define DATA_NS   core
-#define DATA_NAME Session
+#define NS___ core
+#define DS___ Session
 
-_c_data
-  _c_atr(int, dummy)
-  _c_con(())
-_c_data_end
+_c_struct
+  _atr(int, dummy)
+  _c_con()
+_c_struct_end
 
 _cpp_struct
-  _con(())
+  _con()
   _mth (int, long_square, (int))
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif
 // eof

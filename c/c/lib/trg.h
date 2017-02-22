@@ -1,24 +1,24 @@
-// c
+// (c)
 
 #ifndef C_C_TRG_H
 #define C_C_TRG_H
 
-#include "../h_data"
+#include "../c_def.h"
 #include "num.h"
 
-#define DATA_NS   c
-#define DATA_NAME deg
+#define NS___ c
+#define DS___ deg
 
-_c_data
-  _c_atr(real, val)
-  _c_con((real))
-_c_data_end
+_c_struct
+  _atr(real, val)
+  _c_con(real)
+_c_struct_end
 
 _ns_dcl(struct rad;)
 
 _cpp_struct
   _con_c_fwd((real val = 0), (val))
-  _xon((rad))
+  _xon(rad)
   _op_inline(real(), val)
 
   _mth(rad, toRad, ())
@@ -30,19 +30,19 @@ _cpp_struct
   _mth(real, cos, ())
 _cpp_struct_end
 
-#undef DATA_NAME
-#define DATA_NAME rad
+#undef DS___
+#define DS___ rad
 
-_c_data
-  _c_atr(real, val)
-  _c_con((real))
-_c_data_end
+_c_struct
+  _atr(real, val)
+  _c_con(real)
+_c_struct_end
 
 _cpp_struct
   _con_c_fwd((real val = 0), (val))
   _op_inline(real(), val)
 
-  _xon((deg))
+  _xon(deg)
   _mth(deg, toDeg, ())
   _mth(rad, operator+, (rc))
   _mth(rad, operator*, (real))
@@ -52,7 +52,7 @@ _cpp_struct
   _mth(real, cos, ())
 _cpp_struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif

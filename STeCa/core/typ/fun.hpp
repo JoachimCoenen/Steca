@@ -18,7 +18,7 @@
 #ifndef CORE_FUN_H
 #define CORE_FUN_H
 
-#include <c/c/h_data>
+#include <c/c/c_def.h>
 #include <c/c/lib/num.h>
 #include <c/cpp/vec.hpp>
 #include "fry.hpp"

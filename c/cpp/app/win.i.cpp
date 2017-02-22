@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "win.i.h"
 

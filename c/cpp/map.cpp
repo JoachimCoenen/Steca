@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "vec.hpp"
 #include "../c/cpp"

@@ -1,4 +1,4 @@
-// c - include into any .cpp file
+// (c) - include into any .cpp file
 
 #if !_is_cpp_
 #error should be used in cpp files

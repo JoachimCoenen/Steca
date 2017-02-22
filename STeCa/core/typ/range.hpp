@@ -18,18 +18,18 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c/c/h>
+#include <c/c/c.h>
 #include <c/c/lib/num.h>
 #include <c/cpp/vec.hpp>
 
-#define DATA_NS   core
-#define DATA_NAME Range
+#define NS___ core
+#define DS___ Range
 
-_c_data
-  _c_atr(real, min)
-  _c_atr(real, max)
-  _c_con((real, real))
-_c_data_end
+_c_struct
+  _atr(real, min)
+  _atr(real, max)
+  _c_con(real, real)
+_c_struct_end
 
 _cpp_struct COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
@@ -61,9 +61,9 @@ _cpp_struct COMPARABLE EQ_NE
   ref   operator=(rc);
 _cpp_struct_end
 
-#undef DATA_NAME
+#undef DS___
 
-#define DATA_NAME Ranges
+#define DS___ Ranges
 
 _struct EQ_NE
   Ranges();
@@ -86,7 +86,7 @@ private:
   c::vec<Range> rs;
 _struct_end
 
-#undef DATA_NAME
-#undef DATA_NS
+#undef DS___
+#undef NS___
 
 #endif

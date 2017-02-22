@@ -1,9 +1,9 @@
-// c
+// (c)
 
 #ifndef C_C_TYP_NUM
 #define C_C_TYP_NUM
 
-#include "../h"
+#include "../c.h"
 
 EXTERN_C
 //------------------------------------------------------------------------------

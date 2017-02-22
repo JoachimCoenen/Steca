@@ -1,4 +1,4 @@
-// c
+// (c)
 
 #include "mem.h"
 #include "../cpp"
