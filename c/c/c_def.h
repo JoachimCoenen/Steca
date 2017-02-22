@@ -36,7 +36,6 @@
 
 // ... and perhaps constructors ...
 #if _is_cpp_
-#define _c_o(...) __VA_ARGS__;
 #define _c_con(...) NS_NAME_C(__VA_ARGS__);
 #else
 #define _c_con(...)
@@ -64,20 +63,20 @@
 // ... by constructors and destructor ...
 #define _con(...)               \
   DS___(__VA_ARGS__);
+#define _xon(...)               \
+  explicit _con(__VA_ARGS__)
 #define _con_fwd(args, fwd)     \
   DS___ args : base fwd {}
 #define _con_c_fwd(args, fwd)   \
   DS___ args : c_base fwd {}
-#define _xon(...)               \
-  explicit _con(__VA_ARGS__)
-#define _des()                    \
+#define _des()                  \
  ~DS___();
 
 // ... methods ...
-#define _mth_inline(typ, mth, args, ...)  \
-  typ mth args const { __VA_ARGS__ }
 #define _mth(typ, mth, args)              \
   typ mth args const;
+#define _mth_inline(typ, mth, args, ...)  \
+  typ mth args const { __VA_ARGS__ }
 
 #define _mth_mut_inline(typ, mth, args, ...)  \
   typ mth args { __VA_ARGS__ }
@@ -109,17 +108,21 @@
 #define _cpp_struct
 #define _cpp_struct_end
 #define _con(...)
+#define _xon(...)
+#define _con_fwd(args, fwd)
+#define _con_c_fwd(args, fwd)
 #define _des()
 #define _mth(typ, mth, args)
 #define _mth_inline(typ, mth, args, ...)
 #define _mth_mut(typ, mth, args)
 #define _mth_mut_inline(typ, mth, args, ...)
+#define _fry(typ, mth, args)
+#define _cst(typ, name)
 #define _op(op)
 #define _op_inline(op, code)
 #define _op_mut(op)
-#define _op_mut_inline(op, code)
-#define _extra(...)
-#define _ns_extra(...)
+#define _dcl(...)
+#define _ns_dcl(...)
 
 #endif
 
@@ -151,8 +154,8 @@
 #define _struct_sub_pre_pre(pre,pre_s,s)  \
   namespace NS___ { pre struct DS___ : pre_s s { _cpp_struct_typedefs using base = s;
 
-#define _struct_sub(s)          _struct_sub_pre_pre(,,s)
-#define _struct_sub_retempl(s)  _struct_sub_pre_pre(template <typename T>,protected,s)
+#define _struct_sub(s)       _struct_sub_pre_pre(,,s)
+#define _struct_sub_templ(s) _struct_sub_pre_pre(template <typename T>,protected,s)
 #define _struct_sub_end  };}
 
 #define sub_struct(s, b) struct s : b { _typedefs(s) using base = b;
@@ -160,12 +163,10 @@
 
 #define sub_struct_reimpl(s, b) struct s : protected b { _typedefs(s) using base = b; \
   base const& base_rc() const { return *this; }
-#define sub_struct_reimpl_end };
 
 #else
 
 #define _struct
-#define _struct_pref
 #define _struct_end
 
 #define _iface
@@ -177,7 +178,6 @@
 #define _iface_mth_mut(typ, mth, args)
 
 #define _struct_sub(s)
-#define _struct_sub_pref(s)
 #define _struct_sub_end
 
 #endif
@@ -187,8 +187,8 @@
 
 #if _is_cpp_
 
-#define WITH_C_BASE_CONS using c_base::c_base;
-#define WITH_BASE_CONS   using base::base;
+#define C_BASE_CONS using c_base::c_base;
+#define BASE_CONS   using base::base;
 
 #define NO_MOVE(s)              \
   s(rval)             = delete;   \
@@ -223,12 +223,13 @@
 
 #else
 
-#define BASE(s)
 #define NO_MOVE(s)
 #define NO_COPY(s)
 #define NO_GEN(s)
 #define COMPARABLE
 #define EQ_NE
+#define LGTE
+#define COMP_OPS
 
 #define _cpp_code(...)
 #define _cpp_private

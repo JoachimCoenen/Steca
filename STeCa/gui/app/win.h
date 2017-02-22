@@ -24,7 +24,7 @@
 #define NS___ gui
 #define DS___ Win
 
-_struct_sub (c_qt::win) WITH_BASE_CONS
+_struct_sub (c_qt::win) BASE_CONS
   Win();
   Hub hub;
 _struct_sub_end

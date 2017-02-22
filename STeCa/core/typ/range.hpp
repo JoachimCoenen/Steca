@@ -66,7 +66,7 @@ _cpp_struct_end
 #define DS___ Ranges
 
 _struct EQ_NE
-  Ranges();
+  _con()
 
   void clear()          { rs.clear();        }
   bool is_empty() const { return rs.empty(); }

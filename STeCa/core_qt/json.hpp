@@ -96,7 +96,7 @@ sub_struct_reimpl (JsonObj, QJsonObject)
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
 
-sub_struct_reimpl_end
+sub_struct_end
 
 //------------------------------------------------------------------------------
 
@@ -115,7 +115,7 @@ sub_struct_reimpl (JsonArr, QJsonArray)
   uint  count() const;
   JsonObj objAt(uint) const;
 
-sub_struct_reimpl_end
+sub_struct_end
 
 //------------------------------------------------------------------------------
 }

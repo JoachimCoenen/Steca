@@ -30,7 +30,7 @@ _c_struct
   _c_con(sz_t, sz_t)
 _c_struct_end
 
-_cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
+_cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _mth(bool, empty, ())
   _mth(sz_t, size, ())
   _mth(sz2,  transposed, ())
@@ -55,7 +55,7 @@ _struct_end
 
 #define DS___ arr2
 
-_struct_sub_retempl(arr2base)
+_struct_sub_templ(arr2base)
   _cpp_code(typedef T const& Trc;)
   _con_fwd((sz2 sz), (sz, sizeof(T)))
 

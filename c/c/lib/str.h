@@ -43,10 +43,11 @@ _cpp_struct_end
 _cpp_code(typedef c::str::rc strc;)
 
 _cpp_code(
-namespace c { namespace unsafe {
-str str_frm(pcstr, ...);
-str str_cat(pcstr, ...);
-}})
+  namespace c { namespace unsafe {
+  str str_frm(pcstr, ...);
+  str str_cat(pcstr, ...);
+  }}
+)
 
 #undef DS___
 #undef NS___

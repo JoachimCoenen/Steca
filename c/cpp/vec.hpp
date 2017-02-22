@@ -9,7 +9,7 @@
 #define NS___ c
 #define DS___ vec
 
-_struct_sub_retempl(std::vector<T>)
+_struct_sub_templ(std::vector<T>)
   using base::base;
   using base::begin;
   using base::end;

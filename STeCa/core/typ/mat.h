@@ -30,7 +30,7 @@ _c_struct
   _c_con(real, real, real)
 _c_struct_end
 
-_cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
+_cpp_struct C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
 #undef DS___
@@ -46,7 +46,7 @@ _c_struct
          real, real, real)
 _c_struct_end
 
-_cpp_struct WITH_C_BASE_CONS COMPARABLE EQ_NE
+_cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _mth(mat3, transposed, ())
   _mth(mat3, operator*,  (rc))
   _mth(vec3, operator*,  (vec3::rc))

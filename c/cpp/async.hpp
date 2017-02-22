@@ -9,7 +9,7 @@
 #define NS___ c
 #define DS___ thread
 
-_struct_sub (std::thread) WITH_BASE_CONS
+_struct_sub (std::thread) BASE_CONS
 _struct_sub_end
 
 #undef DS___

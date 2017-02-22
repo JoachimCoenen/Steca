@@ -109,7 +109,7 @@ Note:
   code will be emitted only if the header file is processed in [C++].
 * Since this is a [C] structure, there is no destructor;
 
-### 4. 
+### 4.
 Extend the [C] structure in [C++] (by inheritance), add constructors,
 a destructor, methods, operators, etc. using these macros:
 * `_cpp_struct` to start
@@ -117,12 +117,16 @@ a destructor, methods, operators, etc. using these macros:
 * `_con(args...)` for a constructor
 * `_des()` for a destructor
 * `_mth(type, name, args)` for a const method (`args` must contain parentheses)
+* `_mth_inline(type, name, args, ...)` for an inline const method
 * `_mth_mut(type, name, args)` for a non-const (mutating) method
+* `_mth_mut_inline(type, name, args, ...)` for an inline mutating method
 * `_op(name)` for a const operator
 * `_op_mut(name)` for a mutating operator
 * `_op_inline(name, expr)` for a (const) inline operator (a kind of a getter)
 * `_fry(type, name, args)` for a static method (aka *factory*)
 * `_cst(type, name)` for a static attribute (constant)
+* `_dcl(...)` for any other declaration inside the structure
+* `_ns_dcl(...)` for declaration outside the structure, but inside the namespace
 
 The opening `_cpp_struct` conveniently declares these typedefs:
 * `typ` for the structure itself
@@ -178,9 +182,120 @@ _cpp_code(
 )
 ```
 
-5. Finally, undefine the namespace and structire names:
+Other macros:
+* `xon(...)`: `explicit` constructor
+* `_con_fwd(...)`: forwarded constructor
+* `_con_c_fwd(...)`: constructor forwarded to `_c_struct`
+
+5. Finally, undefine the namespace and structure names:
 ```C
 #undef DS___
 #undef NS___
 ```
+
+## After preprocessing
+The above produces two versions of a pre-processed code (here formatted
+for readability, also without code contributed by included files).
+
+### C
+```C
+typedef char* pstr;
+typedef char const* pcstr;
+
+struct c_str {
+  sz_t const sz;
+  char const * const p;
+};
+```
+
+### C++
+```C
+typedef char* pstr;
+typedef char const* pcstr;
+
+extern "C" {
+
+struct c_str {
+  sz_t const sz;
+  char const * const p;
+
+  c_str(sz_t, pcstr);
+};
+
+}
+
+namespace c {
+
+struct str : c_str {
+  typedef str        typ;
+  typedef typ const& rc;
+  typedef typ&       ref;
+  typedef typ&&      rval;
+
+  using c_base = c_str;
+
+  int compare(rc) const;
+  bool operator==(rc) const;
+  bool operator!=(rc) const;
+  bool operator< (rc) const;
+  bool operator<=(rc) const;
+  bool operator> (rc) const;
+  bool operator>=(rc) const;
+
+  str();
+  str(pcstr);
+  str(sz_t maxSz, pcstr);
+  str(rc);
+  str(rval);
+ ~str();
+
+  bool empty()   const;
+  bool eq(pcstr) const;
+
+  rc set(pcstr);
+  rc set(rval);
+
+  operator pcstr() const { return p; }
+
+  str trim() const;
+
+  static str cat (pcstr, pcstr);
+
+  static str const nul;
+};
+
+}
+
+typedef c::str::rc strc;
+
+namespace c { namespace unsafe {
+
+str str_frm(pcstr, ...);
+str str_cat(pcstr, ...);
+
+}}
+
+```
+
+### C++ -only structures
+
+Structures that do not need a [C] layout (will be used only in [C++]), may be
+declared as follows:
+
+* Define `NS___` and `DS___`
+* Open with `_struct`, optionally followed by the convenience macros
+* Declare attributes and methods
+* End with `_struct_end`
+* Undefine `NS___` and `DS___`
+
+Use:
+* `_struct_templ`, `_struct_end` for templated structures.
+* `_iface`,`_iface_end`, `_iface_mth`, `_iface_mth_mut` for interfaces.
+* `_struct_sub`, `_struct_sub_templ`, `_struct_sub_end` for inheritance within
+  the namespace, using NS__ and DS__.
+* `sub_struct`, `sub_struct_reimpl`, `sub_struct_templ`, `sub_struct_end`
+  for inheritance using specified structure names - macros that rely on DS___
+  cannot be used, but the convenience typedefs etc. still work.
+
+`C_BASE_CONS` resp.`BASE_CONS` reexport the `c_base` resp. `base` constructors.
 ♦
