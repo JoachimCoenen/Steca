@@ -28,21 +28,21 @@ Defined in [C] for export, extended in [C++] for implementation.
 Exceptions, if made, should have a clear purpose.
 
 The collaterals and consequences of the above are:
-1.
-  * Use `struct`, not `class`.
-  * No need to state `public:`.
-  * There is no need for getters or setters.
-  * Structures can be safely-ish shared among many readers.
-  * It must be explicitly stated when an attribute value is modified;
-    that should be typically done before the structure is shared.
-2.
-    * No need to state `public:`.
-    * Most methods are to be `const`.
-    * Even non-const methods must explicitly state when an attribute is modified.
-3.
-    * Prefer data composition.
-    * If the access to an attribute or a method needs to be restricted,
-      prefer `private:`.
+### 1.
+* Use `struct`, not `class`.
+* No need to state `public:`.
+* There is no need for getters or setters.
+* Structures can be safely-ish shared among many readers.
+* It must be explicitly stated when an attribute value is modified;
+  that should be typically done before the structure is shared.
+### 2.
+* No need to state `public:`.
+* Most methods are to be `const`.
+* Even non-const methods must explicitly state when an attribute is modified.
+### 3.
+* Prefer data composition.
+* If the access to an attribute or a method needs to be restricted,
+  prefer `private:`.
 
 ## Declaration of data structures:
 
@@ -51,28 +51,27 @@ The standard declaration of a data structure follows this pattern:
 1. Declare [C] data layout with POD attributes. (POD: primitive types and pointers.)
 2. Subclass [C++] and add methods.
 
-Always use a namespace. In [C], the namespace is prefixed to the structure name.
-In [C++], the namespace is used directly.
+Always use a namespace. In [C], the namespace will be put at the front of the structure name.
+In [C++], the namespace is used normally.
 
 ### Header files
 
 In modules, where [C] and [C++] are mixed:
-* `.h` files can be included in [C] and [C++].
+* `.h` files can be included in either [C] or [C++].
 * `.hpp` files are meant to be included only in [C++].
 
-In [C++]-only modules, `.h` may be used for [C++]-only, as usual.
+In [C++]-only modules, `.h` is used for [C++]-only include files, as usual.
 
 ### Interfaces
 
 In the mixed [C/C++] context, [C] interface `.i` files are generated from the
-corresponding `.h` files. Therefore care is to be taken to isolate their [C++]
+corresponding `.h` files. Therefore care must be taken to isolate their [C++]
 segments. The standard declaration pattern uses macros that do that.
 
-## The standard structure declaration
-(See [mem.h](lib/str.h) for details.)
-
-1. Include `c_def.h`; typedef [C] POD as needed.
-
+## The standard pattern for structure declaration
+(See [str.h](lib/str.h) for details.)
+### 1.
+Include `c_def.h`; typedef [C] PODs as needed.
 ```C
 #include <c/c/c_def.h>
 
@@ -80,19 +79,21 @@ typedef char*       pstr;
 typedef char const* pcstr;
 ```
 
-2. Specify the namespace and the data structure name (the trailing underscores
+### 2.
+Specify the namespace and the data structure name (the trailing underscores
 make the names stand out):
 ```C
 #define NS___ c
 #define DS___ str
 ```
 
-3. Declare the [C] layout, using (only) these macros:
-  * `_c_struct` to start
-  * `_c_struct_end` to end
-  * `_atr(typ, name)` to declare a POD attribute
-  * `_ptr(typ, name)` to declare a pointer
-  * `_c_con(args)` to declare a [C++] constructor
+### 3.
+Declare the [C] layout, using (only) these macros:
+* `_c_struct` to start
+* `_c_struct_end` to end
+* `_atr(typ, name)` to declare a POD attribute
+* `_ptr(typ, name)` to declare a pointer
+* `_c_con(args...)` to declare a [C++] constructor
 ```C
 _c_struct
   _atr(sz_t, sz)
@@ -102,46 +103,47 @@ _c_struct
 _c_struct_end
 ```
 Note:
-  * We use two-space indentation.
-  * Data declaration precedes that of methods.
-  * `_c_con` macro (rather than `_con`) declares a constructor. The constructor
-    code will be emitted only if the header files is processed in [C++].
-  * Since this is a [C] structure, there is no destructor;
+* We use two-space indentation.
+* Data declaration precedes that of methods.
+* The `_c_con` macro (rather than `_con`) declares a constructor. The constructor
+  code will be emitted only if the header file is processed in [C++].
+* Since this is a [C] structure, there is no destructor;
 
-4. Subclass ("substructure") the [C] structure, and add constructors,
-   a destructor, methods, operators, ... using these macros:
-   * `_cpp_struct` to start
-   * `_cpp_struct_end` to end
-   * `_con(args)` for a constructor
-   * `_des()` for a destructor
-   * `_mth(type, name, args)` for a const method (`args` must contain parentheses)
-   * `_mth_mut(type, name, args)` for a non-const (mutating) method
-   * `_op(name)` for a const operator
-   * `_op_mut(name)` for a mutating operator
-   * `_op_inline(name, expr)` for a (const) inline operator (a kind of a getter)
-   * `_fry(type, name, args)` for a static method (aka *factory*)
-   * `_cst(type, name)` for a static attribute (constant)
+### 4. 
+Extend the [C] structure in [C++] (by inheritance), add constructors,
+a destructor, methods, operators, etc. using these macros:
+* `_cpp_struct` to start
+* `_cpp_struct_end` to end
+* `_con(args...)` for a constructor
+* `_des()` for a destructor
+* `_mth(type, name, args)` for a const method (`args` must contain parentheses)
+* `_mth_mut(type, name, args)` for a non-const (mutating) method
+* `_op(name)` for a const operator
+* `_op_mut(name)` for a mutating operator
+* `_op_inline(name, expr)` for a (const) inline operator (a kind of a getter)
+* `_fry(type, name, args)` for a static method (aka *factory*)
+* `_cst(type, name)` for a static attribute (constant)
 
-The opening `_cpp_struct` conveniently declare these typedefs:
-  * `typ` for the structure itself
-  * `rc` as a const reference
-  * `ref` as a non-const reference
-  * `rval` as a r-value (or universal) reference
-  * and an alias `c_base` for the base [C] structure.
+The opening `_cpp_struct` conveniently declares these typedefs:
+* `typ` for the structure itself
+* `rc` as a const reference
+* `ref` as a non-const reference
+* `rval` as a r-value (or universal) reference
+* and an alias `c_base` for the base [C] structure.
 
-Optionally put after the opening `_cpp_struct` these convenience macros:
-  * `NO_MOVE` to disallow moving
-  * `NO_COPY` to disallow copying
-  * `NO_GEN` to disallow both moving and copying
-  * `COMPARABLE` to declare `int compare(rc) const`
-  * `EQ_NE` to declare `==` and `!=` operators
-  * `LGTE` to declare `<`, `<=`, `>`, and `>=` operators
-  * `COMP_OPS` as a shortcut for `EQ_NE LGTE`
+Optionally use just after the opening `_cpp_struct` these convenience macros:
+* `NO_MOVE` to disallow moving
+* `NO_COPY` to disallow copying
+* `NO_GEN` to disallow both moving and copying
+* `COMPARABLE` to declare `int compare(rc) const`
+* `EQ_NE` to declare `==` and `!=` operators
+* `LGTE` to declare `<`, `<=`, `>`, and `>=` operators
+* `COMP_OPS` as a shortcut for `EQ_NE LGTE`
 
-Since any [C++] code needs to be guarded - excluded from [C], use macros:
-  * `_cpp_private` to enter `private:` into the declaration
-  * `_cpp_code(...)` to guard any other [C++]-only code
-  * or `#if _is_cpp_` ... `#endif`
+Since any [C++] code must be guarded - excluded from [C], use macros:
+* `_cpp_private` to enter `private:` into the declaration
+* `_cpp_code(...)` to guard any other [C++]-only code
+* or `#if _is_cpp_` ... `#endif`
 
 ```C
 _cpp_struct COMPARABLE COMP_OPS
@@ -169,13 +171,14 @@ _cpp_struct_end
 _cpp_code(typedef c::str::rc strc;)
 
 _cpp_code(
-namespace c { namespace unsafe {
-str str_frm(pcstr, ...);
-str str_cat(pcstr, ...);
-}})
+  namespace c { namespace unsafe {
+  str str_frm(pcstr, ...);
+  str str_cat(pcstr, ...);
+  }}
+)
 ```
 
-5. Finally, undef the namespace and structiúre names:
+5. Finally, undefine the namespace and structire names:
 ```C
 #undef DS___
 #undef NS___
