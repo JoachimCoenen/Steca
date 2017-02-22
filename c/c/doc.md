@@ -29,12 +29,12 @@ Exceptions, if made, should have a clear purpose.
 
 The collaterals and consequences of the above are:
 1.
-    * Use `struct`, not `class`.
-    * No need to state `public:`.
-    * There is no need for getters or setters.
-    * Structures can be safely-ish shared among many readers.
-    * It must be explicitly stated when an attribute value is modified;
-      that should be typically done before the structure is shared.
+  * Use `struct`, not `class`.
+  * No need to state `public:`.
+  * There is no need for getters or setters.
+  * Structures can be safely-ish shared among many readers.
+  * It must be explicitly stated when an attribute value is modified;
+    that should be typically done before the structure is shared.
 2.
     * No need to state `public:`.
     * Most methods are to be `const`.
