@@ -18,8 +18,8 @@
 #ifndef CORE_XY_H
 #define CORE_XY_H
 
-#include <c/c/c_def.h>
-#include <c/c/lib/num.h>
+#include <c2/c/c_def.h>
+#include <c2/c/lib/num.h>
 
 #define NS__ core
 #define ST__ XY

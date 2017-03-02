@@ -7,7 +7,7 @@ find_package (Qt5Widgets REQUIRED)
 
 set (CMAKE_AUTOMOC ON)
 
-set (srcdirs STeCa c)
+set (srcdirs STeCa)
 foreach (dir ${srcdirs})
   set (d ${CMAKE_HOME_DIRECTORY}/${dir})
   file (GLOB_RECURSE fs ${d}/*.cpp)
@@ -25,8 +25,10 @@ if (WITH_COVERAGE)
 endif ()
 
 add_executable (${app} ${files} ${test_files})
+add_dependencies (${app} c2_qt c2_cpp c2_c)
 
 target_link_libraries (${app}
+  c2_qt c2_cpp c2_c
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 

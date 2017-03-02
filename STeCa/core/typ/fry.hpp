@@ -18,11 +18,11 @@
 #ifndef CORE_FRY_H
 #define CORE_FRY_H
 
-#include <c/c/c_def.h>
-#include <c/c/lib/ptr.h>
-#include <c/c/lib/str.h>
-#include <c/cpp/exc.hpp>
-#include <c/cpp/map.hpp>
+#include <c2/c/c_def.h>
+#include <c2/c/lib/ptr.h>
+#include <c2/c/lib/str.h>
+#include <c2/cpp/exc.hpp>
+#include <c2/cpp/map.hpp>
 
 namespace core {
 //-----------------------------------------------------------------------------

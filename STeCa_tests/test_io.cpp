@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 #include <core/io/io.hpp>
-#include <c/c/c_cpp>
-#include <c/qt/def.hpp>
+#include <c2/c/c_cpp>
+#include <c2/qt/def.hpp>
 #include <QFileInfo>
 #include <QDir>
 
@@ -25,8 +25,8 @@ namespace core {
 //------------------------------------------------------------------------------
 
 TEST("caress",
-//  auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
-//  CHECK_NOTHROW(io::loadCaress(toStr(file)));
+  auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
+  CHECK_NOTHROW(io::loadCaress(toStr(file)));
 )
 
 //------------------------------------------------------------------------------

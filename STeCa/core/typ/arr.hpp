@@ -18,7 +18,7 @@
 #ifndef CORE_ARR_H
 #define CORE_ARR_H
 
-#include <c/c/c_def.h>
+#include <c2/c/c_def.h>
 
 #define NS__ core
 #define ST__ sz2

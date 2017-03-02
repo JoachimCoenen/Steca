@@ -17,7 +17,7 @@
 
 #include "hub.hpp"
 #include <QApplication>
-#include <c/c/c_cpp>
+#include <c2/c/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

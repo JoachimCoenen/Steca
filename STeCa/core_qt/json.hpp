@@ -18,12 +18,12 @@
 #ifndef CORE_JSON_H
 #define CORE_JSON_H
 
-#include <c/c/c_c.h>
-#include <c/c/lib/num.h>
-#include <c/c/lib/ptr.h>
+#include <c2/c/c_c.h>
+#include <c2/c/lib/num.h>
+#include <c2/c/lib/ptr.h>
 
-#include <c/cpp/exc.hpp>
-#include <c/qt/def.hpp>
+#include <c2/cpp/exc.hpp>
+#include <c2/qt/def.hpp>
 
 #include <core/typ/ij.h>
 #include <core/typ/range.hpp>

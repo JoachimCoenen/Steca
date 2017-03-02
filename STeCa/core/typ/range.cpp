@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "range.hpp"
-#include <c/c/c_cpp>
+#include <c2/c/c_cpp>
 
 #include <algorithm>
 #undef NAN

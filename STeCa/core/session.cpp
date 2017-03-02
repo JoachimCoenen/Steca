@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "session.h"
-#include <c/cpp/async.hpp>
+#include <c2/cpp/async.hpp>
 #include <chrono>
-#include <c/c/c_cpp>
+#include <c2/c/c_cpp>
 
 core_Session::core_Session() : dummy(0) {}
 

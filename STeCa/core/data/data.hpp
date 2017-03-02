@@ -18,11 +18,11 @@
 #ifndef CORE_DATA_HPP
 #define CORE_DATA_HPP
 
-#include <c/c/lib/ptr.h>
-#include <c/c/lib/str.h>
-#include <c/cpp/vec.hpp>
-#include <c/cpp/map.hpp>
-#include <c/cpp/exc.hpp>
+#include <c2/c/lib/ptr.h>
+#include <c2/c/lib/str.h>
+#include <c2/cpp/vec.hpp>
+#include <c2/cpp/map.hpp>
+#include <c2/cpp/exc.hpp>
 
 namespace core {
 #define NS__ data

@@ -21,15 +21,10 @@ add_custom_target (.md SOURCES ${md_files})
 set (txt_files AUTHORS CHANGELOG COPYING README.md VERSION manifest)
 add_custom_target (.txt SOURCES ${txt_files})
 
-include_directories (${CMAKE_HOME_DIRECTORY})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory (c)
+add_subdirectory (c2)
 add_subdirectory (STeCa)
 
-if (WITH_TESTS)
-  add_subdirectory (tests)
-  enable_testing ()
-  add_test (tests tests/tests)
-endif ()
-
+add_subdirectory (STeCa_tests)
 # eof

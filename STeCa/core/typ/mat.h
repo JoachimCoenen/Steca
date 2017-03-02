@@ -18,9 +18,9 @@
 #ifndef CORE_MAT_H
 #define CORE_MAT_H
 
-#include <c/c/c_def.h>
-#include <c/c/lib/num.h>
-#include <c/c/lib/trg.h>
+#include <c2/c/c_def.h>
+#include <c2/c/lib/num.h>
+#include <c2/c/lib/trg.h>
 
 #define NS__ core
 #define ST__ vec3

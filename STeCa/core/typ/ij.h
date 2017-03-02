@@ -18,7 +18,7 @@
 #ifndef CORE_IJ_H
 #define CORE_IJ_H
 
-#include <c/c/c_def.h>
+#include <c2/c/c_def.h>
 
 #define NS__ core
 #define ST__ IJ

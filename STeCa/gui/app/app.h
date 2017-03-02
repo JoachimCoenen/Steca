@@ -18,7 +18,7 @@
 #ifndef GUI_APP_H
 #define GUI_APP_H
 
-#include <c/qt/app.hpp>
+#include <c2/qt/app.hpp>
 
 #define NS__ gui
 #define ST__ App

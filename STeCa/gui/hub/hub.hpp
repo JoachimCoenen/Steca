@@ -19,7 +19,7 @@
 #define GUI_HUB_H
 
 #include <core/session.h>
-#include <c/c/lib/ptr.h>
+#include <c2/c/lib/ptr.h>
 
 #include <QObject>
 #include <QEvent>

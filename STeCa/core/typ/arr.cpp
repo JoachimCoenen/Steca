@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "arr.hpp"
-#include <c/c/c_cpp>
-#include <c/c/lib/mem.h>
-#include <c/c/lib/num.h>
+#include <c2/c/c_cpp>
+#include <c2/c/lib/mem.h>
+#include <c2/c/lib/num.h>
 
 core_sz2::core_sz2() : core_sz2(0, 0) {}
 core_sz2::core_sz2(sz_t i_, sz_t j_) : i(i_), j(j_) {}

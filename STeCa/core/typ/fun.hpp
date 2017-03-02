@@ -18,9 +18,9 @@
 #ifndef CORE_FUN_H
 #define CORE_FUN_H
 
-#include <c/c/c_def.h>
-#include <c/c/lib/num.h>
-#include <c/cpp/vec.hpp>
+#include <c2/c/c_def.h>
+#include <c2/c/lib/num.h>
+#include <c2/cpp/vec.hpp>
 #include "fry.hpp"
 
 namespace core {

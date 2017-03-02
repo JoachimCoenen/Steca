@@ -18,9 +18,9 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c/c/c_c.h>
-#include <c/c/lib/num.h>
-#include <c/cpp/vec.hpp>
+#include <c2/c/c_c.h>
+#include <c2/c/lib/num.h>
+#include <c2/cpp/vec.hpp>
 
 #define NS__ core
 #define ST__ Range
