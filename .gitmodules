@@ -1,3 +1,3 @@
 [submodule "c2"]
 	path = c2
-	url = git@github.com:c53be/c2.git
+	url = https://github.com/c53be/c2.git
