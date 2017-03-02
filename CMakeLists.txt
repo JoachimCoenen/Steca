@@ -28,6 +28,8 @@ add_subdirectory (STeCa)
 
 if (WITH_TESTS)
   add_subdirectory (tests)
+  enable_testing ()
+  add_test (tests tests/tests)
 endif ()
 
 # eof

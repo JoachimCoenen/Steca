@@ -149,7 +149,7 @@ Since any [C++] code must be guarded - excluded from [C], use macros:
 * `_cpp_code(...)` to guard any other [C++]-only code
 * or `#if _is_cpp_` ... `#endif`
 
-```C
+~~~C
 _cpp_struct COMPARABLE COMP_OPS
   _con()
   _con(pcstr)
@@ -180,7 +180,7 @@ _cpp_code(
   str str_cat(pcstr, ...);
   }}
 )
-```
+~~~
 
 Other macros:
 * `xon(...)`: `explicit` constructor
