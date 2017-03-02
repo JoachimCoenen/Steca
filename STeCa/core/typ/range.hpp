@@ -18,12 +18,12 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c/c/c.h>
+#include <c/c/c_c.h>
 #include <c/c/lib/num.h>
 #include <c/cpp/vec.hpp>
 
-#define NS___ core
-#define DS___ Range
+#define NS__ core
+#define ST__ Range
 
 _c_struct
   _atr(real, min)
@@ -61,9 +61,9 @@ _cpp_struct COMPARABLE EQ_NE
   ref   operator=(rc);
 _cpp_struct_end
 
-#undef DS___
+#undef ST__
 
-#define DS___ Ranges
+#define ST__ Ranges
 
 _struct EQ_NE
   _con()
@@ -86,7 +86,7 @@ private:
   c::vec<Range> rs;
 _struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif

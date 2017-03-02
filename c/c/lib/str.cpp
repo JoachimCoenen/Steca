@@ -3,7 +3,7 @@
 #include "str.h"
 #include "mem.h"
 #include "num.h"
-#include "../cpp"
+#include "../c_cpp"
 #include <string.h>
 #include <cstdarg>
 #include <cstdio>

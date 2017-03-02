@@ -21,8 +21,8 @@
 #include <c/c/c_def.h>
 #include <c/c/lib/num.h>
 
-#define NS___ core
-#define DS___ XY
+#define NS__ core
+#define ST__ XY
 
 _c_struct
   _atr(real, x)
@@ -35,8 +35,8 @@ _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _mth(bool, isDef, ())
 _cpp_struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

@@ -5,7 +5,7 @@
 
 file    | purpose
 --------|--------
-c.h     | The most important definitions. Include everywhere (indirectly).
+c_c.h   | The most important definitions. Include everywhere (indirectly).
 c_def.h | Data defining macros.
 
 ### Terminology:
@@ -77,15 +77,15 @@ Include `c_def.h`; typedef [C] PODs as needed.
 
 typedef char*       pstr;
 typedef char const* pcstr;
-```
+~~~
 
 ### 2.
 Specify the namespace and the data structure name (the trailing underscores
 make the names stand out):
 ```C
-#define NS___ c
-#define DS___ str
-```
+#define NS__ c
+#define ST__ str
+~~~
 
 ### 3.
 Declare the [C] layout, using (only) these macros:
@@ -101,7 +101,7 @@ _c_struct
 
   _c_con(sz_t, pcvoid)
 _c_struct_end
-```
+~~~
 Note:
 * We use two-space indentation.
 * Data declaration precedes that of methods.
@@ -189,9 +189,9 @@ Other macros:
 
 5. Finally, undefine the namespace and structure names:
 ```C
-#undef DS___
-#undef NS___
-```
+#undef ST__
+#undef NS__
+~~~
 
 ## After preprocessing
 The above produces two versions of a pre-processed code (here formatted
@@ -206,7 +206,7 @@ struct c_str {
   sz_t const sz;
   char const * const p;
 };
-```
+~~~
 
 ### C++
 ```C
@@ -275,26 +275,26 @@ str str_cat(pcstr, ...);
 
 }}
 
-```
+~~~
 
 ### C++ -only structures
 
 Structures that do not need a [C] layout (will be used only in [C++]), may be
 declared as follows:
 
-* Define `NS___` and `DS___`
+* Define `NS__` and `ST__`
 * Open with `_struct`, optionally followed by the convenience macros
 * Declare attributes and methods
 * End with `_struct_end`
-* Undefine `NS___` and `DS___`
+* Undefine `NS__` and `ST__`
 
 Use:
 * `_struct_templ`, `_struct_end` for templated structures.
 * `_iface`,`_iface_end`, `_iface_mth`, `_iface_mth_mut` for interfaces.
 * `_struct_sub`, `_struct_sub_templ`, `_struct_sub_end` for inheritance within
-  the namespace, using NS__ and DS__.
+  the namespace, using NS__ and ST__.
 * `sub_struct`, `sub_struct_reimpl`, `sub_struct_templ`, `sub_struct_end`
-  for inheritance using specified structure names - macros that rely on DS___
+  for inheritance using specified structure names - macros that rely on ST__
   cannot be used, but the convenience typedefs etc. still work.
 
 `C_BASE_CONS` resp.`BASE_CONS` reexport the `c_base` resp. `base` constructors.

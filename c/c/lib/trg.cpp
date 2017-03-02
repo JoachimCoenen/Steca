@@ -1,7 +1,7 @@
 // (c)
 
 #include "trg.h"
-#include "../cpp"
+#include "../c_cpp"
 #include <cmath>
 
 c_deg::c_deg(real val_) : val(val_) {}

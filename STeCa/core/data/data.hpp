@@ -25,12 +25,12 @@
 #include <c/cpp/exc.hpp>
 
 namespace core {
-#define NS___ data
+#define NS__ data
 //------------------------------------------------------------------------------
 
 #define _sh_struct _struct typedef c::shared<typ> sh;
 
-#define DS___ Meta
+#define ST__ Meta
 
 _sh_struct                      // metadata
   struct Dict : private c::map<c::str, uint> {
@@ -48,9 +48,9 @@ _sh_struct                      // metadata
   _con(Dict::sh, float, float, float, float)
 _struct_end
 
-#undef  DS___
+#undef  ST__
 
-#define DS___ Set
+#define ST__ Set
 
 _sh_struct                      // one read dataset
   _atr(uint, idx)               // this order in File, 1..; 0 = not
@@ -59,8 +59,8 @@ _sh_struct                      // one read dataset
   _con(Meta::rc)
 _struct_end
 
-#undef  DS___
-#define DS___ File
+#undef  ST__
+#define ST__ File
 
 _sh_struct                      // one file
   _atr(uint, idx)               // this order in Files, 1..; 0 = not
@@ -72,8 +72,8 @@ _sh_struct                      // one file
   _des()
 _struct_end
 
-#undef  DS___
-#define DS___ Files
+#undef  ST__
+#define ST__ Files
 
 _sh_struct                      // the whole file group
   _atr(c::vec<File::sh>, files)
@@ -85,9 +85,9 @@ _sh_struct                      // the whole file group
   _mth_mut(void, remFile, (uint))
 _struct_end
 
-#undef  DS___
+#undef  ST__
 
 //------------------------------------------------------------------------------
-#undef NS___
+#undef NS__
 }
 #endif

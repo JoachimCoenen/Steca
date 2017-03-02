@@ -6,8 +6,8 @@
 #include "../c/lib/str.h"
 #include <exception>
 
-#define NS___ c
-#define DS___ exc
+#define NS__ c
+#define ST__ exc
 
 _struct_sub (::std::exception)
   _atr(str,  msg)
@@ -24,8 +24,8 @@ _ns_dcl([[noreturn]] void err()             will_exc;)
 _ns_dcl([[noreturn]] void err(pcstr)        will_exc;)
 _ns_dcl([[noreturn]] void err(pcstr, pcstr) will_exc;)
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

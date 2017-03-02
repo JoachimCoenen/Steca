@@ -6,8 +6,8 @@
 #include "../c/c_def.h"
 #include <vector>
 
-#define NS___ c
-#define DS___ vec
+#define NS__ c
+#define ST__ vec
 
 _struct_sub_templ(std::vector<T>)
   using base::base;
@@ -41,8 +41,8 @@ _struct_sub_templ(std::vector<T>)
   }
 _struct_sub_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

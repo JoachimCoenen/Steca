@@ -20,8 +20,8 @@
 
 #include <c/c/c_def.h>
 
-#define NS___ core
-#define DS___ Session
+#define NS__ core
+#define ST__ Session
 
 _c_struct
   _atr(int, dummy)
@@ -33,8 +33,8 @@ _cpp_struct
   _mth (int, long_square, (int))
 _cpp_struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

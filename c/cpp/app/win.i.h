@@ -5,15 +5,15 @@
 
 #include "../../c/c_def.h"
 
-#define NS___ c
-#define DS___ win
+#define NS__ c
+#define ST__ win
 
 _iface
   _iface_mth_mut(void, show, ())
 _iface_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

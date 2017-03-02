@@ -6,14 +6,14 @@
 #include "../../c/cpp/vec.hpp"
 #include <thread>
 
-#define NS___ c
-#define DS___ thread
+#define NS__ c
+#define ST__ thread
 
 _struct_sub (std::thread) BASE_CONS
 _struct_sub_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 namespace c {
 //------------------------------------------------------------------------------

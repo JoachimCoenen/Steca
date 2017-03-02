@@ -6,8 +6,8 @@
 #include "../c_def.h"
 #include "num.h"
 
-#define NS___ c
-#define DS___ deg
+#define NS__ c
+#define ST__ deg
 
 _c_struct
   _atr(real, val)
@@ -30,8 +30,8 @@ _cpp_struct
   _mth(real, cos, ())
 _cpp_struct_end
 
-#undef DS___
-#define DS___ rad
+#undef ST__
+#define ST__ rad
 
 _c_struct
   _atr(real, val)
@@ -52,7 +52,7 @@ _cpp_struct
   _mth(real, cos, ())
 _cpp_struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif

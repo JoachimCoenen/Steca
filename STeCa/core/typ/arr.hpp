@@ -20,8 +20,8 @@
 
 #include <c/c/c_def.h>
 
-#define NS___ core
-#define DS___ sz2
+#define NS__ core
+#define ST__ sz2
 
 _c_struct
   _atr(sz_t, i)
@@ -38,9 +38,9 @@ _cpp_struct_end
 
 _ns_dcl(sz2 operator-(sz2::rc, sz2::rc);)
 
-#undef DS___
+#undef ST__
 
-#define DS___ arr2base
+#define ST__ arr2base
 
 _struct
   _atr(sz2, sz)
@@ -51,9 +51,9 @@ protected:
   _mth(void const*, colAt, (sz_t))
 _struct_end
 
-#undef DS___
+#undef ST__
 
-#define DS___ arr2
+#define ST__ arr2
 
 _struct_sub_templ(arr2base)
   _cpp_code(typedef T const& Trc;)
@@ -78,8 +78,8 @@ _struct_sub_templ(arr2base)
   })
 _struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

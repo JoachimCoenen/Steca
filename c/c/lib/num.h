@@ -3,7 +3,7 @@
 #ifndef C_C_TYP_NUM
 #define C_C_TYP_NUM
 
-#include "../c.h"
+#include "../c_c.h"
 
 EXTERN_C
 //------------------------------------------------------------------------------

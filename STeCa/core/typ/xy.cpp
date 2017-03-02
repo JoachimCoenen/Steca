@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "xy.h"
-#include <c/c/cpp>
+#include <c/c/c_cpp>
 
 core_XY::core_XY() : core_XY(c::NAN, c::NAN)  {}
 

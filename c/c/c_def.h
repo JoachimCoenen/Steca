@@ -4,10 +4,10 @@
 #ifndef C_C_DEF_H
 #define C_C_DEF_H
 
-#include "c.h"
+#include "c_c.h"
 
 #if defined(__GNUC__)
-#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+  #pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
 //------------------------------------------------------------------------------
@@ -16,17 +16,15 @@
 #define CAT_(a, b, c) a ## b ## c
 #define CAT3(a, b, c) CAT_(a, b, c)
 
-#define NS_NAME_C   CAT3(NS___, _, DS___)
-#define NS_NAME_CPP CAT3(NS___, :, DS___)
+#define NS_NAME_C   CAT3(NS__, _, ST__)
+#define NS_NAME_CPP CAT3(NS__, :, ST__)
 
 //------------------------------------------------------------------------------
 // declarations
 
 // "C" ns-prefixed struct with the very default constructor ...
-#define _c_struct     \
-  EXTERN_C struct NS_NAME_C {
-#define _c_struct_end \
-  }; EXTERN_C_END
+#define _c_struct       EXTERN_C struct NS_NAME_C {
+#define _c_struct_end   }; EXTERN_C_END
 
 // ... that has only immutable data ...
 #define _atr(typ, name)     \
@@ -51,26 +49,26 @@
   typedef typ& ref;       \
   typedef typ&& rval;
 
-#define _cpp_struct_typedefs _typedefs(DS___)
+#define _cpp_struct_typedefs _typedefs(ST__)
 
 // ... extended ...
-#define _cpp_struct     \
-  namespace NS___ {   \
-  struct DS___ : NS_NAME_C { _cpp_struct_typedefs using c_base = NS_NAME_C;
+#define _cpp_struct   \
+  namespace NS__ {   \
+  struct ST__ : NS_NAME_C { _cpp_struct_typedefs using c_base = NS_NAME_C;
 #define _cpp_struct_end \
   };}
 
 // ... by constructors and destructor ...
 #define _con(...)               \
-  DS___(__VA_ARGS__);
+  ST__(__VA_ARGS__);
 #define _xon(...)               \
   explicit _con(__VA_ARGS__)
 #define _con_fwd(args, fwd)     \
-  DS___ args : base fwd {}
+  ST__ args : base fwd {}
 #define _con_c_fwd(args, fwd)   \
-  DS___ args : c_base fwd {}
+  ST__ args : c_base fwd {}
 #define _des()                  \
- ~DS___();
+ ~ST__();
 
 // ... methods ...
 #define _mth(typ, mth, args)              \
@@ -99,7 +97,7 @@
 
 // ... not covered by the above ...
 #define _dcl(...)     __VA_ARGS__
-#define _ns_dcl(...)  namespace NS___ { __VA_ARGS__ }
+#define _ns_dcl(...)  namespace NS__ { __VA_ARGS__ }
 
 #else
 
@@ -132,14 +130,14 @@
 #if _is_cpp_
 
 #define _struct_pref(pref)     \
-  namespace NS___ { pref struct DS___ { _cpp_struct_typedefs
+  namespace NS__ { pref struct ST__ { _cpp_struct_typedefs
 #define _struct _struct_pref()
 #define _struct_templ _struct_pref(template <typename T>)
 #define _struct_end \
   };}
 
 #define _iface     \
-  _struct virtual ~DS___();
+  _struct virtual ~ST__();
 #define _iface_end \
   };}
 
@@ -152,7 +150,7 @@
 #define _iface_mth_mut(typ, mth, args) _iface_mth_mut_body(typ, mth, args, = 0;)
 
 #define _struct_sub_pre_pre(pre,pre_s,s)  \
-  namespace NS___ { pre struct DS___ : pre_s s { _cpp_struct_typedefs using base = s;
+  namespace NS__ { pre struct ST__ : pre_s s { _cpp_struct_typedefs using base = s;
 
 #define _struct_sub(s)       _struct_sub_pre_pre(,,s)
 #define _struct_sub_templ(s) _struct_sub_pre_pre(template <typename T>,protected,s)
@@ -236,7 +234,7 @@
 
 #endif
 
-#if _is_cpp_
+#if _is_cpp_ && !defined(GENERATE_INTERFACE)
 
 // make a type mutable
 template <typename T> struct mut_typ            { typedef T typ; };

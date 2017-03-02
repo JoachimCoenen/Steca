@@ -3,7 +3,7 @@
 #include "app.hpp"
 #include "log.hpp"
 #include "win.hpp"
-#include "../c/cpp"
+#include "../c/c_cpp"
 #include "../cpp/exc.hpp"
 
 #include <QMessageBox>

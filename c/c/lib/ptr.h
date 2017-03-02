@@ -8,16 +8,16 @@
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-#define NS___ c
-#define DS___ ptr
+#define NS__ c
+#define ST__ ptr
 
 _c_struct
   _ptr(void, p)
   _c_con(pcvoid)
 _c_struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #if _is_cpp_
 namespace c {

@@ -22,8 +22,8 @@
 #include <c/c/lib/num.h>
 #include <c/c/lib/trg.h>
 
-#define NS___ core
-#define DS___ vec3
+#define NS__ core
+#define ST__ vec3
 
 _c_struct
   _atr(real, _0) _atr(real, _1) _atr(real, _2)
@@ -33,9 +33,9 @@ _c_struct_end
 _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef DS___
+#undef ST__
 
-#define DS___ mat3
+#define ST__ mat3
 
 _c_struct
   _atr(real, _00) _atr(real, _01) _atr(real, _02)
@@ -56,7 +56,7 @@ _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _fry(mat3, rotationCCWz, (c::rad))
 _cpp_struct_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif

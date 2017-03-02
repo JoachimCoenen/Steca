@@ -1,13 +1,11 @@
 // (c)
 
-#if !_is_cpp_
-#error this should be used in cpp files
-#endif
+#include "c_cpp_only.inc"
 
-#ifdef C_C_CPP_DEBUG
-#error include only once
+#ifdef C_CPP_DEBUG_INCLUDED
+  #error inlude only once
 #endif
-#define C_C_CPP_DEBUG
+#define C_CPP_DEBUG_INCLUDED
 
 #ifndef NDEBUG
 
@@ -39,6 +37,7 @@ private:
 
 #define EXPECT_WT(cond, what) { if (!(cond)) WT(what); EXPECT(cond) }
 #define ENSURE_WT(cond, what) { if (!(cond)) WT(what); ENSURE(cond) }
+#define ABORT_IF(cond, msg)   { if (cond) { TR("abort:" << __FILE__ << __LINE__ << msg); abort();} }
 
 #else
 
@@ -46,6 +45,7 @@ private:
 
 #define EXPECT_WT(cond, what) { EXPECT(cond) }
 #define ENSURE_WT(cond, what) { ENSURE(cond) }
+#define ABORT_IF(cond, msg)   { if (cond) abort(); }
 
 #endif
 

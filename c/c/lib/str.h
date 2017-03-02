@@ -8,8 +8,8 @@
 typedef char*       pstr;
 typedef char const* pcstr;
 
-#define NS___ c
-#define DS___ str
+#define NS__ c
+#define ST__ str
 
 _c_struct
   _atr(sz_t, sz)
@@ -49,8 +49,8 @@ _cpp_code(
   }}
 )
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

@@ -21,16 +21,16 @@
 #include <c/qt/win.hpp>
 #include <gui/hub/hub.hpp>
 
-#define NS___ gui
-#define DS___ Win
+#define NS__ gui
+#define ST__ Win
 
 _struct_sub (c_qt::win) BASE_CONS
   Win();
   Hub hub;
 _struct_sub_end
 
-#undef DS___
-#undef NS___
+#undef ST__
+#undef NS__
 
 #endif
 // eof

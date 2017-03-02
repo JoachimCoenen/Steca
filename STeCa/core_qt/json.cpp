@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "json.hpp"
-#include <c/c/cpp>
+#include <c/c/c_cpp>
 #include <c/c/lib/str.h>
 #include <QStringList>
 #undef NAN

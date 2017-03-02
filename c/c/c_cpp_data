@@ -1,13 +1,11 @@
 // (c) - cpp side of data declarations
 
-#if !_is_cpp_
-#error this should be used in cpp files
-#endif
+#include "c_cpp_only.inc"
 
-#ifdef C_C_CPP_DATA
-#error include only once
+#ifdef C_CPP_DATA_INCLUDED
+  #error inlude only once
 #endif
-#define C_C_CPP_DATA
+#define C_CPP_DATA_INCLUDED
 
 //------------------------------------------------------------------------------
 // cpp structs

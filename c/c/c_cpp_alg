@@ -1,13 +1,11 @@
-// (c)
+// (c) - include into a .cpp file; algorithms
 
-#if !_is_cpp_
-#error this should be used in cpp files
-#endif
+#include "c_cpp_only.inc"
 
-#ifdef C_C_CPP_ALG
-#error include only once
+#ifdef C_CPP_ALG_INCLUDED
+  #error inlude only once
 #endif
-#define C_C_CPP_ALG
+#define C_CPP_ALG_INCLUDED
 
 #ifdef __GNUC__
 

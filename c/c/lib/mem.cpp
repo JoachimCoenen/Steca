@@ -1,7 +1,7 @@
 // (c)
 
 #include "mem.h"
-#include "../cpp"
+#include "../c_cpp"
 #include <memory>
 #include <string.h>
 
@@ -40,32 +40,57 @@ TEST("mem",
 namespace unsafe {
 //------------------------------------------------------------------------------
 
-pvoid alloc(sz_t sz) {
-  return (sz > 0) ? ::malloc(sz) : nullptr; // TODO abrt if null
+pvoid maybe_alloc(sz_t sz) {
+  return sz ? ::malloc(sz) : nullptr;
 }
 
-pvoid calloc(sz_t n, sz_t sz) {
-  return (sz > 0) ? ::calloc(n, sz) : nullptr; // TODO abrt if null
+pvoid maybe_calloc(sz_t n, sz_t sz) {
+  return sz*n ? ::calloc(n, sz) : nullptr;
 }
 
-pvoid realloc(pvoid p, sz_t sz) {
-  return ::realloc(p, sz); // TODO abrt if null
+pvoid maybe_realloc(pvoid p, sz_t sz) {
+  return ::realloc(p, sz);
+}
+
+pvoid maybe_memcpy(sz_t sz, pcvoid src) {
+  EXPECT(src || !sz)
+  if (!src) return nullptr;
+  pvoid p = maybe_alloc(sz);
+  if (p) ::memcpy(p, src, sz);
+  return p;
 }
 
 void free(pvoid p) {
   if (p) ::free(p);
 }
 
-pvoid memcpy(sz_t size, pcvoid src) {
-  if (!src) return nullptr;
-  pvoid p = alloc(size);
-  ::memcpy(p, src, size);
+pvoid alloc(sz_t sz) {
+  auto p = maybe_alloc(sz);
+  ABORT_IF(!p && sz, "alloc failed")
+  return p;
+}
+
+pvoid calloc(sz_t n, sz_t sz) {
+  auto p = maybe_calloc(n, sz);
+  ABORT_IF(!p && sz*n, "calloc failed")
+  return p;
+}
+
+pvoid realloc(pvoid p_, sz_t sz) {
+  auto p = maybe_realloc(p_, sz);
+  ABORT_IF(!p && sz, "realloc failed")
+  return p;
+}
+
+pvoid memcpy(sz_t sz, pcvoid src) {
+  auto p = maybe_memcpy(sz, src);
+  ABORT_IF(!p && sz, "memcpy failed")
   return p;
 }
 
 TEST("unsafe",
-  free(alloc(0));
-  free(realloc(nullptr, 9));
+  free(maybe_alloc(0));
+  free(maybe_realloc(nullptr, 9));
 )
 
 //------------------------------------------------------------------------------
