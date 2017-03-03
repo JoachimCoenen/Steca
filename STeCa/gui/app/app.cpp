@@ -37,7 +37,7 @@ int App::exec() {
     Win w;
     w.show();
 
-    int res = base::exec(&w);
+    int res = execWin(&w);
 
     return res;
 
