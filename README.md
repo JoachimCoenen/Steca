@@ -4,6 +4,12 @@ StressTextureCalculator, version 2. (`STeCa2`, or simply **Steca**)
 * [[Online STeCa user documentation]](http://apps.jcns.fz-juelich.de/steca2)
 * [[Developers' documentation]](doc.md)
 
+## Branches
+
+* 'master': squashed, only releases
+* 'develop-2.0.5': continuing 2.0.x development
+* 'develop': on the way to 2.1
+
 ## CI Status
 
 ### master:
