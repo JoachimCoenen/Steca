@@ -34,39 +34,39 @@ static qstrc
 
 //------------------------------------------------------------------------------
 
-static JsonObj toJson(IJ::rc ij) {
+static JsonObj toJson(c::ij::rc ij) {
   return JsonObj()
     .saveInt(json_key::I, ij.i)
     .saveInt(json_key::J, ij.j);
 }
 
-static IJ toIJ(JsonObj::rc obj) may_exc {
-  return IJ(
+static c::ij toIJ(JsonObj::rc obj) may_exc {
+  return c::ij(
     obj.loadInt(json_key::I),
     obj.loadInt(json_key::J)
   );
 }
 
 TEST("IJ::json",
-  IJ ij(-1,2), ij1(toIJ(toJson(ij)));
+  c::ij ij(-1,2), ij1(toIJ(toJson(ij)));
   CHECK_EQ(ij, ij1);
 )
 
-static JsonObj toJson(XY::rc xy) {
+static JsonObj toJson(c::xy::rc xy) {
   return JsonObj()
     .saveReal(json_key::X, xy.x)
     .saveReal(json_key::Y, xy.y);
 }
 
-static XY toXY(JsonObj::rc obj) may_exc {
-  return XY(
+static c::xy toXY(JsonObj::rc obj) may_exc {
+  return c::xy(
     obj.loadInt(json_key::X),
     obj.loadInt(json_key::Y)
   );
 }
 
 TEST("XY::json",
-  XY xy(-1,2), xy1(toXY(toJson(xy)));
+  c::xy xy(-1,2), xy1(toXY(toJson(xy)));
   CHECK_EQ(xy, xy1);
 )
 
@@ -331,21 +331,21 @@ Ranges JsonObj::loadRanges(qstrc key) const may_exc {
   return toRanges(loadArr(key));
 }
 
-JsonObj& JsonObj::saveIJ(qstrc key, IJ::rc ij) {
+JsonObj& JsonObj::saveIJ(qstrc key, c::ij::rc ij) {
   insert(key, toJson(ij));
   return *this;
 }
 
-IJ JsonObj::loadIJ(qstrc key) const may_exc {
+c::ij JsonObj::loadIJ(qstrc key) const may_exc {
   return toIJ(loadObj(key));
 }
 
-JsonObj& JsonObj::saveXY(qstrc key, XY::rc xy) {
+JsonObj& JsonObj::saveXY(qstrc key, c::xy::rc xy) {
   insert(key, toJson(xy));
   return *this;
 }
 
-XY JsonObj::loadXY(qstrc key) const may_exc {
+c::xy JsonObj::loadXY(qstrc key) const may_exc {
   return toXY(loadObj(key));
 }
 

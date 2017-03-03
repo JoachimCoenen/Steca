@@ -25,12 +25,14 @@
 #define NS__ core
 #define ST__ Range
 
+// core_Range
 _c_struct
   _atr(real, min)
   _atr(real, max)
   _c_con(real, real)
 _c_struct_end
 
+// core::Range
 _cpp_struct COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
   Range(real);                      // singular, min == max
@@ -65,6 +67,7 @@ _cpp_struct_end
 
 #define ST__ Ranges
 
+// core::Ranges
 _struct EQ_NE
   _con()
 

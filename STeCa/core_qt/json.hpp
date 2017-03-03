@@ -25,9 +25,9 @@
 #include <c2/cpp/exc.hpp>
 #include <c2/qt/def.hpp>
 
-#include <core/typ/ij.h>
+#include <c2/typ/ij.h>
+#include <c2/typ/xy.h>
 #include <core/typ/range.hpp>
-#include <core/typ/xy.h>
 #include <core/typ/fun.hpp>
 
 #include <QJsonArray>
@@ -81,11 +81,11 @@ sub_struct_reimpl (JsonObj, QJsonObject)
   qstr     loadStr(qstrc key, qstrc def)    const may_exc;
 
   // more custom types
-  JsonObj& saveIJ(qstrc key, IJ::rc);
-  IJ       loadIJ(qstrc key)                const may_exc;
+  JsonObj& saveIJ(qstrc key, c::ij::rc);
+  c::ij    loadIJ(qstrc key)                const may_exc;
 
-  JsonObj& saveXY(qstrc key, XY::rc);
-  XY       loadXY(qstrc key)                const may_exc;
+  JsonObj& saveXY(qstrc key, c::xy::rc);
+  c::xy    loadXY(qstrc key)                const may_exc;
 
   JsonObj& saveRange(qstrc key, Range::rc);
   Range    loadRange(qstrc key)             const may_exc;

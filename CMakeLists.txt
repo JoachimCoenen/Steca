@@ -9,8 +9,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   endif()
 endif ()
 
-#file (GLOB_RECURSE old_files .old/*)
-#add_custom_target (.old SOURCES ${old_files})
+file (GLOB_RECURSE old_files .old/*)
+add_custom_target (.old SOURCES ${old_files})
 
 #file (GLOB_RECURSE ci_files .travis/*)
 #add_custom_target (.ci SOURCES .travis.yml .appveyor.yml ${ci_files})
