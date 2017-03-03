@@ -24,10 +24,11 @@
 #define NS__ gui
 #define ST__ Win
 
+// gui::Win
 _struct_sub (c_qt::win) BASE_CONS
   Win();
   Hub hub;
-_struct_sub_end
+_struct_end
 
 #undef ST__
 #undef NS__

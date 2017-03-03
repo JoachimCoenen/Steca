@@ -32,13 +32,14 @@ namespace core {
 
 #define ST__ Meta
 
+// data::Meta
 _sh_struct                      // metadata
   struct Dict : private c::map<c::str, uint> {
     typedef c::shared<Dict> sh; using base = c::map<c::str, uint>;
 
     uint size()    const;
     uint add(strc);
-    uint at(strc)  const may_exc;
+    uint at(strc)  const may_err;
   };
 
   _atr(Dict::sh,      dict)
@@ -49,9 +50,9 @@ _sh_struct                      // metadata
 _struct_end
 
 #undef  ST__
-
 #define ST__ Set
 
+// data::Set
 _sh_struct                      // one read dataset
   _atr(uint, idx)               // this order in File, 1..; 0 = not
   _atr(Meta, meta)
@@ -62,6 +63,7 @@ _struct_end
 #undef  ST__
 #define ST__ File
 
+// data::File
 _sh_struct                      // one file
   _atr(uint, idx)               // this order in Files, 1..; 0 = not
   _atr(c::vec<Set::sh>, sets)
@@ -75,6 +77,7 @@ _struct_end
 #undef  ST__
 #define ST__ Files
 
+// data::Files
 _sh_struct                      // the whole file group
   _atr(c::vec<File::sh>, files)
   _atr(Meta::Dict::sh,   dict)

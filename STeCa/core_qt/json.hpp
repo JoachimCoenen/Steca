@@ -47,51 +47,51 @@ sub_struct_reimpl (JsonObj, QJsonObject)
 
   // plain types
   JsonObj& saveObj(qstrc key, JsonObj const&);
-  JsonObj  loadObj(qstrc key, bool defEmpty=false) const may_exc;
+  JsonObj  loadObj(qstrc key, bool defEmpty=false) const may_err;
 
   JsonObj& saveArr(qstrc key, JsonArr const&);
-  JsonArr  loadArr(qstrc key, bool defEmpty=false) const may_exc;
+  JsonArr  loadArr(qstrc key, bool defEmpty=false) const may_err;
 
   JsonObj& saveInt(qstrc key, int);
-  int      loadInt(qstrc key)               const may_exc;
-  int      loadInt(qstrc key, int def)      const may_exc;
+  int      loadInt(qstrc key)               const may_err;
+  int      loadInt(qstrc key, int def)      const may_err;
 
   JsonObj& saveUint(qstrc key, uint);
-  uint     loadUint(qstrc key)              const may_exc;
-  uint     loadUint(qstrc key, uint def)    const may_exc;
+  uint     loadUint(qstrc key)              const may_err;
+  uint     loadUint(qstrc key, uint def)    const may_err;
 
   JsonObj& savePint(qstrc key, pint);
-  pint     loadPint(qstrc key)              const may_exc;
-  pint     loadPint(qstrc key, uint def)    const may_exc;
+  pint     loadPint(qstrc key)              const may_err;
+  pint     loadPint(qstrc key, uint def)    const may_err;
 
   JsonObj& saveReal(qstrc key, real);
-  real     loadReal(qstrc key)              const may_exc;
-  real     loadReal(qstrc key, real def)    const may_exc;
+  real     loadReal(qstrc key)              const may_err;
+  real     loadReal(qstrc key, real def)    const may_err;
 
   JsonObj& savePreal(qstrc key, preal);
-  preal    loadPreal(qstrc key)             const may_exc;
-  preal    loadPreal(qstrc key, preal def)  const may_exc;
+  preal    loadPreal(qstrc key)             const may_err;
+  preal    loadPreal(qstrc key, preal def)  const may_err;
 
   JsonObj& saveBool(qstrc key, bool);
-  bool     loadBool(qstrc key)              const may_exc;
-  bool     loadBool(qstrc key, bool def)    const may_exc;
+  bool     loadBool(qstrc key)              const may_err;
+  bool     loadBool(qstrc key, bool def)    const may_err;
 
   JsonObj& saveStr(qstrc key, qstrc);
-  qstr     loadStr(qstrc key)               const may_exc;
-  qstr     loadStr(qstrc key, qstrc def)    const may_exc;
+  qstr     loadStr(qstrc key)               const may_err;
+  qstr     loadStr(qstrc key, qstrc def)    const may_err;
 
   // more custom types
   JsonObj& saveIJ(qstrc key, c::ij::rc);
-  c::ij    loadIJ(qstrc key)                const may_exc;
+  c::ij    loadIJ(qstrc key)                const may_err;
 
   JsonObj& saveXY(qstrc key, c::xy::rc);
-  c::xy    loadXY(qstrc key)                const may_exc;
+  c::xy    loadXY(qstrc key)                const may_err;
 
   JsonObj& saveRange(qstrc key, Range::rc);
-  Range    loadRange(qstrc key)             const may_exc;
+  Range    loadRange(qstrc key)             const may_err;
 
   JsonObj& saveRanges(qstrc key, Ranges::rc);
-  Ranges   loadRanges(qstrc key)            const may_exc;
+  Ranges   loadRanges(qstrc key)            const may_err;
 
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;

@@ -25,18 +25,20 @@
 #define NS__ core
 #define ST__ vec3
 
+// core_vec3
 _c_struct
   _atr(real, _0) _atr(real, _1) _atr(real, _2)
   _c_con(real, real, real)
 _c_struct_end
 
+// core::vec3
 _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
 _cpp_struct_end
 
-#undef ST__
-
+#undef  ST__
 #define ST__ mat3
 
+// core_mat3
 _c_struct
   _atr(real, _00) _atr(real, _01) _atr(real, _02)
   _atr(real, _10) _atr(real, _11) _atr(real, _12)
@@ -46,6 +48,7 @@ _c_struct
          real, real, real)
 _c_struct_end
 
+// core::mat3
 _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _mth(mat3, transposed, ())
   _mth(mat3, operator*,  (rc))

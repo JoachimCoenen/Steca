@@ -41,7 +41,7 @@ struct Fun { _typedefs(Fun)
     ref operator=(rc);
 
     JsonObj    toJson() const;
-    static Par fromJson(JsonObj const&) may_exc;
+    static Par fromJson(JsonObj const&) may_err;
   };
 
   Fun();
@@ -64,11 +64,11 @@ protected:
 
 public:
   static void addMaker(strc key, c::give_me<fryFun::someMaker const>);
-  static c::own<Fun> make(strc key)       may_exc;
-  static c::own<Fun> make(JsonObj const&) may_exc;
+  static c::own<Fun> make(strc key)       may_err;
+  static c::own<Fun> make(JsonObj const&) may_err;
 
   virtual JsonObj toJson() const;
-  virtual void    loadJson(JsonObj const&) may_exc;
+  virtual void    loadJson(JsonObj const&) may_err;
 };
 
 typedef c::shared<Fun> shFun;
@@ -88,7 +88,7 @@ struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
   void    setParVal(sz_t parIdx, real val);
 
   JsonObj toJson() const;
-  void    loadJson(JsonObj const&) may_exc;
+  void    loadJson(JsonObj const&) may_err;
 };
 
 // a fun that is a sum of other funs
@@ -104,7 +104,7 @@ struct SumFuns final : Fun { _typedefs(SumFuns) using base = Fun;
   real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
 
   JsonObj toJson() const;
-  void    loadJson(JsonObj const&) may_exc;
+  void    loadJson(JsonObj const&) may_err;
 
 protected:
   // summed funs

@@ -23,10 +23,11 @@
 #define NS__ gui
 #define ST__ App
 
+// gui::App
 _struct_sub (c_qt::app)
   App(int& argc, char* argv[]);
   int exec();
-_struct_sub_end
+_struct_end
 
 #undef ST__
 #undef NS__

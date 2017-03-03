@@ -38,7 +38,7 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-static data::File::sh loadCaress() may_exc {
+static data::File::sh loadCaress() may_err {
   using c::str;
 
   modname_t element, node;
@@ -49,20 +49,16 @@ static data::File::sh loadCaress() may_exc {
         d_number; // data length (?)
 
   auto gds = [&]() -> str {
-    if (d_number < 1)
-      c::err("bad d_number: ", element);
+    check_or_err (d_number > 0, "bad d_number: ", element);
     c::mem m(c::to_u(d_number) + 1);
-
-    if (0 != get_data_unit(mut(m.p)))
-      c::err("bad: ", "string data");
+    check_or_err (0 == get_data_unit(mut(m.p)), "bad: ", "string data");
 
     return str(pcstr(m.p));
   };
 
   auto gdf = [&]() -> float {
     float f;
-    if (0 != get_data_unit(&f))
-      c::err("bad: ", "float data");
+    check_or_err (0 == get_data_unit(&f), "bad: ", "float data");
     return f;
   };
 
@@ -72,14 +68,12 @@ static data::File::sh loadCaress() may_exc {
   bool  isRobot = false, isTable = false;
 
   auto checkRobot = [&]() {
-    if (isTable)
-      c::err("bad: ", "already have table");
+    check_or_err (!isTable, "bad: ", "already have table");
     isRobot = true;
   };
 
   auto checkTable = [&]() {
-    if (isRobot)
-      c::err("bad: ", "already have robot");
+    check_or_err (!isRobot, "bad: ", "already have robot");
     isTable = true;
   };
 
@@ -87,8 +81,7 @@ static data::File::sh loadCaress() may_exc {
     auto resNextUnit = next_data_unit(&e_number, &e_type, element, node, &d_type, &d_number);
     if (2 /*END_OF_FILE_DETECTED*/ == resNextUnit)
       break;
-    if (0 /*OK*/ != resNextUnit)
-      c::err();
+    check_or_err (0 /*OK*/ == resNextUnit, "bad read")
 
     TR(element << node << e_number << e_type << d_type << d_number)
 
@@ -126,8 +119,7 @@ static data::File::sh loadCaress() may_exc {
     }
 
     if (el.eq("READ") || el.eq("SETVALUE") || el.eq("MASTERV1") || el.eq("PROTOCOL")) {
-      if (en.empty())
-        err("empty node for: ", el);
+      check_or_err (!en.empty(), "empty node for: ", el);
 
       float f = gdf();
 
@@ -168,10 +160,9 @@ static data::File::sh loadCaress() may_exc {
   return file;
 }
 
-data::File::sh loadCaress(strc filePath) may_exc {
-  if (0 /*OK*/ != open_data_file(filePath, nullptr))
-    err("Cannot open ", filePath);
-
+data::File::sh loadCaress(strc filePath) may_err {
+  check_or_err (0 /*OK*/ == open_data_file(filePath, nullptr),
+                "Cannot open ", filePath);
   try {
     auto res = loadCaress();
     close_data_file();

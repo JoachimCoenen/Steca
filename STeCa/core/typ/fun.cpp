@@ -49,7 +49,7 @@ void Fun::addMaker(strc key, c::give_me<fryFun::someMaker const> maker) {
   factory.add(key, maker);
 }
 
-c::own<Fun> Fun::make(strc key) may_exc {
+c::own<Fun> Fun::make(strc key) may_err {
   return factory.make(key);
 }
 
@@ -157,7 +157,7 @@ JsonObj Sumfuns::saveJson() const {
   return super::saveJson() + obj;
 }
 
-void Sumfuns::loadJson(JsonObj::rc obj) may_exc {
+void Sumfuns::loadJson(JsonObj::rc obj) may_err {
   RUNTIME_CHECK(funs_.isEmpty(),
                 "non-empty sum of funs; cannot load twice");
 

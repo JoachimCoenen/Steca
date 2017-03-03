@@ -40,7 +40,7 @@ static JsonObj toJson(c::ij::rc ij) {
     .saveInt(json_key::J, ij.j);
 }
 
-static c::ij toIJ(JsonObj::rc obj) may_exc {
+static c::ij toIJ(JsonObj::rc obj) may_err {
   return c::ij(
     obj.loadInt(json_key::I),
     obj.loadInt(json_key::J)
@@ -58,7 +58,7 @@ static JsonObj toJson(c::xy::rc xy) {
     .saveReal(json_key::Y, xy.y);
 }
 
-static c::xy toXY(JsonObj::rc obj) may_exc {
+static c::xy toXY(JsonObj::rc obj) may_err {
   return c::xy(
     obj.loadInt(json_key::X),
     obj.loadInt(json_key::Y)
@@ -76,7 +76,7 @@ static JsonObj toJson(Range::rc rge) {
     .saveReal(json_key::MAX, rge.max);
 }
 
-static Range toRange(JsonObj::rc obj) may_exc {
+static Range toRange(JsonObj::rc obj) may_err {
   return Range(
     obj.loadReal(json_key::MIN),
     obj.loadReal(json_key::MAX)
@@ -95,7 +95,7 @@ static JsonArr toJson(Ranges::rc rs) {
   return arr;
 }
 
-static Ranges toRanges(JsonArr::rc arr) may_exc {
+static Ranges toRanges(JsonArr::rc arr) may_err {
   Ranges rs;
   for_i (arr.count())
     rs.add(toRange(arr.objAt(i)));
@@ -136,7 +136,7 @@ JsonObj& JsonObj::saveObj(qstrc key, JsonObj::rc obj) {
   return *this;
 }
 
-JsonObj JsonObj::loadObj(qstrc key, bool defEmpty) const may_exc {
+JsonObj JsonObj::loadObj(qstrc key, bool defEmpty) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -156,7 +156,7 @@ JsonObj& JsonObj::saveArr(qstrc key, JsonArr::rc arr) {
   return *this;
 }
 
-JsonArr JsonObj::loadArr(qstrc key, bool defEmpty) const may_exc {
+JsonArr JsonObj::loadArr(qstrc key, bool defEmpty) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -176,7 +176,7 @@ JsonObj& JsonObj::saveInt(qstrc key, int num) {
   return *this;
 }
 
-int JsonObj::loadInt(qstrc key) const may_exc {
+int JsonObj::loadInt(qstrc key) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -187,7 +187,7 @@ int JsonObj::loadInt(qstrc key) const may_exc {
   }
 }
 
-int JsonObj::loadInt(qstrc key, int def) const may_exc {
+int JsonObj::loadInt(qstrc key, int def) const may_err {
   RET_LOAD_DEF(Int)
 }
 
@@ -195,14 +195,14 @@ JsonObj& JsonObj::saveUint(qstrc key, uint num) {
   return saveInt(key, c::to_i(num));
 }
 
-uint JsonObj::loadUint(qstrc key) const may_exc {
+uint JsonObj::loadUint(qstrc key) const may_err {
   int num = loadInt(key);
   if (num < 0)
     KEY_ERR("bad number format")
   return c::to_u(num);
 }
 
-uint JsonObj::loadUint(qstrc key, uint def) const may_exc {
+uint JsonObj::loadUint(qstrc key, uint def) const may_err {
   RET_LOAD_DEF(Uint)
 }
 
@@ -235,7 +235,7 @@ JsonObj& JsonObj::saveReal(qstrc key, real num) {
   return *this;
 }
 
-real JsonObj::loadReal(qstrc key) const may_exc {
+real JsonObj::loadReal(qstrc key) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -254,7 +254,7 @@ real JsonObj::loadReal(qstrc key) const may_exc {
   }
 }
 
-real JsonObj::loadReal(qstrc key, real def) const may_exc {
+real JsonObj::loadReal(qstrc key, real def) const may_err {
   RET_LOAD_DEF(Real)
 }
 
@@ -278,7 +278,7 @@ JsonObj& JsonObj::saveBool(qstrc key, bool b) {
   return *this;
 }
 
-bool JsonObj::loadBool(qstrc key) const may_exc {
+bool JsonObj::loadBool(qstrc key) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -289,7 +289,7 @@ bool JsonObj::loadBool(qstrc key) const may_exc {
   }
 }
 
-bool JsonObj::loadBool(qstrc key, bool def) const may_exc {
+bool JsonObj::loadBool(qstrc key, bool def) const may_err {
   RET_LOAD_DEF(Bool)
 }
 
@@ -298,7 +298,7 @@ JsonObj& JsonObj::saveStr(qstrc key, qstrc s) {
   return *this;
 }
 
-qstr JsonObj::loadStr(qstrc key) const may_exc {
+qstr JsonObj::loadStr(qstrc key) const may_err {
   auto val = value(key);
 
   switch (val.type()) {
@@ -309,7 +309,7 @@ qstr JsonObj::loadStr(qstrc key) const may_exc {
   }
 }
 
-qstr JsonObj::loadStr(qstrc key, qstrc def) const may_exc {
+qstr JsonObj::loadStr(qstrc key, qstrc def) const may_err {
   RET_LOAD_DEF(Str)
 }
 
@@ -318,7 +318,7 @@ JsonObj& JsonObj::saveRange(qstrc key, Range::rc range) {
   return *this;
 }
 
-Range JsonObj::loadRange(qstrc key) const may_exc {
+Range JsonObj::loadRange(qstrc key) const may_err {
   return toRange(loadObj(key));
 }
 
@@ -327,7 +327,7 @@ JsonObj& JsonObj::saveRanges(qstrc key, Ranges::rc ranges) {
   return *this;
 }
 
-Ranges JsonObj::loadRanges(qstrc key) const may_exc {
+Ranges JsonObj::loadRanges(qstrc key) const may_err {
   return toRanges(loadArr(key));
 }
 
@@ -336,7 +336,7 @@ JsonObj& JsonObj::saveIJ(qstrc key, c::ij::rc ij) {
   return *this;
 }
 
-c::ij JsonObj::loadIJ(qstrc key) const may_exc {
+c::ij JsonObj::loadIJ(qstrc key) const may_err {
   return toIJ(loadObj(key));
 }
 
@@ -345,7 +345,7 @@ JsonObj& JsonObj::saveXY(qstrc key, c::xy::rc xy) {
   return *this;
 }
 
-c::xy JsonObj::loadXY(qstrc key) const may_exc {
+c::xy JsonObj::loadXY(qstrc key) const may_err {
   return toXY(loadObj(key));
 }
 
@@ -389,11 +389,11 @@ JsonObj Fun::Par::toJson() const {
     .saveReal(json_key::VALUE, val);
 }
 
-Fun::Par Fun::Par::fromJson(JsonObj::rc obj) may_exc {
+Fun::Par Fun::Par::fromJson(JsonObj::rc obj) may_err {
   return Par(obj.loadReal(json_key::VALUE), 0);
 }
 
-c::own<Fun> Fun::make(JsonObj::rc obj) may_exc {
+c::own<Fun> Fun::make(JsonObj::rc obj) may_err {
   auto fun = scope(make(toStr(obj.loadStr(json_key::TYPE))));
   fun->loadJson(obj);
   return fun.take().justOwn();
@@ -435,7 +435,7 @@ JsonObj SumFuns::toJson() const {
   return base::toJson() + obj;
 }
 
-void SumFuns::loadJson(JsonObj::rc obj) may_exc {
+void SumFuns::loadJson(JsonObj::rc obj) may_err {
   EXPECT(funs.empty()) // cannot load twice
 
   base::loadJson(obj);

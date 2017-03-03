@@ -38,7 +38,7 @@ uint Meta::Dict::add(strc key) {
   }
 }
 
-uint Meta::Dict::at(strc key) const may_exc {
+uint Meta::Dict::at(strc key) const may_err {
   try {
     return base::at(key);
   } catch (std::exception const&) {
