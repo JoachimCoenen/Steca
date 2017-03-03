@@ -18,16 +18,17 @@
 #ifndef GUI_WIN_H
 #define GUI_WIN_H
 
-#include <c2/qt/win.hpp>
+#include <c2/gui_qt/win.hpp>
 #include <gui/hub/hub.hpp>
 
 #define NS__ gui
 #define ST__ Win
 
+// gui::Win
 _struct_sub (c_qt::win) BASE_CONS
   Win();
   Hub hub;
-_struct_sub_end
+_struct_end
 
 #undef ST__
 #undef NS__

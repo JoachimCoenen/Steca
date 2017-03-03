@@ -18,15 +18,16 @@
 #ifndef GUI_APP_H
 #define GUI_APP_H
 
-#include <c2/qt/app.hpp>
+#include <c2/gui_qt/app.hpp>
 
 #define NS__ gui
 #define ST__ App
 
+// gui::App
 _struct_sub (c_qt::app)
   App(int& argc, char* argv[]);
   int exec();
-_struct_sub_end
+_struct_end
 
 #undef ST__
 #undef NS__

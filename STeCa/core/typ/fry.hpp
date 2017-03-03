@@ -50,9 +50,9 @@ public:
     makers[key] = m;
   }
 
-  c::own<T> make(strc key) const may_exc {
+  c::own<T> make(strc key) const may_err {
     someMaker const *m = makers.at(key).ptr();
-    if (!m) c::err("no maker ", key);
+    check_or_err(m, "no maker ", key);
     return m->make();
   }
 };
