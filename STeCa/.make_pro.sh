@@ -17,10 +17,18 @@ function files {
   find $where -type f -name \*.$ext -exec echo ' ' {} \\ \;
 }
 
-MODULES='core gui'
+MODULES='core core_qt gui'
 echo -e '\nHEADERS += \\' >> $PRO
 for m in $MODULES ; do files $m h >> $PRO ; done
+for m in $MODULES ; do files $m hpp >> $PRO ; done
 
 echo -e '\nSOURCES += \\' >> $PRO
 for m in $MODULES ; do files $m cpp >> $PRO ; done
+echo ' ' main.cpp >> $PRO
 
+cat >> $PRO <<EOT
+
+# for Windoze
+win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../c2/release/ -lc2
+else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../c2/debug/ -lc2
+EOT
