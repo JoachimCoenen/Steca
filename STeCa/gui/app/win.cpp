@@ -16,12 +16,22 @@
  ******************************************************************************/
 
 #include "win.h"
+#include <c2/gui_qt/btn.hpp>
 #include <c2/c/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub() {
+  using btn = c_qt::btn;
+  //  makeSplit(c_gui::def::orient::Horz);
+  auto &p = makePanel();
+  auto &b = p.makeBox(c_gui::def::orient::Vert).hbox();
+  b.add(new btn("Hello"));
+  auto &v = b.vbox();
+  b.add(new btn("World"));
+  for_i (3)
+    v.add(new btn(c::unsafe::str_frm("%d", i+1)));
 }
 
 //------------------------------------------------------------------------------

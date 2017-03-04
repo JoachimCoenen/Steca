@@ -58,7 +58,7 @@ COMPARABLE_IMPL(mat3) {
 EQ_NE_IMPL(mat3)
 
 mat3 mat3::transposed() const {
-  return typ(
+  return mat3(
     _00, _10, _20,
     _01, _11, _21,
     _02, _12, _22
@@ -66,7 +66,7 @@ mat3 mat3::transposed() const {
 }
 
 mat3 mat3::operator*(rc n) const {
-  return typ(
+  return mat3(
     _00*n._00 + _01*n._10 + _02*n._20,
     _00*n._01 + _01*n._11 + _02*n._21,
     _00*n._02 + _01*n._12 + _02*n._22,
