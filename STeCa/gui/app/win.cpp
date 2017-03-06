@@ -24,7 +24,7 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub(), acts(*this) {
-  makePanel().makeVBox().add(new c_qt::actbtn(*acts.showFiles));
+  makePanel().makeVBox().add(new c_qt::actbtn(acts.showFiles));
 }
 
 //------------------------------------------------------------------------------
