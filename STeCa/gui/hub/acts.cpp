@@ -15,24 +15,35 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_WIN_H
-#define GUI_WIN_H
+#include "acts.h"
+#include <gui/app/win.h>
+#include <c2/c/c_cpp>
+#include <QMenu>
+#include <QMenuBar>
 
-#include <c2/gui_qt/win.hpp>
-#include <gui/hub/hub.h>
-#include <gui/hub/acts.h>
+namespace gui {
+//------------------------------------------------------------------------------
 
-#define NS__ gui
-#define ST__ Win
+template <typename L>
+void f() { L(); }
 
-// gui::Win
-_struct_sub (c_qt::win) BASE_CONS
-  Win();
-  Hub hub; Acts acts;
-_struct_end
+Acts::Acts(Win& win) {
+  using act = c_qt::act;
 
-#undef ST__
-#undef NS__
+  auto mb = win.menuBar();
+  mb->setNativeMenuBar(false);
+  mb->setFixedHeight(0); // "hide"
 
-#endif
+  auto _ = [mb](pcstr t, pcstr ks) {
+    auto a = new act(t); a->key(ks);
+    mb->addAction(a);
+    return a;
+  };
+
+  quit = _("Quit", "Ctrl+Q");
+  quit->onCall([&win]() { win.close(); });
+}
+
+//------------------------------------------------------------------------------
+}
 // eof

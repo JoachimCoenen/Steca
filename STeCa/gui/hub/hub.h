@@ -30,7 +30,7 @@ namespace gui {
 
 struct Hub;
 
-sub_struct (Task, QEvent)
+def_struct_sub (Task, QEvent)
   using Session = core::Session;
 
   Task();
@@ -43,7 +43,7 @@ sub_struct (Task, QEvent)
   virtual void done() = 0;
 
   Hub* hub; Session* session;
-sub_struct_end
+def_struct_end
 
 typedef c::shared<Task> shTask;
 //------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ Q_DECLARE_METATYPE(gui::shTask)
 namespace gui {
 //------------------------------------------------------------------------------
 
-sub_struct (Worker, QObject)
+def_struct_sub (Worker, QObject)
   using Session = core::Session;
 
   Worker(Session&);
@@ -67,9 +67,11 @@ signals:
 private:
   Session& session;
   Q_OBJECT
-sub_struct_end
+def_struct_end
 
-sub_struct (Hub, QObject)
+//------------------------------------------------------------------------------
+
+def_struct_sub (Hub, QObject)
   using Session = core::Session;
 
   Hub();
@@ -91,9 +93,18 @@ private:
   QThread thread;
   Worker  worker;
   Q_OBJECT
-sub_struct_end
+def_struct_end
 
-#endif
+//------------------------------------------------------------------------------
+
+def_struct (RefHub)
+  RefHub(Hub&);
+
+protected:
+  Hub& hub;
+def_struct_end
+
 //------------------------------------------------------------------------------
 }
+#endif
 // eof

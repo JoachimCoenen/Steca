@@ -27,8 +27,7 @@
 namespace core {
 //-----------------------------------------------------------------------------
 
-template <typename T>
-struct fry { _typedefs(fry)
+template <typename T> def_struct (fry)
   using str = c::str;
 
   struct someMaker {
@@ -55,7 +54,8 @@ public:
     check_or_err(m, "no maker ", key);
     return m->make();
   }
-};
+def_struct_end
+
 //------------------------------------------------------------------------------
 }
 #endif

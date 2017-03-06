@@ -15,24 +15,25 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_WIN_H
-#define GUI_WIN_H
+#ifndef GUI_ACTS_H
+#define GUI_ACTS_H
 
-#include <c2/gui_qt/win.hpp>
-#include <gui/hub/hub.h>
-#include <gui/hub/acts.h>
+#include <c2/gui_qt/act.hpp>
 
-#define NS__ gui
-#define ST__ Win
+namespace gui {
+//------------------------------------------------------------------------------
 
-// gui::Win
-_struct_sub (c_qt::win) BASE_CONS
-  Win();
-  Hub hub; Acts acts;
-_struct_end
+struct Win;
 
-#undef ST__
-#undef NS__
+def_struct (Acts)
+  Acts(Win&);
 
+  c_qt::act
+    *quit;
+
+def_struct_end
+
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

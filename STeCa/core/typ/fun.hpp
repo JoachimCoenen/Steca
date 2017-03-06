@@ -28,9 +28,9 @@ namespace core {
 
 struct JsonObj;
 
-struct Fun { _typedefs(Fun)
+def_struct (Fun)
 
-  struct Par final { _typedefs(Par)
+  def_struct (Par)
     _atr(real, val)
     _atr(real, err)
 
@@ -42,7 +42,7 @@ struct Fun { _typedefs(Fun)
 
     JsonObj    toJson() const;
     static Par fromJson(JsonObj const&) may_err;
-  };
+  def_struct_end
 
   Fun();
   virtual ~Fun();
@@ -69,11 +69,11 @@ public:
 
   virtual JsonObj toJson() const;
   virtual void    loadJson(JsonObj const&) may_err;
-};
+def_struct_end
 
 typedef c::shared<Fun> shFun;
 
-struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
+def_struct_sub (SimpleFun, Fun)
   _atr(c::vec<Par>, pars)
 
   SimpleFun();
@@ -89,11 +89,11 @@ struct SimpleFun : Fun { _typedefs(SimpleFun) using base = Fun;
 
   JsonObj toJson() const;
   void    loadJson(JsonObj const&) may_err;
-};
+def_struct_end
 
 // a fun that is a sum of other funs
 
-struct SumFuns final : Fun { _typedefs(SumFuns) using base = Fun;
+def_struct_sub (SumFuns, Fun)
   void add(c::give_me<Fun>);
 
   // aggregate par list for all added funs
@@ -115,7 +115,7 @@ protected:
   c::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate par index
   c::vec<sz_t> firstParIdx4parIdx;
-};
+def_struct_end
 
 //------------------------------------------------------------------------------
 }

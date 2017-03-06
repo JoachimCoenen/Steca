@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "hub.hpp"
+#include "hub.h"
 #include <QApplication>
 #include <c2/c/c_cpp>
 
@@ -84,6 +84,10 @@ bool Hub::event(QEvent* e) {
   emit doWork(sh);
   return true;
 }
+
+//------------------------------------------------------------------------------
+
+RefHub::RefHub(Hub& hub_) : hub(hub_) {}
 
 //------------------------------------------------------------------------------
 }
