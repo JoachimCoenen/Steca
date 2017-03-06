@@ -49,8 +49,8 @@ Hub::Hub() : session(), thread(), worker(session) {
   registerMetaTypes();
 
   worker.moveToThread(&thread);
-  connect(this,    &typ::doWork,     &worker, &Worker::doWork);
-  connect(&worker, &Worker::workDone, this,   &typ::workDone);
+  connect(this,    &Self::doWork,     &worker, &Worker::doWork);
+  connect(&worker, &Worker::workDone, this,    &Self::workDone);
 
   thread.start();
 }

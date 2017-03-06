@@ -130,7 +130,7 @@ TEST("Range::center",
 Range Range::safeFrom(real v1, real v2) {
   if (!(v1 < v2))
     mutate::swap(v1, v2);
-  return typ(v1, v2);
+  return Range(v1, v2);
 }
 
 TEST("Range::safeFrom",

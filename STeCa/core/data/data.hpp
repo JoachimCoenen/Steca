@@ -28,7 +28,7 @@ namespace core {
 #define NS__ data
 //------------------------------------------------------------------------------
 
-#define _sh_struct _struct typedef c::shared<typ> sh;
+#define _sh_struct _struct typedef c::shared<Self> sh;
 
 #define ST__ Meta
 
