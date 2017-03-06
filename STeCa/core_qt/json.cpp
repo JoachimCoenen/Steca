@@ -145,7 +145,7 @@ JsonObj JsonObj::loadObj(qstrc key, bool defEmpty) const may_err {
   case QJsonValue::Undefined:
     if (defEmpty)
       return JsonObj();
-    [[clang::fallthrough]];
+    _if_clang_([[clang::fallthrough]];)
   default:
     KEY_ERR("not an object");
   }
@@ -165,7 +165,7 @@ JsonArr JsonObj::loadArr(qstrc key, bool defEmpty) const may_err {
   case QJsonValue::Undefined:
     if (defEmpty)
       return JsonArr();
-    [[clang::fallthrough]];
+    _if_clang_([[clang::fallthrough]];)
   default:
     KEY_ERR("not an array")
   }

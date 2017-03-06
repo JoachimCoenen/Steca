@@ -29,7 +29,8 @@ def_struct (Acts)
   Acts(Win&);
 
   c_qt::act
-    *quit;
+    *quit,
+    *showFiles;
 
 def_struct_end
 

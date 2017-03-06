@@ -40,8 +40,9 @@ Acts::Acts(Win& win) {
     return a;
   };
 
-  quit = _("Quit", "Ctrl+Q");
-  quit->onCall([&win]() { win.close(); });
+  (quit = _("Quit", "Ctrl+Q"))->onAct([&win]() { win.close(); });
+
+  (showFiles = _("Show files", "Ctrl+1"))->onAct([](){ TR(88) });
 }
 
 //------------------------------------------------------------------------------
