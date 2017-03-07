@@ -1,2 +1,2 @@
 cd build
-tests/tests
+STeCa_tests/STeCa_tests
