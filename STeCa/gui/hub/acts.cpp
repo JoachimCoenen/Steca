@@ -34,15 +34,15 @@ Acts::Acts(Win& win) {
   mb->setNativeMenuBar(false);
   mb->setFixedHeight(0); // "hide"
 
-  auto _ = [mb](pcstr t, pcstr ks) {
-    auto a = new act(t); a->key(ks);
+  auto _ = [mb](pcstr t, pcstr ks, pcstr iconFile) {
+    auto a = new act(t); a->key(ks).icon(iconFile);
     mb->addAction(a);
     return a;
   };
 
-  (quit = _("Quit", "Ctrl+Q"))->onAct([&win]() { win.close(); });
+  (quit = _("Quit", "Ctrl+Q", ""))->onAct([&win]() { win.close(); });
 
-  (showFiles = _("Show files", "Ctrl+1"))->onAct([](){ TR(88) });
+  (showFiles = _("Show files", "Ctrl+1", ":/icon/link"))->onAct([](){ TR(88) });
 }
 
 //------------------------------------------------------------------------------

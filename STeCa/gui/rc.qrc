@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="add">rc/add.svg</file>
+        <file alias="rem">rc/rem.svg</file>
+        <file alias="rotate0">rc/rotate0.svg</file>
+        <file alias="rotate1">rc/rotate1.svg</file>
+        <file alias="rotate2">rc/rotate2.svg</file>
+        <file alias="rotate3">rc/rotate3.svg</file>
+        <file alias="mirrorHorz">rc/mirror_horz.svg</file>
+        <file alias="mirrorVert">rc/mirror_vert.svg</file>
+        <file alias="link">rc/link.svg</file>
+        <file alias="top">rc/top.svg</file>
+        <file alias="right">rc/right.svg</file>
+        <file alias="left">rc/left.svg</file>
+        <file alias="bottom">rc/bottom.svg</file>
+        <file alias="cutBottom">rc/cut_bottom.svg</file>
+        <file alias="cutLeft">rc/cut_left.svg</file>
+        <file alias="cutRight">rc/cut_right.svg</file>
+        <file alias="cutTop">rc/cut_top.svg</file>
+        <file alias="crop">rc/crop.svg</file>
+        <file alias="steps">rc/steps.svg</file>
+        <file alias="selRegion">rc/sel_region.svg</file>
+        <file alias="reflRegion">rc/refl_region.svg</file>
+        <file alias="clear">rc/clear.svg</file>
+        <file alias="scale">rc/scale.svg</file>
+        <file alias="useCorrection">rc/use_correction.svg</file>
+        <file alias="showBackground">rc/show_background.svg</file>
+        <file alias="retroStier">rc/retro_stier.png</file>
+        <file alias="angle">rc/angle.svg</file>
+    </qresource>
+    <qresource prefix="/HAL">
+        <file alias="good_evening">rc/ge.wav</file>
+    </qresource>
+</RCC>

@@ -18,6 +18,7 @@
 #include <gui/app/app.h>
 
 int main(int argc, char* argv[]) {
+  Q_INIT_RESOURCE(rc);
   gui::App(argc, argv).exec();
 }
 

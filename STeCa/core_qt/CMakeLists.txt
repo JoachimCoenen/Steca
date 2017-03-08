@@ -1,7 +1,6 @@
 get_filename_component (lib ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package (Qt5Core    REQUIRED)
-
+find_package (Qt5Core REQUIRED)
 set (CMAKE_AUTOMOC ON)
 
 file (GLOB_RECURSE files *)
