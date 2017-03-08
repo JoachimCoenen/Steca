@@ -7,7 +7,7 @@ os:
 # - osx
 
 compiler:
-# - clang
+- clang
 - gcc
 
 env:

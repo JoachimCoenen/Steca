@@ -28,6 +28,9 @@ echo ' ' main.cpp >> $PRO
 
 cat >> $PRO <<EOT
 
+RESOURCES += \
+  gui/rc.qrc
+
 # for Windoze & Linux
 win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../c2/release/ -lc2
 else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../c2/debug/ -lc2
