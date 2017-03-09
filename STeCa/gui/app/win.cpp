@@ -16,15 +16,20 @@
  ******************************************************************************/
 
 #include "win.h"
+#include <c2/c/c_cpp>
 #include <c2/gui_qt/act.hpp>
 #include <c2/gui_qt/btn.hpp>
-#include <c2/c/c_cpp>
+#include <c2/gui_qt/panel.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub(), acts(*this) {
-  makePanel().makeVBox().add(new c_qt::actbtn(acts.showFiles));
+  auto &vb = makePanel().makeVBox();
+
+  vb.add(new c_qt::toolbar(c_gui::def::orient::Horz));
+  vb.add(new c_qt::actbtn(acts.get(acts.QUIT)));
+  vb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES)));
 }
 
 //------------------------------------------------------------------------------

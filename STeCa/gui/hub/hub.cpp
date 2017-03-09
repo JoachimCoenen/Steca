@@ -38,7 +38,7 @@ Worker::Worker(Session& session_) : session(session_) {
 }
 
 void Worker::doWork(shTask task) {
-  auto mp = task.mut_ptr();
+  auto mp = task.mut_ptr ();
   mp->work();
   emit workDone(task);
 }
@@ -65,7 +65,7 @@ void Hub::post(Task* event) {
 }
 
 void Hub::workDone(shTask task) {
-  task.mut_ptr()->done();
+  task.mut_ptr ()->done();
 }
 
 void Hub::registerMetaTypes() {
@@ -79,7 +79,7 @@ bool Hub::event(QEvent* e) {
     return base::event(e);
 
   shTask sh(task->clone());
-  sh.mut_ptr()->set(*this, session);
+  sh.mut_ptr ()->set(*this, session);
 
   emit doWork(sh);
   return true;

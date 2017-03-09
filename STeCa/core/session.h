@@ -25,13 +25,13 @@
 
 // core_Session
 _c_struct
-  _atr(int, dummy)
-  _c_con()
+  _atr (int, dummy)
+  _c_con ()
 _c_struct_end
 
 // core::Session
 _cpp_struct
-  _con()
+  _con ()
   _mth (int, long_square, (int))
 _cpp_struct_end
 

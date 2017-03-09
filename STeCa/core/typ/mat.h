@@ -27,8 +27,8 @@
 
 // core_vec3
 _c_struct
-  _atr(real, _0) _atr(real, _1) _atr(real, _2)
-  _c_con(real, real, real)
+  _atr (real, _0) _atr (real, _1) _atr (real, _2)
+  _c_con (real, real, real)
 _c_struct_end
 
 // core::vec3
@@ -40,23 +40,23 @@ _cpp_struct_end
 
 // core_mat3
 _c_struct
-  _atr(real, _00) _atr(real, _01) _atr(real, _02)
-  _atr(real, _10) _atr(real, _11) _atr(real, _12)
-  _atr(real, _20) _atr(real, _21) _atr(real, _22)
-  _c_con(real, real, real,
+  _atr (real, _00) _atr (real, _01) _atr (real, _02)
+  _atr (real, _10) _atr (real, _11) _atr (real, _12)
+  _atr (real, _20) _atr (real, _21) _atr (real, _22)
+  _c_con (real, real, real,
          real, real, real,
          real, real, real)
 _c_struct_end
 
 // core::mat3
 _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
-  _mth(mat3, transposed, ())
-  _mth(mat3, operator*,  (rc))
-  _mth(vec3, operator*,  (vec3::rc))
+  _mth (mat3, transposed, ())
+  _mth (mat3, operator*,  (rc))
+  _mth (vec3, operator*,  (vec3::rc))
 
-  _fry(mat3, rotationCWx,  (c::rad))
-  _fry(mat3, rotationCWz,  (c::rad))
-  _fry(mat3, rotationCCWz, (c::rad))
+  _fry (mat3, rotationCWx,  (c::rad))
+  _fry (mat3, rotationCWz,  (c::rad))
+  _fry (mat3, rotationCCWz, (c::rad))
 _cpp_struct_end
 
 #undef ST__

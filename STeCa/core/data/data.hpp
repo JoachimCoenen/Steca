@@ -42,11 +42,11 @@ _sh_struct                      // metadata
     uint at(strc)  const may_err;
   };
 
-  _atr(Dict::sh,      dict)
-  _atr(c::vec<float>, vals)
-  _atr(float, tth) _atr(float, omg) _atr(float, chi) _atr(float, phi)
+  _atr (Dict::sh,      dict)
+  _atr (c::vec<float>, vals)
+  _atr (float, tth) _atr (float, omg) _atr (float, chi) _atr (float, phi)
 
-  _con(Dict::sh, float, float, float, float)
+  _con (Dict::sh, float, float, float, float)
 _struct_end
 
 #undef  ST__
@@ -54,10 +54,10 @@ _struct_end
 
 // data::Set
 _sh_struct                      // one read dataset
-  _atr(uint, idx)               // this order in File, 1..; 0 = not
-  _atr(Meta, meta)
+  _atr (uint, idx)               // this order in File, 1..; 0 = not
+  _atr (Meta, meta)
 
-  _con(Meta::rc)
+  _con (Meta::rc)
 _struct_end
 
 #undef  ST__
@@ -65,13 +65,13 @@ _struct_end
 
 // data::File
 _sh_struct                      // one file
-  _atr(uint, idx)               // this order in Files, 1..; 0 = not
-  _atr(c::vec<Set::sh>, sets)
+  _atr (uint, idx)               // this order in Files, 1..; 0 = not
+  _atr (c::vec<Set::sh>, sets)
 
-  _con()
+  _con ()
 
   _mth_mut(void, addSet, (Set::sh))
-  _des()
+  _des ()
 _struct_end
 
 #undef  ST__
@@ -79,10 +79,10 @@ _struct_end
 
 // data::Files
 _sh_struct                      // the whole file group
-  _atr(c::vec<File::sh>, files)
-  _atr(Meta::Dict::sh,   dict)
+  _atr (c::vec<File::sh>, files)
+  _atr (Meta::Dict::sh,   dict)
 
-  _con()
+  _con ()
 
   _mth_mut(void, addFile, (c::give_me<File>))
   _mth_mut(void, remFile, (uint))

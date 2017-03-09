@@ -27,9 +27,9 @@
 
 // core_Range
 _c_struct
-  _atr(real, min)
-  _atr(real, max)
-  _c_con(real, real)
+  _atr (real, min)
+  _atr (real, max)
+  _c_con (real, real)
 _c_struct_end
 
 // core::Range
@@ -69,7 +69,7 @@ _cpp_struct_end
 
 // core::Ranges
 _struct EQ_NE
-  _con()
+  _con ()
 
   void clear()          { rs.clear();        }
   bool is_empty() const { return rs.empty(); }

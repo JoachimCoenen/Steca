@@ -25,13 +25,10 @@ namespace gui {
 
 struct Win;
 
-def_struct (Acts)
+def_struct_sub (Acts, c_qt::acts)
   Acts(Win&);
 
-  c_qt::act
-    *quit,
-    *showFiles;
-
+  _cst (c::str, SHOW_FILES)
 def_struct_end
 
 //------------------------------------------------------------------------------

@@ -31,8 +31,8 @@ struct JsonObj;
 def_struct (Fun)
 
   def_struct (Par)
-    _atr(real, val)
-    _atr(real, err)
+    _atr (real, val)
+    _atr (real, err)
 
     Par(real, real);
     void set(real, real);
@@ -74,7 +74,7 @@ def_struct_end
 typedef c::shared<Fun> shFun;
 
 def_struct_sub (SimpleFun, Fun)
-  _atr(c::vec<Par>, pars)
+  _atr (c::vec<Par>, pars)
 
   SimpleFun();
 

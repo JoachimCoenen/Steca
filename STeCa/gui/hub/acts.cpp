@@ -19,7 +19,6 @@
 #include <gui/app/win.h>
 #include <c2/c/c_cpp>
 #include <QMenu>
-#include <QMenuBar>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -27,23 +26,14 @@ namespace gui {
 template <typename L>
 void f() { L(); }
 
-Acts::Acts(Win& win) {
+Acts::Acts(Win& w) : base(w) {
   using act = c_qt::act;
 
-  auto mb = win.menuBar();
-  mb->setNativeMenuBar(false);
-  mb->setFixedHeight(0); // "hide"
-
-  auto _ = [mb](pcstr t, pcstr ks, pcstr iconFile) {
-    auto a = new act(t); a->key(ks).icon(iconFile);
-    mb->addAction(a);
-    return a;
-  };
-
-  (quit = _("Quit", "Ctrl+Q", ""))->onAct([&win]() { win.close(); });
-
-  (showFiles = _("Show files", "Ctrl+1", ":/icon/link"))->onAct([](){ TR(88) });
+  add(SHOW_FILES, act::make("Show files", "Ctrl+1", ":/icon/link"));
+  get(SHOW_FILES)->onAct([](){ TR(88) });
 }
+
+c::str const Acts::SHOW_FILES("showFiles");
 
 //------------------------------------------------------------------------------
 }
