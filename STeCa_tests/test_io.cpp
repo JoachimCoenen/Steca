@@ -15,11 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+#include <c2/gui_qt/def.hpp>
 #include <core/io/io.hpp>
 #include <c2/c/c_cpp>
-#include <c2/gui_qt/def.hpp>
-#include <QFileInfo>
 #include <QDir>
+#include <QFileInfo>
 
 namespace core {
 //------------------------------------------------------------------------------

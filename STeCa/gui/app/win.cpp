@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 #include "win.h"
-#include <c2/c/c_cpp>
 #include <c2/gui_qt/act.hpp>
 #include <c2/gui_qt/btn.hpp>
 #include <c2/gui_qt/panel.hpp>
+#include <c2/c/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

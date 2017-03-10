@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 #include "io.hpp"
-#include <c2/c/c_cpp>
+#include <c2/c/lib/mem.h>
 #include <c2/c/lib/num.h>
 #include <c2/c/lib/str.h>
-#include <c2/c/lib/mem.h>
+#include <c2/c/c_cpp>
 #include "Caress/raw.i"
 #include <string.h>
 
