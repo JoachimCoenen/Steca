@@ -27,7 +27,6 @@ namespace gui {
 Win::Win() : hub(), acts(*this) {
   auto &vb = makePanel().makeVBox();
 
-  vb.add(new c_qt::toolbar(c_gui::def::orient::Horz));
   vb.add(new c_qt::actbtn(acts.get(acts.QUIT).ptr()));
   vb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
 }
