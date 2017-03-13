@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_MAT_H
-#define CORE_MAT_H
+#ifndef CORE_MAT_HPP
+#define CORE_MAT_HPP
 
 #include <c2/c/c_def.h>
 #include <c2/c/lib/num.h>

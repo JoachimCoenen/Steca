@@ -15,24 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
-#include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
+#ifndef GUI_ACTS_HPP
+#define GUI_ACTS_HPP
 
-core_Session::core_Session() : dummy(0) {}
+#include <c2/gui_qt/act.hpp>
 
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-Session::Session() {
-}
+struct Win;
 
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
-}
+def_struct_sub (Acts, c_qt::acts)
+  Acts(Win&);
+
+  _cst (c::str, SHOW_FILES)
+def_struct_end
 
 //------------------------------------------------------------------------------
 }
+#endif
 // eof

@@ -15,20 +15,34 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "win.h"
-#include <c2/gui_qt/act.hpp>
-#include <c2/gui_qt/btn.hpp>
-#include <c2/gui_qt/panel.hpp>
+#include "win.hpp"
+#include "panel/inc.inc"
 #include <c2/c/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub(), acts(*this) {
-  auto &vb = makePanel().makeVBox();
+  auto &sp = makeHSplit();
 
-  vb.add(new c_qt::actbtn(acts.get(acts.QUIT).ptr()));
-  vb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
+  auto &ls  = sp.vs();  // left
+  ls.add(new PanelFiles);
+  ls.add(new PanelDatasets);
+
+  auto &cs  = sp.vs();  // center
+  auto &ts  = cs.hs();
+
+  ts.add(new PanelSetup);
+  ts.add(new PanelImage);
+  cs.add(new PanelDiffractogram);
+
+  auto &rs  = sp.vs();  // right
+  rs.add(new PanelMetadata);
+
+//  auto &vb = makePanel().makeVBox();
+
+//  vb.add(new c_qt::actbtn(acts.get(acts.QUIT).ptr()));
+//  vb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
 }
 
 //------------------------------------------------------------------------------

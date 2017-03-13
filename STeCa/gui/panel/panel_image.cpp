@@ -15,22 +15,16 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_APP_H
-#define GUI_APP_H
+#include "panel_image.hpp"
+#include <c2/gui_qt/inc.inc>
 
-#include <c2/gui_qt/app.hpp>
+namespace gui {
+//------------------------------------------------------------------------------
 
-#define NS__ gui
-#define ST__ App
+PanelImage::PanelImage() {
+  makeHBox().add(new c_qt::lbl("Image"));
+}
 
-// gui::App
-_struct_sub (c_qt::app)
-  App(int& argc, char* argv[]);
-  int exec();
-_struct_end
-
-#undef ST__
-#undef NS__
-
-#endif
+//------------------------------------------------------------------------------
+}
 // eof

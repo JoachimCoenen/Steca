@@ -15,20 +15,16 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_ACTS_H
-#define GUI_ACTS_H
+#ifndef GUI_PANEL_IMAGE_HPP
+#define GUI_PANEL_IMAGE_HPP
 
-#include <c2/gui_qt/act.hpp>
+#include <c2/gui_qt/panel.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-struct Win;
-
-def_struct_sub (Acts, c_qt::acts)
-  Acts(Win&);
-
-  _cst (c::str, SHOW_FILES)
+def_struct_sub (PanelImage, c_qt::panel)
+  PanelImage();
 def_struct_end
 
 //------------------------------------------------------------------------------

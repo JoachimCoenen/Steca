@@ -15,26 +15,22 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "acts.h"
-#include <gui/app/win.h>
-#include <c2/c/c_cpp>
-#include <QMenu>
+#ifndef GUI_WIN_HPP
+#define GUI_WIN_HPP
+
+#include <c2/gui_qt/win.hpp>
+#include "hub.hpp"
+#include "acts.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-template <typename L>
-void f() { L(); }
-
-Acts::Acts(Win& w) : base(w) {
-  using act = c_qt::act;
-
-  add(SHOW_FILES, act::make("Show files", "Ctrl+1", ":/icon/link"));
-  get(SHOW_FILES)->onAct([](){ TR(88) });
-}
-
-c::str const Acts::SHOW_FILES("showFiles");
+def_struct_sub (Win, c_qt::win)
+  Win();
+  Hub hub; Acts acts;
+def_struct_end
 
 //------------------------------------------------------------------------------
 }
+#endif
 // eof

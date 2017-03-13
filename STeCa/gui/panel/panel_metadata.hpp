@@ -15,24 +15,19 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
-#include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
+#ifndef GUI_PANEL_METADATA_HPP
+#define GUI_PANEL_METADATA_HPP
 
-core_Session::core_Session() : dummy(0) {}
+#include <c2/gui_qt/panel.hpp>
 
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-Session::Session() {
-}
-
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
-}
+def_struct_sub (PanelMetadata, c_qt::panel)
+  PanelMetadata();
+def_struct_end
 
 //------------------------------------------------------------------------------
 }
+#endif
 // eof

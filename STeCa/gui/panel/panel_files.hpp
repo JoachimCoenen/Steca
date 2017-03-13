@@ -15,34 +15,19 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "app.h"
-#include "manifest"
-#include "win.h"
-#include <c2/c/c_cpp>
+#ifndef GUI_PANEL_FILES_HPP
+#define GUI_PANEL_FILES_HPP
+
+#include <c2/gui_qt/panel.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-App::App(int& argc, char* argv[]) : base(argc, argv) {
-  setApplicationName(APPLICATION_NAME);
-  setApplicationVersion(
-    #include "VERSION"
-  );
-  setOrganizationName(ORGANIZATION_NAME);
-  setOrganizationDomain(ORGANIZATION_DOMAIN);
-}
-
-int App::exec() {
-  try {
-    Win w;
-    return execWin(w);
-
-  } catch (std::exception const& e) {
-    qWarning("Fatal error: %s", e.what());
-    return -1;
-  }
-}
+def_struct_sub (PanelFiles, c_qt::panel)
+  PanelFiles();
+def_struct_end
 
 //------------------------------------------------------------------------------
 }
+#endif
 // eof

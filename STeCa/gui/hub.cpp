@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "hub.h"
+#include "hub.hpp"
 #include <c2/c/c_cpp>
 #include <QApplication>
 

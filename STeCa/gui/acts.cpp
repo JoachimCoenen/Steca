@@ -15,23 +15,25 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
+#include "acts.hpp"
+#include "win.hpp"
 #include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
+#include <QMenu>
 
-core_Session::core_Session() : dummy(0) {}
-
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-Session::Session() {
+template <typename L>
+void f() { L(); }
+
+Acts::Acts(Win& w) : base(w) {
+  using act = c_qt::act;
+
+  add(SHOW_FILES, act::make("Show files", "Ctrl+1", ":/icon/link"));
+  get(SHOW_FILES)->onAct([](){ TR(88) });
 }
 
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
-}
+c::str const Acts::SHOW_FILES("showFiles");
 
 //------------------------------------------------------------------------------
 }

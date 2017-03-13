@@ -15,22 +15,32 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
+#include "app.hpp"
+#include "manifest"
+#include "win.hpp"
 #include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
 
-core_Session::core_Session() : dummy(0) {}
-
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-Session::Session() {
+App::App(int& argc, char* argv[]) : base(argc, argv) {
+  setApplicationName(APPLICATION_NAME);
+  setApplicationVersion(
+    #include "VERSION"
+  );
+  setOrganizationName(ORGANIZATION_NAME);
+  setOrganizationDomain(ORGANIZATION_DOMAIN);
 }
 
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
+int App::exec() {
+  try {
+    Win w;
+    return execWin(w);
+
+  } catch (std::exception const& e) {
+    qWarning("Fatal error: %s", e.what());
+    return -1;
+  }
 }
 
 //------------------------------------------------------------------------------

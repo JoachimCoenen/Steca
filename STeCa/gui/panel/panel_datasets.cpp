@@ -15,22 +15,14 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
-#include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
+#include "panel_datasets.hpp"
+#include <c2/gui_qt/inc.inc>
 
-core_Session::core_Session() : dummy(0) {}
-
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-Session::Session() {
-}
-
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
+PanelDatasets::PanelDatasets() {
+  makeHBox().add(new c_qt::lbl("Datasets"));
 }
 
 //------------------------------------------------------------------------------

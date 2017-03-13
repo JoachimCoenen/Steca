@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "mat.h"
+#include "mat.hpp"
 #include <c2/c/c_cpp>
 
 core_vec3::core_vec3(real _0_, real _1_, real _2_)

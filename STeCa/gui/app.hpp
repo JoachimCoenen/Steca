@@ -15,28 +15,20 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_SESSION_H
-#define CORE_SESSION_H
+#ifndef GUI_APP_HPP
+#define GUI_APP_HPP
 
-#include <c2/c/c_def.h>
+#include <c2/gui_qt/app.hpp>
 
-#define NS__ core
-#define ST__ Session
+namespace gui {
+//------------------------------------------------------------------------------
 
-// core_Session
-_c_struct
-  _atr (int, dummy)
-  _c_con ()
-_c_struct_end
+def_struct_sub (App, c_qt::app)
+  App(int& argc, char* argv[]);
+  int exec();
+def_struct_end
 
-// core::Session
-_cpp_struct
-  _con ()
-  _mth (int, long_square, (int))
-_cpp_struct_end
-
-#undef ST__
-#undef NS__
-
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

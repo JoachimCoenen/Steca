@@ -15,10 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_HUB_H
-#define GUI_HUB_H
+#ifndef GUI_HUB_HPP
+#define GUI_HUB_HPP
 
-#include <core/session.h>
+#include <core/session.hpp>
 #include <c2/c/lib/ptr.h>
 
 #include <QObject>

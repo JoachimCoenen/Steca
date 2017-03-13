@@ -15,21 +15,25 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_WIN_H
-#define GUI_WIN_H
+#ifndef CORE_SESSION_HPP
+#define CORE_SESSION_HPP
 
-#include <c2/gui_qt/win.hpp>
-#include <gui/hub/hub.h>
-#include <gui/hub/acts.h>
+#include <c2/c/c_def.h>
 
-#define NS__ gui
-#define ST__ Win
+#define NS__ core
+#define ST__ Session
 
-// gui::Win
-_struct_sub (c_qt::win) BASE_CONS
-  Win();
-  Hub hub; Acts acts;
-_struct_end
+// core_Session
+_c_struct
+  _atr (int, dummy)
+  _c_con ()
+_c_struct_end
+
+// core::Session
+_cpp_struct
+  _con ()
+  _mth (int, long_square, (int))
+_cpp_struct_end
 
 #undef ST__
 #undef NS__

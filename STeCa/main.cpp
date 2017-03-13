@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <gui/app/app.h>
+#include "gui/app.hpp"
 
 int main(int argc, char* argv[]) {
   Q_INIT_RESOURCE(rc);
