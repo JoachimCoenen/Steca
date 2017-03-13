@@ -25,9 +25,23 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+struct PanelFiles;
+struct PanelDatasets;
+struct PanelSetup;
+struct PanelImage;
+struct PanelDiffractogram;
+struct PanelMetadata;
+
 def_struct_sub (Win, c_qt::win)
   Win();
   Hub hub; Acts acts;
+
+  PanelFiles         *panelFiles;
+  PanelDatasets      *panelDatasets;
+  PanelSetup         *panelSetup;
+  PanelImage         *panelImage;
+  PanelDiffractogram *panelDiffractogram;
+  PanelMetadata      *panelMetadata;
 def_struct_end
 
 //------------------------------------------------------------------------------

@@ -17,6 +17,8 @@
 
 #include "acts.hpp"
 #include "win.hpp"
+#include "win.hpp"
+#include "panel/inc.inc"
 #include <c2/c/c_cpp>
 #include <QMenu>
 
@@ -29,8 +31,10 @@ void f() { L(); }
 Acts::Acts(Win& w) : base(w) {
   using act = c_qt::act;
 
-  add(SHOW_FILES, act::make("Show files", "Ctrl+1", ":/icon/link"));
-  get(SHOW_FILES)->onAct([](){ TR(88) });
+  add(SHOW_FILES, &(act::make("Show files", "Ctrl+1", ":/icon/link")
+  ->toggle(true).onAct([&w](bool on) {
+    w.panelFiles->show(on);
+  })));
 }
 
 c::str const Acts::SHOW_FILES("showFiles");

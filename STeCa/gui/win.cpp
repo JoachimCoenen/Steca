@@ -17,32 +17,45 @@
 
 #include "win.hpp"
 #include "panel/inc.inc"
+#include <c2/gui_qt/inc.inc>
 #include <c2/c/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub(), acts(*this) {
-  auto &sp = makeHSplit();
+  panelFiles         = new PanelFiles;
+  panelDatasets      = new PanelDatasets;
+  panelSetup         = new PanelSetup;
+  panelImage         = new PanelImage;
+  panelDiffractogram = new PanelDiffractogram;
+  panelMetadata      = new PanelMetadata;
+
+  auto &hb = makePanel().makeHBox(); // main: horizontal layout
+  auto &tb = hb.vb();   // toolbar
+
+  auto &sp = hb.hs();
 
   auto &ls  = sp.vs();  // left
-  ls.add(new PanelFiles);
-  ls.add(new PanelDatasets);
+  ls.add(panelFiles);
+  ls.add(panelDatasets);
 
   auto &cs  = sp.vs();  // center
   auto &ts  = cs.hs();
 
-  ts.add(new PanelSetup);
-  ts.add(new PanelImage);
-  cs.add(new PanelDiffractogram);
+  ts.add(panelSetup);
+  ts.add(panelImage);
+  cs.add(panelDiffractogram);
 
   auto &rs  = sp.vs();  // right
-  rs.add(new PanelMetadata);
+  rs.add(panelMetadata);
+
+  tb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
+  tb.addStretch();
 
 //  auto &vb = makePanel().makeVBox();
 
 //  vb.add(new c_qt::actbtn(acts.get(acts.QUIT).ptr()));
-//  vb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
 }
 
 //------------------------------------------------------------------------------
