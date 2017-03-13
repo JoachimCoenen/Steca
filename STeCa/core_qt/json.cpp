@@ -426,7 +426,7 @@ JsonObj SumFuns::toJson() const {
   JsonObj obj;
   obj.saveStr(json_key::TYPE, json_key::SUM);
 
-  uint funCount = uint(funs.size());
+  uint funCount = c::to_uint(funs.size());
   obj.saveUint(json_key::COUNT, funCount);
 
   for_i (funCount)
@@ -436,7 +436,7 @@ JsonObj SumFuns::toJson() const {
 }
 
 void SumFuns::loadJson(JsonObj::rc obj) may_err {
-  EXPECT(funs.empty()) // cannot load twice
+  EXPECT (funs.empty()) // cannot load twice
 
   base::loadJson(obj);
   for_i (obj.loadUint(json_key::COUNT))

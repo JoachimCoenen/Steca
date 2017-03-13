@@ -17,6 +17,7 @@
 
 #include "data.hpp"
 #include <c2/c/c_cpp>
+#include <c2/c/lib/num.h>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -27,7 +28,7 @@ Meta::Meta(Dict::sh dict_, float tth_, float omg_, float chi_, float phi_)
 }
 
 uint Meta::Dict::size() const {
-  return uint(base::size());
+  return base::size();
 }
 
 uint Meta::Dict::add(strc key) {
@@ -84,7 +85,7 @@ Files::Files() : files(), dict(new Meta::Dict) {
 
 void Files::addFile(c::give_me<File> file) {
   mut(files).push(File::sh(file));
-  mut(file->idx) = uint(files.size());
+  mut(file->idx) = files.size();
 }
 
 void Files::remFile(uint i) {
@@ -93,7 +94,7 @@ void Files::remFile(uint i) {
 
   // renumber
   mut(file->idx) = 0;
-  for_i (uint(files.size()))
+  for_i (files.size())
     mut(files.at(i)->idx) = i + 1;
 }
 
