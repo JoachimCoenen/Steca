@@ -22,7 +22,7 @@
 #include <QStringList>
 #undef NAN
 
-namespace core {
+namespace core_qt {
 //------------------------------------------------------------------------------
 
 namespace json_key {
@@ -71,6 +71,11 @@ TEST("XY::json",
   CHECK_EQ(xy, xy1);
 )
 
+//------------------------------------------------------------------------------
+
+using core::Range;
+using core::Ranges;
+
 static JsonObj toJson(Range::rc rge) {
   return JsonObj()
     .saveReal(json_key::MIN, rge.min)
@@ -114,8 +119,83 @@ TEST("Ranges::json",
   CHECK_EQ(rs, rs1);
 )
 
-TEST("Range::par",
-  Fun::Par par(6,0), par1(Fun::Par::fromJson(par.toJson()));
+//------------------------------------------------------------------------------
+// TODO impl from fun.cpp
+
+using core::Par;
+using core::Fun;
+using core::SimpleFun;
+using core::SumFuns;
+using core::shFun;
+
+static JsonObj toJson(Par::rc par) {
+  return JsonObj()
+    .saveReal(json_key::VALUE, par.val);
+}
+
+static Par toPar(JsonObj::rc obj) may_err {
+  return Par(obj.loadReal(json_key::VALUE), 0);
+}
+
+static JsonObj toJson(Fun::rc f);
+
+static JsonObj toJson(SimpleFun::rc f) {
+  JsonArr arr;
+  for_i (f.parCount())
+    arr.append(toJson(f.parAt(i)));
+    return JsonObj().saveArr(json_key::PARAMS, arr);
+}
+
+static JsonObj toJson(SumFuns::rc f) {
+  JsonObj obj;
+  obj.saveStr(json_key::TYPE, json_key::SUM);
+
+  uint funCount = c::to_uint(f.funs.size());
+  obj.saveUint(json_key::COUNT, funCount);
+
+  for_i (funCount)
+    obj.saveObj(json_key::FUN.arg(i+1), toJson(*f.funs.at(i).ptr()));
+
+  return obj;
+}
+
+static JsonObj toJson(Fun::rc f) {
+  if (dynamic_cast<SimpleFun const*>(&f))
+    return toJson(static_cast<SimpleFun const&>(f));
+  if (dynamic_cast<SumFuns const*>(&f))
+    return toJson(static_cast<SumFuns const&>(f));
+
+  EXPECT (false)
+  return JsonObj();
+}
+
+static c::own<Fun> loadFun(JsonObj::rc obj);
+
+static void loadSimpleFun(SimpleFun& f, JsonObj::rc obj) {
+  JsonArr arr = obj.loadArr(json_key::PARAMS);
+  for_i (arr.count())
+    f.add(toPar(arr.objAt(i)));
+}
+
+static void loadSumFuns(SumFuns& f, JsonObj::rc obj) may_err {
+  EXPECT (f.funs.empty()) // cannot load twice
+
+  for_i (obj.loadUint(json_key::COUNT))
+    f.add(loadFun(obj.loadObj(json_key::FUN.arg(i + 1))));
+}
+
+static c::own<Fun> loadFun(JsonObj::rc obj) may_err {
+  auto f = scope(Fun::make(toStr(obj.loadStr(json_key::TYPE))));
+  if (dynamic_cast<SimpleFun*>(f.ptr()))
+    loadSimpleFun(static_cast<SimpleFun&>(*f), obj);
+  else if (dynamic_cast<SumFuns*>(f.ptr()))
+    loadSumFuns(static_cast<SumFuns&>(*f), obj);
+
+  return f.take().justOwn();
+}
+
+TEST("Par::json",
+  Par par(6,0), par1(toPar(toJson(par)));
   CHECK_EQ(par.val,  par1.val);
   CHECK_EQ(par1.err, 0);
 )
@@ -380,68 +460,6 @@ JsonObj JsonArr::objAt(uint i) const {
   if (QJsonValue::Object != obj.type())
     ERR("not an object at " + qstr::number(i))
   return base::at(c::to_i(i)).toObject();
-}
-
-//------------------------------------------------------------------------------
-// TODO impl from fun.cpp
-
-JsonObj Fun::Par::toJson() const {
-  return JsonObj()
-    .saveReal(json_key::VALUE, val);
-}
-
-Fun::Par Fun::Par::fromJson(JsonObj::rc obj) may_err {
-  return Par(obj.loadReal(json_key::VALUE), 0);
-}
-
-c::own<Fun> Fun::make(JsonObj::rc obj) may_err {
-  auto fun = scope(make(toStr(obj.loadStr(json_key::TYPE))));
-  fun->loadJson(obj);
-  return fun.take().justOwn();
-}
-
-JsonObj Fun::toJson() const {
-  // nothing
-  return JsonObj();
-}
-
-void Fun::loadJson(JsonObj::rc) {
-  // nothing
-}
-
-JsonObj SimpleFun::toJson() const {
-  JsonArr arr;
-  for_i (parCount())
-    arr.append(parAt(i).toJson());
-  return base::toJson() + JsonObj().saveArr(json_key::PARAMS, arr);
-}
-
-void SimpleFun::loadJson(JsonObj::rc obj) {
-  base::loadJson(obj);
-  JsonArr arr = obj.loadArr(json_key::PARAMS);
-  for_i (arr.count())
-    add(Par::fromJson(arr.objAt(i)));
-}
-
-JsonObj SumFuns::toJson() const {
-  JsonObj obj;
-  obj.saveStr(json_key::TYPE, json_key::SUM);
-
-  uint funCount = c::to_uint(funs.size());
-  obj.saveUint(json_key::COUNT, funCount);
-
-  for_i (funCount)
-    obj.saveObj(json_key::FUN.arg(i + 1), funs.at(i)->toJson());
-
-  return base::toJson() + obj;
-}
-
-void SumFuns::loadJson(JsonObj::rc obj) may_err {
-  EXPECT (funs.empty()) // cannot load twice
-
-  base::loadJson(obj);
-  for_i (obj.loadUint(json_key::COUNT))
-    add(make(obj.loadObj(json_key::FUN.arg(i + 1))));
 }
 
 //------------------------------------------------------------------------------

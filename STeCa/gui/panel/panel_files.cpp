@@ -17,12 +17,21 @@
 
 #include "panel_files.hpp"
 #include <c2/gui_qt/inc.inc>
+#include <core_qt/models.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelFiles::PanelFiles() {
-  makeHBox().add(new c_qt::lbl("Files"));
+PanelFiles::PanelFiles() : view(nullptr), model(nullptr) {
+  auto &vb = makeVBox();
+
+  vb.add((view = new c_qt::lst_view));
+  view->set((model = new core_qt::ModelFiles));
+}
+
+PanelFiles::~PanelFiles() {
+  delete view;
+  delete model;
 }
 
 //------------------------------------------------------------------------------

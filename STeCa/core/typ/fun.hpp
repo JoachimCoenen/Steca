@@ -26,24 +26,18 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-struct JsonObj;
+def_struct (Par)
+  _atr (real, val)
+  _atr (real, err)
+
+  Par(real, real);
+  void set(real, real);
+  void setVal(real);
+
+  ref operator=(rc);
+def_struct_end
 
 def_struct (Fun)
-
-  def_struct (Par)
-    _atr (real, val)
-    _atr (real, err)
-
-    Par(real, real);
-    void set(real, real);
-    void setVal(real);
-
-    ref operator=(rc);
-
-    JsonObj    toJson() const;
-    static Par fromJson(JsonObj const&) may_err;
-  def_struct_end
-
   Fun();
   virtual ~Fun();
 
@@ -65,10 +59,6 @@ protected:
 public:
   static void addMaker(strc key, c::give_me<fryFun::someMaker const>);
   static c::own<Fun> make(strc key)       may_err;
-  static c::own<Fun> make(JsonObj const&) may_err;
-
-  virtual JsonObj toJson() const;
-  virtual void    loadJson(JsonObj const&) may_err;
 def_struct_end
 
 typedef c::shared<Fun> shFun;
@@ -86,9 +76,6 @@ def_struct_sub (SimpleFun, Fun)
 
   real    parVal(sz_t parIdx, real const* parVals) const;
   void    setParVal(sz_t parIdx, real val);
-
-  JsonObj toJson() const;
-  void    loadJson(JsonObj const&) may_err;
 def_struct_end
 
 // a fun that is a sum of other funs
@@ -103,12 +90,10 @@ def_struct_sub (SumFuns, Fun)
   real  y(real x, real const* parVals = nullptr)              const;
   real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
 
-  JsonObj toJson() const;
-  void    loadJson(JsonObj const&) may_err;
+  // summed funs
+  c::vec<shFun> funs;
 
 protected:
-  // summed funs
-  c::vec<shFun>      funs;
   // the aggregate par list
   c::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index

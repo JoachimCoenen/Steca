@@ -33,7 +33,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-namespace core {
+namespace core_qt {
 //------------------------------------------------------------------------------
 
 struct JsonArr;
@@ -87,11 +87,11 @@ def_struct_reimpl (JsonObj, QJsonObject)
   JsonObj& saveXY(qstrc key, c::xy::rc);
   c::xy    loadXY(qstrc key)                const may_err;
 
-  JsonObj& saveRange(qstrc key, Range::rc);
-  Range    loadRange(qstrc key)             const may_err;
+  JsonObj&    saveRange(qstrc key, core::Range::rc);
+  core::Range loadRange(qstrc key)          const may_err;
 
-  JsonObj& saveRanges(qstrc key, Ranges::rc);
-  Ranges   loadRanges(qstrc key)            const may_err;
+  JsonObj&     saveRanges(qstrc key, core::Ranges::rc);
+  core::Ranges loadRanges(qstrc key)        const may_err;
 
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;

@@ -21,18 +21,18 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-Fun::Par::Par(real val_, real err_) : val(val_), err(err_) {}
+Par::Par(real val_, real err_) : val(val_), err(err_) {}
 
-void Fun::Par::set(real val_, real err_) {
+void Par::set(real val_, real err_) {
   mut(val) = val_;
   mut(err) = err_;
 }
 
-void Fun::Par::setVal(real val_) {
+void Par::setVal(real val_) {
   mut(val) = val_;
 }
 
-Fun::Par::ref Fun::Par::operator=(rc that) {
+Par::ref Par::operator=(rc that) {
   mut(val) = that.val;
   mut(err) = that.err;
   return *this;
@@ -65,7 +65,7 @@ sz_t SimpleFun::parCount() const {
   return pars.size();
 }
 
-Fun::Par::rc SimpleFun::parAt(sz_t i) const {
+Par::rc SimpleFun::parAt(sz_t i) const {
   return pars.at(i);
 }
 
@@ -101,7 +101,7 @@ sz_t SumFuns::parCount() const {
   return allPars.size();
 }
 
-Fun::Par::rc SumFuns::parAt(sz_t i) const {
+Par::rc SumFuns::parAt(sz_t i) const {
   return *allPars.at(i);
 }
 
@@ -135,43 +135,3 @@ real SumFuns::dy(real x, sz_t i, real const* parVals) const {
 //------------------------------------------------------------------------------
 }
 // eof
-
-/*
-
-
-namespace typ {
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-
-JsonObj Sumfuns::saveJson() const {
-  JsonObj obj;
-  obj.saveString(json_key::TYPE, json_fun_key::SUM);
-
-  uint funCount = funs_.count();
-  obj.saveUint(json_key::COUNT, funCount);
-
-  for_i (funCount)
-    obj.saveObj(json_key::FUN.arg(i + 1), funs_.at(i)->saveJson());
-
-  return super::saveJson() + obj;
-}
-
-void Sumfuns::loadJson(JsonObj::rc obj) may_err {
-  RUNTIME_CHECK(funs_.isEmpty(),
-                "non-empty sum of funs; cannot load twice");
-
-  super::loadJson(obj);
-
-  uint funCount = obj.loadUint(json_key::COUNT);
-
-  for_i (funCount) {
-    auto funObj = obj.loadObj(json_key::FUN.arg(i + 1));
-    addfun(make(funObj));
-  }
-}
-
-//------------------------------------------------------------------------------
-}
-// eof
-*/

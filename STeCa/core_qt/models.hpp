@@ -20,9 +20,18 @@
 
 #include <c2/gui_qt/model.hpp>
 
-namespace core {
+namespace core_qt {
 //------------------------------------------------------------------------------
 
+def_struct_sub (ModelFiles, c_qt::lst_model)
+  explicit ModelFiles();
+  _mth (cl_n, cols, ())
+  _mth (rw_n, rows, ())
+  _mth (c_gui::var*, cell, (rw_n, cl_n))
+
+  _mth_mut (void, check, (rw_n, bool))
+  _mth (bool, isChecked, (rw_n))
+def_struct_end
 
 //------------------------------------------------------------------------------
 }
