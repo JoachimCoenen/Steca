@@ -15,36 +15,14 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_WIN_HPP
-#define GUI_WIN_HPP
+#ifndef CORE_MODELS_HPP
+#define CORE_MODELS_HPP
 
-#include <c2/gui_qt/win.hpp>
-#include "hub.hpp"
-#include "acts.hpp"
+#include <c2/gui_qt/model.hpp>
 
-namespace gui {
+namespace core {
 //------------------------------------------------------------------------------
 
-struct PanelFiles;
-struct PanelDatasets;
-struct PanelSetup;
-struct PanelImage;
-struct PanelDiffractogram;
-struct PanelMetadata;
-
-def_struct_sub (Win, c_qt::win)
-  Win();
-  Hub hub; Acts acts;
-
-  bool onClose();
-
-  PanelFiles         *panelFiles;
-  PanelDatasets      *panelDatasets;
-  PanelSetup         *panelSetup;
-  PanelImage         *panelImage;
-  PanelDiffractogram *panelDiffractogram;
-  PanelMetadata      *panelMetadata;
-def_struct_end
 
 //------------------------------------------------------------------------------
 }

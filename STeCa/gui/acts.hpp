@@ -29,6 +29,10 @@ def_struct_sub (Acts, c_qt::acts)
   Acts(Win&);
 
   _cst (c::str, SHOW_FILES)
+  _cst (c::str, SHOW_DATASETS)
+  _cst (c::str, SHOW_METADATA)
+
+  void setup();
 def_struct_end
 
 //------------------------------------------------------------------------------

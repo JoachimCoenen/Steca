@@ -50,12 +50,17 @@ Win::Win() : hub(), acts(*this) {
   auto &rs  = sp.vs();  // right
   rs.add(panelMetadata);
 
-  tb.add(new c_qt::actbtn(acts.get(acts.SHOW_FILES).ptr()));
+  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_FILES)));
+  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_DATASETS)));
+  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_METADATA)));
   tb.addStretch();
+  tb.add(new c_qt::actbtn(&acts.get(acts.QUIT)));
 
-//  auto &vb = makePanel().makeVBox();
+  acts.setup();
+}
 
-//  vb.add(new c_qt::actbtn(acts.get(acts.QUIT).ptr()));
+bool Win::onClose() {
+  return dlgYes("Quit?");
 }
 
 //------------------------------------------------------------------------------

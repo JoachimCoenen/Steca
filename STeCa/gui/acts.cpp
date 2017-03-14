@@ -31,13 +31,32 @@ void f() { L(); }
 Acts::Acts(Win& w) : base(w) {
   using act = c_qt::act;
 
-  add(SHOW_FILES, &(act::make("Show files", "Ctrl+1", ":/icon/link")
-  ->toggle(true).onAct([&w](bool on) {
-    w.panelFiles->show(on);
-  })));
+  add(SHOW_FILES,    act::make("Show files",    "Ctrl+1", ":/icon/tool_f"));
+  add(SHOW_DATASETS, act::make("Show datasets", "Ctrl+2", ":/icon/tool_d"));
+  add(SHOW_METADATA, act::make("Show metadata", "Ctrl+3", ":/icon/tool_m"));
+
+  get(QUIT).icon(":/icon/tool_q");
 }
 
 c::str const Acts::SHOW_FILES("showFiles");
+c::str const Acts::SHOW_DATASETS("showDatasets");
+c::str const Acts::SHOW_METADATA("showMetadata");
+
+void Acts::setup() {
+  auto &w = static_cast<Win&>(base::w);
+
+  get(SHOW_FILES).onToggle([&w](bool on) {
+    w.panelFiles->show(on);
+  }).check();
+
+  get(SHOW_DATASETS).onToggle([&w](bool on) {
+    w.panelDatasets->show(on);
+  }).check();
+
+  get(SHOW_METADATA).onToggle([&w](bool on) {
+    w.panelMetadata->show(on);
+  }).check();
+}
 
 //------------------------------------------------------------------------------
 }
