@@ -21,8 +21,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelSetup::PanelSetup() {
-  makeHBox().add(new c_qt::lbl("Setup"));
+PanelSetup::PanelSetup(Hub& hub_) : base("", hub_) {
+  auto tabs = new c_qt::tabs;
+  vb.add(tabs);
+
+  tabs->makeTab("Geometry");
+  tabs->makeTab("Background");
+  tabs->makeTab("Reflections");
 }
 
 //------------------------------------------------------------------------------

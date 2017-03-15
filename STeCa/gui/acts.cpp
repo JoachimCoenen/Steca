@@ -31,32 +31,34 @@ void f() { L(); }
 Acts::Acts(Win& w) : base(w) {
   using act = c_qt::act;
 
-  add(SHOW_FILES,    act::make("Show files",    "Ctrl+1", ":/icon/tool_f"));
-  add(SHOW_DATASETS, act::make("Show datasets", "Ctrl+2", ":/icon/tool_d"));
-  add(SHOW_METADATA, act::make("Show metadata", "Ctrl+3", ":/icon/tool_m"));
-
   get(QUIT).icon(":/icon/tool_q");
+
+  add(SHOW_FILES,     act::make("Show files",    "Ctrl+1", ":/icon/tool_f"));
+  add(SHOW_DATASETS,  act::make("Show datasets", "Ctrl+2", ":/icon/tool_d"));
+  add(SHOW_METADATA,  act::make("Show metadata", "Ctrl+3", ":/icon/tool_m"));
+
+  add(FILES_ADD,      act::make("Add files...", "", ":/icon/add"));
+  add(FILES_REM,      act::make("Remove selected file", "", ":/icon/rem"));
+  add(CORR_ENABLE,    act::make("Enable correction file...", "", ":/icon/check"));
+  add(CORR_REM,       act::make("Remove correction file", "", ":/icon/clear"));
+
+  add(DIFF_ZOOM,      act::make("Zoom", ""));
+  add(DIFF_ALL_DSETS, act::make("All datasets", ""));
+  add(DIFF_FIX_INTEN, act::make("Fixed intensity scale", ""));
 }
 
 c::str const Acts::SHOW_FILES("showFiles");
 c::str const Acts::SHOW_DATASETS("showDatasets");
 c::str const Acts::SHOW_METADATA("showMetadata");
 
-void Acts::setup() {
-  auto &w = static_cast<Win&>(base::w);
+c::str const Acts::FILES_ADD("filesAdd");
+c::str const Acts::FILES_REM("filesRem");
+c::str const Acts::CORR_ENABLE("corrEnable");
+c::str const Acts::CORR_REM("corrRem");
 
-  get(SHOW_FILES).onToggle([&w](bool on) {
-    w.panelFiles->show(on);
-  }).check();
-
-  get(SHOW_DATASETS).onToggle([&w](bool on) {
-    w.panelDatasets->show(on);
-  }).check();
-
-  get(SHOW_METADATA).onToggle([&w](bool on) {
-    w.panelMetadata->show(on);
-  }).check();
-}
+c::str const Acts::DIFF_ZOOM("diffZoom");
+c::str const Acts::DIFF_ALL_DSETS("diffAllDsets");
+c::str const Acts::DIFF_FIX_INTEN("diffFixInten");
 
 //------------------------------------------------------------------------------
 }

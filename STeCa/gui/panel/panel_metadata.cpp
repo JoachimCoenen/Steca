@@ -17,12 +17,21 @@
 
 #include "panel_metadata.hpp"
 #include <c2/gui_qt/inc.inc>
+#include <core_qt/models.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelMetadata::PanelMetadata() {
-  makeHBox().add(new c_qt::lbl("Metadata"));
+PanelMetadata::PanelMetadata(Hub& hub_)
+: base("Metadata", hub_), view(nullptr), model(nullptr) {
+  vb.add((view = new c_qt::lst_view));
+  view->showHeader(true);
+  view->set((model = new core_qt::ModelMetadata));
+}
+
+PanelMetadata::~PanelMetadata() {
+  delete view;
+  delete model;
 }
 
 //------------------------------------------------------------------------------

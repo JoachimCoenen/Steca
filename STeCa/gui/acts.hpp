@@ -32,7 +32,14 @@ def_struct_sub (Acts, c_qt::acts)
   _cst (c::str, SHOW_DATASETS)
   _cst (c::str, SHOW_METADATA)
 
-  void setup();
+  _cst (c::str, FILES_ADD)
+  _cst (c::str, FILES_REM)
+  _cst (c::str, CORR_ENABLE)
+  _cst (c::str, CORR_REM)
+
+  _cst (c::str, DIFF_ZOOM)
+  _cst (c::str, DIFF_ALL_DSETS)
+  _cst (c::str, DIFF_FIX_INTEN)
 def_struct_end
 
 //------------------------------------------------------------------------------

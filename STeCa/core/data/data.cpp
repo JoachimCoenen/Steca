@@ -31,7 +31,7 @@ uint Meta::Dict::size() const {
   return base::size();
 }
 
-uint Meta::Dict::add(strc key) {
+uint Meta::Dict::add(c::strc key) {
   try {
     return base::at(key);
   } catch (std::exception const&) {
@@ -39,7 +39,7 @@ uint Meta::Dict::add(strc key) {
   }
 }
 
-uint Meta::Dict::at(strc key) const may_err {
+uint Meta::Dict::at(c::strc key) const may_err {
   try {
     return base::at(key);
   } catch (std::exception const&) {

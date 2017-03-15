@@ -18,13 +18,20 @@
 #ifndef GUI_PANEL_METADATA_HPP
 #define GUI_PANEL_METADATA_HPP
 
-#include <c2/gui_qt/panel.hpp>
+#include "panel.hpp"
+#include <c2/gui_qt/lst.hpp>
+#include <c2/gui_qt/model.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelMetadata, c_qt::panel)
-  PanelMetadata();
+def_struct_sub (PanelMetadata, Panel)
+  PanelMetadata(Hub&);
+ ~PanelMetadata();
+
+private:
+ c_qt::lst_view  *view;
+ c_qt::lst_model *model; // TODO to hub
 def_struct_end
 
 //------------------------------------------------------------------------------

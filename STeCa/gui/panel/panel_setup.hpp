@@ -18,13 +18,13 @@
 #ifndef GUI_PANEL_SETUP_HPP
 #define GUI_PANEL_SETUP_HPP
 
-#include <c2/gui_qt/panel.hpp>
+#include "panel.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelSetup, c_qt::panel)
-  PanelSetup();
+def_struct_sub (PanelSetup, Panel)
+  PanelSetup(Hub&);
 def_struct_end
 
 //------------------------------------------------------------------------------

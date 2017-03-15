@@ -17,33 +17,73 @@
 
 #include "models.hpp"
 #include <c2/c/c_cpp>
+#include <c2/cpp/vec.hpp>
+
 namespace core_qt {
 //------------------------------------------------------------------------------
 
-static uint const COLS = 1;
+using rw_n = ModelDatasets::rw_n;
+using cl_n = ModelDatasets::cl_n;
+
+//------------------------------------------------------------------------------
 
 ModelFiles::ModelFiles() {
   checkable(true);
 }
 
-ModelFiles::cl_n ModelFiles::cols() const {
-  return COLS;
+cl_n ModelFiles::cols() const {
+  return 1;
 }
 
-ModelFiles::rw_n ModelFiles::rows() const {
-  return 3;
+rw_n ModelFiles::rows() const {
+  return 0;
 }
 
 c_gui::var* ModelFiles::cell(rw_n, cl_n) const {
-  return new c_qt::var("file");
+  return nullptr;
 }
 
 void ModelFiles::check(rw_n, bool) {
-  notify();
 }
 
 bool ModelFiles::isChecked(rw_n) const {
   return false;
+}
+
+//------------------------------------------------------------------------------
+
+ModelDatasets::ModelDatasets() {
+  checkable(true);
+}
+
+cl_n ModelDatasets::cols() const {
+  return 1;
+}
+
+rw_n ModelDatasets::rows() const {
+  return 0;
+}
+
+c_gui::var* ModelDatasets::cell(rw_n, cl_n) const {
+  return new c_qt::var("file");
+}
+
+//------------------------------------------------------------------------------
+
+ModelMetadata::ModelMetadata() {
+  checkable(true);
+}
+
+cl_n ModelMetadata::cols() const {
+  return 1;
+}
+
+rw_n ModelMetadata::rows() const {
+  return 0;
+}
+
+c_gui::var* ModelMetadata::cell(rw_n, cl_n) const {
+  return nullptr;
 }
 
 //------------------------------------------------------------------------------

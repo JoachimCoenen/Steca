@@ -37,9 +37,9 @@ _sh_struct                      // metadata
   struct Dict : private c::map<c::str, uint> {
     typedef c::shared<Dict> sh; using base = c::map<c::str, uint>;
 
-    uint size()    const;
-    uint add(strc);
-    uint at(strc)  const may_err;
+    uint size()       const;
+    uint add(c::strc);
+    uint at(c::strc)  const may_err;
   };
 
   _atr (Dict::sh,      dict)

@@ -20,7 +20,6 @@
 
 #include <c2/gui_qt/win.hpp>
 #include "hub.hpp"
-#include "acts.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -34,7 +33,7 @@ struct PanelMetadata;
 
 def_struct_sub (Win, c_qt::win)
   Win();
-  Hub hub; Acts acts;
+  Hub hub;
 
   bool onClose();
 

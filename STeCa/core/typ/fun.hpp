@@ -57,8 +57,8 @@ protected:
   static fryFun factory;
 
 public:
-  static void addMaker(strc key, c::give_me<fryFun::someMaker const>);
-  static c::own<Fun> make(strc key)       may_err;
+  static void addMaker(c::strc key, c::give_me<fryFun::someMaker const>);
+  static c::own<Fun> make(c::strc key)       may_err;
 def_struct_end
 
 typedef c::shared<Fun> shFun;

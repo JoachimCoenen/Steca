@@ -23,13 +23,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-Win::Win() : hub(), acts(*this) {
-  panelFiles         = new PanelFiles;
-  panelDatasets      = new PanelDatasets;
-  panelSetup         = new PanelSetup;
-  panelImage         = new PanelImage;
-  panelDiffractogram = new PanelDiffractogram;
-  panelMetadata      = new PanelMetadata;
+Win::Win() : hub(*this) {
+  panelFiles         = new PanelFiles(hub);
+  panelDatasets      = new PanelDatasets(hub);
+  panelSetup         = new PanelSetup(hub);
+  panelImage         = new PanelImage(hub);
+  panelDiffractogram = new PanelDiffractogram(hub);
+  panelMetadata      = new PanelMetadata(hub);
 
   auto &hb = makePanel().makeHBox(); // main: horizontal layout
   auto &tb = hb.vb();   // toolbar
@@ -50,17 +50,29 @@ Win::Win() : hub(), acts(*this) {
   auto &rs  = sp.vs();  // right
   rs.add(panelMetadata);
 
-  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_FILES)));
-  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_DATASETS)));
-  tb.add(new c_qt::actbtn(&acts.get(acts.SHOW_METADATA)));
-  tb.addStretch();
-  tb.add(new c_qt::actbtn(&acts.get(acts.QUIT)));
+  auto &a = hub.acts;
 
-  acts.setup();
+  tb.add(new c_qt::actbtn(a.get(a.SHOW_FILES)));
+  tb.add(new c_qt::actbtn(a.get(a.SHOW_DATASETS)));
+  tb.add(new c_qt::actbtn(a.get(a.SHOW_METADATA)));
+  tb.addStretch();
+  tb.add(new c_qt::actbtn(a.get(a.QUIT)));
+
+  a.get(a.SHOW_FILES).onToggle([this](bool on) {
+    panelFiles->show(on);
+  }).check();
+
+  a.get(a.SHOW_DATASETS).onToggle([this](bool on) {
+    panelDatasets->show(on);
+  }).check();
+
+  a.get(a.SHOW_METADATA).onToggle([this](bool on) {
+    panelMetadata->show(on);
+  }).check();
 }
 
 bool Win::onClose() {
-  return dlgYes("Quit?");
+  return true; // dlgYes("Quit?");
 }
 
 //------------------------------------------------------------------------------

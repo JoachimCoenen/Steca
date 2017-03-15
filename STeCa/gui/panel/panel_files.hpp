@@ -18,16 +18,17 @@
 #ifndef GUI_PANEL_FILES_HPP
 #define GUI_PANEL_FILES_HPP
 
+#include "panel.hpp"
 #include <c2/gui_qt/lst.hpp>
 #include <c2/gui_qt/model.hpp>
-#include <c2/gui_qt/panel.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelFiles, c_qt::panel)
-  PanelFiles();
+def_struct_sub (PanelFiles, Panel)
+  PanelFiles(Hub&);
  ~PanelFiles();
+
 private:
   c_qt::lst_view  *view;
   c_qt::lst_model *model; // TODO to hub

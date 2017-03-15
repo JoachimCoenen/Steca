@@ -15,16 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_PANEL_IMAGE_HPP
-#define GUI_PANEL_IMAGE_HPP
+#ifndef GUI_PANEL_HPP
+#define GUI_PANEL_HPP
 
-#include "panel.hpp"
+#include <c2/gui_qt/panel.hpp>
+#include <c2/gui_qt/layout.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelImage, Panel)
-  PanelImage(Hub&);
+struct Hub;
+
+def_struct_sub (Panel, c_qt::panel)
+  Panel(c::strc title, Hub&);
+
+protected:
+  Hub& hub;
+  c_gui::layout &vb;
 def_struct_end
 
 //------------------------------------------------------------------------------

@@ -33,6 +33,20 @@ def_struct_sub (ModelFiles, c_qt::lst_model)
   _mth (bool, isChecked, (rw_n))
 def_struct_end
 
+def_struct_sub (ModelDatasets, c_qt::lst_model)
+  explicit ModelDatasets();
+  _mth (cl_n, cols, ())
+  _mth (rw_n, rows, ())
+  _mth (c_gui::var*, cell, (rw_n, cl_n))
+def_struct_end
+
+def_struct_sub (ModelMetadata, c_qt::lst_model)
+  explicit ModelMetadata();
+  _mth (cl_n, cols, ())
+  _mth (rw_n, rows, ())
+  _mth (c_gui::var*, cell, (rw_n, cl_n))
+def_struct_end
+
 //------------------------------------------------------------------------------
 }
 #endif

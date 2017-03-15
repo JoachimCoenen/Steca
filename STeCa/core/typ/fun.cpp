@@ -45,11 +45,11 @@ Fun::~Fun() {}
 
 Fun::fryFun Fun::factory;
 
-void Fun::addMaker(strc key, c::give_me<fryFun::someMaker const> maker) {
+void Fun::addMaker(c::strc key, c::give_me<fryFun::someMaker const> maker) {
   factory.add(key, maker);
 }
 
-c::own<Fun> Fun::make(strc key) may_err {
+c::own<Fun> Fun::make(c::strc key) may_err {
   return factory.make(key);
 }
 

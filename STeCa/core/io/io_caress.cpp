@@ -160,7 +160,7 @@ static data::File::sh loadCaress() may_err {
   return file;
 }
 
-data::File::sh loadCaress(strc filePath) may_err {
+data::File::sh loadCaress(c::strc filePath) may_err {
   check_or_err (0 /*OK*/ == open_data_file(filePath, nullptr),
                 "Cannot open ", filePath);
   try {

@@ -21,8 +21,12 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelImage::PanelImage() {
-  makeHBox().add(new c_qt::lbl("Image"));
+PanelImage::PanelImage(Hub& hub_) : base("", hub_) {
+  auto tabs = new c_qt::tabs;
+  vb.add(tabs);
+
+  tabs->makeTab("Image");
+  tabs->makeTab("Correction");
 }
 
 //------------------------------------------------------------------------------

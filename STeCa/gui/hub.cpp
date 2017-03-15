@@ -45,7 +45,7 @@ void Worker::doWork(shTask task) {
 
 //------------------------------------------------------------------------------
 
-Hub::Hub() : session(), thread(), worker(session) {
+Hub::Hub(Win& w) : acts(w), session(), thread(), worker(session) {
   registerMetaTypes();
 
   worker.moveToThread(&thread);

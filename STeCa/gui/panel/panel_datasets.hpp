@@ -18,13 +18,19 @@
 #ifndef GUI_PANEL_DATASETS_HPP
 #define GUI_PANEL_DATASETS_HPP
 
-#include <c2/gui_qt/panel.hpp>
+#include "panel.hpp"
+#include <c2/gui_qt/lst.hpp>
+#include <c2/gui_qt/model.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelDatasets, c_qt::panel)
-  PanelDatasets();
+def_struct_sub (PanelDatasets, Panel)
+  PanelDatasets(Hub&);
+ ~PanelDatasets();
+private:
+ c_qt::lst_view  *view;
+ c_qt::lst_model *model; // TODO to hub
 def_struct_end
 
 //------------------------------------------------------------------------------

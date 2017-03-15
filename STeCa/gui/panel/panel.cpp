@@ -15,19 +15,18 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_PANEL_IMAGE_HPP
-#define GUI_PANEL_IMAGE_HPP
-
 #include "panel.hpp"
+#include "../hub.hpp"
+#include <c2/gui_qt/inc.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelImage, Panel)
-  PanelImage(Hub&);
-def_struct_end
+Panel::Panel(c::strc title, Hub& hub_) : hub(hub_), vb(makeVBox()) {
+  if (!title.empty())
+    vb.add(new c_qt::lbl(title));
+}
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

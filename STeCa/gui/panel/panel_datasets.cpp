@@ -17,12 +17,26 @@
 
 #include "panel_datasets.hpp"
 #include <c2/gui_qt/inc.inc>
+#include <core_qt/models.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelDatasets::PanelDatasets() {
-  makeHBox().add(new c_qt::lbl("Datasets"));
+PanelDatasets::PanelDatasets(Hub& hub_)
+: base("Datasets", hub_), view(nullptr), model(nullptr) {
+  vb.add((view = new c_qt::lst_view));
+  auto &h = vb.hb();
+  h.addStretch();
+  h.add(new c_qt::lbl("Combine"));
+  h.add(new c_qt::spin());
+
+  view->showHeader(true);
+  view->set((model = new core_qt::ModelDatasets));
+}
+
+PanelDatasets::~PanelDatasets() {
+  delete view;
+  delete model;
 }
 
 //------------------------------------------------------------------------------

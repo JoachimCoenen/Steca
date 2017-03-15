@@ -16,13 +16,29 @@
  ******************************************************************************/
 
 #include "panel_diffractogram.hpp"
+#include "../hub.hpp"
 #include <c2/gui_qt/inc.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelDiffractogram::PanelDiffractogram() {
-  makeHBox().add(new c_qt::lbl("Diffractogram"));
+PanelDiffractogram::PanelDiffractogram(Hub& hub_) : base("", hub_) {
+  vb.add(new c_qt::lbl("<Diffractogram>"));
+  auto &hb = vb.hb();
+
+  hb.add(new c_qt::lbl("norm:"));
+  hb.add(new c_qt::cbo());
+  hb.add(new c_qt::lbl(" inten:"));
+  hb.add(new c_qt::rio("sum"));
+  hb.add(new c_qt::rio("avg ×"));
+  hb.add(new c_qt::spin()); // em4_2, 0.001 setDecimals(3);
+
+  hb.addStretch();
+  hb.add(new c_qt::actbtn(hub.acts.get(hub.acts.DIFF_ZOOM)));
+  hb.addStretch();
+
+  hb.add(new c_qt::chk(hub.acts.get(hub.acts.DIFF_ALL_DSETS)));
+  hb.add(new c_qt::chk(hub.acts.get(hub.acts.DIFF_FIX_INTEN)));
 }
 
 //------------------------------------------------------------------------------

@@ -18,13 +18,13 @@
 #ifndef GUI_PANEL_DIFFRACTOGRAM_HPP
 #define GUI_PANEL_DIFFRACTOGRAM_HPP
 
-#include <c2/gui_qt/panel.hpp>
+#include "panel.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelDiffractogram, c_qt::panel)
-  PanelDiffractogram();
+def_struct_sub (PanelDiffractogram, Panel)
+  PanelDiffractogram(Hub&);
 def_struct_end
 
 //------------------------------------------------------------------------------

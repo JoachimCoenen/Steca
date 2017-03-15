@@ -18,6 +18,7 @@
 #ifndef GUI_HUB_HPP
 #define GUI_HUB_HPP
 
+#include "acts.hpp"
 #include <core/session.hpp>
 #include <c2/c/lib/ptr.h>
 
@@ -71,11 +72,15 @@ def_struct_end
 
 //------------------------------------------------------------------------------
 
+struct Win;
+
 def_struct_sub (Hub, QObject)
   using Session = core::Session;
 
-  Hub();
+  Hub(Win&);
  ~Hub();
+
+  Acts acts;
 
   void post(Task*);
   void workDone(shTask);

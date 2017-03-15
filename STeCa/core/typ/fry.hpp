@@ -45,11 +45,11 @@ private:
   c::map<str, scm> makers;
 
 public:
-  void add(strc key, c::give_me<someMaker const> m) {
+  void add(c::strc key, c::give_me<someMaker const> m) {
     makers[key] = m;
   }
 
-  c::own<T> make(strc key) const may_err {
+  c::own<T> make(c::strc key) const may_err {
     someMaker const *m = makers.at(key).ptr();
     check_or_err(m, "no maker ", key);
     return m->make();

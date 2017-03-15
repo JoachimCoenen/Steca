@@ -16,17 +16,38 @@
  ******************************************************************************/
 
 #include "panel_files.hpp"
+#include "../hub.hpp"
 #include <c2/gui_qt/inc.inc>
 #include <core_qt/models.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelFiles::PanelFiles() : view(nullptr), model(nullptr) {
-  auto &vb = makeVBox();
+PanelFiles::PanelFiles(Hub& hub_)
+: base("", hub_), view(nullptr), model(nullptr) {
+  auto &a = hub.acts;
 
-  vb.add((view = new c_qt::lst_view));
-  view->set((model = new core_qt::ModelFiles));
+  {
+    auto &h = vb.hb();
+    h.add(new c_qt::lbl("Files"));
+    h.addStretch();
+    h.add(new c_qt::actbtn(a.get(a.FILES_ADD)));
+    h.add(new c_qt::actbtn(a.get(a.FILES_REM)));
+  }
+
+  {
+    vb.add((view = new c_qt::lst_view));
+    view->showHeader(true);
+    view->set((model = new core_qt::ModelFiles));
+  }
+
+  {
+    vb.add(new c_qt::lbl("Correction file"));
+    auto &h = vb.hb();
+    h.add(new c_qt::edit());
+    h.add(new c_qt::actbtn(a.get(a.CORR_ENABLE)));
+    h.add(new c_qt::actbtn(a.get(a.CORR_REM)));
+  }
 }
 
 PanelFiles::~PanelFiles() {

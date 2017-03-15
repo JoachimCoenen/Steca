@@ -23,7 +23,7 @@
         <file alias="reflRegion">rc/refl_region.svg</file>
         <file alias="clear">rc/clear.svg</file>
         <file alias="scale">rc/scale.svg</file>
-        <file alias="useCorrection">rc/use_correction.svg</file>
+        <file alias="check">rc/check.svg</file>
         <file alias="showBackground">rc/show_background.svg</file>
         <file alias="retroStier">rc/retro_stier.svg</file>
         <file alias="angle">rc/angle.svg</file>
