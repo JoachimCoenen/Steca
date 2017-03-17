@@ -22,10 +22,14 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelDatasets::PanelDatasets(Hub& hub_)
-: base("Datasets", hub_), view(nullptr), model(nullptr) {
-  vb.add((view = new c_qt::lst_view));
-  auto &h = vb.hb();
+PanelDatasets::PanelDatasets(Hub& hub)
+: base("", hub), view(nullptr), model(nullptr) {
+  auto tabs = new c_qt::tabs;
+  vb.add(tabs);
+  tabs->addTab((tab = new Panel(hub)), "Datasets");
+
+  tab->vb.add((view = new c_qt::lst_view));
+  auto &h = tab->vb.hb();
   h.addStretch();
   h.add(new c_qt::lbl("Combine"));
   h.add(new c_qt::spin());

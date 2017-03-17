@@ -30,6 +30,7 @@ def_struct_sub (PanelFiles, Panel)
  ~PanelFiles();
 
 private:
+  Panel *tab;
   c_qt::lst_view  *view;
   c_qt::lst_model *model; // TODO to hub
 def_struct_end

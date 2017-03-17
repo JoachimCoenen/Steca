@@ -25,29 +25,29 @@ namespace gui {
 
 PanelFiles::PanelFiles(Hub& hub_)
 : base("", hub_), view(nullptr), model(nullptr) {
+  auto tabs = new c_qt::tabs;
+  vb.add(tabs);
+
   auto &a = hub.acts;
 
-  {
-    auto &h = vb.hb();
-    h.add(new c_qt::lbl("Files"));
-    h.addStretch();
-    h.add(new c_qt::actbtn(a.get(a.FILES_ADD)));
-    h.add(new c_qt::actbtn(a.get(a.FILES_REM)));
-  }
+  auto p = new c_qt::panel;
+  auto &hb = p->makeHBox();
 
-  {
-    vb.add((view = new c_qt::lst_view));
-    view->showHeader(true);
-    view->set((model = new core_qt::ModelFiles));
-  }
+  auto btnAdd = new c_qt::actbtn(a.get(a.FILES_ADD));
+  auto btnRem = new c_qt::actbtn(a.get(a.FILES_REM));
 
-  {
-    vb.add(new c_qt::lbl("Correction file"));
-    auto &h = vb.hb();
-    h.add(new c_qt::edit());
-    h.add(new c_qt::actbtn(a.get(a.CORR_ENABLE)));
-    h.add(new c_qt::actbtn(a.get(a.CORR_REM)));
-  }
+  hb.margin(0).add(btnAdd).add(btnRem);
+  tabs->addTab((tab = new Panel(hub)), "Files", p);
+
+  tab->vb.add((view = new c_qt::lst_view));
+  view->showHeader(true);
+  view->set((model = new core_qt::ModelFiles));
+
+  tab->vb.add(new c_qt::lbl("Correction file"));
+  auto &h = tab->vb.hb();
+  h.add(new c_qt::edit());
+  h.add(new c_qt::actbtn(a.get(a.CORR_ENABLE)));
+  h.add(new c_qt::actbtn(a.get(a.CORR_REM)));
 }
 
 PanelFiles::~PanelFiles() {

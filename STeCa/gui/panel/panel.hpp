@@ -27,11 +27,13 @@ namespace gui {
 struct Hub;
 
 def_struct_sub (Panel, c_qt::panel)
+  Panel(Hub&);
   Panel(c::strc title, Hub&);
 
 protected:
   Hub& hub;
-  c_gui::layout &vb;
+public:
+  c_gui::box &vb;
 def_struct_end
 
 //------------------------------------------------------------------------------

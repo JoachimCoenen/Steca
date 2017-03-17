@@ -25,6 +25,9 @@ namespace gui {
 
 def_struct_sub (PanelImage, Panel)
   PanelImage(Hub&);
+
+private:
+  Panel *tabImage, *tabCorrection;
 def_struct_end
 
 //------------------------------------------------------------------------------

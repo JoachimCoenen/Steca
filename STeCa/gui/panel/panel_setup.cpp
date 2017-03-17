@@ -25,9 +25,9 @@ PanelSetup::PanelSetup(Hub& hub_) : base("", hub_) {
   auto tabs = new c_qt::tabs;
   vb.add(tabs);
 
-  tabs->makeTab("Geometry");
-  tabs->makeTab("Background");
-  tabs->makeTab("Reflections");
+  tabs->addTab((tabGeometry    = new Panel(hub)), "Geometry");
+  tabs->addTab((tabBackground  = new Panel(hub)), "Background");
+  tabs->addTab((tabReflections = new Panel(hub)), "Reflections");
 }
 
 //------------------------------------------------------------------------------

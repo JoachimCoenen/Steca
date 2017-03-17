@@ -25,6 +25,10 @@ namespace gui {
 
 def_struct_sub (PanelSetup, Panel)
   PanelSetup(Hub&);
+
+private:
+  Panel *tabGeometry, *tabBackground, *tabReflections;
+
 def_struct_end
 
 //------------------------------------------------------------------------------

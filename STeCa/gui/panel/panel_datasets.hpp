@@ -28,9 +28,11 @@ namespace gui {
 def_struct_sub (PanelDatasets, Panel)
   PanelDatasets(Hub&);
  ~PanelDatasets();
+
 private:
- c_qt::lst_view  *view;
- c_qt::lst_model *model; // TODO to hub
+  Panel *tab;
+  c_qt::lst_view  *view;
+  c_qt::lst_model *model; // TODO to hub
 def_struct_end
 
 //------------------------------------------------------------------------------

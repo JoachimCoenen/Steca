@@ -25,6 +25,9 @@ namespace gui {
 
 def_struct_sub (PanelDiffractogram, Panel)
   PanelDiffractogram(Hub&);
+
+private:
+  Panel *tab;
 def_struct_end
 
 //------------------------------------------------------------------------------

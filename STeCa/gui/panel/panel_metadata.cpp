@@ -22,9 +22,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelMetadata::PanelMetadata(Hub& hub_)
-: base("Metadata", hub_), view(nullptr), model(nullptr) {
-  vb.add((view = new c_qt::lst_view));
+PanelMetadata::PanelMetadata(Hub& hub)
+: base("", hub), view(nullptr), model(nullptr) {
+  auto tabs = new c_qt::tabs;
+  vb.add(tabs);
+  tabs->addTab((tab = new Panel(hub)), "Metadata");
+
+  tab->vb.add((view = new c_qt::lst_view));
   view->showHeader(true);
   view->set((model = new core_qt::ModelMetadata));
 }
