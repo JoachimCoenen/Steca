@@ -30,7 +30,7 @@ def_struct_sub (ModelFiles, c_qt::lst_model)
   _mth (c_gui::var*, cell, (rw_n, cl_n))
 
   _mth_mut (void, check, (rw_n, bool))
-  _mth (bool, isChecked, (rw_n))
+  _pred (isChecked, (rw_n))
 def_struct_end
 
 def_struct_sub (ModelDatasets, c_qt::lst_model)

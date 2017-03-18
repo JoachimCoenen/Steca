@@ -18,8 +18,8 @@
 #ifndef CORE_FUN_H
 #define CORE_FUN_H
 
-#include <c2/c/c_def.h>
-#include <c2/c/lib/num.h>
+#include <c2/h/c_def.h>
+#include <c2/c/num.h>
 #include <c2/cpp/vec.hpp>
 #include "fry.hpp"
 
@@ -37,7 +37,7 @@ def_struct (Par)
   ref operator=(rc);
 def_struct_end
 
-def_struct (Fun)
+def_struct (Fun) SHARED
   Fun();
   virtual ~Fun();
 
@@ -60,8 +60,6 @@ public:
   static void addMaker(c::strc key, c::give_me<fryFun::someMaker const>);
   static c::own<Fun> make(c::strc key)       may_err;
 def_struct_end
-
-typedef c::shared<Fun> shFun;
 
 def_struct_sub (SimpleFun, Fun)
   _atr (c::vec<Par>, pars)
@@ -91,7 +89,7 @@ def_struct_sub (SumFuns, Fun)
   real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
 
   // summed funs
-  c::vec<shFun> funs;
+  c::vec<Fun::sh> funs;
 
 protected:
   // the aggregate par list

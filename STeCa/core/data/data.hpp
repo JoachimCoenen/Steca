@@ -18,8 +18,8 @@
 #ifndef CORE_DATA_HPP
 #define CORE_DATA_HPP
 
-#include <c2/c/lib/ptr.h>
-#include <c2/c/lib/str.h>
+#include <c2/c/ptr.h>
+#include <c2/c/str.h>
 #include <c2/cpp/vec.hpp>
 #include <c2/cpp/map.hpp>
 #include <c2/cpp/exc.hpp>
@@ -28,12 +28,10 @@ namespace core {
 #define NS__ data
 //------------------------------------------------------------------------------
 
-#define _sh_struct _struct typedef c::shared<Self> sh;
-
 #define ST__ Meta
 
 // data::Meta
-_sh_struct                      // metadata
+_struct SHARED // metadata
   struct Dict : private c::map<c::str, uint> {
     typedef c::shared<Dict> sh; using base = c::map<c::str, uint>;
 
@@ -43,17 +41,17 @@ _sh_struct                      // metadata
   };
 
   _atr (Dict::sh,      dict)
-  _atr (c::vec<float>, vals)
-  _atr (float, tth) _atr (float, omg) _atr (float, chi) _atr (float, phi)
+  _atr (c::vec<flt32>, vals)
+  _atr (flt32, tth) _atr (flt32, omg) _atr (flt32, chi) _atr (flt32, phi)
 
-  _con (Dict::sh, float, float, float, float)
+  _con (Dict::sh, flt32, flt32, flt32, flt32)
 _struct_end
 
 #undef  ST__
 #define ST__ Set
 
 // data::Set
-_sh_struct                      // one read dataset
+_struct SHARED                   // one read dataset
   _atr (uint, idx)               // this order in File, 1..; 0 = not
   _atr (Meta, meta)
 
@@ -64,7 +62,7 @@ _struct_end
 #define ST__ File
 
 // data::File
-_sh_struct                      // one file
+_struct SHARED                   // one file
   _atr (uint, idx)               // this order in Files, 1..; 0 = not
   _atr (c::vec<Set::sh>, sets)
 
@@ -78,7 +76,7 @@ _struct_end
 #define ST__ Files
 
 // data::Files
-_sh_struct                      // the whole file group
+_struct SHARED                   // the whole file group
   _atr (c::vec<File::sh>, files)
   _atr (Meta::Dict::sh,   dict)
 

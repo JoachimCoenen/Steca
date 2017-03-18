@@ -17,7 +17,7 @@
 
 #include <c2/gui_qt/def.hpp>
 #include <core/io/io.hpp>
-#include <c2/c/c_cpp>
+#include <c2/h/c_cpp>
 #include <QDir>
 #include <QFileInfo>
 

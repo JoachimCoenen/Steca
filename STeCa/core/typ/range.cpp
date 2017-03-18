@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "range.hpp"
-#include <c2/c/c_cpp>
+#include <c2/h/c_cpp>
 
 #include <algorithm>
 #undef NAN
@@ -94,15 +94,15 @@ TEST("Range::isDef",
   CHECK(Range(0,1).isDef());
 )
 
-bool Range::empty() const {
+bool Range::isEmpty() const {
   return !isDef() || min >= max;
 }
 
 TEST("Range::empty",
-  CHECK(Range().empty());
-  CHECK(!Range::inf().empty());
-  CHECK(Range(0).empty());
-  CHECK(!Range(0,1).empty());
+  CHECK(Range().isEmpty());
+  CHECK(!Range::inf().isEmpty());
+  CHECK(Range(0).isEmpty());
+  CHECK(!Range(0,1).isEmpty());
 )
 
 real Range::width() const {
@@ -247,7 +247,7 @@ TEST("Range::intersect",
   CHECK_EQ(Range(-1,0), r.intersect(Range(-2,0)));
 
   auto disjoint = Range(-3,-2);
-  CHECK(r.intersect(disjoint).empty());
+  CHECK(r.intersect(disjoint).isEmpty());
   CHECK_EQ(r.min, r.intersect(disjoint).min);
 )
 
@@ -283,10 +283,10 @@ Range::ref Range::operator=(rc that) {
 //------------------------------------------------------------------------------
 
 bool Ranges::operator==(rc that) const {
-  if (empty())
-    return that.empty();
-  if (that.empty())
-    return empty();
+  if (isEmpty())
+    return that.isEmpty();
+  if (that.isEmpty())
+    return isEmpty();
 
   if (size() != that.size())
     return false;
@@ -334,11 +334,11 @@ bool Ranges::add(Range::rc range) {
       if (range.intersects(r))
         addRange.extendBy(r);
       else
-        newRanges.push(r);
+        newRanges.add(r);
     }
   }
 
-  newRanges.push(addRange);
+  newRanges.add(addRange);
   rs = newRanges;
   sort();
 
@@ -350,14 +350,14 @@ bool Ranges::rem(Range::rc remRange) {
   bool changed = false;
 
   for (Range::rc r : rs) {
-    if (!r.intersect(remRange).empty()) {
+    if (!r.intersect(remRange).isEmpty()) {
       changed = true;
       if (r.min < remRange.min)
-        newRanges.push(Range(r.min, remRange.min));
+        newRanges.add(Range(r.min, remRange.min));
       if (r.max > remRange.max)
-        newRanges.push(Range(remRange.max, r.max));
+        newRanges.add(Range(remRange.max, r.max));
     } else {
-      newRanges.push(r);
+      newRanges.add(r);
     }
   }
 
@@ -410,7 +410,7 @@ static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
 
 TEST("Ranges",
   Ranges rs;
-  CHECK(rs.empty());
+  CHECK(rs.isEmpty());
   CHECK(RANGES_EQ(rs, rs));
   CHECK(RANGES_EQ(rs, Ranges()));
 

@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "json.hpp"
-#include <c2/c/lib/str.h>
-#include <c2/c/lib/num.h>
-#include <c2/c/c_cpp>
+#include <c2/c/str.h>
+#include <c2/c/num.h>
+#include <c2/h/c_cpp>
 #include <QStringList>
 #undef NAN
 
@@ -126,7 +126,6 @@ using core::Par;
 using core::Fun;
 using core::SimpleFun;
 using core::SumFuns;
-using core::shFun;
 
 static JsonObj toJson(Par::rc par) {
   return JsonObj()
@@ -178,7 +177,7 @@ static void loadSimpleFun(SimpleFun& f, JsonObj::rc obj) {
 }
 
 static void loadSumFuns(SumFuns& f, JsonObj::rc obj) may_err {
-  EXPECT (f.funs.empty()) // cannot load twice
+  EXPECT (f.funs.isEmpty()) // cannot load twice
 
   for_i (obj.loadUint(json_key::COUNT))
     f.add(loadFun(obj.loadObj(json_key::FUN.arg(i + 1))));

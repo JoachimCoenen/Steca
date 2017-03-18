@@ -1,10 +1,21 @@
-ver. 2.1.5, released ....
+ver. 2.1.0, released ....
 -------------------------------
 
 Changes:
 
-* some unit tests are back
-* code cleanup
+* rewrite w. c2
+* unit tests
+* wc 2.0.5: 31743 100241 973310
+
+ver. 2.0.5, internal release
+----------------------------
+
+Changes:
+
+* read more metadata from Caress files
+* option btw. sum/average of intensities
+* simple zooming in diffractogram
+* non-native file dialogs w. file information
 
 ver. 2.0.4, released 2016.12.01
 -------------------------------

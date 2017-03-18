@@ -16,10 +16,10 @@
  ******************************************************************************/
 
 #include "io.hpp"
-#include <c2/c/lib/mem.h>
-#include <c2/c/lib/num.h>
-#include <c2/c/lib/str.h>
-#include <c2/c/c_cpp>
+#include <c2/c/mem.h>
+#include <c2/c/num.h>
+#include <c2/c/str.h>
+#include <c2/h/c_cpp>
 #include "Caress/raw.i"
 #include <string.h>
 
@@ -119,7 +119,7 @@ static data::File::sh loadCaress() may_err {
     }
 
     if (el.eq("READ") || el.eq("SETVALUE") || el.eq("MASTERV1") || el.eq("PROTOCOL")) {
-      check_or_err (!en.empty(), "empty node for: ", el);
+      check_or_err (!en.isEmpty(), "empty node for: ", el);
 
       float f = gdf();
 

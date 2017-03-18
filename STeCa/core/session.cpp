@@ -16,22 +16,14 @@
  ******************************************************************************/
 
 #include "session.hpp"
-#include <c2/c/c_cpp>
-#include <c2/cpp/async.hpp>
-#include <chrono>
-
-core_Session::core_Session() : dummy(0) {}
+#include <c2/h/c_cpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-Session::Session() {
-}
-
-int Session::long_square(int i) const {
-  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-  return i*i;
-}
+Session::Session()
+: normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
+{}
 
 //------------------------------------------------------------------------------
 }
