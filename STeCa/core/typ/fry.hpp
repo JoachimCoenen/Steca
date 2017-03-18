@@ -18,11 +18,11 @@
 #ifndef CORE_FRY_H
 #define CORE_FRY_H
 
-#include <c2/c/c_def.h>
-#include <c2/c/lib/ptr.h>
-#include <c2/c/lib/str.h>
+#include <c2/h/c_def.h>
+#include <c2/c/ptr.h>
+#include <c2/c/str.h>
 #include <c2/cpp/exc.hpp>
-#include <c2/cpp/map.hpp>
+#include <c2/cpp/hash.hpp>
 
 namespace core {
 //-----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ template <typename T> def_struct (fry)
 
 private:
   typedef c::scoped<someMaker const> scm;
-  c::map<str, scm> makers;
+  c::hash<str, scm> makers;
 
 public:
   void add(c::strc key, c::give_me<someMaker const> m) {

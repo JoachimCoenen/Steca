@@ -30,7 +30,7 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub_) : base("", hub_) {
   auto &hb = tab->vb.hb();
 
   hb.add(new c_qt::lbl("norm:"));
-  hb.add(new c_qt::cbo());
+  hb.add(new c_qt::cbo(hub.normStrLst));
   hb.add(new c_qt::lbl(" inten:"));
   hb.add(new c_qt::rio("sum"));
   hb.add(new c_qt::rio("avg ×"));

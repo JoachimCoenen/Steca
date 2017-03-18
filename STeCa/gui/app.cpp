@@ -18,7 +18,7 @@
 #include "app.hpp"
 #include "manifest"
 #include "win.hpp"
-#include <c2/c/c_cpp>
+#include <c2/h/c_cpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

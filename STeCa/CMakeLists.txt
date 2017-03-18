@@ -12,10 +12,10 @@ add_subdirectory (core_qt)  # Qt-dependent core parts
 add_subdirectory (gui)      # Qt-gui
 
 add_executable (${app} main.cpp)
-add_dependencies (${app} gui core_qt core c2_gui_qt c2_gui c2_typ c2_cpp c2_c)
+add_dependencies (${app} gui core_qt core c2_gui_qt c2_gui c2_cpp c2_c)
 
 target_link_libraries (${app}
-  gui core_qt core c2_gui_qt c2_gui c2_typ c2_cpp c2_c
+  gui core_qt core c2_gui_qt c2_gui c2_cpp c2_c
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 

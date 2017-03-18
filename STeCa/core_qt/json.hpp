@@ -18,15 +18,15 @@
 #ifndef CORE_JSON_H
 #define CORE_JSON_H
 
-#include <c2/c/c_c.h>
-#include <c2/c/lib/num.h>
-#include <c2/c/lib/ptr.h>
+#include <c2/h/c_c.h>
+#include <c2/c/num.h>
+#include <c2/c/ptr.h>
 
 #include <c2/cpp/exc.hpp>
 #include <c2/gui_qt/def.hpp>
 
-#include <c2/typ/ij.h>
-#include <c2/typ/xy.h>
+#include <c2/c/ij.h>
+#include <c2/c/xy.h>
 #include <core/typ/range.hpp>
 #include <core/typ/fun.hpp>
 

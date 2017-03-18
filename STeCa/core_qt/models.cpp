@@ -16,8 +16,9 @@
  ******************************************************************************/
 
 #include "models.hpp"
-#include <c2/c/c_cpp>
+#include <c2/h/c_cpp>
 #include <c2/cpp/vec.hpp>
+#include <c2/gui_qt/var.hpp>
 
 namespace core_qt {
 //------------------------------------------------------------------------------

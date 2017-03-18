@@ -18,9 +18,7 @@
 #ifndef CORE_RANGE_H
 #define CORE_RANGE_H
 
-#include <c2/c/c_c.h>
-#include <c2/c/lib/num.h>
-#include <c2/cpp/vec.hpp>
+#include "def.hpp"
 
 #define NS__ core
 #define ST__ Range
@@ -40,13 +38,13 @@ _cpp_struct COMPARABLE EQ_NE
 
   Range(rc);
 
-  static Range inf();               // -inf .. +inf
+  static Range inf();                // -inf .. +inf
 
-  bool  isDef()  const;             // is not NaNs
-  bool  empty()  const;             // not def'd or empty
+  bool  isDef()   const;             // is not NaNs
+  bool  isEmpty() const;             // not def'd or empty
 
-  real  width()  const;
-  real  center() const;
+  real  width()   const;
+  real  center()  const;
 
   static Range safeFrom(real, real); // safe factory
 
@@ -71,10 +69,9 @@ _cpp_struct_end
 _struct EQ_NE
   _con ()
 
-  void clear()          { rs.clear();        }
-  bool is_empty() const { return rs.empty(); }
-  sz_t size()     const { return rs.size();  }
-  bool empty()    const { return rs.empty(); }
+  void clear()         { rs.clear();          }
+  bool isEmpty() const { return rs.isEmpty(); }
+  sz_t size()    const { return rs.size();    }
 
   Range::rc at(sz_t i) const { return rs.at(i); }
 

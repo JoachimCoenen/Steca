@@ -18,25 +18,28 @@
 #ifndef CORE_SESSION_HPP
 #define CORE_SESSION_HPP
 
-#include <c2/c/c_def.h>
+#include <c2/h/c_def.h>
+#include <c2/c/str.h>
+#include <c2/cpp/vec.hpp>
 
-#define NS__ core
-#define ST__ Session
+namespace core {
+//------------------------------------------------------------------------------
 
-// core_Session
-_c_struct
-  _atr (int, dummy)
-  _c_con ()
-_c_struct_end
+def_struct (Session)
+  using str_vec = c::vec<c::str>;
 
-// core::Session
-_cpp_struct
-  _con ()
-  _mth (int, long_square, (int))
-_cpp_struct_end
+  explicit Session();
 
-#undef ST__
-#undef NS__
+  enum class eNorm {
+    NONE,
+    MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
+  };
 
+  _atr (str_vec, normStrLst)
+
+def_struct_end
+
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

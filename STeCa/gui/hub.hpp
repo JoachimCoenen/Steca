@@ -20,7 +20,7 @@
 
 #include "acts.hpp"
 #include <core/session.hpp>
-#include <c2/c/lib/ptr.h>
+#include <c2/c/ptr.h>
 
 #include <QObject>
 #include <QEvent>
@@ -31,42 +31,37 @@ namespace gui {
 
 struct Hub;
 
-def_struct_sub (Task, QEvent)
-  using Session = core::Session;
-
+def_struct_sub (Task, QEvent) SHARED
   Task();
  ~Task();
 
-  void set(Hub& hub, Session& session);
+  void set(Hub& hub);
   virtual Task* clone() = 0;
 
   virtual void work() = 0;
   virtual void done() = 0;
 
-  Hub* hub; Session* session;
+  Hub* hub;
 def_struct_end
 
-typedef c::shared<Task> shTask;
 //------------------------------------------------------------------------------
 }
 
-Q_DECLARE_METATYPE(gui::shTask)
+Q_DECLARE_METATYPE(gui::Task::sh)
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 def_struct_sub (Worker, QObject)
-  using Session = core::Session;
+  Worker(Hub&);
 
-  Worker(Session&);
-
-  void doWork(shTask);
+  void doWork(Task::sh);
 
 signals:
-  void workDone(shTask);
+  void workDone(Task::sh);
 
 private:
-  Session& session;
+  Hub& hub;
   Q_OBJECT
 def_struct_end
 
@@ -74,22 +69,17 @@ def_struct_end
 
 struct Win;
 
-def_struct_sub (Hub, QObject)
-  using Session = core::Session;
-
+def_struct_sub2 (Hub, QObject, core::Session)
   Hub(Win&);
  ~Hub();
 
   Acts acts;
 
   void post(Task*);
-  void workDone(shTask);
+  void workDone(Task::sh);
 
 signals:
-  void doWork(shTask);
-
-private:
-  Session session;
+  void doWork(Task::sh);
 
 private:
   void registerMetaTypes();
@@ -98,15 +88,6 @@ private:
   QThread thread;
   Worker  worker;
   Q_OBJECT
-def_struct_end
-
-//------------------------------------------------------------------------------
-
-def_struct (RefHub)
-  RefHub(Hub&);
-
-protected:
-  Hub& hub;
 def_struct_end
 
 //------------------------------------------------------------------------------

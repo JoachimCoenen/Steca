@@ -25,7 +25,7 @@ namespace gui {
 Panel::Panel(Hub& hub) : Panel(c::str::nul, hub) {}
 
 Panel::Panel(c::strc title, Hub& hub_) : hub(hub_), vb(makeVBox()) {
-  if (!title.empty())
+  if (!title.isEmpty())
     vb.add(new c_qt::lbl(title));
 }
 

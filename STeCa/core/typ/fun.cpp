@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fun.hpp"
-#include <c2/c/c_cpp>
+#include <c2/h/c_cpp>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ c::own<Fun> Fun::make(c::strc key) may_err {
 SimpleFun::SimpleFun() : pars() {}
 
 void SimpleFun::add(Par::rc par) {
-  mut(pars).push(par);
+  mut(pars).add(par);
 }
 
 sz_t SimpleFun::parCount() const {
@@ -86,14 +86,14 @@ void SimpleFun::setParVal(sz_t i, real val) {
 
 void SumFuns::add(c::give_me<Fun> fun) {
   sz_t parIdx = parCount();
-  funs.push(shFun(fun));
+  funs.add(Fun::sh(fun));
 
   for_i (fun->parCount()) {
     // aggregate par list
-    allPars.push(&fun->parAt(i));
+    allPars.add(&fun->parAt(i));
     // lookup helpers
-    fun4parIdx.push(fun);
-    firstParIdx4parIdx.push(parIdx);
+    fun4parIdx.add(fun);
+    firstParIdx4parIdx.add(parIdx);
   }
 }
 

@@ -16,13 +16,13 @@
  ******************************************************************************/
 
 #include "data.hpp"
-#include <c2/c/c_cpp>
-#include <c2/c/lib/num.h>
+#include <c2/h/c_cpp>
+#include <c2/c/num.h>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-Meta::Meta(Dict::sh dict_, float tth_, float omg_, float chi_, float phi_)
+Meta::Meta(Dict::sh dict_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
 : dict(dict_), vals(), tth(tth_), omg(omg_), chi(chi_), phi(phi_) {
   mut(vals).reserve(dict->size());
 }
@@ -75,7 +75,7 @@ File::~File() {
 }
 
 void File::addSet(Set::sh set) {
-  mut(sets).push(set);
+  mut(sets).add(set);
 }
 
 //------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ Files::Files() : files(), dict(new Meta::Dict) {
 }
 
 void Files::addFile(c::give_me<File> file) {
-  mut(files).push(File::sh(file));
+  mut(files).add(File::sh(file));
   mut(file->idx) = files.size();
 }
 

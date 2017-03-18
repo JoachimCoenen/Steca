@@ -1,7 +1,4 @@
 CMakeLists.txt.user
-.attick
-.build
-.old
 .vscode
 *.pro
 *.pro.user
