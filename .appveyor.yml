@@ -24,4 +24,5 @@ build_script:
 - mkdir build
 - cd build
 - cmake -G "%CMAKE_GENERATOR%" ..
-- cmake --build . --config %BUILD_CONF% -- /clp:ErrorsOnly
+- cmake --build . --config %BUILD_CONF% 
+# -- /clp:ErrorsOnly
