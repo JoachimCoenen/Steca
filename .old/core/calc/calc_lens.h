@@ -47,7 +47,7 @@ public:
 
   virtual typ::size2d size() const = 0;
 
-protected:
+_protected
   typ::size2d transCutSize(typ::size2d) const;
 
   void doTrans(uint& i, uint& j) const;
@@ -75,7 +75,7 @@ public:
 
   inten_rge::rc rgeInten(bool fixed) const;
 
-private:
+_private
 
   typ::Image const& image_;
 
@@ -104,7 +104,7 @@ public:
 
   data::Dataset::rc dataset()  const { return dataset_;   }
 
-private:
+_private
   void setNorm(eNorm);
   inten_t normFactor_;
 

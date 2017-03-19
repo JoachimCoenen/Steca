@@ -39,7 +39,7 @@ public:
   void clear();
 
   // data files
-private:
+_private
   typ::vec<data::shp_File> files_;
 
 public:
@@ -51,7 +51,7 @@ public:
   void addFile(data::shp_File) THROWS;
   void remFile(uint i);
 
-private:
+_private
   // correction file
   data::shp_File corrFile_;
   typ::shp_Image corrImage_;
@@ -109,7 +109,7 @@ public:
     return collectedDatasetsTags_;
   }
 
-private:
+_private
   // All files must have images of the same size
   typ::size2d imageSize_;
   // Clears the image size if there are no files in the session.
@@ -121,7 +121,7 @@ public:
   typ::size2d imageSize() const;
 
   // image - transform & cut etc.
-private:
+_private
   typ::ImageTransform imageTransform_;
   typ::ImageCut       imageCut_;
 
@@ -134,7 +134,7 @@ public:
 
   void setImageCut(bool topLeftFirst, bool linked, typ::ImageCut::rc);
 
-private:
+_private
   typ::Geometry geometry_;
   typ::Range    gammaRange_;
   mutable typ::cache_lazy<typ::AngleMap::Key,typ::AngleMap> angleMapCache_;
@@ -167,7 +167,7 @@ public:
       uint gmaSlices, gma_rge::rc, Progress*);
 
 // fitting
-private:
+_private
   uint   bgPolyDegree_;
   typ::Ranges bgRanges_;
 
@@ -191,7 +191,7 @@ public:
   void remReflection(uint);
 
 // normalisation
-private:
+_private
   eNorm norm_;
 
 public:

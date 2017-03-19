@@ -33,7 +33,7 @@ public:
   bool allSequentialChecked() { return rbAllSequential_->isChecked(); }
   bool allChecked() { return rbAll_->isChecked(); }
 
-protected:
+_protected
   QRadioButton *rbCurrent_, *rbAllSequential_, *rbAll_;
   QComboBox *fileTypes_;
 };
@@ -49,7 +49,7 @@ class DiffractogramsFrame : public Frame {
 public:
   DiffractogramsFrame(TheHub&, rcstr title, QWidget*);
 
-protected:
+_protected
   TabDiffractogramsSave *tabSave_;
 
   OutputDataCollection collectCurves(gma_rge::rc, uint gmaSlices, data::Dataset::rc dataset, uint picNum);

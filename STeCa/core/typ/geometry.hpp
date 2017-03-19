@@ -24,7 +24,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-def_struct (Geometry) COMPARABLE EQ_NE
+dcl_struct (Geometry) COMPARABLE EQ_NE
   _cst (real, MIN_DETECTOR_DISTANCE)
   _cst (real, MIN_DETECTOR_PIXEL_SIZE)
   _cst (real, DEF_DETECTOR_DISTANCE)
@@ -35,9 +35,9 @@ def_struct (Geometry) COMPARABLE EQ_NE
   _atr (real,  detectorDistance)
   _atr (real,  pixSize)
   _atr (c::ij, midPixOffset)
-def_struct_end
+dcl_struct_end
 
-def_struct (ImageCut) COMPARABLE EQ_NE
+dcl_struct (ImageCut) COMPARABLE EQ_NE
   _atr (uint, left)
   _atr (uint, top)
   _atr (uint, right)

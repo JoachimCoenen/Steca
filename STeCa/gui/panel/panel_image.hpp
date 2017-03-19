@@ -23,12 +23,12 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelImage, Panel)
+dcl_struct_sub (PanelImage, Panel)
   PanelImage(Hub&);
 
-private:
+_private
   Panel *tabImage, *tabCorrection;
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

@@ -30,7 +30,7 @@ class DockHelp : public DockWidget, protected RefHub {
 public:
   DockHelp(TheHub&);
 
-private:
+_private
   QTextBrowser *browser_;
 };
 

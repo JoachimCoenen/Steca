@@ -97,14 +97,14 @@ public:
 
   virtual void fit(typ::Curve::rc, typ::Range::rc);
 
-protected:
+_protected
   typ::Curve prepareFit(typ::Curve::rc, typ::Range::rc);
 
 public:
   typ::JsonObj saveJson() const;
   void loadJson(typ::JsonObj::rc) THROWS;
 
-protected:
+_protected
   typ::Range range_;
   peak_t     guessedPeak_;
   fwhm_t     guessedFWHM_;
@@ -131,7 +131,7 @@ public:
   void setRange(typ::Range::rc);
   void fit(typ::Curve::rc, typ::Range::rc);
 
-private:
+_private
   typ::Curve fittedCurve_;  // saved from fitting
   void prepareY();
 

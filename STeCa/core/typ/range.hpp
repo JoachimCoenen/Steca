@@ -81,7 +81,7 @@ _struct EQ_NE
   // removes (cuts out) a range; true if there was a change
   bool rem(Range::rc);
 
-private:
+_private
   void sort();
   c::vec<Range> rs;
 _struct_end

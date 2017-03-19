@@ -34,13 +34,13 @@ public:
 
   void setMargins(int left, int right);
 
-private:
+_private
   DiffractogramPlot &plot_;
 
   QColor addColor_, remColor_, color_, bgColor_, reflColor_;
   int    marginLeft_, marginRight_;
 
-protected:
+_protected
   void enterEvent(QEvent*);
   void leaveEvent(QEvent*);
   void mousePressEvent(QMouseEvent*);
@@ -88,11 +88,11 @@ public:
 
   void enterZoom(bool);
 
-protected:
+_protected
   void addBgItem(typ::Range::rc);
   void resizeEvent(QResizeEvent*);
 
-private:
+_private
   Diffractogram &diffractogram_;
 
   eTool tool_;
@@ -113,7 +113,7 @@ public:
 
   data::shp_Dataset dataset() const { return dataset_; }
 
-private:
+_private
   void setDataset(data::shp_Dataset);
 
   data::shp_Dataset dataset_;

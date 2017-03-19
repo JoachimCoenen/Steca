@@ -23,29 +23,29 @@
 namespace core_qt {
 //------------------------------------------------------------------------------
 
-def_struct_sub (ModelFiles, c_qt::lst_model)
+dcl_struct_sub (ModelFiles, c_qt::lst_model)
   explicit ModelFiles();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))
 
-  _mth_mut (void, check, (rw_n, bool))
-  _pred (isChecked, (rw_n))
-def_struct_end
+  _voi_mut (check, (rw_n, bool))
+  _bol (isChecked, (rw_n))
+dcl_struct_end
 
-def_struct_sub (ModelDatasets, c_qt::lst_model)
+dcl_struct_sub (ModelDatasets, c_qt::lst_model)
   explicit ModelDatasets();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))
-def_struct_end
+dcl_struct_end
 
-def_struct_sub (ModelMetadata, c_qt::lst_model)
+dcl_struct_sub (ModelMetadata, c_qt::lst_model)
   explicit ModelMetadata();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

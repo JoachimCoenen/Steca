@@ -33,7 +33,7 @@ public:
   void plot(qreal_vec::rc xs,
             qreal_vec::rc ys, qreal_vec::rc ysLo, qreal_vec::rc ysUp);
 
-protected:
+_protected
   QCPGraph *graph_, *graphLo_, *graphUp_;
 };
 
@@ -47,7 +47,7 @@ public:
   uint currType() const;
   bool currDiagram() const;
 
-protected:
+_protected
   QRadioButton *currentDiagram_, *allData_;
   QComboBox    *fileTypes_;
 };
@@ -59,7 +59,7 @@ class DiagramsFrame : public Frame {
 public:
   DiagramsFrame(TheHub&, rcstr title, QWidget*);
 
-protected:
+_protected
   TabPlot         *tabPlot_;
   TabDiagramsSave *tabSave_;
 

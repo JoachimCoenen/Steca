@@ -35,10 +35,10 @@ public:
   void setPixmap(QPixmap const&);
   void setScale();
 
-protected:
+_protected
   void resizeEvent(QResizeEvent*);
 
-private:
+_private
   qreal   scale_;
   QPixmap original_, scaled_;
 

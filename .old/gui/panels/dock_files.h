@@ -28,7 +28,7 @@ class DockFiles : public DockWidget, private RefHub {
 public:
   DockFiles(TheHub&);
 
-private:
+_private
   class FilesView *filesView_;
   class LineView * corrFile_;
 };

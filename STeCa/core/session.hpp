@@ -25,7 +25,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-def_struct (Session)
+dcl_struct (Session)
   using str_vec = c::vec<c::str>;
 
   explicit Session();
@@ -37,7 +37,7 @@ def_struct (Session)
 
   _atr (str_vec, normStrLst)
 
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

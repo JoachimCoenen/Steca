@@ -38,7 +38,7 @@ public:
 
   void updateSingleSelection();
 
-protected:
+_protected
   using Model = models::ReflectionsModel;
   Model *model() const { return static_cast<Model*>(super::model()); }
 

@@ -30,7 +30,7 @@ class TabsSetup : public TabsPanel {
 public:
   TabsSetup(TheHub&);
 
-private:
+_private
   // geometry
   QDoubleSpinBox *detDistance_, *detPixelSize_;
   QSpinBox       *beamOffsetI_, *beamOffsetJ_;

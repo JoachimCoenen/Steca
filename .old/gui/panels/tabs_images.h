@@ -31,7 +31,7 @@ class TabsImages : public TabsPanel {
 public:
   TabsImages(TheHub&);
 
-private:
+_private
   QPixmap makeBlankPixmap();
 
   QImage  makeImage(typ::shp_Image, bool curvedScale);

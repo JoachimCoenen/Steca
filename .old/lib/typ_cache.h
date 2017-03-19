@@ -68,7 +68,7 @@ class cache_base {
 public:
   typedef QSharedPointer<T> shp;
 
-protected:
+_protected
   typedef quint32 mru_t; // the higher the value, the more mru it was
 
   struct shp_mru_t {
@@ -123,7 +123,7 @@ class cache_eager final : public cache_base<Key,T> {
 public:
   typedef QSharedPointer<T> shp;
 
-private:
+_private
   using mru_t     = typename super::mru_t;
   using shp_mru_t = typename super::shp_mru_t;
   using mapKey_t  = typename super::mapKey_t;
@@ -182,7 +182,7 @@ public:
     return p;
   }
 
-private:
+_private
   void removeLru() {
     EXPECT(!super::isEmpty())
     auto itMru = mapMru_.begin();
@@ -204,7 +204,7 @@ class cache_lazy final : public cache_base<Key,T> {
 public:
   typedef QSharedPointer<T> shp;
 
-private:
+_private
   using mru_t     = typename super::mru_t;
   using shp_mru_t = typename super::shp_mru_t;
   using mapKey_t  = typename super::mapKey_t;

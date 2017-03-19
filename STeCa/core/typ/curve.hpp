@@ -26,7 +26,7 @@ namespace core {
 //------------------------------------------------------------------------------
 // A set of x-y datapoints.
 
-def_struct (Curve)
+dcl_struct (Curve)
   _atr (real_vec, xs)
   _atr (real_vec, ys)
   _atr (Range, rgeX)
@@ -36,16 +36,16 @@ def_struct (Curve)
 
   void clear();
 
-  _pred (isEmpty, ())
+  _bol (isEmpty, ())
   _mth  (sz_t, size, ())
-  _pred (isSorted, ())
+  _bol (isSorted, ())
 
-  _mth_set(add, (real x, real y))
+  _set(add, (real x, real y))
 
   _mth (Curve, intersect, (Range::rc))
   _mth (Curve, intersect, (Ranges::rc))
 
-  _mth_mut (void, subtract, (Fun::rc))
+  _voi_mut (subtract, (Fun::rc))
 
   _mth (sz_t, maxYindex, ())  // the index of the maximum y value
   _mth (real, sumY, ())

@@ -25,7 +25,7 @@ namespace gui {
 
 struct Win;
 
-def_struct_sub (Acts, c_qt::acts)
+dcl_struct_sub (Acts, c_qt::acts)
   Acts(Win&);
 
   _cst (c::str, SHOW_FILES)
@@ -40,7 +40,7 @@ def_struct_sub (Acts, c_qt::acts)
   _cst (c::str, DIFF_ZOOM)
   _cst (c::str, DIFF_ALL_DSETS)
   _cst (c::str, DIFF_FIX_INTEN)
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

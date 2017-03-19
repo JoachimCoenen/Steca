@@ -37,7 +37,7 @@ public:
   void setProgress(uint);
   void step();
 
-private:
+_private
   uint total_, mulTotal_, i_;
   QProgressBar* bar_;
 };

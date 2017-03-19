@@ -28,7 +28,7 @@ namespace core {
 
 typedef Range inten_rge;
 
-def_struct (Image) SHARED
+dcl_struct (Image) SHARED
   _atr (inten_rge, rgeInten)
 
   using inten_arr = c::arr2<inten_t>;
@@ -38,20 +38,20 @@ def_struct (Image) SHARED
   Image(inten_arr::rc);
 
   _mth (c::sz2, size, ())
-  _mth_mut (void, clear, ())
-  _pred (isEmpty, ())
-  _mth_mut (void, fill, (inten_t val, c::sz2::rc))
+  _voi_mut (clear, ())
+  _bol (isEmpty, ())
+  _voi_mut (fill, (inten_t val, c::sz2::rc))
 
   _mth (inten_t, inten, (uint i, uint j))
-  _mth_mut (void, setInten, (uint i, uint j, inten_t val))
-  _mth_mut (void, addInten, (uint i, uint j, inten_t val))
-  _mth_mut (void, addIntens, (rc))
+  _voi_mut (setInten, (uint i, uint j, inten_t val))
+  _voi_mut (addInten, (uint i, uint j, inten_t val))
+  _voi_mut (addIntens, (rc))
 
-private:
+_private
   c::shared<inten_arr> intens;
-def_struct_end
+dcl_struct_end
 
-def_struct (ImageTransform)
+dcl_struct (ImageTransform)
   enum eTransform {
     ROTATE_0        = 0,  // no transform
     ROTATE_1        = 1,  // one quarter
@@ -78,12 +78,12 @@ def_struct (ImageTransform)
   // rotates by one quarter-turn
   ImageTransform nextRotate() const;
 
-  _pred_inline (isTransposed, (), 0 != (val & 1))
+  _bol_inl (isTransposed, (), 0 != (val & 1))
 
   bool operator==(rc that) const {
     return val == that.val;
   }
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

@@ -28,7 +28,7 @@ class FilesView : public views::MultiListView {
 public:
   FilesView(TheHub&);
 
-protected:
+_protected
   using Model = models::FilesModel;
   Model* model() const { return static_cast<Model*>(super::model()); }
 

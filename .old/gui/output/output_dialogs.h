@@ -54,7 +54,7 @@ public:
 
   void updateValues();
 
-private:
+_private
   gma_rge rgeGma_;
 };
 
@@ -68,7 +68,7 @@ public:
 
   void updateValues();
 
-private:
+_private
   gma_rge rgeGma_;
 };
 
@@ -135,7 +135,7 @@ public:
 
   str saveDir, saveFmt;
 
-private:
+_private
   void readSettings();
   void saveSettings() const;
 
@@ -160,7 +160,7 @@ public:
   uint rowCount() const;
   typ::row_t::rc row(uint) const;
 
-private:
+_private
   scoped<class TableModel*> model_;
   str_lst outHeaders_;
 };
@@ -180,7 +180,7 @@ class Tab : public QWidget, protected RefHub {
 public:
   Tab(TheHub&, Params&);
 
-protected:
+_protected
   Params &params_;
 
   GridLayout *grid_;
@@ -195,7 +195,7 @@ public:
            str_lst::rc headers, str_lst::rc outHeaders,
            typ::cmp_vec::rc);
 
-private:
+_private
   struct showcol_t {
     str        name;
     QCheckBox *cb;
@@ -203,13 +203,13 @@ private:
 
   typedef typ::vec<showcol_t> showcol_vec;
 
-private:
+_private
   class ShowColsWidget : public QWidget {
     CLASS(ShowColsWidget) SUPER(QWidget)
   public:
     ShowColsWidget(Table&, showcol_vec&);
 
-  private:
+  _private
     Table  &table_; showcol_vec& showCols_;
 
     QBoxLayout   *box_;
@@ -219,7 +219,7 @@ private:
 public:
   Table          *table;
 
-private:
+_private
   ShowColsWidget *showColumnsWidget_;
   showcol_vec     showCols_;
 };
@@ -236,7 +236,7 @@ public:
 
   Action *actBrowse, *actSave;
 
-protected:
+_protected
   str fileSetSuffix(rcstr);
 
   QLineEdit    *dir_, *file_;
@@ -250,7 +250,7 @@ class Frame : public QFrame, protected RefHub {
 public:
   Frame(TheHub&, rcstr title, Params*, QWidget*);
 
-protected:
+_protected
   QAction     *actClose_, *actCalculate_, *actInterpolate_;
   QToolButton *btnClose_, *btnCalculate_, *btnInterpolate_;
 
@@ -269,7 +269,7 @@ protected:
 
   virtual void displayReflection(uint reflIndex, bool interpolated);
 
-protected:
+_protected
   uint getReflIndex()    const;
   bool getInterpolated() const;
 

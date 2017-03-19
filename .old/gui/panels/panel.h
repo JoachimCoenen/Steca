@@ -39,7 +39,7 @@ public:
 
   QBoxLayout* box() const { return box_; }
 
-protected:
+_protected
   QBoxLayout *box_;
 };
 
@@ -64,7 +64,7 @@ public:
 
   QBoxLayout* box() const { return box_; }
 
-protected:
+_protected
   QBoxLayout *box_;
 };
 
@@ -77,7 +77,7 @@ public:
 
   GridLayout* grid() const { return grid_; }
 
-protected:
+_protected
   GridLayout *grid_;
 };
 
@@ -102,7 +102,7 @@ public:
 
   QBoxLayout& box() const { return *box_; }
 
-protected:
+_protected
   QBoxLayout *box_;
 };
 

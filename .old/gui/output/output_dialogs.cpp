@@ -394,7 +394,7 @@ public:
 
   void sortData();
 
-private:
+_private
   uint numCols_;
   int  sortColumn_;
 

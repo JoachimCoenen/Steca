@@ -55,7 +55,7 @@ public:
   OneDatasets&     datasets()       { return datasets_; }
   OneDatasets::rc  datasets() const { return datasets_; }
 
-private:
+_private
   QFileInfo   fileInfo_;
   OneDatasets datasets_;
 };

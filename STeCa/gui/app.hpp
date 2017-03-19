@@ -23,10 +23,10 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (App, c_qt::app)
+dcl_struct_sub (App, c_qt::app)
   App(int& argc, char* argv[]);
   int exec();
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

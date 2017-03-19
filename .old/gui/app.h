@@ -36,7 +36,7 @@ public:
 
   int exec();
 
-private:
+_private
   // Exceptions caught here; displayed in a dialog.
   bool notify(QObject*, QEvent*);
 };

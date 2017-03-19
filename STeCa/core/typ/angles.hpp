@@ -26,24 +26,24 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-def_struct (Angles)
+dcl_struct (Angles)
   _atr (tth_t, tth)
   _atr (gma_t, gma)
 
   Angles();
   Angles(tth_t, gma_t);
 
-  _mth_set (operator=, (rc))
+  _set (operator=, (rc))
 
-def_struct_end
+dcl_struct_end
 
 typedef Range tth_rge;
 typedef Range gma_rge;
 
-def_struct (AngleMap) SHARED
+dcl_struct (AngleMap) SHARED
   using angle_arr = c::arr2<Angles>;
 
-  def_struct (Key) COMPARABLE EQ_NE
+  dcl_struct (Key) COMPARABLE EQ_NE
     _atr (Geometry, geometry)
     _atr (c::sz2, size)
     _atr (ImageCut, cut)
@@ -51,7 +51,7 @@ def_struct (AngleMap) SHARED
     _atr (tth_t, midTth)
 
     Key(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix, tth_t midTth);
-  def_struct_end
+  dcl_struct_end
 
   _atr (Key, key)
   _atr (tth_rge, rgeTth)
@@ -61,10 +61,10 @@ def_struct (AngleMap) SHARED
   AngleMap(Key::rc);
 
   _mth (Angles::rc, at, (uint i, uint j))
-  _mth (void, getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
+  _voi (getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
 
-private:
-  _mth_mut (void, calculate, ())
+_private
+  _voi_mut (calculate, ())
   c::shared<angle_arr> angles;
 
   // sorted

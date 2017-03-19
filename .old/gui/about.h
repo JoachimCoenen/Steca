@@ -31,7 +31,7 @@ class AboutBox : public QDialog {
 public:
   AboutBox(QWidget*);
 
-protected:
+_protected
   void accept();
   void mouseDoubleClickEvent(QMouseEvent*);
 

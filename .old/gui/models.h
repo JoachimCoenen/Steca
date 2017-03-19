@@ -63,7 +63,7 @@ public:
 
   void showMetaInfo(typ::vec<bool> const&);
 
-private:
+_private
   data::Datasets::rc datasets_;     // the selected datasets
   uint_vec           metaInfoNums_; // selected metadata items to show
 };
@@ -89,7 +89,7 @@ public:
 
   void flipCheck(uint row);
 
-private:
+_private
   data::shp_Metadata metadata_;
   typ::vec<bool> rowsChecked_;
 };

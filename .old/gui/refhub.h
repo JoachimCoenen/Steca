@@ -41,10 +41,10 @@ class TheHubSignallingBase : public QObject {
   Q_OBJECT
   friend class RefHub;
 
-private:
+_private
   TheHub& asHub();
 
-protected:
+_protected
   // emit signals - only TheHub can call these
   void tellSessionCleared();
   void tellDatasetSelected(data::shp_Dataset);
@@ -80,7 +80,7 @@ signals:
 
   void sigFittingTab(eFittingTab);
 
-protected:
+_protected
   // to prevent some otherwise recursive calls
   typedef uint level_t;
   level_t sigLevel_ = 0;
@@ -89,7 +89,7 @@ protected:
   public:
     level_guard(level_t&);
    ~level_guard();
-  private:
+  _private
     level_t &level_;
   };
 };
@@ -101,24 +101,24 @@ class RefHub {
 public:
   RefHub(TheHub&);
 
-protected:
+_protected
   TheHub& hub_;
 
-private:
+_private
   template <typename Signal, typename Lambda>
   void onHubSignal(Signal signal, Lambda slot) {
     QObject::connect(&hub_, signal, slot);
   }
 
   // emit signals (through the hub)
-protected:
+_protected
   void tellDatasetSelected(data::shp_Dataset);
   void tellSelectedReflection(calc::shp_Reflection);
   void tellReflectionData(calc::shp_Reflection);
   void tellReflectionValues(typ::Range::rc, typ::XY::rc, fwhm_t, bool);
 
   // handle same signals
-protected:
+_protected
 #define DEFINE_HUB_SIGNAL_HANDLER(name)                      \
   template <typename Lambda> void onSig##name(Lambda slot) { \
     onHubSignal(&TheHubSignallingBase::sig##name, slot);     \

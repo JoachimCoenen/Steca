@@ -50,7 +50,7 @@ public:
 
   void fit(typ::Curve::rc);
 
-private:
+_private
   void setPeakFunction(fit::ePeakType);
   void setPeakFunction(fit::PeakFunction*);
 

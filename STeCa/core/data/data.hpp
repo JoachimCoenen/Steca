@@ -68,7 +68,7 @@ _struct SHARED                   // one file
 
   _con ()
 
-  _mth_mut(void, addSet, (Set::sh))
+  _voi_mut (addSet, (Set::sh))
   _des ()
 _struct_end
 
@@ -82,8 +82,8 @@ _struct SHARED                   // the whole file group
 
   _con ()
 
-  _mth_mut(void, addFile, (c::give_me<File>))
-  _mth_mut(void, remFile, (uint))
+  _voi_mut (addFile, (c::give_me<File>))
+  _voi_mut (remFile, (uint))
 _struct_end
 
 #undef  ST__

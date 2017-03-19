@@ -109,7 +109,7 @@ class TreeListView : public TreeView {
 public:
   TreeListView();
 
-protected:
+_protected
   void setModel(QAbstractItemModel*);
 };
 
@@ -131,7 +131,7 @@ class BoxWidget : public QWidget {
 public:
   BoxWidget(Qt::Orientation);
 
-protected:
+_protected
   QBoxLayout* box_;
 };
 
@@ -143,7 +143,7 @@ class DockWidget : public QDockWidget {
 public:
   DockWidget(rcstr name, rcstr objectName, Qt::Orientation);
 
-protected:
+_protected
   QBoxLayout* box_;
 };
 

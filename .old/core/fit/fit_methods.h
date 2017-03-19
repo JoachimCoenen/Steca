@@ -30,7 +30,7 @@ public:
 
   void fit(typ::Function&, typ::Curve::rc);
 
-protected:
+_protected
   virtual void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
                            qreal const*, uint) = 0;
 
@@ -38,7 +38,7 @@ protected:
   typ::Function* function_;
   qreal const*   xValues_;
 
-protected:
+_protected
   // calculate a vector of y(x)
   void callbackY(qreal*, qreal*, int, int, void*);
 };
@@ -50,7 +50,7 @@ class LinearLeastSquare : public Method {
 public:
   LinearLeastSquare();
 
-protected:
+_protected
   void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
                    qreal const*, uint);
 };
@@ -62,10 +62,10 @@ class LevenbergMarquardt : public Method {
 public:
   LevenbergMarquardt();
 
-protected:
+_protected
   void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
                    qreal const*, uint);
-private:
+_private
   void callbackJacobianLM(qreal*, qreal*, int, int, void*);
 };
 

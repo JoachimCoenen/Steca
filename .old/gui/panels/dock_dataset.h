@@ -30,7 +30,7 @@ public:
 
   QSpinBox *combineDatasets_;
 
-private:
+_private
   class DatasetView *datasetView_;
 };
 

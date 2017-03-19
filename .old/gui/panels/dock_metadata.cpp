@@ -29,10 +29,10 @@ public:
   using Model = models::MetadataModel;
   MetadataView(TheHub&);
 
-protected:
+_protected
   int sizeHintForColumn(int) const;
 
-private:
+_private
   Model* model() const {
     return static_cast<Model*>(super::model());
   }

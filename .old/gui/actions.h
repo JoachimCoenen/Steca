@@ -52,7 +52,7 @@ public:
 
   Action& alt(rcstr text2);
 
-protected:
+_protected
   str text1_, text2_;
 };
 
@@ -77,7 +77,7 @@ public:
     *addReflection, *remReflection,
     *outputPolefigures, *outputDiagrams, *outputDiffractograms;
 
-private:
+_private
   Action& trg(Action*& action, rcstr text);
   Action& tgl(Action*& action, rcstr text);
 };

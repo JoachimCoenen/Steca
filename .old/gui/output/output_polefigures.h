@@ -32,7 +32,7 @@ public:
   TabGraph(TheHub&, Params&);
   void set(calc::ReflectionInfos);
 
-protected:
+_protected
   void update();
 
   calc::ReflectionInfos rs_;
@@ -71,7 +71,7 @@ public:
 
   void rawReflSettings(bool on);
 
-protected:
+_protected
   QRadioButton *rbSelectedRefl_,*rbAllRefls_;
   QCheckBox *outputInten_, *outputTth_, *outputFWHM_;
 };
@@ -83,7 +83,7 @@ class PoleFiguresFrame : public Frame {
 public:
   PoleFiguresFrame(TheHub&, rcstr title, QWidget*);
 
-protected:
+_protected
   TabGraph           *tabGraph_;
   TabPoleFiguresSave *tabSave_;
 

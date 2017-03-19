@@ -32,7 +32,7 @@ class MainWin : public QMainWindow {
 public:
   MainWin();
 
-private:
+_private
   void initMenus();
   void addActions(QMenu*, QList<QAction*>);
   void initLayout();
@@ -45,7 +45,7 @@ public:
   void checkUpdate();
   void checkUpdate(bool completeReport);
 
-private:
+_private
   void messageDialog(rcstr title, rcstr text);
 
 public:
@@ -63,17 +63,17 @@ public:
   void outputDiagrams();
   void outputDiffractograms();
 
-private:
+_private
   gui::TheHub   hub_;
   Actions      &acts_;
 
-private:
+_private
   void closeEvent(QCloseEvent*);
 
   void onShow();
   void onClose();
 
-private:
+_private
   QMenu
       *menuFile_,   *menuView_,
       *menuImage_,  *menuDgram_,
@@ -82,7 +82,7 @@ private:
   QDockWidget
       *dockFiles_, *dockDatasets_, *dockDatasetInfo_, *dockHelp_;
 
-private:
+_private
   QByteArray initialState_;
   QNetworkAccessManager netMan_;
 

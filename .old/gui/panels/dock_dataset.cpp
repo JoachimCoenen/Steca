@@ -28,7 +28,7 @@ class DatasetView : public views::ListView {
 public:
   DatasetView(TheHub&);
 
-protected:
+_protected
   void currentChanged(QModelIndex const&, QModelIndex const&);
 
   using Model = models::DatasetsModel;

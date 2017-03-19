@@ -73,7 +73,7 @@ public:
 
   typ::row_t data() const;
 
-private:
+_private
   data::shp_Metadata md_;
 
   typ::deg alpha_, beta_;
@@ -96,7 +96,7 @@ public:
   inten_t       averageInten() const;
   inten_rge::rc rgeInten()     const;
 
-private:
+_private
   void invalidate();
 
   mutable inten_t   avgInten_;

@@ -122,7 +122,7 @@ public:
   void collectIntens(core::Session const&, typ::Image const* intensCorr,
                      inten_vec&, uint_vec&, gma_rge::rc,
                      tth_t minTth, tth_t deltaTth) const;
-private:
+_private
   shp_Metadata    md_;
   typ::shp_Image  image_;
 };
@@ -165,7 +165,7 @@ public:
   inten_vec collectIntens(core::Session const&, typ::Image const* intensCorr,
                           gma_rge::rc) const;
 
-private:
+_private
   // all dataset(s) must have the same image size
   typ::size2d imageSize()  const;
 
@@ -195,7 +195,7 @@ public:
 
   void  invalidateAvgMutables() const;
 
-private:
+_private
   shp_Dataset combineAll() const;
   qreal calcAvgMutable(qreal (Dataset::*avgMth)() const) const;
 

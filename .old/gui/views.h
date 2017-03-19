@@ -39,7 +39,7 @@ public:
   void setModel(Model*);
   #pragma GCC diagnostic pop
 
-protected:
+_protected
   Model* model() const { return static_cast<Model*>(super::model()); }
 
   void updateSingleSelection();
@@ -54,7 +54,7 @@ class MultiListView : public ListView {
 public:
   MultiListView(TheHub&);
 
-protected:
+_protected
   void selectRows(uint_vec);
 };
 

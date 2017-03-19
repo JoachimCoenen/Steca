@@ -87,10 +87,10 @@ public:
 
   Actions actions;
 
-private:
+_private
   void configActions();
 
-private:
+_private
   scoped<core::Session*> session_;
 
   bool isFixedIntenImageScale_;
@@ -139,7 +139,7 @@ public:
   void addFile(rcstr filePath) THROWS;
   void addFiles(str_lst::rc filePaths) THROWS;
 
-private:
+_private
   uint_vec collectFromFiles_;
   pint     datasetsGroupedBy_ = pint(1);
 
@@ -208,17 +208,17 @@ public:
   eFittingTab fittingTab() const { return fittingTab_; }
   void setFittingTab(eFittingTab);
 
-private:
+_private
   eFittingTab fittingTab_ = eFittingTab::NONE;
 
-private:
+_private
   data::shp_Dataset    selectedDataset_;
   calc::shp_Reflection selectedReflection_;
 
 public:
   data::shp_Dataset selectedDataset() const { return selectedDataset_; }
 
-private:
+_private
   void setImageRotate(typ::ImageTransform);
   void setImageMirror(bool);
 

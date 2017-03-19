@@ -26,15 +26,15 @@ namespace gui {
 
 struct Hub;
 
-def_struct_sub (Panel, c_qt::panel)
+dcl_struct_sub (Panel, c_qt::panel)
   Panel(Hub&);
   Panel(c::strc title, Hub&);
 
-protected:
+_protected
   Hub& hub;
 public:
   c_gui::box &vb;
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

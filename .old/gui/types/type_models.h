@@ -40,7 +40,7 @@ public:
 
   TableModel(gui::TheHub&);
 
-protected:
+_protected
   // the left-most column is hidden
   static int const DCOL = 1;
 

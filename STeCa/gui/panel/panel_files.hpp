@@ -25,15 +25,15 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-def_struct_sub (PanelFiles, Panel)
+dcl_struct_sub (PanelFiles, Panel)
   PanelFiles(Hub&);
  ~PanelFiles();
 
-private:
+_private
   Panel *tab;
   c_qt::lst_view  *view;
   c_qt::lst_model *model; // TODO to hub
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

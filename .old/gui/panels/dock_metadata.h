@@ -28,7 +28,7 @@ class DockMetadata : public DockWidget, protected RefHub {
 public:
   DockMetadata(TheHub&);
 
-private:
+_private
   class MetadataView *metadataView_;
 };
 

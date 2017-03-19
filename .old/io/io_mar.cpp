@@ -37,7 +37,7 @@ data::shp_File loadMar(rcstr filePath) THROWS {
 
     ~CloseFile() { fclose(fpIn_); }
 
-  private:
+  _private
     FILE *fpIn_;
   } _(fpIn);
 

@@ -26,7 +26,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-def_struct (Par)
+dcl_struct (Par)
   _atr (real, val)
   _atr (real, err)
 
@@ -35,9 +35,9 @@ def_struct (Par)
   void setVal(real);
 
   ref operator=(rc);
-def_struct_end
+dcl_struct_end
 
-def_struct (Fun) SHARED
+dcl_struct (Fun) SHARED
   Fun();
   virtual ~Fun();
 
@@ -53,15 +53,15 @@ def_struct (Fun) SHARED
 
   typedef fry<Fun> fryFun;
 
-protected:
+_protected
   static fryFun factory;
 
 public:
   static void addMaker(c::strc key, c::give_me<fryFun::someMaker const>);
   static c::own<Fun> make(c::strc key)       may_err;
-def_struct_end
+dcl_struct_end
 
-def_struct_sub (SimpleFun, Fun)
+dcl_struct_sub (SimpleFun, Fun)
   _atr (c::vec<Par>, pars)
 
   SimpleFun();
@@ -74,11 +74,11 @@ def_struct_sub (SimpleFun, Fun)
 
   real    parVal(sz_t parIdx, real const* parVals) const;
   void    setParVal(sz_t parIdx, real val);
-def_struct_end
+dcl_struct_end
 
 // a fun that is a sum of other funs
 
-def_struct_sub (SumFuns, Fun)
+dcl_struct_sub (SumFuns, Fun)
   void add(c::give_me<Fun>);
 
   // aggregate par list for all added funs
@@ -91,14 +91,14 @@ def_struct_sub (SumFuns, Fun)
   // summed funs
   c::vec<Fun::sh> funs;
 
-protected:
+_protected
   // the aggregate par list
   c::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index
   c::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate par index
   c::vec<sz_t> firstParIdx4parIdx;
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }

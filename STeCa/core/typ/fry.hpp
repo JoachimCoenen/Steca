@@ -27,7 +27,7 @@
 namespace core {
 //-----------------------------------------------------------------------------
 
-template <typename T> def_struct (fry)
+template <typename T> dcl_struct (fry)
   using str = c::str;
 
   struct someMaker {
@@ -40,7 +40,7 @@ template <typename T> def_struct (fry)
     c::own<T> make() const { return c::own<T>::from(new TT); }
   };
 
-private:
+_private
   typedef c::scoped<someMaker const> scm;
   c::hash<str, scm> makers;
 
@@ -54,7 +54,7 @@ public:
     check_or_err(m, "no maker ", key);
     return m->make();
   }
-def_struct_end
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 }
