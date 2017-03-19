@@ -142,7 +142,7 @@ void MainWin::initMenus() {
 }
 
 void MainWin::addActions(QMenu* menu, QList<QAction*> actions) {
-  EXPECT(menu)
+  EXPECT (menu)
   menu->addActions(actions);
 
   str prefix = str("%1: ").arg(menu->title().remove('&'));

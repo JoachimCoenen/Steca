@@ -38,7 +38,7 @@ GridLayout* GridLayout::groupBox(QLayout &addTo, rcstr title) {
 }
 
 int mWidth(QWidget const* w) {
-  EXPECT(w)
+  EXPECT (w)
   return w->fontMetrics().width('m');
 }
 

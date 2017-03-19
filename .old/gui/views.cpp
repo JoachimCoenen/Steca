@@ -28,7 +28,7 @@ ListView::ListView(TheHub& hub) : RefHub(hub) {
 
 void ListView::setModel(Model* model) {
   super::setModel(model);
-  EXPECT(dynamic_cast<Model*>(super::model()))
+  EXPECT (dynamic_cast<Model*>(super::model()))
 }
 
 void ListView::updateSingleSelection() {

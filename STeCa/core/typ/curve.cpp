@@ -32,12 +32,12 @@ void Curve::clear() {
 }
 
 bool Curve::isEmpty() const {
-  ENSURE(xs.isEmpty() == ys.isEmpty())
+  ENSURE (xs.isEmpty() == ys.isEmpty())
   return xs.isEmpty();
 }
 
-sz_t Curve::size() const {
-  ENSURE(xs.size() == ys.size())
+uint Curve::size() const {
+  ENSURE (xs.size() == ys.size())
   return xs.size();
 }
 
@@ -57,9 +57,9 @@ Curve Curve::intersect(Range::rc range) const {
   Curve res;
 
   if (!range.isEmpty()) {
-    ENSURE(isSorted())
+    ENSURE (isSorted())
 
-    uint xi = 0; sz_t sz = size();
+    uint xi = 0; auto sz = size();
     auto minX = range.min, maxX = range.max;
     while (xi < sz && xs.at(xi) < minX)
       ++xi;
@@ -78,9 +78,9 @@ Curve Curve::intersect(Ranges::rc ranges) const {
   // collect points that are in ranges
   // it works because both curve points and ranges are ordered and ranges are
   // non-overlapping
-  ENSURE(isSorted())
+  ENSURE (isSorted())
 
-  uint xi = 0; sz_t sz = size();
+  uint xi = 0; auto sz = size();
   for_i (ranges.size()) {
     auto& range = ranges.at(i);
     auto  minX = range.min, maxX = range.max;
@@ -97,15 +97,15 @@ Curve Curve::intersect(Ranges::rc ranges) const {
 
 void Curve::subtract(Fun::rc f) {
   for_i (size())
-    mut(ys).setAt(i, ys.at(i) - f.y(xs.at(i)));
+    mut(ys).refAt(i) -= f.y(xs.at(i));
 }
 
-sz_t Curve::maxYindex() const {
+uint Curve::maxYindex() const {
   if (isEmpty())
     return 0;
 
   auto yMax  = ys.at(0);
-  sz_t index = 0;
+  uint index = 0;
 
   for_i (size()) {
     auto y = ys.at(i);

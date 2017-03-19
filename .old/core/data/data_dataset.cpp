@@ -1,275 +1,8 @@
-/*******************************************************************************
- * STeCa2 - StressTextureCalculator ver. 2
- *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
- *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * See the COPYING and AUTHORS files for more details.
- ******************************************************************************/
 
-#include "data_dataset.h"
-#include "calc/calc_lens.h"
-#include "session.h"
-#include "typ/typ_log.h"
-#include <qmath.h>
-
-namespace data {
-//------------------------------------------------------------------------------
-// metadata attributes
-
-using namespace::typ;
-using namespace::calc;
-
-enum class eAttr {
-  MOTOR_XT,  MOTOR_YT,  MOTOR_ZT,
-  MOTOR_OMG, MOTOR_TTH, MOTOR_PHI, MOTOR_CHI,
-  MOTOR_PST, MOTOR_SST, MOTOR_OMGM,
-  T, TELOAD, TEPOS, TEEXT, XE, YE, ZE,
-  MONITOR_COUNT, DELTA_MONITOR_COUNT,
-  TIME, DELTA_TIME,
-
-  NUM_NUMERICAL_ATTRIBUTES,
-
-  // non-numbers must come last
-  DATE = NUM_NUMERICAL_ATTRIBUTES, COMMENT,
-
-  NUM_ALL_ATTRIBUTES
-};
-
-Metadata::Metadata()
-: date(), comment()
-, motorXT(0), motorYT(0), motorZT(0)
-, motorOmg(0), motorTth(0), motorPhi(0), motorChi(0)
-, motorPST(0), motorSST(0), motorOMGM(0)
-, nmT(0), nmTeload(0), nmTepos(0), nmTeext(0), nmXe(0), nmYe(0), nmZe(0)
-, monitorCount(0), deltaMonitorCount(0)
-, time(0), deltaTime(0) {
-}
-
-uint Metadata::numAttributes(bool onlyNum) {
-  return uint(onlyNum
-      ? eAttr::NUM_NUMERICAL_ATTRIBUTES
-      : eAttr::NUM_ALL_ATTRIBUTES);
-}
-
-rcstr Metadata::attributeTag(uint i, bool out) {
-  return attributeTags(out).at(i);
-}
-
-str_lst Metadata::attributeTags(bool out) {
-  static str_lst const tags = {
-    "X", "Y", "Z",
-    "ω", "mid 2θ", "φ", "χ",
-    "PST", "SST", "ΩM",
-    "T", "teload", "tepos", "teext", "xe", "ye", "ze",
-    "mon", "Δmon",
-    "t", "Δt",
-    "date", "comment",
-  };
-
-  static str_lst const outTags = {
-    "X", "Y", "Z",
-    "omega", "mid2theta", "phi", "chi",
-    "PST", "SST", "OmegaM",
-    "T", "teload", "tepos", "teext", "xe", "ye", "ze",
-    "mon", "delta_mon",
-    "t", "delta_t",
-    "date", "comment",
-  };
-
-  return out ? outTags : tags;
-}
-
-cmp_vec Metadata::attributeCmps() {
-  static cmp_vec const cmps = {
-    cmp_real, cmp_real, cmp_real,
-    cmp_real, cmp_real, cmp_real, cmp_real,
-    cmp_real, cmp_real, cmp_real,
-    cmp_real, cmp_real, cmp_real, cmp_real, cmp_real, cmp_real, cmp_real,
-    cmp_real, cmp_real,
-    cmp_real, cmp_real,
-    cmp_date, cmp_str,
-  };
-
-  return cmps;
-}
-
-str Metadata::attributeStrValue(uint i) const {
-  qreal value = 0;
-
-  switch (eAttr(i)) {
-  case eAttr::MOTOR_XT:    value = motorXT;   break;
-  case eAttr::MOTOR_YT:    value = motorYT;   break;
-  case eAttr::MOTOR_ZT:    value = motorZT;   break;
-  case eAttr::MOTOR_OMG:   value = motorOmg;  break;
-  case eAttr::MOTOR_TTH:   value = motorTth;  break;
-  case eAttr::MOTOR_PHI:   value = motorPhi;  break;
-  case eAttr::MOTOR_CHI:   value = motorChi;  break;
-  case eAttr::MOTOR_PST:   value = motorPST;  break;
-  case eAttr::MOTOR_SST:   value = motorSST;  break;
-  case eAttr::MOTOR_OMGM:  value = motorOMGM; break;
-
-  case eAttr::T:           value = nmT;       break;
-  case eAttr::TELOAD:      value = nmTeload;  break;
-  case eAttr::TEPOS:       value = nmTepos;   break;
-  case eAttr::TEEXT:       value = nmTeext;   break;
-  case eAttr::XE:          value = nmXe;      break;
-  case eAttr::YE:          value = nmYe;      break;
-  case eAttr::ZE:          value = nmZe;      break;
-
-  case eAttr::MONITOR_COUNT: value = monitorCount; break;
-  case eAttr::DELTA_MONITOR_COUNT: value = deltaMonitorCount; break;
-
-  case eAttr::TIME:        value = time; break;
-  case eAttr::DELTA_TIME:  value = deltaTime; break;
-
-  case eAttr::DATE:        return date;
-  case eAttr::COMMENT:     return comment;
-
-  default: NEVER;
-  }
-
-  return str::number(value);
-}
-
-QVariant Metadata::attributeValue(uint i) const {
-  switch (eAttr(i)) {
-  case eAttr::DATE:       return date;
-  case eAttr::COMMENT:    return comment;
-  case eAttr::MOTOR_XT:   return qreal(motorXT);
-  case eAttr::MOTOR_YT:   return qreal(motorYT);
-  case eAttr::MOTOR_ZT:   return qreal(motorZT);
-  case eAttr::MOTOR_OMG:  return qreal(motorOmg);
-  case eAttr::MOTOR_TTH:  return qreal(motorTth);
-  case eAttr::MOTOR_PHI:  return qreal(motorPhi);
-  case eAttr::MOTOR_CHI:  return qreal(motorChi);
-  case eAttr::MOTOR_PST:  return qreal(motorPST);
-  case eAttr::MOTOR_SST:  return qreal(motorSST);
-  case eAttr::MOTOR_OMGM: return qreal(motorOMGM);
-  case eAttr::T:          return nmT;
-  case eAttr::TELOAD:     return nmTeload;
-  case eAttr::TEPOS:      return nmTepos;
-  case eAttr::TEEXT:      return nmTeext;
-  case eAttr::XE:         return nmXe;
-  case eAttr::YE:         return nmYe;
-  case eAttr::ZE:         return nmZe;
-  case eAttr::MONITOR_COUNT: return monitorCount;
-  case eAttr::DELTA_MONITOR_COUNT: return deltaMonitorCount;
-  case eAttr::TIME:       return time;
-  case eAttr::DELTA_TIME: return deltaTime;
-  default:
-    NEVER return 0;
-  }
-}
-
-row_t Metadata::attributeValues() const {
-  row_t attrs;
-  for_i (uint(eAttr::NUM_ALL_ATTRIBUTES))
-    attrs.append(attributeValue(i));
-  return attrs;
-}
-
-row_t Metadata::attributeNaNs() {
-  static row_t row;
-  if (row.isEmpty())
-    for_i (uint(eAttr::NUM_ALL_ATTRIBUTES))
-      row.append(NAN);
-  return row;
-}
-
-//------------------------------------------------------------------------------
-
-OneDataset::OneDataset(Metadata::rc md, typ::inten_arr::rc intens)
-  : md_(new Metadata(md)), image_(new Image(intens)) {
-}
-
-OneDataset::OneDataset(Metadata::rc md, size2d::rc size, inten_vec const& intens)
-  : md_(new Metadata(md)), image_(new Image(size)) {
-  EXPECT(intens.count() == size.count())
-  for_i (intens.count())
-    image_->setInten(i, intens.at(i));
-}
-
-OneDataset::OneDataset(rc that)
-: md_(that.md_), image_(that.image_) {
-}
-
-shp_Metadata OneDataset::metadata() const {
-  ENSURE(!md_.isNull())
-  return md_;
-}
-
-gma_rge OneDataset::rgeGma(core::Session::rc session) const {
-  return session.angleMap(*this)->rgeGma();
-}
-
-gma_rge OneDataset::rgeGmaFull(core::Session::rc session) const {
-  return session.angleMap(*this)->rgeGmaFull();
-}
-
-tth_rge OneDataset::rgeTth(core::Session::rc session) const {
-  return session.angleMap(*this)->rgeTth();
-}
-
-inten_rge OneDataset::rgeInten() const {
-  return image_->rgeInten();
-}
-
-size2d OneDataset::imageSize() const {
-  return image_->size();
-}
 
 void OneDataset::collectIntens(core::Session::rc session, typ::Image const* intensCorr,
                                inten_vec& intens, uint_vec& counts,gma_rge::rc rgeGma,
-                               tth_t minTth, tth_t deltaTth) const {
-  auto angleMap = session.angleMap(*this);
-  EXPECT(!angleMap.isNull())
-  AngleMap::rc map = *angleMap;
-
-  uint_vec const* gmaIndexes = nullptr;
-  uint gmaIndexMin = 0, gmaIndexMax = 0;
-  map.getGmaIndexes(rgeGma, gmaIndexes, gmaIndexMin, gmaIndexMax);
-
-  EXPECT(gmaIndexes)
-  EXPECT(gmaIndexMin <= gmaIndexMax)
-  EXPECT(gmaIndexMax <= gmaIndexes->count())
-
-  EXPECT(intens.count() == counts.count())
-  uint count = intens.count();
-
-  EXPECT(0 < deltaTth)
-
-  for (uint i = gmaIndexMin; i < gmaIndexMax; ++i) {
-    uint ind = gmaIndexes->at(i);
-    inten_t inten = image_->inten(ind);
-    if (qIsNaN(inten))
-      continue;
-
-    inten_t corr = intensCorr ? intensCorr->inten(ind) : 1;
-    if (qIsNaN(corr))
-      continue;
-
-    inten *= corr;
-
-    tth_t tth  = map.at(ind).tth;
-
-    // bin index
-    uint ti = to_u(qFloor((tth - minTth) / deltaTth));
-    EXPECT(ti <= count)
-    ti = qMin(ti, count-1); // it can overshoot due to floating point calculation
-
-    intens[ti] += inten;
-    counts[ti] += 1;
-  }
-}
+                               tth_t minTth, tth_t deltaTth)
 
 //------------------------------------------------------------------------------
 
@@ -279,11 +12,11 @@ Dataset::Dataset()
 
 shp_Metadata Dataset::metadata() const {
   if (md_.isNull()) {
-    EXPECT(!isEmpty())
+    EXPECT (!isEmpty())
     const_cast<Cls*>(this)->md_ = shp_Metadata(new Metadata);
     Metadata *m = const_cast<Metadata*>(md_.data());
 
-    EXPECT(!first()->metadata().isNull())
+    EXPECT (!first()->metadata().isNull())
     Metadata::rc firstMd = *(first()->metadata());
 
     m->date         = firstMd.date;
@@ -294,7 +27,7 @@ shp_Metadata Dataset::metadata() const {
     // averages the rest
     for (auto& one : *this) {
        Metadata const* d = one->metadata().data();
-       EXPECT(d)
+       EXPECT (d)
 
        m->motorXT   += d->motorXT;
        m->motorYT   += d->motorYT;
@@ -356,12 +89,12 @@ shp_Metadata Dataset::metadata() const {
 }
 
 Datasets::rc Dataset::datasets() const {
-  EXPECT(datasets_)
+  EXPECT (datasets_)
   return *datasets_;
 }
 
 #define AVG_ONES(what)    \
-  EXPECT(!isEmpty())      \
+  EXPECT (!isEmpty())      \
   qreal avg = 0;          \
   for (auto& one : *this) \
     avg += one->what();   \
@@ -382,7 +115,7 @@ deg Dataset::chi() const {
 
 // combined range of combined datasets
 #define RGE_COMBINE(combineOp, what)  \
-  EXPECT(!isEmpty())                  \
+  EXPECT (!isEmpty())                  \
   Range rge;                          \
   for (auto& one : *this)             \
     rge.combineOp(one->what);         \
@@ -456,7 +189,7 @@ inten_vec Dataset::collectIntens(
 }
 
 size2d Dataset::imageSize() const {
-  EXPECT(!isEmpty())
+  EXPECT (!isEmpty())
   // all images have the same size; simply take the first one
   return first()->imageSize();
 }
@@ -469,7 +202,7 @@ Datasets::Datasets() {
 
 void Datasets::appendHere(shp_Dataset dataset) {
   // can be added only once
-  EXPECT(!dataset->datasets_)
+  EXPECT (!dataset->datasets_)
   dataset->datasets_ = this;
 
   super::append(dataset);
@@ -574,13 +307,13 @@ qreal Datasets::calcAvgMutable(qreal (Dataset::*avgMth)() const) const {
 }
 
 size2d OneDatasets::imageSize() const {
-  EXPECT(!isEmpty())
+  EXPECT (!isEmpty())
   // all images have the same size; simply take the first one
   return first()->imageSize();
 }
 
 shp_Image OneDatasets::foldedImage() const {
-  EXPECT(!isEmpty())
+  EXPECT (!isEmpty())
   shp_Image image(new Image(imageSize()));
 
   for (auto& one: *this)

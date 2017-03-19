@@ -18,7 +18,6 @@
 #include "angles.hpp"
 #include <c2/h/c_cpp>
 #include <algorithm>
-#include <math.h>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -33,21 +32,38 @@ Angles::ref Angles::operator=(rc that) {
   return *this;
 }
 
-AngleMap::Key::Key(Geometry::rc geometry_, c::sz2::rc size_,
-                   ImageCut::rc cut_, c::ij::rc midPix_, tth_t midTth_)
-: geometry(geometry_), size(size_), cut(cut_), midPix(midPix_), midTth(midTth_)
-{}
+AngleMap::Key0::Key0()
+: geometry(), size(), cut(), midPix() {}
 
-COMPARABLE_IMPL(AngleMap::Key) {
+AngleMap::Key0::Key0(Geometry::rc geometry_, c::sz2::rc size_,
+                     ImageCut::rc cut_, c::ij::rc midPix_)
+  : geometry(geometry_), size(size_), cut(cut_), midPix(midPix_) {}
+
+COMPARABLE_IMPL(AngleMap::Key0) {
   RET_COMPARABLES_IF_NE(geometry)
   RET_COMPARABLES_IF_NE(size)
   RET_COMPARABLES_IF_NE(cut)
   RET_COMPARABLES_IF_NE(midPix)
+  return 0;
+}
+
+EQ_NE_IMPL(AngleMap::Key0)
+
+AngleMap::Key::Key(Geometry::rc geometry_, c::sz2::rc size_,
+                   ImageCut::rc cut_, c::ij::rc midPix_, tth_t midTth_)
+: base(geometry_, size_, cut_, midPix_), midTth(midTth_) {}
+
+AngleMap::Key::Key(Key0 k, tth_t midTth)
+: Key(k.geometry, k.size, k.cut, k.midPix, midTth) {}
+
+COMPARABLE_IMPL(AngleMap::Key) {
+  for (int cmp = base::compare(that); cmp; )
+    return cmp;
   RET_COMPARE_IF_NE_THAT(midTth)
   return 0;
 }
 
-EQ_NE_IMPL(AngleMap::Key)
+COMP_OPS_IMPL(AngleMap::Key)
 
 //------------------------------------------------------------------------------
 
@@ -59,8 +75,12 @@ Angles::rc AngleMap::at(uint i, uint j) const {
   return angles->at(i, j);
 }
 
+Angles::rc AngleMap::at(uint i) const {
+  return angles->at(i);
+}
+
 static uint lowerBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
-  EXPECT(i1 < i2)
+  EXPECT (i1 < i2)
 
   if (1 == i2-i1)
     return i1;
@@ -72,7 +92,7 @@ static uint lowerBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
 }
 
 static uint upperBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
-  EXPECT(i1 < i2)
+  EXPECT (i1 < i2)
 
   if (1 == i2-i1)
     return i2;
@@ -106,12 +126,12 @@ void AngleMap::calculate() {
   mut(rgeGma) = Range();
   mut(rgeGmaFull) = Range();
 
-  EXPECT(size.i > cut.left + cut.right)
-  EXPECT(size.j > cut.top  + cut.bottom)
+  EXPECT (size.i > cut.left + cut.right)
+  EXPECT (size.j > cut.top  + cut.bottom)
 
   auto countWithoutCut = (size.i - cut.left - cut.right)
                        * (size.j - cut.top  - cut.bottom);
-  EXPECT(countWithoutCut > 0)
+  EXPECT (countWithoutCut > 0)
 
   gmas.resize(countWithoutCut);
   gmaIndexes.resize(countWithoutCut);

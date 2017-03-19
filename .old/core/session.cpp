@@ -78,9 +78,9 @@ void Session::remFile(uint i) {
 void Session::calcIntensCorr() const {
   corrHasNaNs_ = false;
 
-  EXPECT(corrImage_)
+  EXPECT (corrImage_)
   size2d size = corrImage_->size() - imageCut_.marginSize();
-  ENSURE(!size.isEmpty())
+  ENSURE (!size.isEmpty())
 
   uint w = size.w, h = size.h, di = imageCut_.left,
        dj = imageCut_.top;
@@ -273,14 +273,6 @@ void Session::setGammaRange(Range::rc gammaRange) {
   gammaRange_ = gammaRange;
 }
 
-shp_AngleMap Session::angleMap(OneDataset::rc one) const {
-  AngleMap::Key key(geometry_, imageSize_, imageCut_, midPix(), one.midTth());
-  shp_AngleMap map = angleMapCache_.value(key);
-  if (map.isNull())
-    map = angleMapCache_.insert(key, shp_AngleMap(new AngleMap(key)));
-  return map;
-}
-
 shp_AngleMap Session::angleMap(Session::rc session, OneDataset::rc one) {
   return session.angleMap(one);
 }
@@ -440,7 +432,7 @@ void Session::setIntenScaleAvg(bool avg, preal scale) {
 }
 
 void Session::addReflection(shp_Reflection reflection) {
-  EXPECT(!reflection.isNull())
+  EXPECT (!reflection.isNull())
   reflections_.append(reflection);
 }
 

@@ -40,7 +40,7 @@ _private
 
 MetadataView::MetadataView(TheHub& hub) : super(hub) {
   setModel(&hub.metadataModel);
-  EXPECT(dynamic_cast<Model*>(super::model()))
+  EXPECT (dynamic_cast<Model*>(super::model()))
 
   connect(this, &MetadataView::clicked, [this](QModelIndex const& index) {
     model()->flipCheck(to_u(index.row()));

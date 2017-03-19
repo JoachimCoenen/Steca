@@ -18,25 +18,29 @@
 #ifndef CORE_SESSION_HPP
 #define CORE_SESSION_HPP
 
-#include <c2/h/c_def.h>
-#include <c2/c/str.h>
-#include <c2/cpp/vec.hpp>
+#include "typ/angles.hpp"
+#include "data/data.hpp"
+#include <c2/cpp/cache.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
 dcl_struct (Session)
-  using str_vec = c::vec<c::str>;
-
-  explicit Session();
-
   enum class eNorm {
     NONE,
     MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
   };
 
-  _atr (str_vec, normStrLst)
+  _atr (c::vec<c::str>, normStrLst)
 
+  explicit Session();
+
+  _mth (AngleMap::sh, angleMap, (data::Set::rc))
+
+  _atr (AngleMap::Key0, angleMapKey0) // current
+
+_private
+  mutable c::cache_lazy<AngleMap::Key,AngleMap> angleMapCache;
 dcl_struct_end
 
 //------------------------------------------------------------------------------

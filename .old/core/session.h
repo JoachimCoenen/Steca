@@ -137,7 +137,6 @@ public:
 _private
   typ::Geometry geometry_;
   typ::Range    gammaRange_;
-  mutable typ::cache_lazy<typ::AngleMap::Key,typ::AngleMap> angleMapCache_;
 
 public:
   typ::Geometry::rc geometry() const { return geometry_; }
@@ -147,7 +146,6 @@ public:
   typ::Range::rc gammaRange() const;
   void setGammaRange(typ::Range::rc);
 
-  typ::shp_AngleMap        angleMap(data::OneDataset::rc) const;
   static typ::shp_AngleMap angleMap(Session::rc, data::OneDataset::rc);
 
 // lenses

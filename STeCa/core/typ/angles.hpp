@@ -37,20 +37,24 @@ dcl_struct (Angles)
 
 dcl_struct_end
 
-typedef Range tth_rge;
-typedef Range gma_rge;
-
 dcl_struct (AngleMap) SHARED
   using angle_arr = c::arr2<Angles>;
 
-  dcl_struct (Key) COMPARABLE EQ_NE
+  dcl_struct (Key0) COMPARABLE EQ_NE
     _atr (Geometry, geometry)
     _atr (c::sz2, size)
     _atr (ImageCut, cut)
     _atr (c::ij, midPix)
+
+    Key0();
+    Key0(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix);
+  dcl_struct_end
+
+  dcl_struct_sub(Key, Key0) COMPARABLE COMP_OPS
     _atr (tth_t, midTth)
 
     Key(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix, tth_t midTth);
+    Key(Key0, tth_t midTth);
   dcl_struct_end
 
   _atr (Key, key)
@@ -61,6 +65,8 @@ dcl_struct (AngleMap) SHARED
   AngleMap(Key::rc);
 
   _mth (Angles::rc, at, (uint i, uint j))
+  _mth (Angles::rc, at, (uint i))
+
   _voi (getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
 
 _private

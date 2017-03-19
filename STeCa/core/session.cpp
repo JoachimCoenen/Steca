@@ -23,7 +23,17 @@ namespace core {
 
 Session::Session()
 : normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
+, angleMapCache(360)
 {}
+
+AngleMap::sh Session::angleMap(data::Set::rc set) const {
+  AngleMap::Key key(angleMapKey0, set.midTth());
+  auto map = angleMapCache.value(key);
+  if (!map)
+    map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
+  return map;
+}
+
 
 //------------------------------------------------------------------------------
 }

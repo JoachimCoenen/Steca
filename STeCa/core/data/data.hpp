@@ -18,77 +18,81 @@
 #ifndef CORE_DATA_HPP
 #define CORE_DATA_HPP
 
-#include <c2/c/ptr.h>
-#include <c2/c/str.h>
-#include <c2/cpp/vec.hpp>
+#include "../typ/def.hpp"
+#include "../typ/image.hpp"
 #include <c2/cpp/map.hpp>
-#include <c2/cpp/exc.hpp>
 
 namespace core {
-#define NS__ data
+struct Session;
+
+namespace data {
 //------------------------------------------------------------------------------
 
-#define ST__ Meta
-
-// data::Meta
-_struct SHARED // metadata
-  struct Dict : private c::map<c::str, uint> {
-    typedef c::shared<Dict> sh; using base = c::map<c::str, uint>;
-
-    uint size()       const;
-    uint add(c::strc);
-    uint at(c::strc)  const may_err;
+dcl_struct (Meta) SHARED // metadata
+  // attribute dictionary
+  dcl_struct_reimpl (Dict, c::map<c::str COMMA uint>)
+    using base::size;
+    _mth_mut (uint, add, (c::strc))
+    _mth_err (uint, at,  (c::strc))
   };
 
-  _atr (Dict::sh,      dict)
-  _atr (c::vec<flt32>, vals)
+  dcl_struct (Dicts) SHARED
+    _atr (Dict, dictFlt)  //numeric attributes
+    _atr (Dict, dictStr)  // text attributes
+    Dicts();
+  dcl_struct_end
+
+  _atr (Dicts::sh,      dicts)
+  _atr (c::vec<flt32>,  valsFlt)
+  _atr (c::vec<c::str>, valsStr)
+
   _atr (flt32, tth) _atr (flt32, omg) _atr (flt32, chi) _atr (flt32, phi)
 
-  _con (Dict::sh, flt32, flt32, flt32, flt32)
-_struct_end
+  Meta(Dicts::sh, flt32, flt32, flt32, flt32);
+dcl_struct_end
 
-#undef  ST__
-#define ST__ Set
+//------------------------------------------------------------------------------
+dcl_struct (Set) SHARED   // one dataset
+  _atr (uint,      idx)   // this order in File, 1..; 0 = not in File
+  _atr (Meta::sh,  meta)
+  _atr (Image::sh, image)
 
-// data::Set
-_struct SHARED                   // one read dataset
-  _atr (uint, idx)               // this order in File, 1..; 0 = not
-  _atr (Meta, meta)
+  Set(Meta::sh, Image::sh);
 
-  _con (Meta::rc)
-_struct_end
+  _mth (tth_t,  midTth, ())
+  _mth (c::deg, omg, ())
+  _mth (c::deg, phi, ())
+  _mth (c::deg, chi, ())
+  _mth (gma_rge, rgeGma,     (Session const&))
+  _mth (gma_rge, rgeGmaFull, (Session const&))
+  _mth (tth_rge, rgeTth,     (Session const&))
 
-#undef  ST__
-#define ST__ File
+  _voi (collect, (Session const&, Image const* corr,
+                  core::inten_vec&, core::uint_vec&, gma_rge::rc,
+                  tth_t minTth, tth_t deltaTth))
+dcl_struct_end
 
-// data::File
-_struct SHARED                   // one file
-  _atr (uint, idx)               // this order in Files, 1..; 0 = not
+//------------------------------------------------------------------------------
+dcl_struct (File) SHARED  // one file
+  _atr (uint, idx)        // this order in Files, 1..; 0 = not in Files
   _atr (c::vec<Set::sh>, sets)
 
-  _con ()
+  File();
 
   _voi_mut (addSet, (Set::sh))
-  _des ()
-_struct_end
+dcl_struct_end
 
-#undef  ST__
-#define ST__ Files
-
-// data::Files
-_struct SHARED                   // the whole file group
+  //------------------------------------------------------------------------------
+dcl_struct (Files) SHARED // the whole file group
   _atr (c::vec<File::sh>, files)
-  _atr (Meta::Dict::sh,   dict)
+  _atr (Meta::Dicts::sh,  dicts)
 
-  _con ()
+  Files();
 
   _voi_mut (addFile, (c::give_me<File>))
   _voi_mut (remFile, (uint))
-_struct_end
-
-#undef  ST__
+dcl_struct_end
 
 //------------------------------------------------------------------------------
-#undef NS__
-}
+}}
 #endif

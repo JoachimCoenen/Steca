@@ -43,6 +43,7 @@ dcl_struct (Image) SHARED
   _voi_mut (fill, (inten_t val, c::sz2::rc))
 
   _mth (inten_t, inten, (uint i, uint j))
+  _mth (inten_t, inten, (uint i))
   _voi_mut (setInten, (uint i, uint j, inten_t val))
   _voi_mut (addInten, (uint i, uint j, inten_t val))
   _voi_mut (addIntens, (rc))

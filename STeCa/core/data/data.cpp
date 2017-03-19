@@ -16,20 +16,11 @@
  ******************************************************************************/
 
 #include "data.hpp"
+#include "../session.hpp"
 #include <c2/h/c_cpp>
-#include <c2/c/num.h>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
-
-Meta::Meta(Dict::sh dict_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
-: dict(dict_), vals(), tth(tth_), omg(omg_), chi(chi_), phi(phi_) {
-  mut(vals).reserve(dict->size());
-}
-
-uint Meta::Dict::size() const {
-  return base::size();
-}
 
 uint Meta::Dict::add(c::strc key) {
   try {
@@ -45,6 +36,16 @@ uint Meta::Dict::at(c::strc key) const may_err {
   } catch (std::exception const&) {
     c::err("Dict has no ", key);
   }
+}
+
+Meta::Dicts::Dicts() : dictFlt(), dictStr() {}
+
+Meta::Meta(Dicts::sh dicts_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
+: dicts(dicts_), valsFlt(), valsStr()
+, tth(tth_), omg(omg_), chi(chi_), phi(phi_)
+{
+  mut(valsFlt).reserve(dicts->dictFlt.size());
+  mut(valsStr).reserve(dicts->dictStr.size());
 }
 
 TEST("dict",
@@ -63,16 +64,81 @@ TEST("dict",
 
 //------------------------------------------------------------------------------
 
-Set::Set(Meta::rc meta_) : idx(0), meta(meta_) {
+Set::Set(Meta::sh meta_, Image::sh image_)
+: idx(0), meta(meta_), image(image_) {}
+
+tth_t Set::midTth() const {
+  return real(meta->tth);
 }
 
+c::deg Set::omg() const {
+  return real(meta->omg);
+}
+
+c::deg Set::phi() const {
+  return real(meta->tth);
+}
+
+c::deg Set::chi() const {
+  return real(meta->tth);
+}
+
+gma_rge Set::rgeGma(Session::rc s) const {
+  return s.angleMap(*this)->rgeGma;
+}
+
+gma_rge Set::rgeGmaFull(Session::rc s) const {
+  return s.angleMap(*this)->rgeGmaFull;
+}
+
+tth_rge Set::rgeTth(Session::rc s)const {
+  return s.angleMap(*this)->rgeTth;
+}
+
+void Set::collect(Session::rc s, Image const* corrImage,
+                core::inten_vec& intens, core::uint_vec& counts,
+                gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
+  auto &map = *s.angleMap(*this);
+
+  uint_vec const* gmaIndexes = nullptr;
+  uint gmaIndexMin = 0, gmaIndexMax = 0;
+  map.getGmaIndexes(rgeGma, gmaIndexes, gmaIndexMin, gmaIndexMax);
+
+  EXPECT (gmaIndexes)
+  EXPECT (gmaIndexMin <= gmaIndexMax)
+  EXPECT (gmaIndexMax <= gmaIndexes->size())
+
+  auto size = intens.size();
+  EXPECT (size == counts.size())
+
+  EXPECT (0 < deltaTth)
+
+  for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
+    auto ind   = gmaIndexes->at(i);
+    auto inten = image->inten(ind);
+    if (c::isnan(inten))
+      continue;
+
+    inten_t corr = corrImage ? corrImage->inten(ind) : 1;
+    if (c::isnan(corr))
+      continue;
+
+    inten *= corr;
+
+    tth_t tth  = map.at(ind).tth;
+
+    // bin index
+    auto ti = c::to_uint(c::floor((tth - minTth) / deltaTth));
+    EXPECT (ti <= size)
+    ti = c::min(ti, size-1); // it can overshoot due to floating point calculation
+
+    intens.refAt(ti) += inten;
+    counts.refAt(ti) += 1;
+  }
+}
 //------------------------------------------------------------------------------
 
-File::File() : idx(0), sets() {
-}
-
-File::~File() {
-}
+File::File() : idx(0), sets() {}
 
 void File::addSet(Set::sh set) {
   mut(sets).add(set);
@@ -80,8 +146,7 @@ void File::addSet(Set::sh set) {
 
 //------------------------------------------------------------------------------
 
-Files::Files() : files(), dict(new Meta::Dict) {
-}
+Files::Files() : files(), dicts(new Meta::Dicts) {}
 
 void Files::addFile(c::give_me<File> file) {
   mut(files).add(File::sh(file));
@@ -117,10 +182,8 @@ TEST("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  Meta meta(fs.dict, 0, 0, 0, 0);
-
-  f1->addSet(new Set(meta));
-
+  f1->addSet(new Set(c::share(new Meta(fs.dicts, 0, 0, 0, 0)),
+                     c::share(new Image)));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);
 )

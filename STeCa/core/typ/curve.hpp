@@ -37,7 +37,7 @@ dcl_struct (Curve)
   void clear();
 
   _bol (isEmpty, ())
-  _mth  (sz_t, size, ())
+  _mth (uint, size, ())
   _bol (isSorted, ())
 
   _set(add, (real x, real y))
@@ -47,7 +47,7 @@ dcl_struct (Curve)
 
   _voi_mut (subtract, (Fun::rc))
 
-  _mth (sz_t, maxYindex, ())  // the index of the maximum y value
+  _mth (uint, maxYindex, ())  // the index of the maximum y value
   _mth (real, sumY, ())
 };
 

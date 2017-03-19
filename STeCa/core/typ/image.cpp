@@ -52,13 +52,17 @@ inten_t Image::inten(uint i, uint j) const {
   return intens->at(i, j);
 }
 
+inten_t Image::inten(uint i) const {
+  return intens->at(i);
+}
+
 void Image::setInten(uint i, uint j, inten_t val) {
   mut(*intens).setAt(i, j, val);
 }
 
 void Image::addInten(uint i, uint j, inten_t val) {
   auto &is = mut(*intens);
-  is.setAt(i, j, is.at(i, j) + val);
+  is.refAt(i, j) += val;
 }
 
 void Image::addIntens(rc that) {

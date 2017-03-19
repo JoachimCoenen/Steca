@@ -51,13 +51,13 @@ void Settings::saveVariant(rcstr key, const QVariant& val) {
 }
 
 void Settings::read(rcstr key, QAction* act, bool def) {
-  EXPECT(act->isCheckable())
+  EXPECT (act->isCheckable())
   if (act)
       act->setChecked(readVariant(key, def).toBool());
 }
 
 void Settings::save(rcstr key, QAction* act) {
-  EXPECT(act->isCheckable())
+  EXPECT (act->isCheckable())
   if (act)
       saveVariant(key, act->isChecked());
 }

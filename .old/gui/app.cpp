@@ -74,7 +74,7 @@ static void waiting(bool on) {
 static QMainWindow *mainWindow;
 
 static void logMessage(rcstr msg, MessageLogger::eType type) {
-  EXPECT(mainWindow)
+  EXPECT (mainWindow)
 
   str statusMsg;
   switch (type) {

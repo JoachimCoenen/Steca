@@ -13,6 +13,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
+
 typedef c::vec<real> real_vec;
 typedef c::vec<uint> uint_vec;
 
@@ -21,6 +22,10 @@ typedef c::vec<inten_t> inten_vec;
 
 typedef c::deg tth_t;
 typedef c::deg gma_t;
+
+struct  Range;
+typedef Range tth_rge;
+typedef Range gma_rge;
 
 typedef flt32  fwhm_t;
 
