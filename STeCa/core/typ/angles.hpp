@@ -50,7 +50,7 @@ dcl_struct (AngleMap) SHARED
     Key0(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix);
   dcl_struct_end
 
-  dcl_struct_sub(Key, Key0) COMPARABLE COMP_OPS
+  dcl_struct_sub (Key, Key0) COMPARABLE COMP_OPS
     _atr (tth_t, midTth)
 
     Key(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix, tth_t midTth);

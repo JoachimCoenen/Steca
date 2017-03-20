@@ -24,7 +24,7 @@ namespace core_qt {
 //------------------------------------------------------------------------------
 
 dcl_struct_sub (ModelFiles, c_qt::lst_model)
-  explicit ModelFiles();
+  ModelFiles();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))
@@ -34,14 +34,14 @@ dcl_struct_sub (ModelFiles, c_qt::lst_model)
 dcl_struct_end
 
 dcl_struct_sub (ModelDatasets, c_qt::lst_model)
-  explicit ModelDatasets();
+  ModelDatasets();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))
 dcl_struct_end
 
 dcl_struct_sub (ModelMetadata, c_qt::lst_model)
-  explicit ModelMetadata();
+  ModelMetadata();
   _mth (cl_n, cols, ())
   _mth (rw_n, rows, ())
   _mth (c_gui::var*, cell, (rw_n, cl_n))

@@ -33,14 +33,14 @@ dcl_struct (Session)
 
   _atr (c::vec<c::str>, normStrLst)
 
-  explicit Session();
+  Session();
 
   _mth (AngleMap::sh, angleMap, (data::Set::rc))
 
   _atr (AngleMap::Key0, angleMapKey0) // current
 
 _private
-  mutable c::cache_lazy<AngleMap::Key,AngleMap> angleMapCache;
+  mutable c::cache<AngleMap::Key,AngleMap> angleMapCache;
 dcl_struct_end
 
 //------------------------------------------------------------------------------

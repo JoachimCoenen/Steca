@@ -17,18 +17,19 @@
 
 #include "session.hpp"
 #include <c2/h/c_cpp>
+#include <c2/c/num.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
 Session::Session()
 : normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
-, angleMapCache(360)
+, angleMapCache(c::pint(12))
 {}
 
 AngleMap::sh Session::angleMap(data::Set::rc set) const {
   AngleMap::Key key(angleMapKey0, set.midTth());
-  auto map = angleMapCache.value(key);
+  auto map = angleMapCache.get(key);
   if (!map)
     map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
   return map;
