@@ -20,8 +20,8 @@
 
 #include "def.hpp"
 #include "range.hpp"
-#include <c2/c/arr2.h>
 #include <c2/c/ptr.h>
+#include <c2/cpp/arr2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------

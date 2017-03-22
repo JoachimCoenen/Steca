@@ -22,34 +22,21 @@
 #include <c2/c/num.h>
 #include <c2/c/trg.h>
 
-#define NS__ core
-#define ST__ vec3
+namespace core {
 
-// core_vec3
-_c_struct
+dcl_struct (vec3) COMPARABLE EQ_NE
   _atr (real, _0) _atr (real, _1) _atr (real, _2)
-  _c_con (real, real, real)
-_c_struct_end
+  vec3(real, real, real);
+dcl_struct_end
 
-// core::vec3
-_cpp_struct C_BASE_CONS COMPARABLE EQ_NE
-_cpp_struct_end
-
-#undef  ST__
-#define ST__ mat3
-
-// core_mat3
-_c_struct
+dcl_struct (mat3) COMPARABLE EQ_NE
   _atr (real, _00) _atr (real, _01) _atr (real, _02)
   _atr (real, _10) _atr (real, _11) _atr (real, _12)
   _atr (real, _20) _atr (real, _21) _atr (real, _22)
-  _c_con (real, real, real,
-         real, real, real,
-         real, real, real)
-_c_struct_end
+  mat3(real, real, real,
+       real, real, real,
+       real, real, real);
 
-// core::mat3
-_cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _mth (mat3, transposed, ())
   _mth (mat3, operator*,  (rc))
   _mth (vec3, operator*,  (vec3::rc))
@@ -57,9 +44,9 @@ _cpp_struct C_BASE_CONS COMPARABLE EQ_NE
   _fry (mat3, rotationCWx,  (c::rad))
   _fry (mat3, rotationCWz,  (c::rad))
   _fry (mat3, rotationCCWz, (c::rad))
-_cpp_struct_end
+dcl_struct_end
 
-#undef ST__
-#undef NS__
+}
 
 #endif
+// eof

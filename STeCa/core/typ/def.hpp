@@ -13,7 +13,6 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-
 typedef c::vec<real> real_vec;
 typedef c::vec<uint> uint_vec;
 

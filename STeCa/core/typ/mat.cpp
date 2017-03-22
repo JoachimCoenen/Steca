@@ -18,18 +18,11 @@
 #include "mat.hpp"
 #include <c2/h/c_cpp>
 
-core_vec3::core_vec3(real _0_, real _1_, real _2_)
-: _0(_0_), _1(_1_), _2(_2_) {}
-
-core_mat3::core_mat3(real _00_, real _01_, real _02_,
-                     real _10_, real _11_, real _12_,
-                     real _20_, real _21_, real _22_)
-: _00(_00_), _01(_01_), _02(_02_),
-  _10(_10_), _11(_11_), _12(_12_),
-  _20(_20_), _21(_21_), _22(_22_) {}
-
 namespace core {
 //------------------------------------------------------------------------------
+
+vec3::vec3(real _0_, real _1_, real _2_)
+: _0(_0_), _1(_1_), _2(_2_) {}
 
 COMPARABLE_IMPL(vec3) {
   RET_COMPARE_IF_NE_THAT(_0)
@@ -41,6 +34,13 @@ COMPARABLE_IMPL(vec3) {
 EQ_NE_IMPL(vec3)
 
 //------------------------------------------------------------------------------
+
+mat3::mat3(real _00_, real _01_, real _02_,
+           real _10_, real _11_, real _12_,
+           real _20_, real _21_, real _22_)
+: _00(_00_), _01(_01_), _02(_02_),
+  _10(_10_), _11(_11_), _12(_12_),
+  _20(_20_), _21(_21_), _22(_22_) {}
 
 COMPARABLE_IMPL(mat3) {
   RET_COMPARE_IF_NE_THAT(_00)
@@ -125,7 +125,7 @@ TEST("mat3",
 )
 
 TEST("mat3::rotation",
-  real angle = 1;
+  c::rad angle(1);
   auto cwx  = mat3::rotationCWx(angle);
   auto cwz  = mat3::rotationCWz(angle);
   auto ccwz = mat3::rotationCCWz(angle);

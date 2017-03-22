@@ -20,18 +20,15 @@
 
 #include "def.hpp"
 
-#define NS__ core
-#define ST__ Range
-
-// core_Range
-_c_struct
+dcl_struct (core_Range)
   _atr (real, min)
   _atr (real, max)
-  _c_con (real, real)
-_c_struct_end
+  _con (core_Range, (real, real))
+dcl_struct_end
 
-// core::Range
-_cpp_struct COMPARABLE EQ_NE
+namespace core {
+
+dcl_struct_sub (Range, core_Range) COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
   Range(real);                      // singular, min == max
   Range(real, real);                // the usual
@@ -59,15 +56,10 @@ _cpp_struct COMPARABLE EQ_NE
   real  bound(real)     const;      // limit the number to the interval
 
   ref   operator=(rc);
-_cpp_struct_end
+dcl_struct_end
 
-#undef ST__
-
-#define ST__ Ranges
-
-// core::Ranges
-_struct EQ_NE
-  _con ()
+dcl_struct (Ranges) EQ_NE
+  _con (Ranges, ())
 
   void clear()         { rs.clear();          }
   bool isEmpty() const { return rs.isEmpty(); }
@@ -84,9 +76,8 @@ _struct EQ_NE
 _private
   void sort();
   c::vec<Range> rs;
-_struct_end
+dcl_struct_end
 
-#undef ST__
-#undef NS__
-
+}
 #endif
+// eof

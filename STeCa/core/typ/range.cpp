@@ -59,10 +59,10 @@ TEST("Range()",
   CHECK(c::isnan(r.max));
 )
 
-Range::Range(real val) : c_base(val, val) {
+Range::Range(real val) : base(val, val) {
 }
 
-Range::Range(real min, real max) : c_base(min, max) {
+Range::Range(real min, real max) : base(min, max) {
   EXPECT (!c::isnan(min) && !c::isnan(max))
   EXPECT (min <= max)
 }

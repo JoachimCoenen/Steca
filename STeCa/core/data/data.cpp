@@ -68,19 +68,19 @@ Set::Set(Meta::sh meta_, Image::sh image_)
 : idx(0), meta(meta_), image(image_) {}
 
 tth_t Set::midTth() const {
-  return real(meta->tth);
+  return tth_t(real(meta->tth));
 }
 
 c::deg Set::omg() const {
-  return real(meta->omg);
+  return c::deg(real(meta->omg));
 }
 
 c::deg Set::phi() const {
-  return real(meta->tth);
+  return c::deg(real(meta->tth));
 }
 
 c::deg Set::chi() const {
-  return real(meta->tth);
+  return c::deg(real(meta->tth));
 }
 
 gma_rge Set::rgeGma(Session::rc s) const {

@@ -19,7 +19,7 @@
 #define CORE_GEOMETRY_H
 
 #include "def.hpp"
-#include <c2/c/arr2.h>
+#include <c2/cpp/arr2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------

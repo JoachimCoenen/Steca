@@ -82,7 +82,7 @@ dcl_struct (File) SHARED  // one file
   _voi_mut (addSet, (Set::sh))
 dcl_struct_end
 
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 dcl_struct (Files) SHARED // the whole file group
   _atr (c::vec<File::sh>, files)
   _atr (Meta::Dicts::sh,  dicts)

@@ -22,7 +22,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-Angles::Angles() : Angles(0, 0) {}
+Angles::Angles() : Angles(tth_t(0), gma_t(0)) {}
 
 Angles::Angles(tth_t tth_, gma_t gma_) : tth(tth_), gma(gma_) {}
 
@@ -106,8 +106,8 @@ static uint upperBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
 void AngleMap::getGmaIndexes(gma_rge::rc rgeGma,
                              uint_vec const*& indexes, uint& minIndex, uint& maxIndex) const {
   indexes = &gmaIndexes;
-  minIndex = lowerBound(gmas, rgeGma.min, 0, c::to_uint(gmas.size()));
-  maxIndex = upperBound(gmas, rgeGma.max, 0, c::to_uint(gmas.size()));
+  minIndex = lowerBound(gmas, gma_t(rgeGma.min), 0, c::to_uint(gmas.size()));
+  maxIndex = upperBound(gmas, gma_t(rgeGma.max), 0, c::to_uint(gmas.size()));
 }
 
 void AngleMap::calculate() {
@@ -155,8 +155,8 @@ void AngleMap::calculate() {
       real b_y = (midPix.j - c::to_i(j)) * pixSize; // == d_y
       real b_r = sqrt(b_x2 + b_y*b_y);
 
-      c::rad gma = atan2(b_y, b_x);
-      c::rad tth = atan2(b_r, b_z);
+      c::rad gma(atan2(b_y, b_x));
+      c::rad tth(atan2(b_r, b_z));
 
       mut(*angles).setAt(i, j, Angles(tth.toDeg(), gma.toDeg()));
     }
