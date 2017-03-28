@@ -20,8 +20,10 @@
 #include <c2/c/num.h>
 #include <c2/c/str.h>
 #include <c2/h/c_cpp>
-#include "Caress/raw.i"
 #include <string.h>
+
+#undef CHECK
+#include "Caress/raw.h"
 
 /* Mirko Boin says:
  * ... the status of the instrument before a measurement/scan ... refers to all
@@ -38,6 +40,40 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
+namespace get_data {
+  c::mem unit(int32 n, sz_t sz) {
+    check_or_err (n >= 0, "bad d_number");
+    c::mem data(c::to_u(n) * sz);
+    if (n > 0)
+      check_or_err (0 == get_data_unit(mut(data.p)), "bad data unit");
+    return data;
+  };
+
+  c::mem partition(int32 section, int32 n, sz_t sz, int32 d_type) {
+    check_or_err (n > 0, "bad d_number");
+    c::mem data(c::to_u(n) * sz);
+
+    int32 start = 1;
+    while (n > 0) {
+      c::mem buf(MAXNUMBEROFCHANNELS * sz);
+      int32 n_ = c::min(n, MAXNUMBEROFCHANNELS);
+      check_or_err (0 == get_data_partition(mut(buf.p), &section, &start, &n_, &d_type), "bad data partition");
+      check_or_err (n_ > 0, "bad n_");
+      c::unsafe::memmov(pstr(data.p)+c::to_u(start-1)*sz, buf.p, c::to_u(n_));
+      n -= n_; start += n_;
+    }
+
+    return data;
+  };
+}
+
+c::mem getData(int32 n, sz_t sz, int32 d_type) {
+  if (n > MAXNUMBEROFCHANNELS)
+    return get_data::partition(1, n, sz, d_type);
+  else
+    return get_data::unit(n, sz);
+}
+
 static data::File::sh loadCaress() may_err {
   using c::str;
 
@@ -47,20 +83,6 @@ static data::File::sh loadCaress() may_err {
         e_type,   // element type
         d_type,   // data type
         d_number; // data length (?)
-
-  auto gds = [&]() -> str {
-    check_or_err (d_number > 0, "bad d_number: ", element);
-    c::mem m(c::to_u(d_number) + 1);
-    check_or_err (0 == get_data_unit(mut(m.p)), "bad: ", "string data");
-
-    return str(pcstr(m.p));
-  };
-
-  auto gdf = [&]() -> float {
-    float f;
-    check_or_err (0 == get_data_unit(&f), "bad: ", "float data");
-    return f;
-  };
 
   str s_masterCounter, s_date, s_comment;
 
@@ -78,23 +100,63 @@ static data::File::sh loadCaress() may_err {
   };
 
   for (;;) {
-    auto resNextUnit = next_data_unit(&e_number, &e_type, element, node, &d_type, &d_number);
-    if (2 /*END_OF_FILE_DETECTED*/ == resNextUnit)
+    switch (next_data_unit(&e_number, &e_type, element, node, &d_type, &d_number)) {
+    case 2: // END_OF_FILE_DETECTED
+      goto exit;
+    case 0:
       break;
-    check_or_err (0 /*OK*/ == resNextUnit, "bad read")
+    default:
+      c::err("bad next_data_unit");
+    }
 
-    TR(element << node << e_number << e_type << d_type << d_number)
+    check_or_err (0 <= d_number, "bad d_number")
+//    TR(element << node << e_number << e_type << d_type << d_number)
+
+    switch (d_type) {
+    case 1: {
+      auto data = getData(d_number, sizeof(int16), d_type);
+//      for_i (d_number < 12 ? d_number : 0)
+//        TR('i' << reinterpret_cast<int16 const*>(data.p)[i])
+      break;
+    }
+
+    case 2: {
+      auto data = getData(d_number, sizeof(int32), d_type);
+      for_i (d_number < 12 ? d_number : 0)
+        TR('l' << reinterpret_cast<int32 const*>(data.p)[i])
+      break;
+    }
+
+    case 5: {
+      auto data = getData(d_number, sizeof(flt32), d_type);
+      for_i (d_number < 12 ? d_number : 0)
+        TR('f' << reinterpret_cast<flt32 const*>(data.p)[i])
+      break;
+    }
+
+    case 16: {
+      c::str s(getData(d_number, sizeof(char), d_type));
+      TR('s' << s.p)
+      break;
+    }
+
+    case 0: // nothing, just a tag
+      break;
+
+    default:
+      c::err("not handled d_type");
+    }
 
     str el(str(8, element).trim());
     str en(str(8, node).trim());
 
     if (el.eq("DAT")) {
-      TR(gds())
+//      TR(gds())
       continue;
     }
 
     if (el.eq("EXPTYPE")) {
-      TR(gds())
+//      TR(gds())
       continue;
     }
 
@@ -104,12 +166,12 @@ static data::File::sh loadCaress() may_err {
     }
 
     if (el.eq("COM")) {
-      s_comment.set(gds());
+//      s_comment.set(gds());
       continue;
     }
 
     if (el.eq("DATE")) {
-      s_date.set(gds());
+//      s_date.set(gds());
       continue;
     }
 
@@ -121,7 +183,7 @@ static data::File::sh loadCaress() may_err {
     if (el.eq("READ") || el.eq("SETVALUE") || el.eq("MASTERV1") || el.eq("PROTOCOL")) {
       check_or_err (!en.isEmpty(), "empty node for: ", el);
 
-      float f = gdf();
+      float f = 0;//get1<flt32>();
 
 //      mut(*files.dict).add(en);
 
@@ -156,6 +218,7 @@ static data::File::sh loadCaress() may_err {
     }
   }
 
+exit:
   data::File::sh file(new data::File);
   return file;
 }

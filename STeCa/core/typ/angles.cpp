@@ -18,6 +18,7 @@
 #include "angles.hpp"
 #include <c2/h/c_cpp>
 #include <algorithm>
+#include <cmath>
 
 namespace core {
 //------------------------------------------------------------------------------

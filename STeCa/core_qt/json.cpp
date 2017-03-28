@@ -142,7 +142,7 @@ static JsonObj toJson(SimpleFun::rc f) {
   JsonArr arr;
   for_i (f.parCount())
     arr.append(toJson(f.parAt(i)));
-    return JsonObj().saveArr(json_key::PARAMS, arr);
+  return JsonObj().saveArr(json_key::PARAMS, arr);
 }
 
 static JsonObj toJson(SumFuns::rc f) {
