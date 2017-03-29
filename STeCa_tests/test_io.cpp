@@ -25,8 +25,8 @@ namespace core {
 //------------------------------------------------------------------------------
 
 TEST("caress",
-  //auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
-  auto file = "/home/jan/C/+dev/fz/data/test/m200093580.dat";
+  auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
+//  auto file = "/home/jan/C/+dev/fz/data/test/m200093580.dat";
 
   data::Files files;
   CHECK_NOTHROW(io::loadCaress(files, toStr(file)));
