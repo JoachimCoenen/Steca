@@ -20,8 +20,9 @@
 #include <c2/cpp/exc.hpp>
 #include <c2/inc/c_cpp>
 #undef CHECK
+#undef int64
+#undef uint64
 #include "Caress/raw.h"
-#include "Caress/car_globals.h"
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
