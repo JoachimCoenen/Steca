@@ -56,7 +56,7 @@ static data::File::sh loadCaress(data::Files& files) may_err {
 
       }
     } else {                           // anything else
-      if (node.isEmpty()) // else ignored
+      if (node.isEmpty()) // otherwise ignored
         mut(file->strs).add(std::make_pair(elem, getAsString(n, dt))); // file info
     }
 
