@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "curve.hpp"
-#include <c2/h/c_cpp>
+#include <c2/inc/c_cpp>
 #include <algorithm>
 
 namespace core {

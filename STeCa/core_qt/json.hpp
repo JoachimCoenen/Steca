@@ -18,7 +18,7 @@
 #ifndef CORE_JSON_H
 #define CORE_JSON_H
 
-#include <c2/h/c_c.h>
+#include <c2/inc/c_c.h>
 #include <c2/c/num.h>
 #include <c2/c/ptr.h>
 

@@ -23,7 +23,7 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-data::File::sh loadCaress(c::strc filePath) may_err;
+data::File::sh loadCaress(data::Files&, c::strc filePath) may_err;
 
 //------------------------------------------------------------------------------
 }}

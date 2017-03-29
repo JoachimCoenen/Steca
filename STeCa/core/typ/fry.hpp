@@ -18,7 +18,7 @@
 #ifndef CORE_FRY_H
 #define CORE_FRY_H
 
-#include <c2/h/c_def.h>
+#include <c2/inc/c_def.h>
 #include <c2/c/ptr.h>
 #include <c2/c/str.h>
 #include <c2/cpp/exc.hpp>

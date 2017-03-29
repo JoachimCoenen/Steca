@@ -3,7 +3,7 @@
 #ifdef WITH_TESTS
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include <c2/h/test/test.h>
+#include <c2/inc/test/test.h>
 
 #endif
 // eof

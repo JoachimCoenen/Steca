@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "models.hpp"
-#include <c2/h/c_cpp>
+#include <c2/inc/c_cpp>
 #include <c2/cpp/vec.hpp>
 #include <c2/gui_qt/var.hpp>
 

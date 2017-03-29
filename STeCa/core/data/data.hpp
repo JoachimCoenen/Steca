@@ -30,25 +30,18 @@ namespace data {
 
 dcl_struct (Meta) SHARED // metadata
   // attribute dictionary
-  dcl_struct_reimpl (Dict, c::map<c::str COMMA uint>)
+  dcl_struct_reimpl (Dict, c::map<c::str COMMA uint>) SHARED
     using base::size;
     _mth_mut (uint, add, (c::strc))
     _mth_err (uint, at,  (c::strc))
   };
 
-  dcl_struct (Dicts) SHARED
-    _atr (Dict, dictFlt)  //numeric attributes
-    _atr (Dict, dictStr)  // text attributes
-    Dicts();
-  dcl_struct_end
-
-  _atr (Dicts::sh,      dicts)
-  _atr (c::vec<flt32>,  valsFlt)
-  _atr (c::vec<c::str>, valsStr)
+  _atr (Dict::sh,      dict)
+  _atr (c::vec<flt32>, vals)
 
   _atr (flt32, tth) _atr (flt32, omg) _atr (flt32, chi) _atr (flt32, phi)
 
-  Meta(Dicts::sh, flt32, flt32, flt32, flt32);
+  Meta(Dict::sh, flt32, flt32, flt32, flt32);
 dcl_struct_end
 
 //------------------------------------------------------------------------------
@@ -73,11 +66,16 @@ dcl_struct (Set) SHARED   // one dataset
 dcl_struct_end
 
 //------------------------------------------------------------------------------
+
+struct Files;
+
 dcl_struct (File) SHARED  // one file
+  _ref (Files, files)
   _atr (uint, idx)        // this order in Files, 1..; 0 = not in Files
+  _atr (c::vec<std::pair<c::str COMMA c::str>>, strs)
   _atr (c::vec<Set::sh>, sets)
 
-  File();
+  File(Files const&);
 
   _voi_mut (addSet, (Set::sh))
 dcl_struct_end
@@ -85,11 +83,11 @@ dcl_struct_end
 //------------------------------------------------------------------------------
 dcl_struct (Files) SHARED // the whole file group
   _atr (c::vec<File::sh>, files)
-  _atr (Meta::Dicts::sh,  dicts)
+  _atr (Meta::Dict::sh,   dict)
 
   Files();
 
-  _voi_mut (addFile, (c::give_me<File>))
+  _voi_mut (addFile, (data::File::sh))
   _voi_mut (remFile, (uint))
 dcl_struct_end
 

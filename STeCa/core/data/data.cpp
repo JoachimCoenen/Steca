@@ -17,7 +17,7 @@
 
 #include "data.hpp"
 #include "../session.hpp"
-#include <c2/h/c_cpp>
+#include <c2/inc/c_cpp>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -38,14 +38,11 @@ uint Meta::Dict::at(c::strc key) const may_err {
   }
 }
 
-Meta::Dicts::Dicts() : dictFlt(), dictStr() {}
-
-Meta::Meta(Dicts::sh dicts_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
-: dicts(dicts_), valsFlt(), valsStr()
+Meta::Meta(Dict::sh dict_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
+: dict(dict_), vals()
 , tth(tth_), omg(omg_), chi(chi_), phi(phi_)
 {
-  mut(valsFlt).reserve(dicts->dictFlt.size());
-  mut(valsStr).reserve(dicts->dictStr.size());
+  mut(vals).reserve(dict->size());
 }
 
 TEST("dict",
@@ -138,7 +135,7 @@ void Set::collect(Session::rc s, Image const* corrImage,
 }
 //------------------------------------------------------------------------------
 
-File::File() : idx(0), sets() {}
+File::File(Files::rc files_) : files(files_), idx(0), strs(), sets() {}
 
 void File::addSet(Set::sh set) {
   mut(sets).add(set);
@@ -146,10 +143,20 @@ void File::addSet(Set::sh set) {
 
 //------------------------------------------------------------------------------
 
-Files::Files() : files(), dicts(new Meta::Dicts) {}
+Files::Files() : files(), dict(new Meta::Dict) {}
 
-void Files::addFile(c::give_me<File> file) {
-  mut(files).add(File::sh(file));
+void Files::addFile(data::File::sh file) {
+  EXPECT (this == &file->files)
+  EXPECT (! // not there
+    ([&]() {
+      for_i (files.size())
+        if (file == files.at(i))
+          return true;
+      return false;
+     }())
+  )
+
+  mut(files).add(file);
   mut(file->idx) = files.size();
 }
 
@@ -166,24 +173,25 @@ void Files::remFile(uint i) {
 //------------------------------------------------------------------------------
 
 TEST("data::sh",
-  File::sh f1(new File()), f2(new File);
+  Files fs;
+  File::sh f1(new File(fs)), f2(new File(fs));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST("data",
   Files fs;
 
-  File *f1 = new File, *f2 = new File;
+  File *f1 = new File(fs), *f2 = new File(fs);
   CHECK_EQ(0, f1->idx);
   CHECK_EQ(0, f2->idx);
 
-  fs.addFile(c::give_me<File>::from(f1));
-  fs.addFile(c::give_me<File>::from(f2));
+  fs.addFile(c::share(f1));
+  fs.addFile(c::share(f2));
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(new Set(c::share(new Meta(fs.dicts, 0, 0, 0, 0)),
-                     c::share(new Image)));
+  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, 0, 0, 0, 0)),
+                              c::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);
 )

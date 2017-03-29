@@ -15,27 +15,31 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
-#include <c2/inc/c_cpp>
-#include <c2/c/num.h>
+#ifndef CORE_IO_CARESS_DATA_HPP
+#define CORE_IO_CARESS_DATA_HPP
 
-namespace core {
+#include <c2/inc/c_def.h>
+#include <c2/c/mem.h>
+#include <c2/c/str.h>
+#include <c2/cpp/vec.hpp>
+
+namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-Session::Session()
-: normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
-, angleMapCache(c::pint(12))
-{}
+bool openFile(c::strc);
+void closeFile();
 
-AngleMap::sh Session::angleMap(data::Set::rc set) const {
-  AngleMap::Key key(angleMapKey0, set.midTth());
-  auto map = angleMapCache.get(key);
-  if (!map)
-    map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
-  return map;
-}
+enum dtype {
+  NONE, INT16, INT32, FLT32, STR
+};
 
+c::mem getData(uint n, sz_t, dtype);
+c::str getString(uint n);
+c::str getAsString(uint n, dtype);
+float  getAsFloat(uint n, dtype);
+
+bool nextDataUnit(c::str& elem, c::str& node, dtype&, uint& n);
 
 //------------------------------------------------------------------------------
-}
-// eof
+}}
+#endif

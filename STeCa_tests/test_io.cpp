@@ -17,7 +17,7 @@
 
 #include <c2/gui_qt/def.hpp>
 #include <core/io/io.hpp>
-#include <c2/h/c_cpp>
+#include <c2/inc/c_cpp>
 #include <QDir>
 #include <QFileInfo>
 
@@ -26,8 +26,10 @@ namespace core {
 
 TEST("caress",
   //auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
-  auto file = "/home/jan/C/+dev/fz/data/SS15/m280578.dat";
-  CHECK_NOTHROW(io::loadCaress(toStr(file)));
+  auto file = "/home/jan/C/+dev/fz/data/test/m200093580.dat";
+
+  data::Files files;
+  CHECK_NOTHROW(io::loadCaress(files, toStr(file)));
 )
 
 //------------------------------------------------------------------------------

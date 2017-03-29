@@ -18,7 +18,7 @@
 #ifndef CORE_MAT_HPP
 #define CORE_MAT_HPP
 
-#include <c2/h/c_def.h>
+#include <c2/inc/c_def.h>
 #include <c2/c/num.h>
 #include <c2/c/trg.h>
 
