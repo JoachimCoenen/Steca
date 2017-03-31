@@ -18,15 +18,15 @@
 #ifndef CORE_IMAGE_HPP
 #define CORE_IMAGE_HPP
 
-#include "def.hpp"
-#include "range.hpp"
+#include "../typ/def.hpp"
+#include "../typ/range.hpp"
 #include <c2/c/ptr.h>
 #include <c2/cpp/arr2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-typedef Range inten_rge;
+using inten_rge = Range;
 
 dcl_struct (Image) SHARED
   _atr (inten_rge, rgeInten)

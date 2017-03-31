@@ -41,7 +41,7 @@ template <typename T> dcl_struct (fry)
   };
 
 _private
-  typedef c::scoped<someMaker const> scm;
+  using scm = c::scoped<someMaker const>;
   c::hash<str, scm> makers;
 
 public:

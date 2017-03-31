@@ -13,20 +13,21 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-typedef c::vec<real> real_vec;
-typedef c::vec<uint> uint_vec;
+using real_vec = c::vec<real>;
+using uint_vec = c::vec<uint>;
 
-typedef flt32 inten_t;
-typedef c::vec<inten_t> inten_vec;
+using inten_t   = flt32;
+using inten_vec = c::vec<inten_t>;
 
-typedef c::deg tth_t;
-typedef c::deg gma_t;
+using tth_t = c::deg;
+using gma_t = c::deg;
 
-struct  Range;
-typedef Range tth_rge;
-typedef Range gma_rge;
+struct Range;
 
-typedef flt32  fwhm_t;
+using tth_rge = Range;
+using gma_rge = Range;
+
+using fwhm_t = flt32;
 
 //------------------------------------------------------------------------------
 }

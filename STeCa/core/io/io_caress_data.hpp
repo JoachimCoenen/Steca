@@ -33,10 +33,10 @@ enum dtype {
   NONE, INT16, INT32, FLT32, STR
 };
 
-c::mem getData(uint n, sz_t, dtype);
+c::mem getData(dtype, uint n, sz_t);
 c::str getString(uint n);
-c::str getAsString(uint n, dtype);
-float  getAsFloat(uint n, dtype);
+c::str getAsString(dtype, uint n);
+float  getAsFloat(dtype, uint n);
 
 bool nextDataUnit(c::str& elem, c::str& node, dtype&, uint& n);
 

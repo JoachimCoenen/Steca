@@ -18,6 +18,7 @@
 #include "io.hpp"
 #include "io_caress_data.hpp"
 #include <c2/inc/c_cpp>
+#include <functional>
 
 /*
  * This is our best attempt at wrapping nicely the "raw" Caress data handling
@@ -27,82 +28,169 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-static data::File::sh loadCaress(data::Files& files) may_err {
-  data::File::sh file(new data::File(files));
+using data::Files;
+using data::File;
+using data::Set;
+using data::Meta;
 
-  float tthAxis = 0, omgAxis = 0, chiAxis = 0, phiAxis = 0;
-  bool  isRobot = false, isTable = false;
+using data::flt_vec;
 
-  auto checkRobot = [&]() {
-    check_or_err (!isTable, "bad: ", "already have table");
-    isRobot = true;
+static File::sh loadCaress(Files& files) may_err {
+
+  File::sh file(new File(files));
+
+  int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
+
+  enum class eAxes  { NONE, ROBOT, TABLE }
+    axes = eAxes::NONE;
+  enum class eBlock { NONE, READ, SETVALUE, MASTER1V }
+    block = eBlock::NONE;
+
+  std::function<void()> checkRobot = [&]() {
+    check_or_err (eAxes::TABLE != axes, "bad: ", "already have table data");
+    axes = eAxes::ROBOT;
   };
 
-  auto checkTable = [&]() {
-    check_or_err (!isRobot, "bad: ", "already have robot");
-    isTable = true;
+  std::function<void()> checkTable = [&]() {
+    check_or_err (eAxes::ROBOT != axes, "bad: ", "already have robot data");
+    axes = eAxes::TABLE;
   };
 
   c::str elem, node; dtype dt; uint n;
+
+  flt_vec readVals, vals;
+
+  auto setVal = [&](flt_vec& vs, uint idx, flt32 val) {
+    if (idx+1 > vs.size())
+      vs.resize(idx+1, 0);
+    vs.setAt(idx, val);
+  };
+
+  auto addValTo = [&](flt_vec& vs, c::strc ns, flt32 val) -> uint {
+    auto idx = mut(*files.dict).add(ns);
+    setVal(vs, idx, val);
+    return idx;
+  };
+
+  auto addVal = [&](flt_vec& vs) -> uint {
+    return addValTo(vs, node, getAsFloat(dt, n));
+  };
+
+  auto doAxis = [&](flt_vec& vs, pcstr ns, std::function<void()> check, int& idx) -> bool {
+    if (!node.eqi(ns))
+      return false;
+    check();
+    auto i = addVal(vs);
+    if (idx < 0)
+      idx = i;
+    else
+      EXPECT (i == idx)
+    return true;
+  };
+
+  auto doAxes = [&](flt_vec& vs) -> bool {
+    return
+      doAxis(vs, "TTHS", checkTable, tthIdx) ||
+      doAxis(vs, "OMGS", checkTable, omgIdx) ||
+      doAxis(vs, "CHIS", checkTable, chiIdx) ||
+      doAxis(vs, "PHIS", checkTable, phiIdx) ||
+      doAxis(vs, "TTHR", checkRobot, tthIdx) ||
+      doAxis(vs, "OMGR", checkRobot, omgIdx) ||
+      doAxis(vs, "CHIR", checkRobot, chiIdx) ||
+      doAxis(vs, "PHIR", checkRobot, phiIdx);
+  };
+
+  auto beginDataset = [&]() {
+    vals = readVals;
+  };
+
+  auto endDataset = [&]() {
+    if (vals.isEmpty())
+      return;
+
+    // fix angles
+    check_or_err (tthIdx >= 0, "missing TTH");
+    bool robot = eAxes::ROBOT == axes;
+    if (omgIdx < 0)
+      omgIdx = addValTo(vals, robot ? "OMGR" : "OMGS", 0);
+    if (chiIdx < 0)
+      chiIdx = addValTo(vals, robot ? "CHIR" : "CHIS", 0);
+    if (phiIdx < 0)
+      phiIdx = addValTo(vals, robot ? "PHIR" : "PHIS", 0);
+
+    uint idx = c::max(omgIdx, c::max(chiIdx, phiIdx));
+    if (vals.size() < idx+1)
+      vals.resize(idx+1, 0);
+
+    if (robot)
+      vals.setAt(chiIdx, 180 - vals.at(chiIdx));
+
+    mut(*file).addSet(
+      c::share(new Set(
+        c::share(new Meta(files.dict, vals,
+                          vals.at(tthIdx), vals.at(omgIdx),
+                          vals.at(chiIdx), vals.at(phiIdx))),
+       c::share(new Image))));
+
+//    TR("DATASET")
+    vals.clear();
+  };
+
   while (nextDataUnit(elem, node, dt, n)) {
-    TR(elem << node << dt << n)
+    if (elem.eqi("READ")) {
 
-    if (elem.eqi("READ")) {             // global metadata
-      check_or_err (!node.isEmpty(), "empty node");
-      mut(*files.dict).add(node);
-    } else if (elem.eqi("SETVALUE")) {  // begin scan
-    } else if (elem.eqi("MASTER1V")) {  // data
-      if (node.eqi("ADET")) {
+      // instrument state - global metadata
+      check_or_err (block <= eBlock::READ, "unexpect READ block");
+      block = eBlock::READ;
+      check_or_err (!node.isEmpty(), "empty READ node");
+      if (!doAxes(readVals))
+        addVal(readVals);
 
+    } else if (elem.eqi("SETVALUE")) {
+
+      // begin scan
+      if (block != eBlock::SETVALUE) {
+        endDataset();
+        block = eBlock::SETVALUE;
+        beginDataset();
       }
-    } else {                           // anything else
-      if (node.isEmpty()) // otherwise ignored
-        mut(file->strs).add(std::make_pair(elem, getAsString(n, dt))); // file info
+
+      check_or_err (!node.isEmpty(), "empty SETVALUE node");
+      addVal(vals);
+
+    } else if (elem.eqi("MASTER1V")) {
+
+      // scan data
+      block = eBlock::MASTER1V;
+
+      check_or_err (!node.isEmpty(), "empty MASTER1V node");
+      if (node.eqi("ADET"))
+          ; //        TR("adet")
+      else
+        addVal(vals);
+
+    } else {
+
+      endDataset();
+      if (node.isEmpty()) // file-level info
+        mut(file->strs).add(std::make_pair(elem, getAsString(dt, n)));
+
+      // anything else is ignored
+
     }
 
-
-//    if (s_elem.eq("READ") || s_elem.eq("SETVALUE") || s_elem.eq("MASTERV1") || s_elem.eq("PROTOCOL")) {
-//      check_or_err (!s_node.isEmpty(), "empty node for: ", s_elem);
-
-//      float f = 0;//get1<flt32>();
-
-
-//      if (s_node.eq("TTHS")) {
-//        checkTable(); tthAxis = f;
-//      } else
-//      if (s_node.eq("OMGS")) {
-//        checkTable(); omgAxis = f;
-//      } else
-//      if (s_node.eq("CHIS")) {
-//        checkTable(); chiAxis = f;
-//      } else
-//      if (s_node.eq("PHIS")) {
-//        checkTable(); phiAxis = f;
-//      } else
-//      if (s_node.eq("TTHR")) {
-//        checkRobot(); tthAxis = f;
-//      } else
-//      if (s_node.eq("OMGR")) {
-//        checkRobot(); omgAxis = f;
-//      } else
-//      if (s_node.eq("CHIR")) {
-//        checkRobot(); chiAxis = 180 - f; // !
-//      } else
-//      if (s_node.eq("PHIR")) {
-//        checkRobot(); phiAxis = f;
-//      } else
 //      if (s_node.eq("TIM1")) {
 //        // if s_date y < 2015 || 2015 Jan/Feb : f = f / 100
 //      };
-//      continue;
-//    }
   }
+
+  endDataset();
 
   files.addFile(file);
   return file;
 }
 
-data::File::sh loadCaress(data::Files& files, c::strc filePath) may_err {
+File::sh loadCaress(Files& files, c::strc filePath) may_err {
   check_or_err (openFile(filePath), "Cannot open ", filePath);
   try {
     auto res = loadCaress(files);

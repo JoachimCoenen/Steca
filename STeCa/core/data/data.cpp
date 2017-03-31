@@ -38,12 +38,8 @@ uint Meta::Dict::at(c::strc key) const may_err {
   }
 }
 
-Meta::Meta(Dict::sh dict_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
-: dict(dict_), vals()
-, tth(tth_), omg(omg_), chi(chi_), phi(phi_)
-{
-  mut(vals).reserve(dict->size());
-}
+Meta::Meta(Dict::sh dict_, flt_vec::rc vals_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
+: dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_) {}
 
 TEST("dict",
   Meta::Dict dict;
@@ -190,7 +186,7 @@ TEST("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, 0, 0, 0, 0)),
+  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0)),
                               c::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);

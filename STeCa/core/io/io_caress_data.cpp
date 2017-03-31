@@ -106,7 +106,7 @@ void closeFile() {
   close_data_file();
 }
 
-c::mem getData(uint n, sz_t sz, dtype dt) {
+c::mem getData(dtype dt, uint n, sz_t sz) {
   if (n > MAXNUMBEROFCHANNELS)
     return getPartition(n, sz, from_dtype(dt));
   else
@@ -114,15 +114,15 @@ c::mem getData(uint n, sz_t sz, dtype dt) {
 }
 
 c::str getString(uint n) {
-  return c::str(getData(n, sizeof(char), STR));
+  return c::str(getData(STR, n, sizeof(char)));
 }
 
-c::str getAsString(uint n, dtype dt) {
+c::str getAsString(dtype dt, uint n) {
   if (STR == dt)
     return getString(n);
 
   check_or_err (1 == n, "bad n<>1");
-  auto m = getData(n, dtype_size(dt), dt);
+  auto m = getData(dt, n, dtype_size(dt));
 
   switch (dt) {
   case NONE:
@@ -139,7 +139,7 @@ c::str getAsString(uint n, dtype dt) {
   }
 }
 
-float getAsFloat(uint n, dtype dt) {
+float getAsFloat(dtype dt, uint n) {
   switch (dt) {
   case NONE:
   case STR:
@@ -150,7 +150,7 @@ float getAsFloat(uint n, dtype dt) {
 
   check_or_err (1 == n, "bad n<>1");
 
-  auto m = getData(n, dtype_size(dt), dt);
+  auto m = getData(dt, n, dtype_size(dt));
 
   switch (dt) {
   case NONE:

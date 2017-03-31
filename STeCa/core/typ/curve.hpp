@@ -51,7 +51,7 @@ dcl_struct (Curve)
   _mth (real, sumY, ())
 };
 
-typedef c::vec<Curve> curve_vec;
+using curve_vec =  c::vec<Curve>;
 
 //------------------------------------------------------------------------------
 }

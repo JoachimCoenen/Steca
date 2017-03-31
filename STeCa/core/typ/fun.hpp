@@ -51,7 +51,7 @@ dcl_struct (Fun) SHARED
   // partial derivative / par, with given (parVals) or own pars
   virtual real dy(real x, sz_t parIdx, real const* parVals = nullptr) const = 0;
 
-  typedef fry<Fun> fryFun;
+  using fryFun = fry<Fun>;
 
 _protected
   static fryFun factory;

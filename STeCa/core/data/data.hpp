@@ -19,7 +19,7 @@
 #define CORE_DATA_HPP
 
 #include "../typ/def.hpp"
-#include "../typ/image.hpp"
+#include "image.hpp"
 #include <c2/cpp/map.hpp>
 
 namespace core {
@@ -27,6 +27,8 @@ struct Session;
 
 namespace data {
 //------------------------------------------------------------------------------
+
+using flt_vec = c::vec<flt32>;
 
 dcl_struct (Meta) SHARED // metadata
   // attribute dictionary
@@ -36,15 +38,16 @@ dcl_struct (Meta) SHARED // metadata
     _mth_err (uint, at,  (c::strc))
   };
 
-  _atr (Dict::sh,      dict)
-  _atr (c::vec<flt32>, vals)
+  _atr (Dict::sh, dict)
+  _atr (flt_vec,  vals)
 
   _atr (flt32, tth) _atr (flt32, omg) _atr (flt32, chi) _atr (flt32, phi)
 
-  Meta(Dict::sh, flt32, flt32, flt32, flt32);
+  Meta(Dict::sh, flt_vec::rc, flt32, flt32, flt32, flt32);
 dcl_struct_end
 
 //------------------------------------------------------------------------------
+
 dcl_struct (Set) SHARED   // one dataset
   _atr (uint,      idx)   // this order in File, 1..; 0 = not in File
   _atr (Meta::sh,  meta)
@@ -52,10 +55,10 @@ dcl_struct (Set) SHARED   // one dataset
 
   Set(Meta::sh, Image::sh);
 
-  _mth (tth_t,  midTth, ())
-  _mth (c::deg, omg, ())
-  _mth (c::deg, phi, ())
-  _mth (c::deg, chi, ())
+  _mth (tth_t,   midTth, ())
+  _mth (c::deg,  omg, ())
+  _mth (c::deg,  phi, ())
+  _mth (c::deg,  chi, ())
   _mth (gma_rge, rgeGma,     (Session const&))
   _mth (gma_rge, rgeGmaFull, (Session const&))
   _mth (tth_rge, rgeTth,     (Session const&))
@@ -81,6 +84,7 @@ dcl_struct (File) SHARED  // one file
 dcl_struct_end
 
 //------------------------------------------------------------------------------
+
 dcl_struct (Files) SHARED // the whole file group
   _atr (c::vec<File::sh>, files)
   _atr (Meta::Dict::sh,   dict)
