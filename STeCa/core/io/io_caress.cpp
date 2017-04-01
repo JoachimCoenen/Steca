@@ -108,31 +108,23 @@ static File::sh loadCaress(Files& files) may_err {
     if (vals.isEmpty())
       return;
 
-    // fix angles
+    // angles
     check_or_err (tthIdx >= 0, "missing TTH");
     bool robot = eAxes::ROBOT == axes;
-    if (omgIdx < 0)
-      omgIdx = addValTo(vals, robot ? "OMGR" : "OMGS", 0);
-    if (chiIdx < 0)
-      chiIdx = addValTo(vals, robot ? "CHIR" : "CHIS", 0);
-    if (phiIdx < 0)
-      phiIdx = addValTo(vals, robot ? "PHIR" : "PHIS", 0);
 
-    uint idx = c::max(omgIdx, c::max(chiIdx, phiIdx));
-    if (vals.size() < idx+1)
-      vals.resize(idx+1, 0);
+    flt32 tth = vals.at(tthIdx),
+          omg = omgIdx >= 0 ? vals.at(omgIdx) : 0,
+          chi = chiIdx >= 0 ? vals.at(chiIdx) : 0,
+          phi = phiIdx >= 0 ? vals.at(phiIdx) : 0;
 
     if (robot)
-      vals.setAt(chiIdx, 180 - vals.at(chiIdx));
+      chi = 180 - chi; // TODO ask Michael
 
     mut(*file).addSet(
       c::share(new Set(
-        c::share(new Meta(files.dict, vals,
-                          vals.at(tthIdx), vals.at(omgIdx),
-                          vals.at(chiIdx), vals.at(phiIdx))),
-       c::share(new Image))));
+        c::share(new Meta(files.dict, vals, tth, omg, chi, phi)),
+        c::share(new Image))));
 
-//    TR("DATASET")
     vals.clear();
   };
 
