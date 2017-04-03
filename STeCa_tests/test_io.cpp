@@ -24,10 +24,15 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-TEST("caress",
-//  auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
+#ifdef WITH_TESTS
+#ifdef DEVELOPMENT_JAN
   auto file = "/home/jan/C/+dev/fz/data/test/m200093580.dat";
+#else
+  auto file = QFileInfo(__FILE__).dir().path() + "/test_caress.dat";
+#endif
+#endif
 
+TEST("caress",
   data::Files files;
   CHECK_NOTHROW(io::loadCaress(files, toStr(file)));
 )
