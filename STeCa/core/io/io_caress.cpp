@@ -39,8 +39,6 @@ static File::sh loadCaress(Files& files) may_err {
 
   File::sh file(new File(files));
 
-  int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
-
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
   enum class eBlock { NONE, READ, SETVALUE, MASTER1V }
@@ -76,15 +74,17 @@ static File::sh loadCaress(Files& files) may_err {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
+  int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
+
   auto doAxis = [&](flt_vec& vs, pcstr ns, std::function<void()> check, int& idx) -> bool {
     if (!node.eqi(ns))
       return false;
     check();
-    auto i = addVal(vs);
+    uint i = addVal(vs);
     if (idx < 0)
       idx = i;
     else
-      EXPECT (i == idx)
+      EXPECT (i == uint(idx))
     return true;
   };
 
@@ -170,10 +170,6 @@ static File::sh loadCaress(Files& files) may_err {
       // anything else is ignored
 
     }
-
-//      if (s_node.eq("TIM1")) {
-//        // if s_date y < 2015 || 2015 Jan/Feb : f = f / 100
-//      };
   }
 
   endDataset();

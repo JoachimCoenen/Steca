@@ -39,8 +39,11 @@ static int32 from_dtype(dtype t) {
     return REALTYPE;
   case STR:
     return CHARTYPE;
+  default:
+    EXPECT (false)
+    return 0;
   }
-};
+}
 
 static uint dtype_size(dtype t) {
   switch (t) {
@@ -50,12 +53,11 @@ static uint dtype_size(dtype t) {
     return 4;
   case FLT32:
     return 4;
-  case NONE:
-  case STR:
+  default:
     EXPECT (false)
     return 0;
   }
-};
+}
 
 static dtype to_dtype(int32 t) {
   switch (t) {
@@ -72,7 +74,7 @@ static dtype to_dtype(int32 t) {
   }
 
   c::err("unsuported data type: ", t);
-};
+}
 
 
 static c::mem getUnit(uint n, sz_t sz) {
@@ -80,7 +82,7 @@ static c::mem getUnit(uint n, sz_t sz) {
   if (n > 0)
     check_or_err (0 == get_data_unit(mut(data.p)), "bad data unit");
   return data;
-};
+}
 
 static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
   c::mem data(n * sz);
@@ -96,7 +98,7 @@ static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
   }
 
   return data;
-};
+}
 
 bool openFile(c::strc f) {
   return OK == open_data_file(f.p, nullptr);
@@ -133,9 +135,9 @@ c::str getAsString(dtype dt, uint n) {
     return c::str::frm(*static_cast<int32 const*>(m.p));
   case FLT32:
     return c::str::frm(*static_cast<flt32 const*>(m.p));
-  case STR:
+  default:
     EXPECT (false)
-    break;
+    return c::str::nul;
   }
 }
 
@@ -153,16 +155,15 @@ float getAsFloat(dtype dt, uint n) {
   auto m = getData(dt, n, dtype_size(dt));
 
   switch (dt) {
-  case NONE:
-  case STR:
-    EXPECT (false)
-    return 0;
   case INT16:
     return *static_cast<int16 const*>(m.p);
   case INT32:
     return *static_cast<int32 const*>(m.p);
   case FLT32:
     return *static_cast<flt32 const*>(m.p);
+  default:
+    EXPECT (false)
+    return 0;
   }
 }
 

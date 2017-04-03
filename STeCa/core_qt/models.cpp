@@ -33,11 +33,11 @@ ModelFiles::ModelFiles() {
 }
 
 cl_n ModelFiles::cols() const {
-  return 1;
+  return cl_n(1);
 }
 
 rw_n ModelFiles::rows() const {
-  return 0;
+  return rw_n(0);
 }
 
 c_gui::var* ModelFiles::cell(rw_n, cl_n) const {
@@ -58,11 +58,11 @@ ModelDatasets::ModelDatasets() {
 }
 
 cl_n ModelDatasets::cols() const {
-  return 1;
+  return cl_n(1);
 }
 
 rw_n ModelDatasets::rows() const {
-  return 0;
+  return rw_n(0);
 }
 
 c_gui::var* ModelDatasets::cell(rw_n, cl_n) const {
@@ -76,11 +76,11 @@ ModelMetadata::ModelMetadata() {
 }
 
 cl_n ModelMetadata::cols() const {
-  return 1;
+  return cl_n(1);
 }
 
 rw_n ModelMetadata::rows() const {
-  return 0;
+  return rw_n(0);
 }
 
 c_gui::var* ModelMetadata::cell(rw_n, cl_n) const {
