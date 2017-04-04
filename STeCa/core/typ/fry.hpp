@@ -51,7 +51,7 @@ public:
 
   c::own<T> make(c::strc key) const may_err {
     someMaker const *m = makers.at(key).ptr();
-    check_or_err(m, "no maker ", key);
+    check_or_err (m, "no maker ", key);
     return m->make();
   }
 dcl_struct_end

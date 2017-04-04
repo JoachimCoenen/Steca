@@ -38,7 +38,7 @@ c::str getString(uint n);
 c::str getAsString(dtype, uint n);
 float  getAsFloat(dtype, uint n);
 
-c::mem getData(dtype, uint n);
+c::vec<int32> getAdet(dtype, uint n);
 
 bool nextDataUnit(c::str& elem, c::str& node, dtype&, uint& n);
 

@@ -21,20 +21,33 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-Image::Image() : Image(c::sz2()) {}
+count_arr2::count_arr2(c::sz2 sz) : cs(sz, 0) {}
 
-Image::Image(c::sz2::rc sz) : intens(new inten_arr(sz, 0)) {}
-
-Image::Image(inten_arr::rc that): Image(that.sz) {
-  addIntens(that);
+count_arr2::count_arr2(rc that) : cs(that.size()) {
+  for_i (cs.sz.size())
+    setAt(i, that.at(i));
 }
 
+
+void count_arr2::addAt(uint i, uint j, inten_t c) {
+  auto sum = (cs.refAt(i, j) += c);
+  mut(rgeCount).extendBy(real(sum));
+}
+
+//------------------------------------------------------------------------------
+
+Image::Image() : Image(c::sz2()) {}
+
+Image::Image(c::sz2::rc sz) : intens(new count_arr2(sz)) {}
+
+Image::Image(count_arr2::rc is): intens(new count_arr2(is)) {}
+
 c::sz2 Image::size() const {
-  return intens->sz;
+  return intens->size();
 }
 
 void Image::clear() {
-  intens.reset(new inten_arr(c::sz2(), 0));
+  intens.reset(new count_arr2(c::sz2()));
 }
 
 bool Image::isEmpty() const {
@@ -55,7 +68,7 @@ void Image::setInten(uint i, uint j, inten_t val) {
 
 void Image::addInten(uint i, uint j, inten_t val) {
   auto &is = mut(*intens);
-  is.refAt(i, j) += val;
+  is.addAt(i, j, val);
 }
 
 void Image::addIntens(rc that) {
@@ -63,11 +76,8 @@ void Image::addIntens(rc that) {
     c::err("inconsistent image size");
 
   auto sz = size();
-  for_ij (c::to_uint(sz.i), c::to_uint(sz.j)) {
-    auto inten = that.inten(i, j);
-    mut(rgeInten).extendBy(real(inten));
-    addInten(i, j, inten);
-  }
+  for_ij (c::to_uint(sz.i), c::to_uint(sz.j))
+    addInten(i, j, that.inten(i, j));
 }
 
 //------------------------------------------------------------------------------

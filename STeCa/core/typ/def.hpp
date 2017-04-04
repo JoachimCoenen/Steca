@@ -16,9 +16,6 @@ namespace core {
 using real_vec = c::vec<real>;
 using uint_vec = c::vec<uint>;
 
-using inten_t   = flt32;
-using inten_vec = c::vec<inten_t>;
-
 using tth_t = c::deg;
 using gma_t = c::deg;
 
@@ -28,6 +25,9 @@ using tth_rge = Range;
 using gma_rge = Range;
 
 using fwhm_t = flt32;
+
+using inten_t   = flt32;
+using inten_vec = c::vec<inten_t>;
 
 //------------------------------------------------------------------------------
 }

@@ -63,10 +63,10 @@ dcl_struct (Set) SHARED   // one dataset
 
   Set(Meta::sh, Image::sh);
 
-  _val_inl(tth_t::rc, tth, (), meta->tth)
-  _val_inl(tth_t::rc, omg, (), meta->omg)
-  _val_inl(tth_t::rc, phi, (), meta->phi)
-  _val_inl(tth_t::rc, chi, (), meta->chi)
+  _val(tth_t::rc, tth, (), meta->tth)
+  _val(tth_t::rc, omg, (), meta->omg)
+  _val(tth_t::rc, phi, (), meta->phi)
+  _val(tth_t::rc, chi, (), meta->chi)
 
   _mth (gma_rge, rgeGma,     (Session const&))
   _mth (gma_rge, rgeGmaFull, (Session const&))

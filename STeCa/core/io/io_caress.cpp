@@ -19,6 +19,7 @@
 #include "io_caress_data.hpp"
 #include <c2/inc/c_cpp>
 #include <functional>
+#include <cmath>
 
 /*
  * This is our best attempt at wrapping nicely the "raw" Caress data handling
@@ -76,6 +77,7 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
 
   int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
   int  timIdx = -1, monIdx = -1;
+  c::scoped<Image> image;
 
   auto doAxis = [&](flt_vec& vs, pcstr ns, std::function<void()> check, int& idx) -> bool {
     if (!node.eqi(ns))
@@ -142,13 +144,17 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
     if (robot)
       chi = 180 - chi; // TODO ask Michael
 
+    check_or_err (image.ptr(), "do not have an image");
+
     mut(*file).addSet(
       c::share(new Set(
         c::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon)),
-        c::share(new Image))));
+        c::share(image.take().ptr()))));
 
     vals.clear();
   };
+
+  int imageSide = -1;
 
   while (nextDataUnit(elem, node, dt, n)) {
     if (elem.eqi("READ")) {
@@ -179,8 +185,18 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
 
       check_or_err (!node.isEmpty(), "empty MASTER1V node");
       if (node.eqi("ADET")) {
-        auto m = getData(dt, n);
-        // TODO
+        auto adet = getAdet(dt, n);
+        auto size = adet.size();
+        auto side = c::to_uint(c::floor(sqrt(size)));
+        check_or_err ((side*side == size) && (imageSide < 0 || imageSide == int(side)),
+                      "bad image size");
+        imageSide = side;
+
+        count_arr2 cs(c::sz2(side, side));
+        for_i (size)
+          cs.setAt(i, adet.at(i));
+
+        image.reset(new Image(cs));
       } else {
         addVal(vals);
       }

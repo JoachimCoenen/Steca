@@ -26,16 +26,32 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-using inten_rge = Range;
+dcl_struct(count_arr2)
+  using count_rge = Range;
+  _atr (count_rge, rgeCount)
+
+  count_arr2(c::sz2);
+  count_arr2(rc);
+
+  _val (c::sz2, size, (), cs.sz)
+  _bol_inl (isEmpty, (), cs.isEmpty())
+
+  _val (inten_t, at, (uint i),         cs.at(i))
+  _val (inten_t, at, (uint i, uint j), cs.at(i,j))
+
+  _voi_mut_inl (setAt, (uint i,         inten_t c), { cs.setAt(i, c);    })
+  _voi_mut_inl (setAt, (uint i, uint j, inten_t c), { cs.setAt(i, j, c); })
+
+  _voi_mut (addAt, (uint, uint, inten_t))
+
+private:
+  c::arr2<inten_t> cs;  // could be optimized int8/16/32
+dcl_struct_end
 
 dcl_struct (Image) SHARED
-  _atr (inten_rge, rgeInten)
-
-  using inten_arr = c::arr2<inten_t>;
-
   Image();
   Image(c::sz2::rc);
-  Image(inten_arr::rc);
+  Image(count_arr2::rc);
 
   _mth (c::sz2, size, ())
   _voi_mut (clear, ())
@@ -48,7 +64,7 @@ dcl_struct (Image) SHARED
   _voi_mut (addIntens, (rc))
 
 _private
-  c::shared<inten_arr> intens;
+  c::shared<count_arr2> intens;
 dcl_struct_end
 
 dcl_struct (ImageTransform)

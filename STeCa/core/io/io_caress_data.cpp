@@ -191,6 +191,21 @@ bool nextDataUnit(c::str& elem, c::str& node, dtype& dt, uint& n) {
   }
 }
 
+c::vec<int32> getAdet(dtype dt, uint n) {
+  check_or_err (INT32==dt, "expecting int32 adet");
+
+  auto m = getData(dt, n);
+  c::vec<int32> v(n, 0);
+
+  auto d = v.data();
+  auto s = static_cast<int32 const*>(m.p);
+
+  for_i (n)
+    *d++ = *s++;
+
+  return v;
+}
+
 //------------------------------------------------------------------------------
 }}
 // eof
