@@ -23,29 +23,22 @@ namespace core {
 
 Image::Image() : Image(c::sz2()) {}
 
-Image::Image(c::sz2::rc sz) : intens(new inten_arr(sz)) {
-  fill(0, sz);
-}
+Image::Image(c::sz2::rc sz) : intens(new inten_arr(sz, 0)) {}
 
-Image::Image(inten_arr::rc that): Image(that.size()) {
+Image::Image(inten_arr::rc that): Image(that.sz) {
   addIntens(that);
 }
 
 c::sz2 Image::size() const {
-  return intens->size();
+  return intens->sz;
 }
 
 void Image::clear() {
-  intens.reset(new inten_arr(c::sz2()));
+  intens.reset(new inten_arr(c::sz2(), 0));
 }
 
 bool Image::isEmpty() const {
   return intens->isEmpty();
-}
-
-void Image::fill(inten_t val, c::sz2::rc sz) {
-  intens.reset(new inten_arr(sz)); // copy-on-write
-  mut(*intens).fill(val);
 }
 
 inten_t Image::inten(uint i, uint j) const {

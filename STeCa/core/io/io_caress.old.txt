@@ -1,28 +1,3 @@
-/*******************************************************************************
- * REVIEW: STeCa2 - StressTextureCalculator ver. 2
- *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
- *
- * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * See the COPYING and AUTHORS files for more details.
- ******************************************************************************/
-
-#include "data/data_dataset.h"
-#include "Caress/raw.h"
-#include "typ/typ_types.h"
-#include "io_io.h"
-
-#include <sstream>
-#include <qmath.h>
-
 namespace io {
 //------------------------------------------------------------------------------
 // Code taken from the original STeCa, only slightly modified.
@@ -31,10 +6,6 @@ data::shp_File loadCaress2(rcstr filePath) THROWS {
 
   RUNTIME_CHECK(0 == open_data_file(filePath.toLocal8Bit().data(), nullptr),
                 "Cannot open file " + filePath);
-
-  struct CloseFile {
-    ~CloseFile() { close_data_file(); }
-  } __;
 
   for (;;) {
     int32 e_number, // element number
@@ -470,7 +441,7 @@ data::shp_File loadCaress(rcstr filePath) THROWS {
       if (!strncmp(node, "SST   ", 6))
         if (get_data_unit(&sstAxis) != 0)
           sstAxis = 0;
-      if (!strncmp(node, "OMGM  ", 6))
+      if (!strncmp(node, "OMGM  ", 6))s
         if (get_data_unit(&omgmAxis) != 0)
           omgmAxis = 0;
       if (!strncmp(node, "MON   ", 6))

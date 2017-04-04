@@ -40,7 +40,6 @@ dcl_struct (Image) SHARED
   _mth (c::sz2, size, ())
   _voi_mut (clear, ())
   _bol (isEmpty, ())
-  _voi_mut (fill, (inten_t val, c::sz2::rc))
 
   _mth (inten_t, inten, (uint i, uint j))
   _mth (inten_t, inten, (uint i))

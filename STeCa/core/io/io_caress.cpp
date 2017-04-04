@@ -35,7 +35,7 @@ using data::Meta;
 
 using data::flt_vec;
 
-static File::sh loadCaress(Files& files) may_err {
+static File::sh loadOpenCaressFile(Files& files) may_err {
 
   File::sh file(new File(files));
 
@@ -75,6 +75,7 @@ static File::sh loadCaress(Files& files) may_err {
   };
 
   int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
+  int  timIdx = -1, monIdx = -1;
 
   auto doAxis = [&](flt_vec& vs, pcstr ns, std::function<void()> check, int& idx) -> bool {
     if (!node.eqi(ns))
@@ -100,6 +101,23 @@ static File::sh loadCaress(Files& files) may_err {
       doAxis(vs, "PHIR", checkRobot, phiIdx);
   };
 
+  auto doVal = [&](flt_vec& vs, pcstr ns, int& idx) -> bool {
+    if (!node.eqi(ns))
+      return false;
+    uint i = addVal(vs);
+    if (idx < 0)
+      idx = i;
+    else
+      EXPECT (i == uint(idx))
+    return true;
+  };
+
+  auto doTimMon = [&](flt_vec& vs) -> bool {
+    return
+      doVal(vs, "TIM1", timIdx) ||
+      doVal(vs, "MON",  monIdx);
+  };
+
   auto beginDataset = [&]() {
     vals = readVals;
   };
@@ -112,17 +130,21 @@ static File::sh loadCaress(Files& files) may_err {
     check_or_err (tthIdx >= 0, "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
+    auto valAt = [&](int idx) {
+      return idx >= 0 ? vals.at(idx) : 0;
+    };
+
     flt32 tth = vals.at(tthIdx),
-          omg = omgIdx >= 0 ? vals.at(omgIdx) : 0,
-          chi = chiIdx >= 0 ? vals.at(chiIdx) : 0,
-          phi = phiIdx >= 0 ? vals.at(phiIdx) : 0;
+          omg = valAt(omgIdx), chi = valAt(chiIdx), phi = valAt(phiIdx),
+          tim = valAt(timIdx), mon = valAt(monIdx);
+    // TODO (Michael): until (including) Feb 2015, tim /= 100
 
     if (robot)
       chi = 180 - chi; // TODO ask Michael
 
     mut(*file).addSet(
       c::share(new Set(
-        c::share(new Meta(files.dict, vals, tth, omg, chi, phi)),
+        c::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon)),
         c::share(new Image))));
 
     vals.clear();
@@ -135,7 +157,7 @@ static File::sh loadCaress(Files& files) may_err {
       check_or_err (block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
       check_or_err (!node.isEmpty(), "empty READ node");
-      if (!doAxes(readVals))
+      if (!doAxes(readVals) && !doTimMon(readVals))
         addVal(readVals);
 
     } else if (elem.eqi("SETVALUE")) {
@@ -156,10 +178,12 @@ static File::sh loadCaress(Files& files) may_err {
       block = eBlock::MASTER1V;
 
       check_or_err (!node.isEmpty(), "empty MASTER1V node");
-      if (node.eqi("ADET"))
-          ; //        TR("adet")
-      else
+      if (node.eqi("ADET")) {
+        auto m = getData(dt, n);
+        // TODO
+      } else {
         addVal(vals);
+      }
 
     } else {
 
@@ -168,7 +192,6 @@ static File::sh loadCaress(Files& files) may_err {
         mut(file->strs).add(std::make_pair(elem, getAsString(dt, n)));
 
       // anything else is ignored
-
     }
   }
 
@@ -180,15 +203,13 @@ static File::sh loadCaress(Files& files) may_err {
 
 File::sh loadCaress(Files& files, c::strc filePath) may_err {
   check_or_err (openFile(filePath), "Cannot open ", filePath);
+
+  struct __ { ~__() { closeFile(); } } autoClose;
+
   try {
-    auto res = loadCaress(files);
-    closeFile();
-    return res;
+    return loadOpenCaressFile(files);
   } catch (c::exc& e) {
     mut(e.msg).set(c::str::cat(filePath, e.msg));
-    throw; // ?
-  } catch (...) {
-    closeFile();
     throw;
   }
 }

@@ -37,7 +37,7 @@ static int32 from_dtype(dtype t) {
     return LONGINTEGER;
   case FLT32:
     return REALTYPE;
-  case STR:
+  case CHR:
     return CHARTYPE;
   default:
     EXPECT (false)
@@ -53,6 +53,8 @@ static uint dtype_size(dtype t) {
     return 4;
   case FLT32:
     return 4;
+  case CHR:
+    return 1;
   default:
     EXPECT (false)
     return 0;
@@ -68,7 +70,7 @@ static dtype to_dtype(int32 t) {
   case REALTYPE:
     return FLT32;
   case CHARTYPE:
-    return STR;
+    return CHR;
   case 0:
     return NONE;
   }
@@ -108,7 +110,8 @@ void closeFile() {
   close_data_file();
 }
 
-c::mem getData(dtype dt, uint n, sz_t sz) {
+c::mem getData(dtype dt, uint n) {
+  auto sz = dtype_size(dt);
   if (n > MAXNUMBEROFCHANNELS)
     return getPartition(n, sz, from_dtype(dt));
   else
@@ -116,15 +119,15 @@ c::mem getData(dtype dt, uint n, sz_t sz) {
 }
 
 c::str getString(uint n) {
-  return c::str(getData(STR, n, sizeof(char)));
+  return c::str(getData(CHR, n));
 }
 
 c::str getAsString(dtype dt, uint n) {
-  if (STR == dt)
+  if (CHR == dt)
     return getString(n);
 
   check_or_err (1 == n, "bad n<>1");
-  auto m = getData(dt, n, dtype_size(dt));
+  auto m = getData(dt, n);
 
   switch (dt) {
   case NONE:
@@ -144,7 +147,7 @@ c::str getAsString(dtype dt, uint n) {
 float getAsFloat(dtype dt, uint n) {
   switch (dt) {
   case NONE:
-  case STR:
+  case CHR:
     c::err("cannot get as float");
   default:
     break;
@@ -152,7 +155,7 @@ float getAsFloat(dtype dt, uint n) {
 
   check_or_err (1 == n, "bad n<>1");
 
-  auto m = getData(dt, n, dtype_size(dt));
+  auto m = getData(dt, n);
 
   switch (dt) {
   case INT16:
@@ -168,7 +171,7 @@ float getAsFloat(dtype dt, uint n) {
 }
 
 bool nextDataUnit(c::str& elem, c::str& node, dtype& dt, uint& n) {
-  int32 e_number, e_type, d_number, d_type = from_dtype(dt);
+  int32 e_number, e_type, d_number, d_type;
   modname_t m_elem, m_node;
   switch (next_data_unit(&e_number, &e_type, m_elem, m_node, &d_type, &d_number)) {
   case OK: {

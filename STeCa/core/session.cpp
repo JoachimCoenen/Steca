@@ -28,7 +28,7 @@ Session::Session()
 {}
 
 AngleMap::sh Session::angleMap(data::Set::rc set) const {
-  AngleMap::Key key(angleMapKey0, set.midTth());
+  AngleMap::Key key(angleMapKey0, set.tth());
   auto map = angleMapCache.get(key);
   if (!map)
     map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));

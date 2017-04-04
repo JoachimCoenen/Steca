@@ -20,6 +20,7 @@
 
 #include "../typ/def.hpp"
 #include "image.hpp"
+#include <c2/c/tim.h>
 #include <c2/cpp/map.hpp>
 
 namespace core {
@@ -41,9 +42,16 @@ dcl_struct (Meta) SHARED // metadata
   _atr (Dict::sh, dict)
   _atr (flt_vec,  vals)
 
-  _atr (flt32, tth) _atr (flt32, omg) _atr (flt32, chi) _atr (flt32, phi)
+  _atr (tth_t,  tth)    // mid tth
+  _atr (c::deg, omg)
+  _atr (c::deg, chi)
+  _atr (c::deg, phi)
 
-  Meta(Dict::sh, flt_vec::rc, flt32, flt32, flt32, flt32);
+  _atr (flt32,  tim)    // time
+  _atr (flt32,  mon)    // monitor count
+
+  Meta(Dict::sh, flt_vec::rc, flt32, flt32, flt32, flt32,
+                              flt32, flt32);
 dcl_struct_end
 
 //------------------------------------------------------------------------------
@@ -55,10 +63,11 @@ dcl_struct (Set) SHARED   // one dataset
 
   Set(Meta::sh, Image::sh);
 
-  _mth (tth_t,   midTth, ())
-  _mth (c::deg,  omg, ())
-  _mth (c::deg,  phi, ())
-  _mth (c::deg,  chi, ())
+  _val_inl(tth_t::rc, tth, (), meta->tth)
+  _val_inl(tth_t::rc, omg, (), meta->omg)
+  _val_inl(tth_t::rc, phi, (), meta->phi)
+  _val_inl(tth_t::rc, chi, (), meta->chi)
+
   _mth (gma_rge, rgeGma,     (Session const&))
   _mth (gma_rge, rgeGmaFull, (Session const&))
   _mth (tth_rge, rgeTth,     (Session const&))

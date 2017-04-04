@@ -38,8 +38,11 @@ uint Meta::Dict::at(c::strc key) const may_err {
   }
 }
 
-Meta::Meta(Dict::sh dict_, flt_vec::rc vals_, flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_)
-: dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_) {}
+Meta::Meta(Dict::sh dict_, flt_vec::rc vals_,
+           flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_,
+           flt32 tim_, flt32 mon_)
+: dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
+, tim(tim_), mon(mon_) {}
 
 TEST("dict",
   Meta::Dict dict;
@@ -59,22 +62,6 @@ TEST("dict",
 
 Set::Set(Meta::sh meta_, Image::sh image_)
 : idx(0), meta(meta_), image(image_) {}
-
-tth_t Set::midTth() const {
-  return tth_t(real(meta->tth));
-}
-
-c::deg Set::omg() const {
-  return c::deg(real(meta->omg));
-}
-
-c::deg Set::phi() const {
-  return c::deg(real(meta->tth));
-}
-
-c::deg Set::chi() const {
-  return c::deg(real(meta->tth));
-}
 
 gma_rge Set::rgeGma(Session::rc s) const {
   return s.angleMap(*this)->rgeGma;
@@ -186,7 +173,7 @@ TEST("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0)),
+  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0)),
                               c::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);

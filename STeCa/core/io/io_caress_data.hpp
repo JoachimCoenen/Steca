@@ -30,13 +30,15 @@ bool openFile(c::strc);
 void closeFile();
 
 enum dtype {
-  NONE, INT16, INT32, FLT32, STR
+  NONE, INT16, INT32, FLT32, CHR
 };
 
-c::mem getData(dtype, uint n, sz_t);
+c::mem getData(dtype, uint n);
 c::str getString(uint n);
 c::str getAsString(dtype, uint n);
 float  getAsFloat(dtype, uint n);
+
+c::mem getData(dtype, uint n);
 
 bool nextDataUnit(c::str& elem, c::str& node, dtype&, uint& n);
 
