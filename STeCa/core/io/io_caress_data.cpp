@@ -20,8 +20,6 @@
 #include <c2/cpp/exc.hpp>
 #include <c2/inc/c_cpp>
 #undef CHECK
-#undef int64
-#undef uint64
 #include "Caress/raw.h"
 
 namespace core { namespace io {
@@ -159,11 +157,11 @@ float getAsFloat(dtype dt, uint n) {
 
   switch (dt) {
   case INT16:
-    return *static_cast<int16 const*>(m.p);
+    return float(*static_cast<int16 const*>(m.p));
   case INT32:
-    return *static_cast<int32 const*>(m.p);
+    return float(*static_cast<int32 const*>(m.p));
   case FLT32:
-    return *static_cast<flt32 const*>(m.p);
+    return float(*static_cast<flt32 const*>(m.p));
   default:
     EXPECT (false)
     return 0;

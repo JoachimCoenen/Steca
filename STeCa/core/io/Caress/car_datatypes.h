@@ -26,8 +26,13 @@ typedef signed short int16;
 typedef unsigned short uint16;
 typedef signed int int32;
 typedef unsigned int uint32;
-typedef signed long int64;
-typedef unsigned long uint64;
+#ifdef _WIN64
+typedef unsigned __int64 uint64;
+typedef   signed __int64  int64;
+#else
+typedef unsigned long  uint64;
+typedef   signed long   int64;
+#endif
 #endif
 
 /* x86: 32 bit, little endian */

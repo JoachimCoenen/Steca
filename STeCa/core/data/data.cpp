@@ -54,9 +54,14 @@ TEST("dict",
   CHECK_EQ(2, dict.add("2"));
 
   CHECK_EQ(3, dict.size());
+)
 
+#ifndef OS_WIN  // CDB has some trouble with this
+TEST("dict-throw",
+  Meta::Dict dict;
   CHECK_THROWS_AS(dict.at(""), c::exc::rc);
 )
+#endif
 
 //------------------------------------------------------------------------------
 

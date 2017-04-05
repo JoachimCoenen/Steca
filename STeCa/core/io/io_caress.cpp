@@ -194,7 +194,7 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
 
         count_arr2 cs(c::sz2(side, side));
         for_i (size)
-          cs.setAt(i, adet.at(i));
+          cs.setAt(i, inten_t(adet.at(i)));
 
         image.reset(new Image(cs));
       } else {
