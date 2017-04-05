@@ -20,7 +20,7 @@
 #include <c2/inc/c_cpp>
 #include <functional>
 #include <cmath>
-
+#include <libgen.h> // TODO move basename etc. to its own struct
 /*
  * This is our best attempt at wrapping nicely the "raw" Caress data handling
  * routines. jb.
@@ -36,9 +36,9 @@ using data::Meta;
 
 using data::flt_vec;
 
-static File::sh loadOpenCaressFile(Files& files) may_err {
+static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
 
-  File::sh file(new File(files));
+  File::sh file(new File(name, files));
 
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
@@ -75,83 +75,79 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
-  int  tthIdx = -1, omgIdx = -1, chiIdx = -1, phiIdx = -1;
-  int  timIdx = -1, monIdx = -1;
+  flt32 tth = c::flt_nan, omg = c::flt_nan, chi = c::flt_nan, phi = c::flt_nan,
+        tim = c::flt_nan, mon = c::flt_nan;
+
   c::scoped<Image> image;
 
-  auto doAxis = [&](flt_vec& vs, pcstr ns, std::function<void()> check, int& idx) -> bool {
+  auto doAxis = [&](pcstr ns, std::function<void()> check, flt32& val) -> bool {
     if (!node.eqi(ns))
       return false;
     check();
-    uint i = addVal(vs);
-    if (idx < 0)
-      idx = i;
-    else
-      EXPECT (i == uint(idx))
+    val = getAsFloat(dt, n);
     return true;
   };
 
-  auto doAxes = [&](flt_vec& vs) -> bool {
+  auto doAxes = [&]() -> bool {
     return
-      doAxis(vs, "TTHS", checkTable, tthIdx) ||
-      doAxis(vs, "OMGS", checkTable, omgIdx) ||
-      doAxis(vs, "CHIS", checkTable, chiIdx) ||
-      doAxis(vs, "PHIS", checkTable, phiIdx) ||
-      doAxis(vs, "TTHR", checkRobot, tthIdx) ||
-      doAxis(vs, "OMGR", checkRobot, omgIdx) ||
-      doAxis(vs, "CHIR", checkRobot, chiIdx) ||
-      doAxis(vs, "PHIR", checkRobot, phiIdx);
+      doAxis("TTHS", checkTable, tth) ||
+      doAxis("OMGS", checkTable, omg) ||
+      doAxis("CHIS", checkTable, chi) ||
+      doAxis("PHIS", checkTable, phi) ||
+      doAxis("TTHR", checkRobot, tth) ||
+      doAxis("OMGR", checkRobot, omg) ||
+      doAxis("CHIR", checkRobot, chi) ||
+      doAxis("PHIR", checkRobot, phi);
   };
 
-  auto doVal = [&](flt_vec& vs, pcstr ns, int& idx) -> bool {
+  auto doVal = [&](pcstr ns, flt32& val) -> bool {
     if (!node.eqi(ns))
       return false;
-    uint i = addVal(vs);
-    if (idx < 0)
-      idx = i;
-    else
-      EXPECT (i == uint(idx))
+    val = getAsFloat(dt, n);
     return true;
   };
 
-  auto doTimMon = [&](flt_vec& vs) -> bool {
+  auto doTimMon = [&]() -> bool {
     return
-      doVal(vs, "TIM1", timIdx) ||
-      doVal(vs, "MON",  monIdx);
+      doVal("TIM1", tim) ||
+      doVal("MON",  mon);
+    // TODO (Michael): until (including) Feb 2015, tim /= 100
   };
 
   auto beginDataset = [&]() {
     vals = readVals;
   };
 
+  flt32 lastTim = c::flt_nan, lastMon = c::flt_nan;
+
   auto endDataset = [&]() {
     if (vals.isEmpty())
       return;
 
     // angles
-    check_or_err (tthIdx >= 0, "missing TTH");
+    check_or_err (!c::isnan(tth), "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
     auto valAt = [&](int idx) {
       return idx >= 0 ? vals.at(idx) : 0;
     };
 
-    flt32 tth = vals.at(tthIdx),
-          omg = valAt(omgIdx), chi = valAt(chiIdx), phi = valAt(phiIdx),
-          tim = valAt(timIdx), mon = valAt(monIdx);
-    // TODO (Michael): until (including) Feb 2015, tim /= 100
-
     if (robot)
       chi = 180 - chi; // TODO ask Michael
 
     check_or_err (image.ptr(), "do not have an image");
 
+    check_or_err (c::isnan(lastTim) || lastTim <= tim, "decreasing tim");
+    check_or_err (c::isnan(lastMon) || lastMon <= mon, "decreasing mon");
+
+    flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
       c::share(new Set(
-        c::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon)),
+        c::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
         c::share(image.take().ptr()))));
 
     vals.clear();
+    lastTim = tim; lastMon = mon;
   };
 
   int imageSide = -1;
@@ -163,7 +159,7 @@ static File::sh loadOpenCaressFile(Files& files) may_err {
       check_or_err (block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
       check_or_err (!node.isEmpty(), "empty READ node");
-      if (!doAxes(readVals) && !doTimMon(readVals))
+      if (!doAxes() && !doTimMon())
         addVal(readVals);
 
     } else if (elem.eqi("SETVALUE")) {
@@ -223,7 +219,8 @@ File::sh loadCaress(Files& files, c::strc filePath) may_err {
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(files);
+    c::str path(filePath);  // make a copy, basename may change it
+    return loadOpenCaressFile(basename(mut(path.p)), files);
   } catch (c::exc& e) {
     mut(e.msg).set(c::str::cat(filePath, e.msg));
     throw;

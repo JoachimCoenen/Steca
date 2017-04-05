@@ -39,8 +39,8 @@ namespace core_qt {
 struct JsonArr;
 
 dcl_struct_reimpl (JsonObj, QJsonObject)
-  using pint  = c::pint;
-  using preal = c::preal;
+  using pint = c::pint;
+  using peal = c::peal;
 
   JsonObj();
   JsonObj(QJsonObject const&);
@@ -68,9 +68,9 @@ dcl_struct_reimpl (JsonObj, QJsonObject)
   real     loadReal(qstrc key)              const may_err;
   real     loadReal(qstrc key, real def)    const may_err;
 
-  JsonObj& savePreal(qstrc key, preal);
-  preal    loadPreal(qstrc key)             const may_err;
-  preal    loadPreal(qstrc key, preal def)  const may_err;
+  JsonObj& savePeal(qstrc key, peal);
+  peal     loadPeal(qstrc key)             const may_err;
+  peal     loadPeal(qstrc key, peal def)   const may_err;
 
   JsonObj& saveBool(qstrc key, bool);
   bool     loadBool(qstrc key)              const may_err;
@@ -87,8 +87,8 @@ dcl_struct_reimpl (JsonObj, QJsonObject)
   JsonObj& saveXY(qstrc key, c::xy::rc);
   c::xy    loadXY(qstrc key)                const may_err;
 
-  JsonObj&    saveRange(qstrc key, core::Range::rc);
-  core::Range loadRange(qstrc key)          const may_err;
+  JsonObj&     saveRange(qstrc key, core::Range::rc);
+  core::Range  loadRange(qstrc key)         const may_err;
 
   JsonObj&     saveRanges(qstrc key, core::Ranges::rc);
   core::Ranges loadRanges(qstrc key)        const may_err;

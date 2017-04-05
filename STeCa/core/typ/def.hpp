@@ -17,6 +17,10 @@ using real_vec = c::vec<real>;
 using uint_vec = c::vec<uint>;
 
 using tth_t = c::deg;
+using omg_t = c::deg;
+using phi_t = c::deg;
+using chi_t = c::deg;
+
 using gma_t = c::deg;
 
 struct Range;

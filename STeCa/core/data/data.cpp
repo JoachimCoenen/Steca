@@ -38,11 +38,17 @@ uint Meta::Dict::at(c::strc key) const may_err {
   }
 }
 
-Meta::Meta(Dict::sh dict_, flt_vec::rc vals_,
-           flt32 tth_, flt32 omg_, flt32 chi_, flt32 phi_,
-           flt32 tim_, flt32 mon_)
-: dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
-, tim(tim_), mon(mon_) {}
+Meta::Meta(Dict::shc dict_)
+: dict(dict_), vals(dict->size(), 0), tth(0), omg(0), chi(0), phi(0)
+, tim(0), mon(0) , dTim(0), dMon(0) {}
+
+Meta::Meta(Dict::shc dict_, flt_vec::rc vals_,
+           flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
+           flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
+  : dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
+  , tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_) {
+  EXPECT (dict->size() == vals.size())
+}
 
 TEST("dict",
   Meta::Dict dict;
@@ -121,9 +127,148 @@ void Set::collect(Session::rc s, Image const* corrImage,
     counts.refAt(ti) += 1;
   }
 }
+
 //------------------------------------------------------------------------------
 
-File::File(Files::rc files_) : files(files_), idx(0), strs(), sets() {}
+CombinedSet::CombinedSet() : sets()
+, lazyOmg(c::flt_nan), lazyPhi(c::flt_nan), lazyChi(c::flt_nan)
+, lazyTim(c::flt_nan), lazyMon(c::flt_nan), lazyDTim(c::flt_nan), lazyDMon(c::flt_nan) {}
+
+Meta::sh CombinedSet::meta() const {
+  if (lazyMeta.ptr())
+    return lazyMeta;
+
+  // max tim, mon
+  // sum dTim, dMon
+  // avg all else
+
+  uint n = sets.size();
+  EXPECT (0 < n)
+
+  mut(lazyMeta).reset(new Meta(sets.first()->meta->dict));
+
+  Meta::ref d = mut(*lazyMeta);
+  for_i (n) {
+    Meta::rc s = *(sets.at(i)->meta);
+
+    EXPECT (d.vals.size() == s.vals.size())
+    for_i (d.vals.size())
+      mut(d.vals).setAt(i, d.vals.at(i) + s.vals.at(i));
+
+    mut(d.tth) = d.tth + s.tth;
+    mut(d.omg) = d.omg + s.omg;
+    mut(d.chi) = d.chi + s.chi;
+    mut(d.phi) = d.phi + s.phi;
+
+    mut(d.tim) = c::max(d.tim, s.tim);
+    mut(d.mon) = c::max(d.mon, s.mon);
+
+    mut(d.dTim) += c::notnan(s.dTim, 0.f); // TODO consider _use_num !nan etc.
+    mut(d.dMon) += c::notnan(s.dMon, 0.f);
+  }
+
+  real fac = 1.0 / n;
+
+  for_i (d.vals.size())
+    mut(d.vals).setAt(i, d.vals.at(i) * fac);
+
+  mut(d.tth) = d.tth * fac;
+  mut(d.omg) = d.omg * fac;
+  mut(d.chi) = d.chi * fac;
+  mut(d.phi) = d.phi * fac;
+
+  return lazyMeta;
+}
+
+Image::sh CombinedSet::image() const {
+  if (lazyImage.ptr())
+    return lazyImage;
+
+  uint n = sets.size();
+  EXPECT (0 < n)
+
+  mut(lazyImage).reset(new Image(sets.first()->image->size()));
+
+  Image::ref d = mut(*lazyImage);
+  for_i (n)
+    d.addIntens(*(sets.at(i)->image));
+
+  return lazyImage;
+}
+
+#define AVG_SETS_VAL(lazyVal, fun)  \
+  if (c::isnan(lazyVal)) {          \
+    EXPECT (!sets.isEmpty())        \
+    for (auto& set: sets)           \
+      mut(lazyVal) += set->fun();   \
+    mut(lazyVal) /= sets.size();    \
+  }
+
+#define SUM_SETS_VAL(lazyVal, fun)  \
+  if (c::isnan(lazyVal)) {          \
+    EXPECT (!sets.isEmpty())        \
+    for (auto& set: sets)           \
+      mut(lazyVal) += set->fun();   \
+  }
+
+#define RGE_SETS_COMBINE(op, fun)   \
+  EXPECT (!sets.isEmpty())          \
+  Range rge;                        \
+  for (auto& set : sets)            \
+    rge.op(set->fun);               \
+  return rge;
+
+omg_t::rc CombinedSet::omg() const {
+  AVG_SETS_VAL(lazyOmg.val, omg)
+  return lazyOmg;
+}
+
+phi_t::rc CombinedSet::phi() const {
+  AVG_SETS_VAL(lazyPhi.val, phi)
+  return lazyPhi;
+}
+
+chi_t::rc CombinedSet::chi() const {
+  AVG_SETS_VAL(lazyChi.val, chi)
+  return lazyChi;
+}
+
+flt32 CombinedSet::tim() const {
+  AVG_SETS_VAL(lazyTim, tim)
+  return lazyTim;
+}
+
+flt32 CombinedSet::mon() const {
+  AVG_SETS_VAL(lazyMon, mon)
+  return lazyMon;
+}
+
+flt32 CombinedSet::dTim() const {
+  SUM_SETS_VAL(lazyDTim, dTim)
+  return lazyDTim;
+}
+
+flt32 CombinedSet::dMon() const {
+  SUM_SETS_VAL(lazyDMon, dMon)
+  return lazyDMon;
+}
+
+gma_rge CombinedSet::rgeGma(Session const& s) const {
+  RGE_SETS_COMBINE(extendBy, rgeGma(s))
+}
+
+gma_rge CombinedSet::rgeGmaFull(Session const& s) const {
+  RGE_SETS_COMBINE(extendBy, rgeGmaFull(s))
+}
+
+tth_rge CombinedSet::rgeTth(Session const& s) const {
+  RGE_SETS_COMBINE(extendBy, rgeTth(s))
+}
+
+//------------------------------------------------------------------------------
+
+File::File(c::strc name_, Files::rc files_)
+: name(name_), files(files_), idx(0), strs(), sets() {}
 
 void File::addSet(Set::sh set) {
   mut(sets).add(set);
@@ -162,14 +307,14 @@ void Files::remFile(uint i) {
 
 TEST("data::sh",
   Files fs;
-  File::sh f1(new File(fs)), f2(new File(fs));
+  File::sh f1(new File("", fs)), f2(new File("", fs));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST("data",
   Files fs;
 
-  File *f1 = new File(fs), *f2 = new File(fs);
+  File *f1 = new File("", fs), *f2 = new File("", fs);
   CHECK_EQ(0, f1->idx);
   CHECK_EQ(0, f2->idx);
 
@@ -178,7 +323,7 @@ TEST("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0)),
+  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0, 0, 0)),
                               c::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);

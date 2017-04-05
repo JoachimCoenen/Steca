@@ -69,7 +69,7 @@ _private
 
   // scaling
   bool  intenScaledAvg_;  // if not, summed
-  preal intenScale_;
+  peal intenScale_;
 
 public:
   bool hasCorrFile() const {
@@ -140,7 +140,7 @@ _private
 
 public:
   typ::Geometry::rc geometry() const { return geometry_; }
-  void setGeometry(preal detectorDistance, preal pixSize, typ::IJ::rc midPixOffset);
+  void setGeometry(peal detectorDistance, peal pixSize, typ::IJ::rc midPixOffset);
   typ::IJ midPix() const;
 
   typ::Range::rc gammaRange() const;
@@ -175,7 +175,7 @@ public:
   typ::Ranges::rc       bgRanges()       const { return bgRanges_;       }
   uint                  bgPolyDegree()   const { return bgPolyDegree_;   }
   bool                  intenScaledAvg() const { return intenScaledAvg_; }
-  preal                 intenScale()     const { return intenScale_;     }
+  peal                 intenScale()     const { return intenScale_;     }
   calc::Reflections::rc reflections()    const { return reflections_;    }
 
   void setBgRanges(typ::Ranges::rc);
@@ -183,7 +183,7 @@ public:
   bool remBgRange(typ::Range::rc);
 
   void setBgPolyDegree(uint);
-  void setIntenScaleAvg(bool,preal);
+  void setIntenScaleAvg(bool,peal);
 
   void addReflection(calc::shp_Reflection);
   void remReflection(uint);

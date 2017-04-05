@@ -248,8 +248,8 @@ QByteArray TheHub::saveSession() const {
 
   auto& geo = session_->geometry();
   top.saveObj(config_key::DETECTOR, JsonObj()
-      .savePreal(config_key::DET_DISTANCE, geo.detectorDistance)
-      .savePreal(config_key::DET_PIX_SIZE, geo.pixSize)
+      .savePeal(config_key::DET_DISTANCE, geo.detectorDistance)
+      .savePeal(config_key::DET_PIX_SIZE, geo.pixSize)
       .saveObj(config_key::BEAM_OFFSET, geo.midPixOffset.saveJson()));
 
   auto& cut = session_->imageCut();
@@ -288,7 +288,7 @@ QByteArray TheHub::saveSession() const {
   top.saveUint(config_key::BG_DEGREE, bgPolyDegree());
   top.saveArr(config_key::BG_RANGES, bgRanges().saveJson());
   top.saveBool(config_key::INTEN_SCALED_AVG, intenScaledAvg());
-  top.savePreal(config_key::INTEN_SCALE, intenScale());
+  top.savePeal(config_key::INTEN_SCALE, intenScale());
 
   JsonArr arrReflections;
   for (auto& reflection : reflections())
@@ -352,7 +352,7 @@ void TheHub::loadSession(QByteArray const& json) THROWS {
   setCorrFile(top.loadString(config_key::CORR_FILE, EMPTY_STR));
 
   auto det = top.loadObj(config_key::DETECTOR);
-  setGeometry(det.loadPreal(config_key::DET_DISTANCE), det.loadPreal(config_key::DET_PIX_SIZE),
+  setGeometry(det.loadPeal(config_key::DET_DISTANCE), det.loadPeal(config_key::DET_PIX_SIZE),
               det.loadIJ(config_key::BEAM_OFFSET));
 
   auto cut = top.loadObj(config_key::CUT);
@@ -369,7 +369,7 @@ void TheHub::loadSession(QByteArray const& json) THROWS {
   setBgPolyDegree(top.loadUint(config_key::BG_DEGREE));
 
   setIntenScaleAvg(top.loadBool(config_key::INTEN_SCALED_AVG, true),
-                   top.loadPreal(config_key::INTEN_SCALE, preal(1)));
+                   top.loadPeal(config_key::INTEN_SCALE, peal(1)));
 
   auto reflectionsObj = top.loadArr(config_key::REFLECTIONS);
   for_i (reflectionsObj.count()) {
@@ -447,7 +447,7 @@ const typ::Geometry& TheHub::geometry() const {
   return session_->geometry();
 }
 
-void TheHub::setGeometry(preal detectorDistance, preal pixSize, typ::IJ::rc midPixOffset) {
+void TheHub::setGeometry(peal detectorDistance, peal pixSize, typ::IJ::rc midPixOffset) {
   level_guard __(sigLevel_);
   if (sigLevel_ > 1)
     return;
@@ -485,7 +485,7 @@ void TheHub::setBgPolyDegree(uint degree) {
   emit sigBgChanged();
 }
 
-void TheHub::setIntenScaleAvg(bool avg, preal scale) {
+void TheHub::setIntenScaleAvg(bool avg, peal scale) {
   session_->setIntenScaleAvg(avg, scale);
   emit sigNormChanged(); // TODO instead of another signal
 }

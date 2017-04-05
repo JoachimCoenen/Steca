@@ -185,7 +185,7 @@ public:
   void setImageCut(bool topLeft, bool linked, typ::ImageCut::rc);
 
   typ::Geometry::rc geometry() const;
-  void setGeometry(preal detectorDistance, preal pixSize, typ::IJ::rc midPixOffset);
+  void setGeometry(peal detectorDistance, peal pixSize, typ::IJ::rc midPixOffset);
 
   typ::Range::rc gammaRange() const;
   void setGammaRange(typ::Range::rc);
@@ -198,7 +198,7 @@ public:
   static uint constexpr MAX_POLYNOM_DEGREE = 4;
   void setBgPolyDegree(uint);
 
-  void setIntenScaleAvg(bool, preal);
+  void setIntenScaleAvg(bool, peal);
 
   void setReflType(fit::ePeakType);
 
@@ -230,7 +230,7 @@ public:
   uint            bgPolyDegree()      const { return session_->bgPolyDegree(); }
 
   bool            intenScaledAvg()    const { return session_->intenScaledAvg();  }
-  preal           intenScale()        const { return session_->intenScale();   }
+  peal           intenScale()        const { return session_->intenScale();   }
 
   calc::Reflections::rc reflections() const { return session_->reflections();  }
 };

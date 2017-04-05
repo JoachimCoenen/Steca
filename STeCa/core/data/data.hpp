@@ -39,38 +39,88 @@ dcl_struct (Meta) SHARED // metadata
     _mth_err (uint, at,  (c::strc))
   };
 
-  _atr (Dict::sh, dict)
+  _atr (Dict::sh, dict) // other than the values stored explicitly below
   _atr (flt_vec,  vals)
 
-  _atr (tth_t,  tth)    // mid tth
-  _atr (c::deg, omg)
-  _atr (c::deg, chi)
-  _atr (c::deg, phi)
+  _atr (tth_t,  tth)    // *mid* tth
+  _atr (omg_t,  omg)
+  _atr (chi_t,  chi)
+  _atr (phi_t,  phi)
 
   _atr (flt32,  tim)    // time
   _atr (flt32,  mon)    // monitor count
+  _atr (flt32, dTim)    // delta time, may be nan
+  _atr (flt32, dMon)    // delta mon. count, may be nan
 
-  Meta(Dict::sh, flt_vec::rc, flt32, flt32, flt32, flt32,
-                              flt32, flt32);
+  Meta(Dict::shc);
+  Meta(Dict::shc, flt_vec::rc, flt32, flt32, flt32, flt32,
+                               flt32, flt32, flt32, flt32);
 dcl_struct_end
 
 //------------------------------------------------------------------------------
 
-dcl_struct (Set) SHARED   // one dataset
+dcl_struct (Set) SHARED   // one dataset, as acquired
   _atr (uint,      idx)   // this order in File, 1..; 0 = not in File
   _atr (Meta::sh,  meta)
   _atr (Image::sh, image)
 
   Set(Meta::sh, Image::sh);
 
-  _val(tth_t::rc, tth, (), meta->tth)
-  _val(tth_t::rc, omg, (), meta->omg)
-  _val(tth_t::rc, phi, (), meta->phi)
-  _val(tth_t::rc, chi, (), meta->chi)
+  _val (tth_t::rc, tth, (), meta->tth)
+  _val (omg_t::rc, omg, (), meta->omg)
+  _val (phi_t::rc, phi, (), meta->phi)
+  _val (chi_t::rc, chi, (), meta->chi)
 
-  _mth (gma_rge, rgeGma,     (Session const&))
-  _mth (gma_rge, rgeGmaFull, (Session const&))
-  _mth (tth_rge, rgeTth,     (Session const&))
+  _val (flt32,     tim, (), meta->tim)
+  _val (flt32,     mon, (), meta->mon)
+  _val (flt32,    dTim, (), meta->dTim)
+  _val (flt32,    dMon, (), meta->dMon)
+
+  _mth (gma_rge,   rgeGma,     (Session const&))
+  _mth (gma_rge,   rgeGmaFull, (Session const&))
+  _mth (tth_rge,   rgeTth,     (Session const&))
+
+  _voi (collect, (Session const&, Image const* corr,
+                  core::inten_vec&, core::uint_vec&, gma_rge::rc,
+                  tth_t minTth, tth_t deltaTth))
+dcl_struct_end
+
+//------------------------------------------------------------------------------
+
+dcl_struct (CombinedSet) SHARED   // one or more Set
+  _atr (c::vec<Set::sh>, sets)
+
+  CombinedSet();
+
+  _mth (Meta::sh,  meta,  ())
+  _mth (Image::sh, image, ())
+
+  // no tth
+  _mth (omg_t::rc, omg, ())
+  _mth (phi_t::rc, phi, ())
+  _mth (chi_t::rc, chi, ())
+
+  _mth (flt32,     tim, ())
+  _mth (flt32,     mon, ())
+  _mth (flt32,    dTim, ())
+  _mth (flt32,    dMon, ())
+
+  _mth (gma_rge,   rgeGma,     (Session const&))
+  _mth (gma_rge,   rgeGmaFull, (Session const&))
+  _mth (tth_rge,   rgeTth,     (Session const&))
+
+_private
+  _mut (Meta::sh,  lazyMeta)
+  _mut (Image::sh, lazyImage)
+
+  _mut (omg_t,     lazyOmg)
+  _mut (phi_t,     lazyPhi)
+  _mut (chi_t,     lazyChi)
+
+  _mut (flt32,     lazyTim)
+  _mut (flt32,     lazyMon)
+  _mut (flt32,     lazyDTim)
+  _mut (flt32,     lazyDMon)
 
   _voi (collect, (Session const&, Image const* corr,
                   core::inten_vec&, core::uint_vec&, gma_rge::rc,
@@ -82,12 +132,12 @@ dcl_struct_end
 struct Files;
 
 dcl_struct (File) SHARED  // one file
-  _ref (Files, files)
-  _atr (uint, idx)        // this order in Files, 1..; 0 = not in Files
+  _atr (c::str, name)
+  _ref (Files, files) _atr (uint, idx) // this order in Files, 1..; 0 = not in Files
   _atr (c::vec<std::pair<c::str COMMA c::str>>, strs)
   _atr (c::vec<Set::sh>, sets)
 
-  File(Files const&);
+  File(c::strc name, Files const&);
 
   _voi_mut (addSet, (Set::sh))
 dcl_struct_end

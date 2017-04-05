@@ -387,12 +387,12 @@ Diffractogram::Diffractogram(TheHub& hub)
   connect(intenAvg_, &QRadioButton::toggled, [this](bool on) {
     intenScale_->setEnabled(on);
     intenScale_->setValue(hub_.intenScale());
-    hub_.setIntenScaleAvg(on, preal(intenScale_->value()));
+    hub_.setIntenScaleAvg(on, peal(intenScale_->value()));
   });
 
   connect(intenScale_, slot(QDoubleSpinBox,valueChanged,double), [this](double val) {
     if (val>0)
-      hub_.setIntenScaleAvg(hub_.intenScaledAvg(), preal(val));
+      hub_.setIntenScaleAvg(hub_.intenScaledAvg(), peal(val));
   });
 
   hb->addStretch();

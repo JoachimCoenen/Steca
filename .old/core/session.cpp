@@ -49,7 +49,7 @@ void Session::clear() {
   angleMapCache_.clear();
 
   intenScaledAvg_ = true;
-  intenScale_ = preal(1);
+  intenScale_ = peal(1);
 }
 
 shp_File Session::file(uint i) const {
@@ -247,7 +247,7 @@ void Session::setImageCut(bool topLeftFirst, bool linked, ImageCut::rc cut) {
   intensCorr_.clear();  // lazy
 }
 
-void Session::setGeometry(preal detectorDistance, preal pixSize, IJ::rc midPixOffset) {
+void Session::setGeometry(peal detectorDistance, peal pixSize, IJ::rc midPixOffset) {
 
   geometry_.detectorDistance = detectorDistance;
   geometry_.pixSize          = pixSize;
@@ -427,7 +427,7 @@ void Session::setBgPolyDegree(uint degree) {
   bgPolyDegree_ = degree;
 }
 
-void Session::setIntenScaleAvg(bool avg, preal scale) {
+void Session::setIntenScaleAvg(bool avg, peal scale) {
   intenScaledAvg_ = avg; intenScale_ = scale;
 }
 

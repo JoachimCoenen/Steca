@@ -20,7 +20,6 @@
 #include <c2/c/num.h>
 #include <c2/inc/c_cpp>
 #include <QStringList>
-#undef NAN
 
 namespace core_qt {
 //------------------------------------------------------------------------------
@@ -305,7 +304,7 @@ static qstrc INF_P("+inf"), INF_M("-inf");
 
 JsonObj& JsonObj::saveReal(qstrc key, real num) {
   if (c::isnan(num)) {
-    // do save nothing for NANs
+    // do save nothing for nans
   } else if (c::isinf(num)) {
     insert(key, qstr(num < 0 ? INF_M : INF_P));
   } else {
@@ -320,13 +319,13 @@ real JsonObj::loadReal(qstrc key) const may_err {
 
   switch (val.type()) {
   case QJsonValue::Undefined:
-    return c::NAN;            // not present means a NAN
+    return c::flt_nan;          // not present means nan
   case QJsonValue::String: {  // infinities stored as strings
     auto s = val.toString();
     if (INF_P == s)
-      return +c::INF;
+      return +c::flt_inf;
     if (INF_M == s)
-      return -c::INF;
+      return -c::flt_inf;
     KEY_ERR("bad number format")
   }
   default:
@@ -338,19 +337,19 @@ real JsonObj::loadReal(qstrc key, real def) const may_err {
   RET_LOAD_DEF(Real)
 }
 
-JsonObj& JsonObj::savePreal(qstrc key, preal num) {
+JsonObj& JsonObj::savePeal(qstrc key, peal num) {
   return saveReal(key, num);
 }
 
-c::preal JsonObj::loadPreal(qstrc key) const {
+c::peal JsonObj::loadPeal(qstrc key) const {
   real num = loadReal(key);
   if (num <= 0)
     KEY_ERR("expecting a positive real")
-  return preal(num);
+  return peal(num);
 }
 
-c::preal JsonObj::loadPreal(qstrc key, preal def) const {
-  RET_LOAD_DEF(Preal)
+c::peal JsonObj::loadPeal(qstrc key, peal def) const {
+  RET_LOAD_DEF(Peal)
 }
 
 JsonObj& JsonObj::saveBool(qstrc key, bool b) {

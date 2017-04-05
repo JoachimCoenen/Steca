@@ -430,8 +430,8 @@ TabsSetup::TabsSetup(TheHub& hub) : super(hub) {
 
 void TabsSetup::setToHub() {
   hub_.setGeometry(
-    preal(qMax(qreal(typ::Geometry::MIN_DETECTOR_DISTANCE),   detDistance_->value())),
-    preal(qMax(qreal(typ::Geometry::MIN_DETECTOR_PIXEL_SIZE), detPixelSize_->value())),
+    peal(qMax(qreal(typ::Geometry::MIN_DETECTOR_DISTANCE),   detDistance_->value())),
+    peal(qMax(qreal(typ::Geometry::MIN_DETECTOR_PIXEL_SIZE), detPixelSize_->value())),
     typ::IJ(beamOffsetI_->value(), beamOffsetJ_->value())
   );
 }

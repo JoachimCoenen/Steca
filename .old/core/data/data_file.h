@@ -39,7 +39,7 @@ Q_DECLARE_METATYPE(data::shp_File)
 #include <QFileInfo>
 
 namespace data {
-
+^
 class Datasets;
 //------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ public:
   OneDatasets&     datasets()       { return datasets_; }
   OneDatasets::rc  datasets() const { return datasets_; }
 
-_private
+private:
   QFileInfo   fileInfo_;
   OneDatasets datasets_;
 };
