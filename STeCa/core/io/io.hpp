@@ -19,11 +19,12 @@
 #define CORE_IO_HPP
 
 #include <core/data/data.hpp>
+#include <c2/c/path.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-data::File::sh loadCaress(data::Files&, c::strc filePath) may_err;
+data::File::sh loadCaress(data::Files&, c::path filePath) may_err;
 
 //------------------------------------------------------------------------------
 }}

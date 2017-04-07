@@ -24,6 +24,8 @@ namespace core {
 
 Session::Session()
 : normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
+, angleMapKey0(), imageCut(), imageSize()
+, avgScaleIntens(), intenScale(1)
 , angleMapCache(c::pint(12))
 {}
 

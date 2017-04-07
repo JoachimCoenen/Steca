@@ -31,7 +31,7 @@ count_arr2::count_arr2(rc that) : cs(that.size()) {
 
 void count_arr2::addAt(uint i, uint j, inten_t c) {
   auto sum = (cs.refAt(i, j) += c);
-  mut(rgeCount).extendBy(real(sum));
+  mut(rgeCount).extendBy(sum);
 }
 
 //------------------------------------------------------------------------------

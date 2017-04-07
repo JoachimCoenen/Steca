@@ -21,17 +21,19 @@
 #include "def.hpp"
 
 dcl_struct (core_Range)
-  _atr (real, min)
-  _atr (real, max)
-  _con (core_Range, (real, real))
+  using rv_t = real;
+
+  _atr (rv_t, min)
+  _atr (rv_t, max)
+  _con (core_Range, (rv_t, rv_t))
 dcl_struct_end
 
 namespace core {
 
 dcl_struct_sub (Range, core_Range) COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
-  Range(real);                      // singular, min == max
-  Range(real, real);                // the usual
+  Range(rv_t);                      // singular, min == max
+  Range(rv_t, rv_t);                // the usual
 
   Range(rc);
 
@@ -40,20 +42,20 @@ dcl_struct_sub (Range, core_Range) COMPARABLE EQ_NE
   bool  isDef()   const;             // is not NaNs
   bool  isEmpty() const;             // not def'd or empty
 
-  real  width()   const;
-  real  center()  const;
+  rv_t  width()   const;
+  rv_t  center()  const;
 
-  static Range safeFrom(real, real); // safe factory
+  static Range safeFrom(rv_t, rv_t); // safe factory
 
-  void  extendBy(real);             // extend to include the number
+  void  extendBy(rv_t);             // extend to include the number
   void  extendBy(rc);               // extend to include the range
 
-  bool  contains(real)  const;
+  bool  contains(rv_t)  const;
   bool  contains(rc)    const;
   bool  intersects(rc)  const;
   Range intersect(rc)   const;
 
-  real  bound(real)     const;      // limit the number to the interval
+  rv_t  bound(rv_t)     const;      // limit the number to the interval
 
   ref   operator=(rc);
 dcl_struct_end

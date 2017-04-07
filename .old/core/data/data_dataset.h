@@ -1,7 +1,7 @@
 /*******************************************************************************
  * STeCa2 - StressTextureCalculator ver. 2
  *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
+ * Copyright (C) 2016-7 Forschungszentrum Jülich GmbH
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -130,7 +130,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-CombinedSet
+((CombinedSet))
 
 class OneDatasets : public typ::vec<shp_OneDataset> {
   CLASS(OneDatasets) SUPER(typ::vec<shp_OneDataset>)
@@ -176,7 +176,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-CombinedSets
+((CombinedSets))
 class Datasets final : public typ::vec<shp_Dataset> {
   CLASS(Datasets) SUPER(typ::vec<shp_Dataset>)
 public:

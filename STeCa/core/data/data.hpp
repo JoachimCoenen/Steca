@@ -80,6 +80,8 @@ dcl_struct (Set) SHARED   // one dataset, as acquired
   _mth (gma_rge,   rgeGmaFull, (Session const&))
   _mth (tth_rge,   rgeTth,     (Session const&))
 
+  _val (inten_rge, rgeInten, (), image->rgeInten())
+
   _voi (collect, (Session const&, Image const* corr,
                   core::inten_vec&, core::uint_vec&, gma_rge::rc,
                   tth_t minTth, tth_t deltaTth))
@@ -109,6 +111,8 @@ dcl_struct (CombinedSet) SHARED   // one or more Set
   _mth (gma_rge,   rgeGmaFull, (Session const&))
   _mth (tth_rge,   rgeTth,     (Session const&))
 
+  _mth (inten_rge, rgeInten, ())
+
 _private
   _mut (Meta::sh,  lazyMeta)
   _mut (Image::sh, lazyImage)
@@ -122,9 +126,15 @@ _private
   _mut (flt32,     lazyDTim)
   _mut (flt32,     lazyDMon)
 
-  _voi (collect, (Session const&, Image const* corr,
-                  core::inten_vec&, core::uint_vec&, gma_rge::rc,
-                  tth_t minTth, tth_t deltaTth))
+  _mth (inten_vec, collect, (Session const&, Image const* corr, gma_rge::rc))
+dcl_struct_end
+
+//------------------------------------------------------------------------------
+
+dcl_struct (CombinedSets) SHARED
+  _atr (c::vec<CombinedSet::sh>, sets)
+
+  CombinedSets();
 dcl_struct_end
 
 //------------------------------------------------------------------------------

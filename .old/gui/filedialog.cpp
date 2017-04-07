@@ -1,7 +1,7 @@
 /*******************************************************************************
  * STeCa2 - StressTextureCalculator ver. 2
  *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
+ * Copyright (C) 2016-7 Forschungszentrum Jülich GmbH
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free

@@ -23,7 +23,7 @@
 #include <c2/c/ptr.h>
 
 #include <c2/cpp/exc.hpp>
-#include <c2/gui_qt/def.hpp>
+#include <c2/gui_qt/qstr.hpp>
 
 #include <c2/c/ij.h>
 #include <c2/c/xy.h>

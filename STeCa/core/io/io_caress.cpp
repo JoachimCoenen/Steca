@@ -20,7 +20,6 @@
 #include <c2/inc/c_cpp>
 #include <functional>
 #include <cmath>
-#include <libgen.h> // TODO move basename etc. to its own struct
 /*
  * This is our best attempt at wrapping nicely the "raw" Caress data handling
  * routines. jb.
@@ -128,10 +127,6 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
     check_or_err (!c::isnan(tth), "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
-    auto valAt = [&](int idx) {
-      return idx >= 0 ? vals.at(idx) : 0;
-    };
-
     if (robot)
       chi = 180 - chi; // TODO ask Michael
 
@@ -213,14 +208,13 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
   return file;
 }
 
-File::sh loadCaress(Files& files, c::strc filePath) may_err {
+File::sh loadCaress(Files& files, c::path filePath) may_err {
   check_or_err (openFile(filePath), "Cannot open ", filePath);
 
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    c::str path(filePath);  // make a copy, basename may change it
-    return loadOpenCaressFile(basename(mut(path.p)), files);
+    return loadOpenCaressFile(filePath.basename(), files);
   } catch (c::exc& e) {
     mut(e.msg).set(c::str::cat(filePath, e.msg));
     throw;

@@ -32,10 +32,11 @@
 #include "compiler.h"
 #include "misc.h"
 
-#include "typ/typ_log.h"
+#include <c2/gui_qt/log.hpp>
 
 void msg_cannotSolve(uint n, uint m) {
-  MessageLogger::warn(str("levmar: cannot solve a problem with fewer measurements [%1] than unknowns [%2]\n").arg(n).arg(m));
+  c_qt::log::warn(
+    c::unsafe::str_frm("levmar: cannot solve a problem with fewer measurements (%u) than unknowns (%u)\n", n, m));
 }
 
 #define EPSILON       1E-12

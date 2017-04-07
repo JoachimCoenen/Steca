@@ -80,7 +80,7 @@ static dtype to_dtype(int32 t) {
 static c::mem getUnit(uint n, sz_t sz) {
   c::mem data(n * sz);
   if (n > 0)
-    check_or_err (0 == get_data_unit(mut(data.p)), "bad data unit");
+    check_or_err (0 == get_data_unit(mutp(data.p)), "bad data unit");
   return data;
 }
 
@@ -91,7 +91,7 @@ static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
   while (ni > 0) {
     c::mem buf(MAXNUMBEROFCHANNELS * sz);
     int32 n = c::min(ni, MAXNUMBEROFCHANNELS);
-    check_or_err (0 == get_data_partition(mut(buf.p), &section, &start, &n, &d_type), "bad data partition");
+    check_or_err (0 == get_data_partition(mutp(buf.p), &section, &start, &n, &d_type), "bad data partition");
     EXPECT (n == c::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
     c::unsafe::memmov(pstr(data.p)+c::to_u(start-1)*sz, buf.p, c::to_u(n));
     ni -= n; start += n;

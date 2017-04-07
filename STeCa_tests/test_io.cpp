@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include <c2/gui_qt/def.hpp>
+#include <c2/gui_qt/qstr.hpp>
 #include <core/io/io.hpp>
 #include <c2/inc/c_cpp>
 #include <QDir>

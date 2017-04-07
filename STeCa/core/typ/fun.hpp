@@ -21,7 +21,7 @@
 #include <c2/inc/c_def.h>
 #include <c2/c/num.h>
 #include <c2/cpp/vec.hpp>
-#include "fry.hpp"
+#include "factory.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ dcl_struct (Par)
   _atr (real, err)
 
   Par(real, real);
-  void set(real, real);
+  void set(real val, real err);
   void setVal(real);
 
   ref operator=(rc);
@@ -51,13 +51,13 @@ dcl_struct (Fun) SHARED
   // partial derivative / par, with given (parVals) or own pars
   virtual real dy(real x, sz_t parIdx, real const* parVals = nullptr) const = 0;
 
-  using fryFun = fry<Fun>;
+  using fryFun = factory<Fun>;
 
 _protected
-  static fryFun factory;
+  static fryFun funFry;
 
 public:
-  static void addMaker(c::strc key, c::give_me<fryFun::someMaker const>);
+  static void addMaker(c::strc key, c::give_me<fryFun::maker_base const>);
   static c::own<Fun> make(c::strc key)       may_err;
 dcl_struct_end
 

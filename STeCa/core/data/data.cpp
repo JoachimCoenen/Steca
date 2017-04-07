@@ -86,7 +86,7 @@ tth_rge Set::rgeTth(Session::rc s)const {
   return s.angleMap(*this)->rgeTth;
 }
 
-void Set::collect(Session::rc s, Image const* corrImage,
+void Set::collect(Session::rc s, Image const* corr,
                 core::inten_vec& intens, core::uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
   auto &map = *s.angleMap(*this);
@@ -110,11 +110,11 @@ void Set::collect(Session::rc s, Image const* corrImage,
     if (c::isnan(inten))
       continue;
 
-    inten_t corr = corrImage ? corrImage->inten(ind) : 1;
-    if (c::isnan(corr))
+    inten_t ci = corr ? corr->inten(ind) : 1;
+    if (c::isnan(ci))
       continue;
 
-    inten *= corr;
+    inten *= ci;
 
     tth_t tth  = map.at(ind).tth;
 
@@ -204,20 +204,6 @@ Image::sh CombinedSet::image() const {
     mut(lazyVal) /= sets.size();    \
   }
 
-#define SUM_SETS_VAL(lazyVal, fun)  \
-  if (c::isnan(lazyVal)) {          \
-    EXPECT (!sets.isEmpty())        \
-    for (auto& set: sets)           \
-      mut(lazyVal) += set->fun();   \
-  }
-
-#define RGE_SETS_COMBINE(op, fun)   \
-  EXPECT (!sets.isEmpty())          \
-  Range rge;                        \
-  for (auto& set : sets)            \
-    rge.op(set->fun);               \
-  return rge;
-
 omg_t::rc CombinedSet::omg() const {
   AVG_SETS_VAL(lazyOmg.val, omg)
   return lazyOmg;
@@ -243,6 +229,13 @@ flt32 CombinedSet::mon() const {
   return lazyMon;
 }
 
+#define SUM_SETS_VAL(lazyVal, fun)  \
+  if (c::isnan(lazyVal)) {          \
+    EXPECT (!sets.isEmpty())        \
+    for (auto& set: sets)           \
+      mut(lazyVal) += set->fun();   \
+  }
+
 flt32 CombinedSet::dTim() const {
   SUM_SETS_VAL(lazyDTim, dTim)
   return lazyDTim;
@@ -252,6 +245,13 @@ flt32 CombinedSet::dMon() const {
   SUM_SETS_VAL(lazyDMon, dMon)
   return lazyDMon;
 }
+
+#define RGE_SETS_COMBINE(op, fun)   \
+  EXPECT (!sets.isEmpty())          \
+  Range rge;                        \
+  for (auto& set : sets)            \
+    rge.op(set->fun);               \
+  return rge;
 
 gma_rge CombinedSet::rgeGma(Session const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeGma(s))
@@ -263,6 +263,47 @@ gma_rge CombinedSet::rgeGmaFull(Session const& s) const {
 
 tth_rge CombinedSet::rgeTth(Session const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeTth(s))
+}
+
+inten_rge CombinedSet::rgeInten() const {
+  RGE_SETS_COMBINE(intersect, rgeInten())
+}
+
+inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rgeGma) const {
+  tth_rge tthRge = rgeTth(s);
+  tth_t   tthWdt = tth_t(tthRge.width());
+
+  auto cut = s.imageCut;
+  uint pixWidth = s.imageSize.i - cut.left - cut.right;
+
+  uint numBins;
+  if (1 < sets.size()) {
+    auto one   = sets.first();
+    auto delta = tth_t(one->rgeTth(s).width() / pixWidth);
+    numBins = c::to_uint(c::ceil(tthWdt / delta));
+  } else {
+    numBins = pixWidth; // simply match the pixel resolution
+  }
+
+  inten_vec intens(numBins, 0);
+  uint_vec  counts(numBins, 0);
+
+  auto minTth = tth_t(tthRge.min), deltaTth = tth_t(tthWdt / numBins);
+
+  for (auto& one : sets)
+    one->collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);
+
+  // sum or average
+  if (s.avgScaleIntens) {
+    auto scale = s.intenScale;
+    for_i (numBins) {
+      auto cnt = counts.at(i);
+      if (cnt > 0)
+        intens.refAt(i) *= scale/cnt;
+    }
+  }
+
+  return intens;
 }
 
 //------------------------------------------------------------------------------

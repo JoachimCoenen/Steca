@@ -38,7 +38,7 @@ Worker::Worker(Hub& hub_) : hub(hub_) {}
 
 void Worker::doWork(Task::sh task) {
   auto mp = task.ptr();
-  mut(mp)->work();
+  mutp(mp)->work();
   emit workDone(task);
 }
 
@@ -64,7 +64,7 @@ void Hub::post(Task* event) {
 }
 
 void Hub::workDone(Task::sh task) {
-  mut(task.ptr())->done();
+  mutp(task.ptr())->done();
 }
 
 void Hub::registerMetaTypes() {
@@ -78,7 +78,7 @@ bool Hub::event(QEvent* e) {
     return QObject::event(e);
 
   Task::sh sh(task->clone());
-  mut(sh.ptr())->set(*this);
+  mutp(sh.ptr())->set(*this);
 
   emit doWork(sh);
   return true;

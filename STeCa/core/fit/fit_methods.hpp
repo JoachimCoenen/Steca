@@ -1,7 +1,7 @@
 /*******************************************************************************
  * STeCa2 - StressTextureCalculator ver. 2
  *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
+ * Copyright (C) 2016-7 Forschungszentrum Jülich GmbH
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -15,60 +15,47 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef FIT_METHODS_H
-#define FIT_METHODS_H
+#ifndef CORE_FIT_METHODS_H
+#define CORE_FIT_METHODS_H
 
-#include "fit_fun.h"
+#include "fit_fun.hpp"
 
-namespace fit {
+namespace core { namespace fit {
 //------------------------------------------------------------------------------
 
-class Method {
-public:
+dcl_iface (Method)
   Method();
-  virtual ~Method();
-
-  void fit(typ::Function&, typ::Curve::rc);
+  _voi (fit, (Fun&, Curve::rc))
 
 _protected
-  virtual void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                           qreal const*, uint) = 0;
+  // these pointers are valid during fit() call, for use in callbackY
+  _ptr (Fun,      fun)
+  _ptr (real_vec, xs)
 
-  // these pointers are valid during fit() call
-  typ::Function* function_;
-  qreal const*   xValues_;
+  _abs_voi (approximate, (real*, real const*, real const*, real*, uint,
+                          real const*, uint))
 
-_protected
   // calculate a vector of y(x)
-  void callbackY(qreal*, qreal*, int, int, void*);
+  _voi (callbackY, (real*, real*, int, int, void*))
 };
 
 //------------------------------------------------------------------------------
 
-class LinearLeastSquare : public Method {
-  CLASS(LinearLeastSquare) SUPER(Method)
-public:
-  LinearLeastSquare();
-
+dcl_struct_sub(LinearLeastSquare, Method)
 _protected
-  void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                   qreal const*, uint);
-};
+  _voi (approximate, (real*, real const*, real const*, real*, uint,
+                      real const*, uint))
+dcl_struct_end
 
 //------------------------------------------------------------------------------
 
-class LevenbergMarquardt : public Method {
-  CLASS(LevenbergMarquardt) SUPER(Method)
-public:
-  LevenbergMarquardt();
-
+dcl_struct_sub(LevenbergMarquardt, Method)
 _protected
-  void approximate(qreal*, qreal const*, qreal const*, qreal*, uint,
-                   qreal const*, uint);
-_private
-  void callbackJacobianLM(qreal*, qreal*, int, int, void*);
-};
+  _voi (approximate, (real*, real const*, real const*, real*, uint,
+                      real const*, uint))
+  _voi (callbackJacobianLM, (real*, real*, int, int, void*))
+dcl_struct_end
 
 //------------------------------------------------------------------------------
-}
+}}
 #endif

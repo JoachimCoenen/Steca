@@ -15,10 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_FRY_H
-#define CORE_FRY_H
+#ifndef CORE_FACTORY_H
+#define CORE_FACTORY_H
 
-#include <c2/inc/c_def.h>
 #include <c2/c/ptr.h>
 #include <c2/c/str.h>
 #include <c2/cpp/exc.hpp>
@@ -27,33 +26,29 @@
 namespace core {
 //-----------------------------------------------------------------------------
 
-template <typename T> dcl_struct (fry)
-  using str = c::str;
+template <class ProductBase>
+dcl_struct (factory)
+  dcl_iface (maker_base)
+    _abs_mth(c::own<ProductBase>, make, ())
+  dcl_iface_end
 
-  struct someMaker {
-    virtual ~someMaker() {}
-    virtual c::own<T> make() const = 0;
-  };
+  template <class Product>
+  dcl_struct_sub(maker, maker_base)
+    _val (c::own<ProductBase>, make, (), new Product)
+  dcl_struct_end
 
-  template <typename TT>
-  struct maker : someMaker {
-    c::own<T> make() const { return c::own<T>::from(new TT); }
-  };
+  _set_inl (add, (c::strc key, c::give_me<maker_base> m), makers.add(key, m);)
 
-_private
-  using scm = c::scoped<someMaker const>;
-  c::hash<str, scm> makers;
-
-public:
-  void add(c::strc key, c::give_me<someMaker const> m) {
-    makers[key] = m;
+  c::own<ProductBase> make(c::strc key) const may_err {
+    try {
+      return makers.at(key)->make();
+    } catch (std::exception const&) {
+      c::err("Factory has no maker ", key);
+    }
   }
 
-  c::own<T> make(c::strc key) const may_err {
-    someMaker const *m = makers.at(key).ptr();
-    check_or_err (m, "no maker ", key);
-    return m->make();
-  }
+_protected
+  c::hash<c::str, c::own<maker_base>> makers;
 dcl_struct_end
 
 //------------------------------------------------------------------------------

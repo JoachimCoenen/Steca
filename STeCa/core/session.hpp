@@ -18,8 +18,9 @@
 #ifndef CORE_SESSION_HPP
 #define CORE_SESSION_HPP
 
-#include "typ/angles.hpp"
 #include "data/data.hpp"
+#include "typ/angles.hpp"
+#include <c2/c/num.h>
 #include <c2/cpp/cache.hpp>
 
 namespace core {
@@ -35,9 +36,13 @@ dcl_struct (Session)
 
   Session();
 
-  _mth (AngleMap::sh, angleMap, (data::Set::rc))
-
+  _mth (AngleMap::sh,   angleMap, (data::Set::rc))
   _atr (AngleMap::Key0, angleMapKey0) // current
+  _atr (ImageCut,       imageCut)
+  _atr (c::sz2,         imageSize)
+
+  _atr (bool,    avgScaleIntens)
+  _atr (c::peal, intenScale)
 
 _private
   mutable c::cache<AngleMap::Key,AngleMap> angleMapCache;

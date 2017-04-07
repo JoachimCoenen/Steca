@@ -63,6 +63,8 @@ dcl_struct (Image) SHARED
   _voi_mut (addInten, (uint i, uint j, inten_t val))
   _voi_mut (addIntens, (rc))
 
+  _val (inten_rge, rgeInten, (), intens->rgeCount)
+
 _private
   c::shared<count_arr2> intens;
 dcl_struct_end

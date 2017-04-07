@@ -19,7 +19,7 @@
 #include <c2/inc/c_cpp>
 #include <algorithm>
 
-core_Range::core_Range(real min_, real max_) : min(min_), max(max_) {}
+core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -57,10 +57,10 @@ TEST("Range()",
   CHECK(c::isnan(r.max));
 )
 
-Range::Range(real val) : base(val, val) {
+Range::Range(rv_t val) : base(val, val) {
 }
 
-Range::Range(real min, real max) : base(min, max) {
+Range::Range(rv_t min, rv_t max) : base(min, max) {
   EXPECT (!c::isnan(min) && !c::isnan(max))
   EXPECT (min <= max)
 }
@@ -103,7 +103,7 @@ TEST("Range::empty",
   CHECK(!Range(0,1).isEmpty());
 )
 
-real Range::width() const {
+Range::rv_t Range::width() const {
   return isDef() ? max - min : c::flt_nan;
 }
 
@@ -114,7 +114,7 @@ TEST("Range::width",
   CHECK(c::isinf(Range::inf().width()));
 )
 
-real Range::center() const {
+Range::rv_t Range::center() const {
   return isDef() ? (min + max) / 2 : c::flt_nan;
 }
 
@@ -125,7 +125,7 @@ TEST("Range::center",
   CHECK(c::isnan(Range::inf().center()));
 )
 
-Range Range::safeFrom(real v1, real v2) {
+Range Range::safeFrom(rv_t v1, rv_t v2) {
   if (!(v1 < v2))
     mutate::swap(v1, v2);
   return Range(v1, v2);
@@ -137,7 +137,7 @@ TEST("Range::safeFrom",
   CHECK_EQ(Range::safeFrom(+c::flt_inf, -c::flt_inf), Range::inf());
 )
 
-void Range::extendBy(real val) {
+void Range::extendBy(rv_t val) {
   mut(min) = c::isnan(min) ? val : c::min(min, val);
   mut(max) = c::isnan(max) ? val : c::max(max, val);
 }
@@ -155,7 +155,7 @@ TEST("Range::extend",
   CHECK_EQ(r, Range(-1,4));
 )
 
-bool Range::contains(real val) const {
+bool Range::contains(rv_t val) const {
   return min <= val && val <= max;
 }
 
@@ -249,7 +249,7 @@ TEST("Range::intersect",
   CHECK_EQ(r.min, r.intersect(disjoint).min);
 )
 
-real Range::bound(real value) const {
+Range::rv_t Range::bound(rv_t value) const {
   if (isDef() && !c::isnan(value))
     return c::bound(min, value, max);
   return c::flt_nan;
@@ -376,7 +376,7 @@ void Ranges::sort() {
 
 TEST_CODE(
 typedef struct {
-  real min, max;
+  Range::rv_t min, max;
 } min_max;
 
 static bool RANGES_EQ(Ranges::rc rs, c::vec<min_max> mm) {

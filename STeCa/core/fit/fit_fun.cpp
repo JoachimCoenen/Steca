@@ -1,7 +1,7 @@
 /*******************************************************************************
  * STeCa2 - StressTextureCalculator ver. 2
  *
- * Copyright (C) 2016 Forschungszentrum Jülich GmbH 2016
+ * Copyright (C) 2016-7 Forschungszentrum Jülich GmbH
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -15,22 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "fit_fun.h"
-#include "fit_methods.h"
-#include "def/def_alg.h"
-#include <qmath.h>
+#include "fit_fun.hpp"
+#include "fit_methods.hpp"
+#include "../typ/factory.hpp"
+#include <c2/inc/c_cpp>
+#include <cmath>
 
-namespace json_fun_key {
-str const
-  POLYNOM("polynom"), RAW("Raw"),
-  GAUSSIAN("Gaussian"), LORENTZIAN("Lorentzian"),
-  PSEUDOVOIGT1("PseudoVoigt1"), PSEUDOVOIGT2("PseudoVoigt2");
-}
+//namespace json_fun_key {
+//str const
+//  POLYNOM("polynom"), RAW("Raw"),
+//  GAUSSIAN("Gaussian"), LORENTZIAN("Lorentzian"),
+//  PSEUDOVOIGT1("PseudoVoigt1"), PSEUDOVOIGT2("PseudoVoigt2");
+//}
 
-namespace fit {
+namespace core { namespace fit {
 //------------------------------------------------------------------------------
-
-using namespace typ;
+/*
+static
 
 void initFactory() {
   ONLY_ONCE
@@ -224,7 +225,7 @@ void PeakFunction::loadJson(JsonObj::rc obj) THROWS {
 Raw::Raw() {
 }
 
-qreal Raw::y(qreal x, qreal const* /*parValues*/) const {
+qreal Raw::y(qreal x, qreal const* / *parValues* /) const {
   if (!x_count_ || !range_.contains(x))
     return 0;
 
@@ -660,6 +661,8 @@ JsonObj PseudoVoigt2::saveJson() const {
   return super::saveJson().saveString(json_key::TYPE, json_fun_key::PSEUDOVOIGT2);
 }
 
+*/
+
 //------------------------------------------------------------------------------
-}
+}}
 // eof

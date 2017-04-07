@@ -43,14 +43,14 @@ Par::ref Par::operator=(rc that) {
 Fun::Fun()  {}
 Fun::~Fun() {}
 
-Fun::fryFun Fun::factory;
+Fun::fryFun Fun::funFry;
 
-void Fun::addMaker(c::strc key, c::give_me<fryFun::someMaker const> maker) {
-  factory.add(key, maker);
+void Fun::addMaker(c::strc key, c::give_me<fryFun::maker_base const> maker) {
+  funFry.add(key, maker);
 }
 
 c::own<Fun> Fun::make(c::strc key) may_err {
-  return factory.make(key);
+  return funFry.make(key);
 }
 
 //------------------------------------------------------------------------------
