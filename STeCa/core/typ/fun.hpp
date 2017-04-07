@@ -26,6 +26,13 @@
 namespace core {
 //------------------------------------------------------------------------------
 
+namespace key {
+extern c::str const
+  I, J, X, Y, MIN, MAX,
+  PARAMS, TYPE, FUN, SUM,
+  VALUE, RANGE, COUNT;
+}
+
 dcl_struct (Par)
   _atr (real, val)
   _atr (real, err)
@@ -57,7 +64,8 @@ _protected
   static fryFun funFry;
 
 public:
-  static void addMaker(c::strc key, c::give_me<fryFun::maker_base const>);
+  static void initFry();
+  static void addMaker(c::strc key, c::give_me<fryFun::maker_base>);
   static c::own<Fun> make(c::strc key)       may_err;
 dcl_struct_end
 

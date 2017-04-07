@@ -16,38 +16,30 @@
  ******************************************************************************/
 
 #include "fit_fun.hpp"
-#include "fit_methods.hpp"
 #include "../typ/factory.hpp"
+#include "fit_methods.hpp"
 #include <c2/inc/c_cpp>
 #include <cmath>
 
-//namespace json_fun_key {
-//str const
-//  POLYNOM("polynom"), RAW("Raw"),
-//  GAUSSIAN("Gaussian"), LORENTZIAN("Lorentzian"),
-//  PSEUDOVOIGT1("PseudoVoigt1"), PSEUDOVOIGT2("PseudoVoigt2");
-//}
+namespace core {
 
-namespace core { namespace fit {
+namespace fit {
 //------------------------------------------------------------------------------
-/*
-static
 
-void initFactory() {
+void initFry() {
   ONLY_ONCE
 
-  using F = typ::Function;
-  using O = owner_not_null<F::Factory::MakerBase*>;
-  F::initFactory();
+  Fun::initFry();
 
-  F::addFactoryMaker(json_fun_key::POLYNOM,      O::from(new F::Factory::Maker<Gaussian>));
-  F::addFactoryMaker(json_fun_key::RAW,          O::from(new F::Factory::Maker<Raw>));
-  F::addFactoryMaker(json_fun_key::GAUSSIAN,     O::from(new F::Factory::Maker<Gaussian>));
-  F::addFactoryMaker(json_fun_key::LORENTZIAN,   O::from(new F::Factory::Maker<Lorentzian>));
-  F::addFactoryMaker(json_fun_key::PSEUDOVOIGT1, O::from(new F::Factory::Maker<PseudoVoigt1>));
-  F::addFactoryMaker(json_fun_key::PSEUDOVOIGT2, O::from(new F::Factory::Maker<PseudoVoigt2>));
+//  Fun::addMaker(key::POLYNOM,      c::owned(new Fun::fryFun::maker<Gaussian>));
+//  Fun::addMaker(key::RAW,          c::owned(new Fun::fryFun::maker<Raw>));
+//  Fun::addMaker(key::GAUSSIAN,     c::owned(new Fun::fryFun::maker<Gaussian>));
+//  Fun::addMaker(key::LORENTZIAN,   c::owned(new Fun::fryFun::maker<Lorentzian>));
+//  Fun::addMaker(key::PSEUDOVOIGT1, c::owned(new Fun::fryFun::maker<PseudoVoigt1>));
+//  Fun::addMaker(key::PSEUDOVOIGT2, c::owned(new Fun::fryFun::maker<PseudoVoigt2>));
 }
 
+/*
 //------------------------------------------------------------------------------
 
 Polynom::Polynom(uint degree) {

@@ -23,7 +23,6 @@
 #include <c2/c/ptr.h>
 
 #include <c2/cpp/exc.hpp>
-#include <c2/gui_qt/qstr.hpp>
 
 #include <c2/c/ij.h>
 #include <c2/c/xy.h>
@@ -33,12 +32,15 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+// TODO perhaps move all this, and io, out of core to io
 namespace core_qt {
 //------------------------------------------------------------------------------
 
 struct JsonArr;
 
 dcl_struct_reimpl (JsonObj, QJsonObject)
+  using strc = c::strc;
+
   using pint = c::pint;
   using peal = c::peal;
 
@@ -46,56 +48,61 @@ dcl_struct_reimpl (JsonObj, QJsonObject)
   JsonObj(QJsonObject const&);
 
   // plain types
-  JsonObj& saveObj(qstrc key, JsonObj const&);
-  JsonObj  loadObj(qstrc key, bool defEmpty=false) const may_err;
+  JsonObj& saveObj(strc key, JsonObj const&);
+  JsonObj  loadObj(strc key, bool defEmpty=false) const may_err;
 
-  JsonObj& saveArr(qstrc key, JsonArr const&);
-  JsonArr  loadArr(qstrc key, bool defEmpty=false) const may_err;
+  JsonObj& saveArr(strc key, JsonArr const&);
+  JsonArr  loadArr(strc key, bool defEmpty=false) const may_err;
 
-  JsonObj& saveInt(qstrc key, int);
-  int      loadInt(qstrc key)               const may_err;
-  int      loadInt(qstrc key, int def)      const may_err;
+  JsonObj& saveInt(strc key, int);
+  int      loadInt(strc key)               const may_err;
+  int      loadInt(strc key, int def)      const may_err;
 
-  JsonObj& saveUint(qstrc key, uint);
-  uint     loadUint(qstrc key)              const may_err;
-  uint     loadUint(qstrc key, uint def)    const may_err;
+  JsonObj& saveUint(strc key, uint);
+  uint     loadUint(strc key)              const may_err;
+  uint     loadUint(strc key, uint def)    const may_err;
 
-  JsonObj& savePint(qstrc key, pint);
-  pint     loadPint(qstrc key)              const may_err;
-  pint     loadPint(qstrc key, uint def)    const may_err;
+  JsonObj& savePint(strc key, pint);
+  pint     loadPint(strc key)              const may_err;
+  pint     loadPint(strc key, uint def)    const may_err;
 
-  JsonObj& saveReal(qstrc key, real);
-  real     loadReal(qstrc key)              const may_err;
-  real     loadReal(qstrc key, real def)    const may_err;
+  JsonObj& saveReal(strc key, real);
+  real     loadReal(strc key)              const may_err;
+  real     loadReal(strc key, real def)    const may_err;
 
-  JsonObj& savePeal(qstrc key, peal);
-  peal     loadPeal(qstrc key)             const may_err;
-  peal     loadPeal(qstrc key, peal def)   const may_err;
+  JsonObj& savePeal(strc key, peal);
+  peal     loadPeal(strc key)             const may_err;
+  peal     loadPeal(strc key, peal def)   const may_err;
 
-  JsonObj& saveBool(qstrc key, bool);
-  bool     loadBool(qstrc key)              const may_err;
-  bool     loadBool(qstrc key, bool def)    const may_err;
+  JsonObj& saveBool(strc key, bool);
+  bool     loadBool(strc key)              const may_err;
+  bool     loadBool(strc key, bool def)    const may_err;
 
-  JsonObj& saveStr(qstrc key, qstrc);
-  qstr     loadStr(qstrc key)               const may_err;
-  qstr     loadStr(qstrc key, qstrc def)    const may_err;
+  JsonObj& saveStr(strc key, strc);
+  c::str   loadStr(strc key)               const may_err;
+  c::str   loadStr(strc key, strc def)    const may_err;
 
   // more custom types
-  JsonObj& saveIJ(qstrc key, c::ij::rc);
-  c::ij    loadIJ(qstrc key)                const may_err;
+  JsonObj& saveIJ(strc key, c::ij::rc);
+  c::ij    loadIJ(strc key)                const may_err;
 
-  JsonObj& saveXY(qstrc key, c::xy::rc);
-  c::xy    loadXY(qstrc key)                const may_err;
+  JsonObj& saveXY(strc key, c::xy::rc);
+  c::xy    loadXY(strc key)                const may_err;
 
-  JsonObj&     saveRange(qstrc key, core::Range::rc);
-  core::Range  loadRange(qstrc key)         const may_err;
+  JsonObj&     saveRange(strc key, core::Range::rc);
+  core::Range  loadRange(strc key)         const may_err;
 
-  JsonObj&     saveRanges(qstrc key, core::Ranges::rc);
-  core::Ranges loadRanges(qstrc key)        const may_err;
+  JsonObj&     saveRanges(strc key, core::Ranges::rc);
+  core::Ranges loadRanges(strc key)        const may_err;
 
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
 
+_protected
+  iterator insert(strc, strc);
+  iterator insert(strc, QJsonValue const&);
+
+  QJsonValue value(strc) const;
 dcl_struct_end
 
 //------------------------------------------------------------------------------

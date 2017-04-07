@@ -45,7 +45,12 @@ Fun::~Fun() {}
 
 Fun::fryFun Fun::funFry;
 
-void Fun::addMaker(c::strc key, c::give_me<fryFun::maker_base const> maker) {
+void Fun::initFry() {
+  ONLY_ONCE
+  addMaker(key::SUM, c::owned(new fryFun::maker<SumFuns>));
+}
+
+void Fun::addMaker(c::strc key, c::give_me<fryFun::maker_base> maker) {
   funFry.add(key, maker);
 }
 

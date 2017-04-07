@@ -18,21 +18,21 @@
 #ifndef CORE_FIT_FUN_H
 #define CORE_FIT_FUN_H
 
-//#include "typ/typ_types.h"
-//#include "typ/typ_curve.h"
 #include "../typ/fun.hpp"
 #include "../typ/curve.hpp"
 
-//namespace json_fun_key {
-//extern str const
-//  POLYNOM, RAW, GAUSSIAN, LORENTZIAN,
-//  PSEUDOVOIGT1, PSEUDOVOIGT2;
-//}
+namespace core {
 
-namespace core { namespace fit {
+namespace key {
+extern c::str const
+  PEAK, FWHM,
+  POLYNOM, RAW, GAUSSIAN, LORENTZIAN, PSEUDOVOIGT1, PSEUDOVOIGT2;
+}
+
+namespace fit {
 //------------------------------------------------------------------------------
 
-void initFactory();
+void initFry();
 
 //------------------------------------------------------------------------------
 // a polynom(ial)

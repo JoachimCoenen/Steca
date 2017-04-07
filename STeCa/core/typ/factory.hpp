@@ -28,13 +28,14 @@ namespace core {
 
 template <class ProductBase>
 dcl_struct (factory)
-  dcl_iface (maker_base)
+  dcl_struct (maker_base)
+    virtual ~maker_base() {}
     _abs_mth(c::own<ProductBase>, make, ())
-  dcl_iface_end
+  dcl_struct_end
 
   template <class Product>
   dcl_struct_sub(maker, maker_base)
-    _val (c::own<ProductBase>, make, (), new Product)
+    _val (c::own<ProductBase>, make, (), c::owned(new Product))
   dcl_struct_end
 
   _set_inl (add, (c::strc key, c::give_me<maker_base> m), makers.add(key, m);)

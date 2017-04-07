@@ -24,10 +24,10 @@ if (WITH_COVERAGE)
 endif ()
 
 add_executable (${app} ${files} ${test_files})
-add_dependencies (${app} c2_gui_qt c2_gui c2_cpp c2_c)
+add_dependencies (${app} c2_gui_qt c2_qt c2_gui c2_cpp c2_c)
 
 target_link_libraries (${app}
-  c2_gui_qt c2_gui c2_cpp c2_c
+  c2_gui_qt c2_qt c2_gui c2_cpp c2_c
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 
