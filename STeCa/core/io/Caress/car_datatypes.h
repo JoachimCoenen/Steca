@@ -26,7 +26,7 @@ typedef signed short int16;
 typedef unsigned short uint16;
 typedef signed int int32;
 typedef unsigned int uint32;
-#ifdef _WIN64
+#ifdef OS
 typedef unsigned __int64 uint64;
 typedef   signed __int64  int64;
 #else

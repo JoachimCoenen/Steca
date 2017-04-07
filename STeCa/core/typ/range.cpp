@@ -47,8 +47,7 @@ TEST("Range::compare",
   CHECK_NE(r, r2);
 )
 
-Range::Range() : Range(c::flt_nan) {
-}
+Range::Range() : Range(c::flt_nan) {}
 
 TEST("Range()",
   Range r;

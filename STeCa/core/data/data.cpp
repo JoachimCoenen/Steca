@@ -170,7 +170,7 @@ Meta::sh CombinedSet::meta() const {
   real fac = 1.0 / n;
 
   for_i (d.vals.size())
-    mut(d.vals).setAt(i, d.vals.at(i) * fac);
+    mut(d.vals).setAt(i, inten_t(d.vals.at(i) * fac));
 
   mut(d.tth) = d.tth * fac;
   mut(d.omg) = d.omg * fac;
@@ -299,7 +299,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
     for_i (numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
-        intens.refAt(i) *= scale/cnt;
+        intens.refAt(i) *= flt32(scale/cnt);
     }
   }
 
