@@ -26,27 +26,27 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_struct (Session)
+dcl_struct_(Session)
   enum class eNorm {
     NONE,
     MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
   };
 
-  _atr (c::vec<c::str>, normStrLst)
+  atr_(c::vec<c::str>, normStrLst)
 
   Session();
 
-  _mth (AngleMap::sh,   angleMap, (data::Set::rc))
-  _atr (AngleMap::Key0, angleMapKey0) // current
-  _atr (ImageCut,       imageCut)
-  _atr (c::sz2,         imageSize)
+  mth_(AngleMap::sh,   angleMap, (data::Set::rc))
+  atr_(AngleMap::Key0, angleMapKey0) // current
+  atr_(ImageCut,       imageCut)
+  atr_(c::sz2,         imageSize)
 
-  _atr (bool,    avgScaleIntens)
-  _atr (c::peal, intenScale)
+  atr_(bool,    avgScaleIntens)
+  atr_(c::peal, intenScale)
 
-_private
+private_
   mutable c::cache<AngleMap::Key,AngleMap> angleMapCache;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

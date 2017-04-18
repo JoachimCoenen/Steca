@@ -27,18 +27,18 @@ namespace core {
 //-----------------------------------------------------------------------------
 
 template <class ProductBase>
-dcl_struct (factory)
-  dcl_struct (maker_base)
+dcl_struct_(factory)
+  dcl_struct_(maker_base)
     virtual ~maker_base() {}
-    _abs_mth(c::own<ProductBase>, make, ())
-  dcl_struct_end
+    abs_mth_(c::own<ProductBase>, make, ())
+  dcl_end
 
   template <class Product>
-  dcl_struct_sub(maker, maker_base)
-    _val (c::own<ProductBase>, make, (), c::owned(new Product))
-  dcl_struct_end
+  dcl_struct_sub_(maker, maker_base)
+    val_(c::own<ProductBase>, make, (), c::owned(new Product))
+  dcl_end
 
-  _set_inl (add, (c::strc key, c::give_me<maker_base> m), makers.add(key, m);)
+  set_inl_(add, (c::strc key, c::give_me<maker_base> m), makers.add(key, m);)
 
   c::own<ProductBase> make(c::strc key) const may_err {
     try {
@@ -48,9 +48,9 @@ dcl_struct (factory)
     }
   }
 
-_protected
+protected_
   c::hash<c::str, c::own<maker_base>> makers;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

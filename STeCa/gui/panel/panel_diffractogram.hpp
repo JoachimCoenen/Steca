@@ -23,12 +23,12 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_struct_sub (PanelDiffractogram, Panel)
+dcl_struct_sub_(PanelDiffractogram, Panel)
   PanelDiffractogram(Hub&);
 
-_private
+private_
   Panel *tab;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

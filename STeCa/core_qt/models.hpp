@@ -23,29 +23,29 @@
 namespace core_qt {
 //------------------------------------------------------------------------------
 
-dcl_struct_sub (ModelFiles, c_qt::lst_model)
+dcl_struct_sub_(ModelFiles, c_qt::lst_model)
   ModelFiles();
-  _mth (cl_n, cols, ())
-  _mth (rw_n, rows, ())
-  _mth (c_gui::var*, cell, (rw_n, cl_n))
+  mth_(cl_n, cols, ())
+  mth_(rw_n, rows, ())
+  mth_(c_gui::var*, cell, (rw_n, cl_n))
 
-  _voi_mut (check, (rw_n, bool))
-  _bol (isChecked, (rw_n))
-dcl_struct_end
+  voi_mut_(check, (rw_n, bool))
+  bol_(isChecked, (rw_n))
+dcl_end
 
-dcl_struct_sub (ModelDatasets, c_qt::lst_model)
+dcl_struct_sub_(ModelDatasets, c_qt::lst_model)
   ModelDatasets();
-  _mth (cl_n, cols, ())
-  _mth (rw_n, rows, ())
-  _mth (c_gui::var*, cell, (rw_n, cl_n))
-dcl_struct_end
+  mth_(cl_n, cols, ())
+  mth_(rw_n, rows, ())
+  mth_(c_gui::var*, cell, (rw_n, cl_n))
+dcl_end
 
-dcl_struct_sub (ModelMetadata, c_qt::lst_model)
+dcl_struct_sub_(ModelMetadata, c_qt::lst_model)
   ModelMetadata();
-  _mth (cl_n, cols, ())
-  _mth (rw_n, rows, ())
-  _mth (c_gui::var*, cell, (rw_n, cl_n))
-dcl_struct_end
+  mth_(cl_n, cols, ())
+  mth_(rw_n, rows, ())
+  mth_(c_gui::var*, cell, (rw_n, cl_n))
+dcl_end
 
 //------------------------------------------------------------------------------
 }

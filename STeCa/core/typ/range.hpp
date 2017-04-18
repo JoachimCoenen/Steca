@@ -20,17 +20,17 @@
 
 #include "def.hpp"
 
-dcl_struct (core_Range)
+dcl_struct_(core_Range)
   using rv_t = real;
 
-  _atr (rv_t, min)
-  _atr (rv_t, max)
-  _con (core_Range, (rv_t, rv_t))
-dcl_struct_end
+  atr_(rv_t, min)
+  atr_(rv_t, max)
+  con_(core_Range, (rv_t, rv_t))
+dcl_end
 
 namespace core {
 
-dcl_struct_sub (Range, core_Range) COMPARABLE EQ_NE
+dcl_struct_sub_(Range, core_Range) COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
   Range(rv_t);                      // singular, min == max
   Range(rv_t, rv_t);                // the usual
@@ -58,10 +58,10 @@ dcl_struct_sub (Range, core_Range) COMPARABLE EQ_NE
   rv_t  bound(rv_t)     const;      // limit the number to the interval
 
   ref   operator=(rc);
-dcl_struct_end
+dcl_end
 
-dcl_struct (Ranges) EQ_NE
-  _con (Ranges, ())
+dcl_struct_(Ranges) EQ_NE
+  con_(Ranges, ())
 
   void clear()         { rs.clear();          }
   bool isEmpty() const { return rs.isEmpty(); }
@@ -75,10 +75,10 @@ dcl_struct (Ranges) EQ_NE
   // removes (cuts out) a range; true if there was a change
   bool rem(Range::rc);
 
-_private
+private_
   void sort();
   c::vec<Range> rs;
-dcl_struct_end
+dcl_end
 
 }
 #endif

@@ -26,29 +26,29 @@ namespace core {
 //------------------------------------------------------------------------------
 // A set of x-y datapoints.
 
-dcl_struct (Curve)
-  _atr (real_vec, xs)
-  _atr (real_vec, ys)
-  _atr (Range, rgeX)
-  _atr (Range, rgeY)
+dcl_struct_(Curve)
+  atr_(real_vec, xs)
+  atr_(real_vec, ys)
+  atr_(Range, rgeX)
+  atr_(Range, rgeY)
 
   Curve();
 
   void clear();
 
-  _bol (isEmpty, ())
-  _mth (uint, size, ())
-  _bol (isSorted, ())
+  bol_(isEmpty, ())
+  mth_(uint, size, ())
+  bol_(isSorted, ())
 
-  _set(add, (real x, real y))
+  set_(add, (real x, real y))
 
-  _mth (Curve, intersect, (Range::rc))
-  _mth (Curve, intersect, (Ranges::rc))
+  mth_(Curve, intersect, (Range::rc))
+  mth_(Curve, intersect, (Ranges::rc))
 
-  _voi_mut (subtract, (Fun::rc))
+  voi_mut_(subtract, (Fun::rc))
 
-  _mth (uint, maxYindex, ())  // the index of the maximum y value
-  _mth (real, sumY, ())
+  mth_(uint, maxYindex, ())  // the index of the maximum y value
+  mth_(real, sumY, ())
 };
 
 using curve_vec =  c::vec<Curve>;

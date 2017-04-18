@@ -26,57 +26,56 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_struct (Angles)
-  _atr (tth_t, tth)
-  _atr (gma_t, gma)
+dcl_struct_(Angles)
+  atr_(tth_t, tth)
+  atr_(gma_t, gma)
 
   Angles();
   Angles(tth_t, gma_t);
 
-  _set (operator=, (rc))
+  set_(operator=, (rc))
+dcl_end
 
-dcl_struct_end
-
-dcl_struct (AngleMap) SHARED
+dcl_struct_(AngleMap) SHARED
   using angle_arr = c::arr2<Angles>;
 
-  dcl_struct (Key0) COMPARABLE EQ_NE
-    _atr (Geometry, geometry)
-    _atr (c::sz2, size)
-    _atr (ImageCut, cut)
-    _atr (c::ij, midPix)
+  dcl_struct_(Key0) COMPARABLE EQ_NE
+    atr_(Geometry, geometry)
+    atr_(c::sz2, size)
+    atr_(ImageCut, cut)
+    atr_(c::ij, midPix)
 
     Key0();
     Key0(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix);
-  dcl_struct_end
+  dcl_end
 
-  dcl_struct_sub (Key, Key0) COMPARABLE COMP_OPS
-    _atr (tth_t, midTth)
+  dcl_struct_sub_(Key, Key0) COMPARABLE COMP_OPS
+    atr_(tth_t, midTth)
 
     Key(Geometry::rc, c::sz2::rc, ImageCut::rc, c::ij::rc midPix, tth_t midTth);
     Key(Key0, tth_t midTth);
-  dcl_struct_end
+  dcl_end
 
-  _atr (Key, key)
-  _atr (tth_rge, rgeTth)
-  _atr (gma_rge, rgeGma)
-  _atr (gma_rge, rgeGmaFull)
+  atr_(Key, key)
+  atr_(tth_rge, rgeTth)
+  atr_(gma_rge, rgeGma)
+  atr_(gma_rge, rgeGmaFull)
 
   AngleMap(Key::rc);
 
-  _mth (Angles::rc, at, (uint i, uint j))
-  _mth (Angles::rc, at, (uint i))
+  mth_(Angles::rc, at, (uint i, uint j))
+  mth_(Angles::rc, at, (uint i))
 
-  _voi (getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
+  voi_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
 
-_private
-  _voi_mut (calculate, ())
+private_
+  voi_mut_(calculate, ())
   c::shared<angle_arr> angles;
 
   // sorted
   c::vec<gma_t> gmas;
   uint_vec      gmaIndexes;
-};
+dcl_end
 
 //------------------------------------------------------------------------------
 }

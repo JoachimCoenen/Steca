@@ -24,24 +24,24 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_struct (Geometry) COMPARABLE EQ_NE
-  _cst (real, MIN_DETECTOR_DISTANCE)
-  _cst (real, MIN_DETECTOR_PIXEL_SIZE)
-  _cst (real, DEF_DETECTOR_DISTANCE)
-  _cst (real, DEF_DETECTOR_PIXEL_SIZE)
+dcl_struct_(Geometry) COMPARABLE EQ_NE
+  cst_(real, MIN_DETECTOR_DISTANCE)
+  cst_(real, MIN_DETECTOR_PIXEL_SIZE)
+  cst_(real, DEF_DETECTOR_DISTANCE)
+  cst_(real, DEF_DETECTOR_PIXEL_SIZE)
 
   Geometry();
 
-  _atr (real,  detectorDistance)
-  _atr (real,  pixSize)
-  _atr (c::ij, midPixOffset)
-dcl_struct_end
+  atr_(real,  detectorDistance)
+  atr_(real,  pixSize)
+  atr_(c::ij, midPixOffset)
+dcl_end
 
-dcl_struct (ImageCut) COMPARABLE EQ_NE
-  _atr (uint, left)
-  _atr (uint, top)
-  _atr (uint, right)
-  _atr (uint, bottom)
+dcl_struct_(ImageCut) COMPARABLE EQ_NE
+  atr_(uint, left)
+  atr_(uint, top)
+  atr_(uint, right)
+  atr_(uint, bottom)
 
   ImageCut();
   ImageCut(uint left, uint top, uint right, uint bottom);

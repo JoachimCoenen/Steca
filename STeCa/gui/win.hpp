@@ -31,7 +31,7 @@ struct PanelImage;
 struct PanelDiffractogram;
 struct PanelMetadata;
 
-dcl_struct_sub (Win, c_qt::win)
+dcl_struct_sub_(Win, c_qt::win)
   Win();
   Hub hub;
 
@@ -43,7 +43,7 @@ dcl_struct_sub (Win, c_qt::win)
   PanelImage         *panelImage;
   PanelDiffractogram *panelDiffractogram;
   PanelMetadata      *panelMetadata;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

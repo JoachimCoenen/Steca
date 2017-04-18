@@ -23,13 +23,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_struct_sub (PanelSetup, Panel)
+dcl_struct_sub_(PanelSetup, Panel)
   PanelSetup(Hub&);
 
-_private
+private_
   Panel *tabGeometry, *tabBackground, *tabReflections;
 
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

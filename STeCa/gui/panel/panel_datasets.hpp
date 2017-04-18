@@ -25,15 +25,15 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_struct_sub (PanelDatasets, Panel)
+dcl_struct_sub_(PanelDatasets, Panel)
   PanelDatasets(Hub&);
  ~PanelDatasets();
 
-_private
+private_
   Panel *tab;
   c_qt::lst_view  *view;
   c_qt::lst_model *model; // TODO to hub
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

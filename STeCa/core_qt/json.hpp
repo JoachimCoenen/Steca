@@ -38,7 +38,7 @@ namespace core_qt {
 
 struct JsonArr;
 
-dcl_struct_reimpl (JsonObj, QJsonObject)
+dcl_struct_reimpl_(JsonObj, QJsonObject)
   using strc = c::strc;
 
   using pint = c::pint;
@@ -98,16 +98,16 @@ dcl_struct_reimpl (JsonObj, QJsonObject)
   JsonObj& operator+= (rc);
   JsonObj  operator+  (rc) const;
 
-_protected
+protected_
   iterator insert(strc, strc);
   iterator insert(strc, QJsonValue const&);
 
   QJsonValue value(strc) const;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_struct_reimpl (JsonArr, QJsonArray)
+dcl_struct_reimpl_(JsonArr, QJsonArray)
   JsonArr();
   JsonArr(QJsonArray const&);
 
@@ -122,7 +122,7 @@ dcl_struct_reimpl (JsonArr, QJsonArray)
   uint  count() const;
   JsonObj objAt(uint) const;
 
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

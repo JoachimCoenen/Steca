@@ -31,7 +31,7 @@ namespace gui {
 
 struct Hub;
 
-dcl_struct_sub (Task, QEvent) SHARED
+dcl_struct_sub_(Task, QEvent) SHARED
   Task();
  ~Task();
 
@@ -42,7 +42,7 @@ dcl_struct_sub (Task, QEvent) SHARED
   virtual void done() = 0;
 
   Hub* hub;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }
@@ -52,7 +52,7 @@ Q_DECLARE_METATYPE(gui::Task::sh)
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_struct_sub (Worker, QObject)
+dcl_struct_sub_(Worker, QObject)
   Worker(Hub&);
 
   void doWork(Task::sh);
@@ -60,16 +60,16 @@ dcl_struct_sub (Worker, QObject)
 signals:
   void workDone(Task::sh);
 
-_private
+private_
   Hub& hub;
   Q_OBJECT
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 
 struct Win;
 
-dcl_struct_sub2 (Hub, QObject, core::Session)
+dcl_struct_sub2_(Hub, QObject, core::Session)
   Hub(Win&);
  ~Hub();
 
@@ -81,14 +81,14 @@ dcl_struct_sub2 (Hub, QObject, core::Session)
 signals:
   void doWork(Task::sh);
 
-_private
+private_
   void registerMetaTypes();
   bool event(QEvent*);
 
   QThread thread;
   Worker  worker;
   Q_OBJECT
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

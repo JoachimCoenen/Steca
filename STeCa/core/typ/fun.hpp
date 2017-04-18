@@ -33,18 +33,18 @@ extern c::str const
   VALUE, RANGE, COUNT;
 }
 
-dcl_struct (Par)
-  _atr (real, val)
-  _atr (real, err)
+dcl_struct_(Par)
+  atr_(real, val)
+  atr_(real, err)
 
   Par(real, real);
   void set(real val, real err);
   void setVal(real);
 
   ref operator=(rc);
-dcl_struct_end
+dcl_end
 
-dcl_struct (Fun) SHARED
+dcl_struct_(Fun) SHARED
   Fun();
   virtual ~Fun();
 
@@ -60,17 +60,17 @@ dcl_struct (Fun) SHARED
 
   using fryFun = factory<Fun>;
 
-_protected
+protected_
   static fryFun funFry;
 
 public:
   static void initFry();
   static void addMaker(c::strc key, c::give_me<fryFun::maker_base>);
   static c::own<Fun> make(c::strc key)       may_err;
-dcl_struct_end
+dcl_end
 
-dcl_struct_sub (SimpleFun, Fun)
-  _atr (c::vec<Par>, pars)
+dcl_struct_sub_(SimpleFun, Fun)
+  atr_(c::vec<Par>, pars)
 
   SimpleFun();
 
@@ -82,11 +82,11 @@ dcl_struct_sub (SimpleFun, Fun)
 
   real    parVal(sz_t parIdx, real const* parVals) const;
   void    setParVal(sz_t parIdx, real val);
-dcl_struct_end
+dcl_end
 
 // a fun that is a sum of other funs
 
-dcl_struct_sub (SumFuns, Fun)
+dcl_struct_sub_(SumFuns, Fun)
   void add(c::give_me<Fun>);
 
   // aggregate par list for all added funs
@@ -99,14 +99,14 @@ dcl_struct_sub (SumFuns, Fun)
   // summed funs
   c::vec<Fun::sh> funs;
 
-_protected
+protected_
   // the aggregate par list
   c::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index
   c::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate par index
   c::vec<sz_t> firstParIdx4parIdx;
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 }

@@ -25,22 +25,22 @@ namespace gui {
 
 struct Win;
 
-dcl_struct_sub (Acts, c_qt::acts)
+dcl_struct_sub_(Acts, c_qt::acts)
   Acts(Win&);
 
-  _cst (c::str, SHOW_FILES)
-  _cst (c::str, SHOW_DATASETS)
-  _cst (c::str, SHOW_METADATA)
+  cst_(c::str, SHOW_FILES)
+  cst_(c::str, SHOW_DATASETS)
+  cst_(c::str, SHOW_METADATA)
 
-  _cst (c::str, FILES_ADD)
-  _cst (c::str, FILES_REM)
-  _cst (c::str, CORR_ENABLE)
-  _cst (c::str, CORR_REM)
+  cst_(c::str, FILES_ADD)
+  cst_(c::str, FILES_REM)
+  cst_(c::str, CORR_ENABLE)
+  cst_(c::str, CORR_REM)
 
-  _cst (c::str, DIFF_ZOOM)
-  _cst (c::str, DIFF_ALL_DSETS)
-  _cst (c::str, DIFF_FIX_INTEN)
-dcl_struct_end
+  cst_(c::str, DIFF_ZOOM)
+  cst_(c::str, DIFF_ALL_DSETS)
+  cst_(c::str, DIFF_FIX_INTEN)
+dcl_end
 
 //------------------------------------------------------------------------------
 }

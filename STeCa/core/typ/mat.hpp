@@ -24,27 +24,27 @@
 
 namespace core {
 
-dcl_struct (vec3) COMPARABLE EQ_NE
-  _atr (real, _0) _atr (real, _1) _atr (real, _2)
+dcl_struct_(vec3) COMPARABLE EQ_NE
+  atr_(real, _0) atr_(real, _1) atr_(real, _2)
   vec3(real, real, real);
-dcl_struct_end
+dcl_end
 
-dcl_struct (mat3) COMPARABLE EQ_NE
-  _atr (real, _00) _atr (real, _01) _atr (real, _02)
-  _atr (real, _10) _atr (real, _11) _atr (real, _12)
-  _atr (real, _20) _atr (real, _21) _atr (real, _22)
+dcl_struct_(mat3) COMPARABLE EQ_NE
+  atr_(real, _00) atr_(real, _01) atr_(real, _02)
+  atr_(real, _10) atr_(real, _11) atr_(real, _12)
+  atr_(real, _20) atr_(real, _21) atr_(real, _22)
   mat3(real, real, real,
        real, real, real,
        real, real, real);
 
-  _mth (mat3, transposed, ())
-  _mth (mat3, operator*,  (rc))
-  _mth (vec3, operator*,  (vec3::rc))
+  mth_(mat3, transposed, ())
+  mth_(mat3, operator*,  (rc))
+  mth_(vec3, operator*,  (vec3::rc))
 
-  _fry (mat3, rotationCWx,  (c::rad))
-  _fry (mat3, rotationCWz,  (c::rad))
-  _fry (mat3, rotationCCWz, (c::rad))
-dcl_struct_end
+  fry_(mat3, rotationCWx,  (c::rad))
+  fry_(mat3, rotationCWz,  (c::rad))
+  fry_(mat3, rotationCCWz, (c::rad))
+dcl_end
 
 }
 

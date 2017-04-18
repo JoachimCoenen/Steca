@@ -23,38 +23,38 @@
 namespace core { namespace fit {
 //------------------------------------------------------------------------------
 
-dcl_iface (Method)
+dcl_iface_(Method)
   Method();
-  _voi (fit, (Fun&, Curve::rc))
+  voi_(fit, (Fun&, Curve::rc))
 
-_protected
+protected_
   // these pointers are valid during fit() call, for use in callbackY
-  _ptr (Fun,      fun)
-  _ptr (real_vec, xs)
+  ptr_ (Fun,      fun)
+  ptr_ (real_vec, xs)
 
-  _abs_voi (approximate, (real*, real const*, real const*, real*, uint,
+  abs_voi_(approximate, (real*, real const*, real const*, real*, uint,
                           real const*, uint))
 
   // calculate a vector of y(x)
-  _voi (callbackY, (real*, real*, int, int, void*))
-};
+  voi_(callbackY, (real*, real*, int, int, void*))
+dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_struct_sub(LinearLeastSquare, Method)
-_protected
-  _voi (approximate, (real*, real const*, real const*, real*, uint,
+dcl_struct_sub_(LinearLeastSquare, Method)
+protected_
+  voi_(approximate, (real*, real const*, real const*, real*, uint,
                       real const*, uint))
-dcl_struct_end
+dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_struct_sub(LevenbergMarquardt, Method)
-_protected
-  _voi (approximate, (real*, real const*, real const*, real*, uint,
+dcl_struct_sub_(LevenbergMarquardt, Method)
+protected_
+  voi_(approximate, (real*, real const*, real const*, real*, uint,
                       real const*, uint))
-  _voi (callbackJacobianLM, (real*, real*, int, int, void*))
-dcl_struct_end
+  voi_(callbackJacobianLM, (real*, real*, int, int, void*))
+dcl_end
 
 //------------------------------------------------------------------------------
 }}
