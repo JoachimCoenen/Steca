@@ -28,6 +28,12 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
+c::str loadCaressComment(c::path::rc) {
+  return ""; // TODO
+}
+
+//------------------------------------------------------------------------------
+
 using data::Files;
 using data::File;
 using data::Set;
@@ -208,15 +214,15 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
   return file;
 }
 
-File::sh loadCaress(Files& files, c::path filePath) may_err {
-  check_or_err (openFile(filePath), "Cannot open ", filePath);
+File::sh loadCaress(Files& files, c::path::rc path) may_err {
+  check_or_err (openFile(path), "Cannot open ", path);
 
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(filePath.basename(), files);
+    return loadOpenCaressFile(path.basename(), files);
   } catch (c::exc& e) {
-    mut(e.msg).set(c::str::cat(filePath, e.msg));
+    mut(e.msg).set(c::str::cat(path, e.msg));
     throw;
   }
 }

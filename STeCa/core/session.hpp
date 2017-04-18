@@ -22,6 +22,7 @@
 #include "typ/angles.hpp"
 #include <c2/c/num.h>
 #include <c2/cpp/cache.hpp>
+#include <c2/cpp/strlst.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -32,7 +33,7 @@ dcl_struct_(Session)
     MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
   };
 
-  atr_(c::vec<c::str>, normStrLst)
+  atr_(c::str_lst, normStrLst)
 
   Session();
 

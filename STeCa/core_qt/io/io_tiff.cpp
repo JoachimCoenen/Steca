@@ -15,23 +15,24 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef FILEDIALOG_H
-#define FILEDIALOG_H
+#include "io.hpp"
+#include <c2/inc/c_cpp>
 
-#include "typ/typ_str.h"
-#include "typ/typ_strlst.h"
-
-class QWidget;
-
-namespace gui { namespace file_dialog {
+namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-str     openFileName(QWidget*, rcstr caption, rcstr dir, rcstr filter);
-str     saveFileName(QWidget*, rcstr caption, rcstr dir, rcstr filter);
-str_lst openFileNames(QWidget*, rcstr caption, rcstr dir, rcstr filter);
+using data::Files;
+using data::File;
+using data::Set;
+using data::Meta;
 
-str     saveDirName(QWidget*, rcstr caption, rcstr dir);
+using data::flt_vec;
+
+File::sh loadTiffDat(Files&, c::path::rc) may_err {
+  File::sh file;
+  return file;
+}
 
 //------------------------------------------------------------------------------
 }}
-#endif // FILEDIALOG_H
+// eof

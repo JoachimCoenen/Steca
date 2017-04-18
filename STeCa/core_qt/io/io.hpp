@@ -15,32 +15,29 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef IO_IO_H
-#define IO_IO_H
+#ifndef CORE_IO_HPP
+#define CORE_IO_HPP
 
-#include "data/data_file.h"
+#include <core/data/data.hpp>
+#include <c2/c/path.h>
 
-namespace io {
+namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress(QFileInfo const&);
-bool couldBeMar(QFileInfo const&);
-bool couldBeTiffDat(QFileInfo const&);
+bool couldBeCaress(c::path::rc);
+bool couldBeMar(c::path::rc);
+bool couldBeTiffDat(c::path::rc);
 
 // load a file; file type will be sensed
-data::shp_File load(rcstr filePath) THROWS;
+data::File::sh load(data::Files&, c::path::rc) may_err;
 
-// load a Caress file
-data::shp_File loadCaress(rcstr filePath) THROWS;
-data::shp_File loadCaress2(rcstr filePath) THROWS;
-str loadCaressComment(rcstr filePath);
+// load a specific file type
+data::File::sh loadCaress(data::Files&, c::path::rc)  may_err;
+data::File::sh loadMar(data::Files&, c::path::rc)     may_err;
+data::File::sh loadTiffDat(data::Files&, c::path::rc) may_err;
 
-// load a Mar file
-data::shp_File loadMar(rcstr filePath) THROWS;
-
-// load a metadata file + tiffs
-data::shp_File loadTiffDat(rcstr filePath) THROWS;
+c::str loadCaressComment(c::path::rc) may_err;
 
 //------------------------------------------------------------------------------
-}
-#endif // IO_IO_H
+}}
+#endif

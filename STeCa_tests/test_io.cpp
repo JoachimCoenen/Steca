@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include <c2/qt/qstr.hpp>
-#include <core/io/io.hpp>
+#include <core_qt/io/io.hpp>
 #include <c2/inc/c_cpp>
 #include <QDir>
 #include <QFileInfo>
