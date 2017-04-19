@@ -278,7 +278,7 @@ Params::Params(TheHub& hub, ePanels panels)
 , panelGammaSlices(nullptr), panelGammaRange(nullptr), panelPoints(nullptr)
 , panelInterpolation(nullptr), panelDiagram(nullptr)
 {
-  EXPECT (panels & GAMMA)
+  EXPECT_(panels & GAMMA)
 
   setLayout((box_ = boxLayout(Qt::Horizontal)));
 
@@ -476,12 +476,12 @@ QVariant TableModel::headerData(int section, Qt::Orientation, int role) const {
 }
 
 void TableModel::moveColumn(uint from, uint to) {
-  EXPECT (from < colIndexMap_.count() && to < colIndexMap_.count())
+  EXPECT_(from < colIndexMap_.count() && to < colIndexMap_.count())
   qSwap(colIndexMap_[from], colIndexMap_[to]);
 }
 
 void TableModel::setColumns(str_lst::rc headers, typ::cmp_vec::rc cmps) {
-  EXPECT (to_u(headers.count()) == numCols_ && cmps.count() == numCols_)
+  EXPECT_(to_u(headers.count()) == numCols_ && cmps.count() == numCols_)
   headers_      = headers;
   cmpFunctions_ = cmps;
 }
@@ -572,12 +572,12 @@ Table::Table(TheHub& hub, uint numDataColumns)
 
 void Table::setColumns(str_lst::rc headers, str_lst::rc outHeaders, typ::cmp_vec::rc cmps) {
   model_->setColumns(headers, cmps);
-  EXPECT (headers.count() == outHeaders.count())
+  EXPECT_(headers.count() == outHeaders.count())
   outHeaders_ = outHeaders;
 
   connect(header(), &QHeaderView::sectionMoved,
           [this](int /*logicalIndex*/, int oldVisualIndex, int newVisualIndex) {
-            EXPECT (oldVisualIndex > 0 && newVisualIndex > 0)
+            EXPECT_(oldVisualIndex > 0 && newVisualIndex > 0)
             auto& h = *header();
             h.setSortIndicatorShown(false);
             model_->setSortColumn(-1);
@@ -622,7 +622,7 @@ TabTable::TabTable(TheHub& hub, Params& params,
                    typ::cmp_vec::rc cmps)
 : super(hub, params)
 {
-  EXPECT (to_u(headers.count()) == cmps.count())
+  EXPECT_(to_u(headers.count()) == cmps.count())
   uint numCols = to_u(headers.count());
 
   grid_->addWidget((table = new Table(hub_, numCols)), 0, 0);
@@ -861,7 +861,7 @@ Frame::Frame(TheHub& hub, rcstr title, Params* params, QWidget* parent)
   setWindowTitle(title);
   setLayout((box_ = vbox()));
 
-  EXPECT (params)
+  EXPECT_(params)
 
   box_->addWidget((params_ = params));
   box_->addWidget((tabs_   = new Tabs(hub)));
@@ -907,7 +907,7 @@ Frame::Frame(TheHub& hub, rcstr title, Params* params, QWidget* parent)
   }
 
   if (params_->panelPoints) {
-    ENSURE (params_->panelReflection)
+    ENSURE_(params_->panelReflection)
     connect(params_->panelPoints->rbInterp, &QRadioButton::toggled, [updateDisplay]() {
       updateDisplay();
     });
@@ -939,12 +939,12 @@ void Frame::calculate() {
     uint reflCount = reflections.count();
 
     auto ps = params_->panelGammaSlices;
-    ENSURE (ps)
+    ENSURE_(ps)
 
     uint gammaSlices = to_u(ps->numSlices->value());
 
     auto pr = params_->panelGammaRange;
-    ENSURE (pr)
+    ENSURE_(pr)
 
     typ::Range rgeGamma;
     if (pr->cbLimitGamma->isChecked())
@@ -994,7 +994,7 @@ void Frame::interpolate() {
 void Frame::displayReflection(uint reflIndex, bool interpolated) {
   table_->clear();
 
-  EXPECT (calcPoints_.count() == interpPoints_.count())
+  EXPECT_(calcPoints_.count() == interpPoints_.count())
   if (calcPoints_.count() <= reflIndex)
     return;
 
@@ -1005,7 +1005,7 @@ void Frame::displayReflection(uint reflIndex, bool interpolated) {
 }
 
 uint Frame::getReflIndex() const {
-  EXPECT (params_->panelReflection)
+  EXPECT_(params_->panelReflection)
   int reflIndex = params_->panelReflection->cbRefl->currentIndex();
   RUNTIME_CHECK(reflIndex >= 0, "invalid reflection index");
   return to_u(reflIndex);

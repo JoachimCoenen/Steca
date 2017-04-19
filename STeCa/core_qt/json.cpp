@@ -169,7 +169,7 @@ static JsonObj toJson(Fun::rc f) {
   if (dynamic_cast<SumFuns const*>(&f))
     return toJson(static_cast<SumFuns const&>(f));
 
-  EXPECT (false)
+  EXPECT_(false)
   return JsonObj();
 }
 
@@ -182,7 +182,7 @@ static void loadSimpleFun(SimpleFun& f, JsonObj::rc obj) {
 }
 
 static void loadSumFuns(SumFuns& f, JsonObj::rc obj) may_err {
-  EXPECT (f.funs.isEmpty()) // cannot load twice
+  EXPECT_(f.funs.isEmpty()) // cannot load twice
 
   for_i (obj.loadUint(core::key::COUNT))
     f.add(loadFun(obj.loadObj(str::cat(core::key::FUN, str(i+1)))));

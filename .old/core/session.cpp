@@ -78,9 +78,9 @@ void Session::remFile(uint i) {
 void Session::calcIntensCorr() const {
   corrHasNaNs_ = false;
 
-  EXPECT (corrImage_)
+  EXPECT_(corrImage_)
   size2d size = corrImage_->size() - imageCut_.marginSize();
-  ENSURE (!size.isEmpty())
+  ENSURE_(!size.isEmpty())
 
   uint w = size.w, h = size.h, di = imageCut_.left,
        dj = imageCut_.top;
@@ -432,7 +432,7 @@ void Session::setIntenScaleAvg(bool avg, peal scale) {
 }
 
 void Session::addReflection(shp_Reflection reflection) {
-  EXPECT (!reflection.isNull())
+  EXPECT_(!reflection.isNull())
   reflections_.append(reflection);
 }
 

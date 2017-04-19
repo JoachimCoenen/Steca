@@ -130,10 +130,10 @@ real SumFuns::dy(real x, sz_t i, real const* parVals) const {
   sz_t firstIndex = firstParIdx4parIdx.at(i);
   if (parVals) parVals += firstIndex;
 
-  ENSURE (firstIndex <= i)
+  ENSURE_(firstIndex <= i)
   i -= firstIndex;
 
-  ENSURE (i < f->parCount())
+  ENSURE_(i < f->parCount())
   return f->dy(x, i, parVals);
 }
 

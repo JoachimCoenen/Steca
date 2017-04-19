@@ -39,6 +39,8 @@ dcl_struct_(Meta) SHARED // metadata
     mth_err_(uint, at,  (c::strc))
   };
 
+  atr_(c::str, comment)
+
   atr_(Dict::sh, dict) // other than the values stored explicitly below
   atr_(flt_vec,  vals)
 
@@ -142,12 +144,13 @@ dcl_end
 struct Files;
 
 dcl_struct_(File) SHARED  // one file
-  atr_(c::str, name)
   ref_(Files, files) atr_(uint, idx) // this order in Files, 1..; 0 = not in Files
+  atr_(c::str, name)
+  atr_(c::str, comment)
   atr_(c::vec<std::pair<c::str COMMA c::str>>, strs)
   atr_(c::vec<Set::sh>, sets)
 
-  File(c::strc name, Files const&);
+  File(Files const&, c::strc name);
 
   voi_mut_(addSet, (Set::sh))
 dcl_end

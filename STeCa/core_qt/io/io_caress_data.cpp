@@ -38,7 +38,7 @@ static int32 from_dtype(dtype t) {
   case CHR:
     return CHARTYPE;
   default:
-    EXPECT (false)
+    EXPECT_(false)
     return 0;
   }
 }
@@ -54,7 +54,7 @@ static uint dtype_size(dtype t) {
   case CHR:
     return 1;
   default:
-    EXPECT (false)
+    EXPECT_(false)
     return 0;
   }
 }
@@ -80,7 +80,7 @@ static dtype to_dtype(int32 t) {
 static c::mem getUnit(uint n, sz_t sz) {
   c::mem data(n * sz);
   if (n > 0)
-    check_or_err (0 == get_data_unit(mutp(data.p)), "bad data unit");
+    check_or_err_(0 == get_data_unit(mutp(data.p)), "bad data unit");
   return data;
 }
 
@@ -91,8 +91,8 @@ static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
   while (ni > 0) {
     c::mem buf(MAXNUMBEROFCHANNELS * sz);
     int32 n = c::min(ni, MAXNUMBEROFCHANNELS);
-    check_or_err (0 == get_data_partition(mutp(buf.p), &section, &start, &n, &d_type), "bad data partition");
-    EXPECT (n == c::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
+    check_or_err_(0 == get_data_partition(mutp(buf.p), &section, &start, &n, &d_type), "bad data partition");
+    EXPECT_(n == c::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
     c::unsafe::memmov(pstr(data.p)+c::to_u(start-1)*sz, buf.p, c::to_u(n));
     ni -= n; start += n;
   }
@@ -124,7 +124,7 @@ c::str getAsString(dtype dt, uint n) {
   if (CHR == dt)
     return getString(n);
 
-  check_or_err (1 == n, "bad n<>1");
+  check_or_err_(1 == n, "bad n<>1");
   auto m = getData(dt, n);
 
   switch (dt) {
@@ -137,7 +137,7 @@ c::str getAsString(dtype dt, uint n) {
   case FLT32:
     return c::str::frm(*static_cast<flt32 const*>(m.p));
   default:
-    EXPECT (false)
+    EXPECT_(false)
     return c::str::nul;
   }
 }
@@ -151,7 +151,7 @@ float getAsFloat(dtype dt, uint n) {
     break;
   }
 
-  check_or_err (1 == n, "bad n<>1");
+  check_or_err_(1 == n, "bad n<>1");
 
   auto m = getData(dt, n);
 
@@ -163,7 +163,7 @@ float getAsFloat(dtype dt, uint n) {
   case FLT32:
     return float(*static_cast<flt32 const*>(m.p));
   default:
-    EXPECT (false)
+    EXPECT_(false)
     return 0;
   }
 }
@@ -174,7 +174,7 @@ bool nextDataUnit(c::str& elem, c::str& node, dtype& dt, uint& n) {
   switch (next_data_unit(&e_number, &e_type, m_elem, m_node, &d_type, &d_number)) {
   case OK: {
     dt = to_dtype(d_type);
-    check_or_err (d_number >= 0, "bad d_number");
+    check_or_err_(d_number >= 0, "bad d_number");
     n = c::to_uint(d_number);
 
     elem.set(c::str(MAXNAMELENGTH, m_elem).trim());
@@ -190,7 +190,7 @@ bool nextDataUnit(c::str& elem, c::str& node, dtype& dt, uint& n) {
 }
 
 c::vec<int32> getAdet(dtype dt, uint n) {
-  check_or_err (INT32==dt, "expecting int32 adet");
+  check_or_err_(INT32==dt, "expecting int32 adet");
 
   auto m = getData(dt, n);
   c::vec<int32> v(n, 0);

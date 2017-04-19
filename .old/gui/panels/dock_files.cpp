@@ -39,7 +39,7 @@ _protected
 
 FilesView::FilesView(TheHub& hub) : super(hub) {
   setModel(&hub.filesModel);
-  EXPECT (dynamic_cast<Model*>(super::model()))
+  EXPECT_(dynamic_cast<Model*>(super::model()))
 
   header()->hide();
 

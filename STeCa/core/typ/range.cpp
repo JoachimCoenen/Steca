@@ -31,7 +31,7 @@ TEST("Range(min, max)",
 )
 
 COMPARABLE_IMPL(Range) {
-  EXPECT (isDef() && that.isDef())
+  EXPECT_(isDef() && that.isDef())
   RET_COMPARE_IF_NE_THAT(min)
   RET_COMPARE_IF_NE_THAT(max)
   return 0;
@@ -60,8 +60,8 @@ Range::Range(rv_t val) : base(val, val) {
 }
 
 Range::Range(rv_t min, rv_t max) : base(min, max) {
-  EXPECT (!c::isnan(min) && !c::isnan(max))
-  EXPECT (min <= max)
+  EXPECT_(!c::isnan(min) && !c::isnan(max))
+  EXPECT_(min <= max)
 }
 
 TEST("Range(v)",

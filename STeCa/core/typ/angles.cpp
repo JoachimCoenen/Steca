@@ -81,7 +81,7 @@ Angles::rc AngleMap::at(uint i) const {
 }
 
 static uint lowerBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
-  EXPECT (i1 < i2)
+  EXPECT_(i1 < i2)
 
   if (1 == i2-i1)
     return i1;
@@ -93,7 +93,7 @@ static uint lowerBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
 }
 
 static uint upperBound(c::vec<gma_t>::rc vec, gma_t x, uint i1, uint i2) {
-  EXPECT (i1 < i2)
+  EXPECT_(i1 < i2)
 
   if (1 == i2-i1)
     return i2;
@@ -127,12 +127,12 @@ void AngleMap::calculate() {
   mut(rgeGma) = Range();
   mut(rgeGmaFull) = Range();
 
-  EXPECT (size.i > cut.left + cut.right)
-  EXPECT (size.j > cut.top  + cut.bottom)
+  EXPECT_(size.i > cut.left + cut.right)
+  EXPECT_(size.j > cut.top  + cut.bottom)
 
   auto countWithoutCut = (size.i - cut.left - cut.right)
                        * (size.j - cut.top  - cut.bottom);
-  EXPECT (countWithoutCut > 0)
+  EXPECT_(countWithoutCut > 0)
 
   gmas.resize(countWithoutCut);
   gmaIndexes.resize(countWithoutCut);

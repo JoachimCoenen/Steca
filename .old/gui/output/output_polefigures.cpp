@@ -30,7 +30,7 @@ namespace gui { namespace output {
 TabGraph::TabGraph(TheHub& hub, Params& params)
 : super(hub, params), flat_(false), alphaMax_(90), avgAlphaMax_(0)
 {
-  ENSURE (params_.panelInterpolation)
+  ENSURE_(params_.panelInterpolation)
 
   grid_->addWidget((cbFlat_ = check("no intensity")), 0, 0);
 

@@ -193,7 +193,7 @@ OneDataset::OneDataset(Metadata::rc md, typ::inten_arr::rc intens)
 
 OneDataset::OneDataset(Metadata::rc md, size2d::rc size, inten_vec const& intens)
   : md_(new Metadata(md)), image_(new Image(size)) {
-  EXPECT(intens.count() == size.count())
+  EXPECT_(intens.count() == size.count())
   for_i (intens.count())
     image_->setInten(i, intens.at(i));
 }
@@ -231,21 +231,21 @@ void OneDataset::collectIntens(core::Session::rc session, typ::Image const* inte
                                inten_vec& intens, uint_vec& counts,gma_rge::rc rgeGma,
                                tth_t minTth, tth_t deltaTth) const {
   auto angleMap = session.angleMap(*this);
-  EXPECT(!angleMap.isNull())
+  EXPECT_(!angleMap.isNull())
   AngleMap::rc map = *angleMap;
 
   uint_vec const* gmaIndexes = nullptr;
   uint gmaIndexMin = 0, gmaIndexMax = 0;
   map.getGmaIndexes(rgeGma, gmaIndexes, gmaIndexMin, gmaIndexMax);
 
-  EXPECT(gmaIndexes)
-  EXPECT(gmaIndexMin <= gmaIndexMax)
-  EXPECT(gmaIndexMax <= gmaIndexes->count())
+  EXPECT_(gmaIndexes)
+  EXPECT_(gmaIndexMin <= gmaIndexMax)
+  EXPECT_(gmaIndexMax <= gmaIndexes->count())
 
-  EXPECT(intens.count() == counts.count())
+  EXPECT_(intens.count() == counts.count())
   uint count = intens.count();
 
-  EXPECT(0 < deltaTth)
+  EXPECT_(0 < deltaTth)
 
   for (uint i = gmaIndexMin; i < gmaIndexMax; ++i) {
     uint ind = gmaIndexes->at(i);
@@ -263,7 +263,7 @@ void OneDataset::collectIntens(core::Session::rc session, typ::Image const* inte
 
     // bin index
     uint ti = to_u(qFloor((tth - minTth) / deltaTth));
-    EXPECT(ti <= count)
+    EXPECT_(ti <= count)
     ti = qMin(ti, count-1); // it can overshoot due to floating point calculation
 
     intens[ti] += inten;
@@ -274,13 +274,13 @@ void OneDataset::collectIntens(core::Session::rc session, typ::Image const* inte
 //------------------------------------------------------------------------------
 
 size2d OneDatasets::imageSize() const {
-  EXPECT(!isEmpty())
+  EXPECT_(!isEmpty())
   // all images have the same size; simply take the first one
   return first()->imageSize();
 }
 
 shp_Image OneDatasets::foldedImage() const {
-  EXPECT(!isEmpty())
+  EXPECT_(!isEmpty())
   shp_Image image(new Image(imageSize()));
 
   for (auto& one: *this)
@@ -297,11 +297,11 @@ Dataset::Dataset()
 
 shp_Metadata Dataset::metadata() const {
   if (md_.isNull()) {
-    EXPECT(!isEmpty())
+    EXPECT_(!isEmpty())
     const_cast<Cls*>(this)->md_ = shp_Metadata(new Metadata);
     Metadata *m = const_cast<Metadata*>(md_.data());
 
-    EXPECT(!first()->metadata().isNull())
+    EXPECT_(!first()->metadata().isNull())
     Metadata::rc firstMd = *(first()->metadata());
 
     m->date         = firstMd.date;
@@ -312,7 +312,7 @@ shp_Metadata Dataset::metadata() const {
     // averages the rest
     for (auto& one : *this) {
        Metadata const* d = one->metadata().data();
-       EXPECT(d)
+       EXPECT_(d)
 
        m->motorXT   += d->motorXT;
        m->motorYT   += d->motorYT;
@@ -374,12 +374,12 @@ shp_Metadata Dataset::metadata() const {
 }
 
 Datasets::rc Dataset::datasets() const {
-  EXPECT(datasets_)
+  EXPECT_(datasets_)
   return *datasets_;
 }
 
 #define AVG_ONES(what)    \
-  EXPECT(!isEmpty())      \
+  EXPECT_(!isEmpty())      \
   qreal avg = 0;          \
   for (auto& one : *this) \
     avg += one->what();   \
@@ -400,7 +400,7 @@ deg Dataset::chi() const {
 
 // combined range of combined datasets
 #define RGE_COMBINE(combineOp, what)  \
-  EXPECT(!isEmpty())                  \
+  EXPECT_(!isEmpty())                  \
   Range rge;                          \
   for (auto& one : *this)             \
     rge.combineOp(one->what);         \
@@ -474,7 +474,7 @@ inten_vec Dataset::collectIntens(
 }
 
 size2d Dataset::imageSize() const {
-  EXPECT(!isEmpty())
+  EXPECT_(!isEmpty())
   // all images have the same size; simply take the first one
   return first()->imageSize();
 }
@@ -487,7 +487,7 @@ Datasets::Datasets() {
 
 void Datasets::appendHere(shp_Dataset dataset) {
   // can be added only once
-  EXPECT(!dataset->datasets_)
+  EXPECT_(!dataset->datasets_)
   dataset->datasets_ = this;
 
   super::append(dataset);

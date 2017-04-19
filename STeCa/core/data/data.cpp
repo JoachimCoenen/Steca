@@ -39,15 +39,17 @@ uint Meta::Dict::at(c::strc key) const may_err {
 }
 
 Meta::Meta(Dict::shc dict_)
-: dict(dict_), vals(dict->size(), 0), tth(0), omg(0), chi(0), phi(0)
+: comment()
+, dict(dict_), vals(dict->size(), 0), tth(0), omg(0), chi(0), phi(0)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
 Meta::Meta(Dict::shc dict_, flt_vec::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
-  : dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
-  , tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_) {
-  EXPECT (dict->size() == vals.size())
+: comment()
+, dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
+, tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_) {
+  EXPECT_(dict->size() == vals.size())
 }
 
 TEST("dict",
@@ -95,14 +97,14 @@ void Set::collect(Session::rc s, Image const* corr,
   uint gmaIndexMin = 0, gmaIndexMax = 0;
   map.getGmaIndexes(rgeGma, gmaIndexes, gmaIndexMin, gmaIndexMax);
 
-  EXPECT (gmaIndexes)
-  EXPECT (gmaIndexMin <= gmaIndexMax)
-  EXPECT (gmaIndexMax <= gmaIndexes->size())
+  EXPECT_(gmaIndexes)
+  EXPECT_(gmaIndexMin <= gmaIndexMax)
+  EXPECT_(gmaIndexMax <= gmaIndexes->size())
 
   auto size = intens.size();
-  EXPECT (size == counts.size())
+  EXPECT_(size == counts.size())
 
-  EXPECT (0 < deltaTth)
+  EXPECT_(0 < deltaTth)
 
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
@@ -120,7 +122,7 @@ void Set::collect(Session::rc s, Image const* corr,
 
     // bin index
     auto ti = c::to_uint(c::floor((tth - minTth) / deltaTth));
-    EXPECT (ti <= size)
+    EXPECT_(ti <= size)
     ti = c::min(ti, size-1); // it can overshoot due to floating point calculation
 
     intens.refAt(ti) += inten;
@@ -143,7 +145,7 @@ Meta::sh CombinedSet::meta() const {
   // avg all else
 
   uint n = sets.size();
-  EXPECT (0 < n)
+  EXPECT_(0 < n)
 
   mut(lazyMeta).reset(new Meta(sets.first()->meta->dict));
 
@@ -151,7 +153,7 @@ Meta::sh CombinedSet::meta() const {
   for_i (n) {
     Meta::rc s = *(sets.at(i)->meta);
 
-    EXPECT (d.vals.size() == s.vals.size())
+    EXPECT_(d.vals.size() == s.vals.size())
     for_i (d.vals.size())
       mut(d.vals).setAt(i, d.vals.at(i) + s.vals.at(i));
 
@@ -163,7 +165,7 @@ Meta::sh CombinedSet::meta() const {
     mut(d.tim) = c::max(d.tim, s.tim);
     mut(d.mon) = c::max(d.mon, s.mon);
 
-    mut(d.dTim) += c::notnan(s.dTim, 0.f); // TODO consider _use_num !nan etc.
+    mut(d.dTim) += c::notnan(s.dTim, 0.f); // TODO consider use_num_ !nan etc.
     mut(d.dMon) += c::notnan(s.dMon, 0.f);
   }
 
@@ -185,7 +187,7 @@ Image::sh CombinedSet::image() const {
     return lazyImage;
 
   uint n = sets.size();
-  EXPECT (0 < n)
+  EXPECT_(0 < n)
 
   mut(lazyImage).reset(new Image(sets.first()->image->size()));
 
@@ -198,7 +200,7 @@ Image::sh CombinedSet::image() const {
 
 #define AVG_SETS_VAL(lazyVal, fun)  \
   if (c::isnan(lazyVal)) {          \
-    EXPECT (!sets.isEmpty())        \
+    EXPECT_(!sets.isEmpty())        \
     for (auto& set: sets)           \
       mut(lazyVal) += set->fun();   \
     mut(lazyVal) /= sets.size();    \
@@ -231,7 +233,7 @@ flt32 CombinedSet::mon() const {
 
 #define SUM_SETS_VAL(lazyVal, fun)  \
   if (c::isnan(lazyVal)) {          \
-    EXPECT (!sets.isEmpty())        \
+    EXPECT_(!sets.isEmpty())        \
     for (auto& set: sets)           \
       mut(lazyVal) += set->fun();   \
   }
@@ -247,7 +249,7 @@ flt32 CombinedSet::dMon() const {
 }
 
 #define RGE_SETS_COMBINE(op, fun)   \
-  EXPECT (!sets.isEmpty())          \
+  EXPECT_(!sets.isEmpty())          \
   Range rge;                        \
   for (auto& set : sets)            \
     rge.op(set->fun);               \
@@ -308,8 +310,8 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
 
 //------------------------------------------------------------------------------
 
-File::File(c::strc name_, Files::rc files_)
-: name(name_), files(files_), idx(0), strs(), sets() {}
+File::File(Files::rc files_, c::strc name_)
+: files(files_), idx(0), name(name_), comment(), strs(), sets() {}
 
 void File::addSet(Set::sh set) {
   mut(sets).add(set);
@@ -320,8 +322,8 @@ void File::addSet(Set::sh set) {
 Files::Files() : files(), dict(new Meta::Dict) {}
 
 void Files::addFile(data::File::sh file) {
-  EXPECT (this == &file->files)
-  EXPECT (! // not there
+  EXPECT_(this == &file->files)
+  EXPECT_(! // not there
     ([&]() {
       for_i (files.size())
         if (file == files.at(i))
@@ -348,14 +350,14 @@ void Files::remFile(uint i) {
 
 TEST("data::sh",
   Files fs;
-  File::sh f1(new File("", fs)), f2(new File("", fs));
+  File::sh f1(new File(fs, "")), f2(new File(fs, ""));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST("data",
   Files fs;
 
-  File *f1 = new File("", fs), *f2 = new File("", fs);
+  File *f1 = new File(fs, ""), *f2 = new File(fs, "");
   CHECK_EQ(0, f1->idx);
   CHECK_EQ(0, f2->idx);
 

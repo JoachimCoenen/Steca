@@ -86,7 +86,7 @@ bool couldBeTiffDat(c::path::rc path) {
 //------------------------------------------------------------------------------
 
 data::File::sh load(data::Files& files, c::path::rc path) may_err {
-  check_or_err (QFileInfo(path.p).exists(), "File does not exist: ", path);
+  check_or_err_(QFileInfo(path.p).exists(), "File does not exist: ", path);
 
   data::File::sh file;
 
@@ -99,7 +99,7 @@ data::File::sh load(data::Files& files, c::path::rc path) may_err {
   else
     c::err("unknown file type: ", path);
 
-  check_or_err (file->sets.size() > 0,
+  check_or_err_(file->sets.size() > 0,
                 "File contains no datasets: ", path);
 
   // ensure that all datasets have images of the same size

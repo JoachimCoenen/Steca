@@ -41,9 +41,8 @@ using data::Meta;
 
 using data::flt_vec;
 
-static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
-
-  File::sh file(new File(name, files));
+static File::sh loadOpenCaressFile(Files& files, c::strc name) may_err {
+  File::sh file(new File(files, name));
 
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
@@ -51,12 +50,12 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
     block = eBlock::NONE;
 
   std::function<void()> checkRobot = [&]() {
-    check_or_err (eAxes::TABLE != axes, "bad: ", "already have table data");
+    check_or_err_(eAxes::TABLE != axes, "bad: ", "already have table data");
     axes = eAxes::ROBOT;
   };
 
   std::function<void()> checkTable = [&]() {
-    check_or_err (eAxes::ROBOT != axes, "bad: ", "already have robot data");
+    check_or_err_(eAxes::ROBOT != axes, "bad: ", "already have robot data");
     axes = eAxes::TABLE;
   };
 
@@ -130,16 +129,16 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
       return;
 
     // angles
-    check_or_err (!c::isnan(tth), "missing TTH");
+    check_or_err_(!c::isnan(tth), "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
     if (robot)
       chi = 180 - chi; // TODO ask Michael
 
-    check_or_err (image.ptr(), "do not have an image");
+    check_or_err_(image.ptr(), "do not have an image");
 
-    check_or_err (c::isnan(lastTim) || lastTim <= tim, "decreasing tim");
-    check_or_err (c::isnan(lastMon) || lastMon <= mon, "decreasing mon");
+    check_or_err_(c::isnan(lastTim) || lastTim <= tim, "decreasing tim");
+    check_or_err_(c::isnan(lastMon) || lastMon <= mon, "decreasing mon");
 
     flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
@@ -157,9 +156,9 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
     if (elem.eqi("READ")) {
 
       // instrument state - global metadata
-      check_or_err (block <= eBlock::READ, "unexpect READ block");
+      check_or_err_(block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
-      check_or_err (!node.isEmpty(), "empty READ node");
+      check_or_err_(!node.isEmpty(), "empty READ node");
       if (!doAxes() && !doTimMon())
         addVal(readVals);
 
@@ -172,7 +171,7 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
         beginDataset();
       }
 
-      check_or_err (!node.isEmpty(), "empty SETVALUE node");
+      check_or_err_(!node.isEmpty(), "empty SETVALUE node");
       addVal(vals);
 
     } else if (elem.eqi("MASTER1V")) {
@@ -180,12 +179,12 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
       // scan data
       block = eBlock::MASTER1V;
 
-      check_or_err (!node.isEmpty(), "empty MASTER1V node");
+      check_or_err_(!node.isEmpty(), "empty MASTER1V node");
       if (node.eqi("ADET")) {
         auto adet = getAdet(dt, n);
         auto size = adet.size();
         auto side = c::to_uint(c::floor(sqrt(size)));
-        check_or_err ((side*side == size) && (imageSide < 0 || imageSide == int(side)),
+        check_or_err_((side*side == size) && (imageSide < 0 || imageSide == int(side)),
                       "bad image size");
         imageSide = side;
 
@@ -201,9 +200,13 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
     } else {
 
       endDataset();
-      if (node.isEmpty()) // file-level info
-        mut(file->strs).add(std::make_pair(elem, getAsString(dt, n)));
-
+      if (node.isEmpty()) { // file-level info
+        c::str s(getAsString(dt, n));
+        if (elem.eqi("COM"))
+          mut(file->comment).set(s);
+        else
+          mut(file->strs).add(std::make_pair(elem, s));
+      }
       // anything else is ignored
     }
   }
@@ -215,12 +218,12 @@ static File::sh loadOpenCaressFile(c::strc name, Files& files) may_err {
 }
 
 File::sh loadCaress(Files& files, c::path::rc path) may_err {
-  check_or_err (openFile(path), "Cannot open ", path);
+  check_or_err_(openFile(path), "Cannot open ", path);
 
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(path.basename(), files);
+    return loadOpenCaressFile(files, path.basename());
   } catch (c::exc& e) {
     mut(e.msg).set(c::str::cat(path, e.msg));
     throw;

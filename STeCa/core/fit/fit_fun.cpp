@@ -48,7 +48,7 @@ Polynom::Polynom(uint degree) {
 
 uint Polynom::degree() const {
   uint parCount = super::parameterCount();
-  ENSURE (parCount > 0)
+  ENSURE_(parCount > 0)
   return parCount - 1;
 }
 
@@ -79,7 +79,7 @@ qreal Polynom::dy(qreal x, uint i, qreal const*) const {
 
 // REVIEW
 qreal Polynom::avgY(Range::rc rgeX, qreal const* parValues) const {
-  EXPECT (rgeX.isValid())
+  EXPECT_(rgeX.isValid())
 
   qreal w = rgeX.width();
   if (w <= 0)

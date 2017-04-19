@@ -232,7 +232,7 @@ void DiffractogramPlot::plot(typ::Curve::rc dgram, typ::Curve::rc dgramBgFitted,
 
     typ::Range intenRange;
     if (hub_.isFixedIntenDgramScale()) {
-      ENSURE (!diffractogram_.dataset().isNull())
+      ENSURE_(!diffractogram_.dataset().isNull())
       auto lens = hub_.datasetLens(*diffractogram_.dataset());
       intenRange = lens->rgeInten();
     } else {
