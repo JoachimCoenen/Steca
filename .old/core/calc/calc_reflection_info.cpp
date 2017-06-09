@@ -32,7 +32,7 @@ using namespace data;
 str_lst ReflectionInfo::dataTags(bool out) {
   str_lst tags;
 
-  for_i (uint(eReflAttr::NUM_REFL_ATTR))
+  for_i_(uint(eReflAttr::NUM_REFL_ATTR))
     tags.append(reflStringTag(i, out));
 
   tags.append(Metadata::attributeTags(out));
@@ -168,7 +168,7 @@ inten_t ReflectionInfos::averageInten() const {
 
 inten_rge::rc ReflectionInfos::rgeInten() const {
   if (!rgeInten_.isValid()) {
-    for_i (count())
+    for_i_(count())
       rgeInten_.extendBy(at(i).inten());
   }
 

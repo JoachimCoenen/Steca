@@ -188,7 +188,7 @@ void TreeListView::setModel(QAbstractItemModel* model) {
 
   if (model) {
     connect(model, &QAbstractItemModel::modelReset, [this, model]() {
-      for_i (model->columnCount())
+      for_i_(model->columnCount())
         resizeColumnToContents(i);
     });
   }

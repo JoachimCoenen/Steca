@@ -126,7 +126,7 @@ PanelInterpolation::PanelInterpolation(TheHub& hub) : super(hub, "Interpolation"
 
 PanelDiagram::PanelDiagram(TheHub& hub) : super(hub, "Diagram") {
   auto tags = calc::ReflectionInfo::dataTags(false);
-  for_i (data::Metadata::numAttributes(false) - data::Metadata::numAttributes(true))
+  for_i_(data::Metadata::numAttributes(false) - data::Metadata::numAttributes(true))
     tags.removeLast(); // remove all tags that are not numbers
 
   auto g = grid();
@@ -411,7 +411,7 @@ TableModel::TableModel(TheHub& hub, uint numColumns_)
 : models::TableModel(hub), numCols_(numColumns_), sortColumn_(-1)
 {
   colIndexMap_.resize(numCols_);
-  for_i (numCols_)
+  for_i_(numCols_)
     colIndexMap_[i] = i;
 }
 
@@ -522,7 +522,7 @@ void TableModel::sortData() {
         return false;
     }
 
-    for_i (numCols_) {
+    for_i_(numCols_) {
       if (to_i(i) != sortColumn_) {
         int c = cmpRows(i, r1, r2);
         if (c < 0)
@@ -630,7 +630,7 @@ TabTable::TabTable(TheHub& hub, Params& params,
 
   table->setColumns(headers, outHeaders, cmps);
 
-  for_i (numCols) {
+  for_i_(numCols) {
     showcol_t item;
     item.name = headers.at(i);
     showCols_.append(item);
@@ -662,7 +662,7 @@ TabTable::ShowColsWidget::ShowColsWidget(Table& table, showcol_vec& showCols)
   box_->addWidget(rbFWHM_  = radioButton("fwhm"));
   box_->addSpacing(8);
 
-  for_i (showCols.count()) {
+  for_i_(showCols.count()) {
     auto& item = showCols[i];
     box_->addWidget((item.cb = check(item.name)));
   }
@@ -702,7 +702,7 @@ TabTable::ShowColsWidget::ShowColsWidget(Table& table, showcol_vec& showCols)
     bool isAll = true, isNone = true, isOther = false;
     uint nInten = 0, nTth = 0, nFwhm = 0;
 
-    for_i (showCols_.count()) {
+    for_i_(showCols_.count()) {
       if (!showCols_.at(i).cb->isChecked()) {
         isAll = false;
         continue;
@@ -741,7 +741,7 @@ TabTable::ShowColsWidget::ShowColsWidget(Table& table, showcol_vec& showCols)
     rbFWHM_->setChecked(!isOther  && PRESET_SELECTION == nFwhm);
   };
 
-  for_i (showCols_.count()) {
+  for_i_(showCols_.count()) {
     auto cb = showCols_.at(i).cb;
 
     connect(cb, &QCheckBox::toggled, [this, updateRbs, i](bool on) {
@@ -952,7 +952,7 @@ void Frame::calculate() {
 
     Progress progress(reflCount, pb_);
 
-    for_i (reflCount)
+    for_i_(reflCount)
       calcPoints_.append(hub_.makeReflectionInfos(
           *reflections.at(i), gammaSlices, rgeGamma, &progress));
   }
@@ -977,14 +977,14 @@ void Frame::interpolate() {
 
     Progress progress(calcPoints_.count(), pb_);
 
-    for_i (calcPoints_.count())
+    for_i_(calcPoints_.count())
       interpPoints_.append(
           calc::interpolate(calcPoints_.at(i),
                             alphaStep, betaStep, idwRadius,
                             avgAlphaMax, avgRadius, avgTreshold,
                             &progress));
   } else {
-    for_i (calcPoints_.count())
+    for_i_(calcPoints_.count())
       interpPoints_.append(calc::ReflectionInfos());
   }
 

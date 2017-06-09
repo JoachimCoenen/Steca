@@ -271,7 +271,7 @@ bool PoleFiguresFrame::savePoleFigureOutput() {
 
   // all reflections
   bool res = true;
-  for_i (reflections.count())
+  for_i_(reflections.count())
     res = logCheckSuccess(path, writePoleFigureOutputFiles(path, i)) && res;
 
   return res;
@@ -298,7 +298,7 @@ bool PoleFiguresFrame::writePoleFigureOutputFiles(rcstr filePath, uint index) {
 
   if (tabSave_->outputInten()) {
     qreal_vec output;
-    for_i (reflInfo.count())
+    for_i_(reflInfo.count())
       output.append(reflInfo.at(i).inten());
 
     auto intenFilePath = path + ".inten";
@@ -312,7 +312,7 @@ bool PoleFiguresFrame::writePoleFigureOutputFiles(rcstr filePath, uint index) {
 
   if (tabSave_->outputTth() && fit::ePeakType::RAW != type) {
     qreal_vec output;
-    for_i (reflInfo.count())
+    for_i_(reflInfo.count())
       output.append(reflInfo.at(i).tth());
 
     auto tthFilePath = filePath + ".tth";
@@ -325,7 +325,7 @@ bool PoleFiguresFrame::writePoleFigureOutputFiles(rcstr filePath, uint index) {
 
   if (tabSave_->outputFWHM() && fit::ePeakType::RAW != type) {
     qreal_vec output;
-    for_i (reflInfo.count())
+    for_i_(reflInfo.count())
       output.append(reflInfo.at(i).fwhm());
 
     auto fwhmFilePath = filePath + ".fwhm";
@@ -378,7 +378,7 @@ void PoleFiguresFrame::writeListFile(rcstr filePath, calc::ReflectionInfos reflI
   WriteFile file(filePath + ".lst");
   QTextStream stream(&file);
 
-  for_i (reflInfo.count()) {
+  for_i_(reflInfo.count()) {
     stream << qreal(reflInfo.at(i).alpha()) << " "
            << qreal(reflInfo.at(i).beta()) << " "
            << output.at(i) << '\n';

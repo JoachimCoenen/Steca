@@ -93,7 +93,7 @@ OutputDataCollection DiffractogramsFrame::collectCurves(
 
   gmaSlices = qMax(1u, gmaSlices);
   qreal step = rge.width() / gmaSlices;
-  for_i (gmaSlices) {
+  for_i_(gmaSlices) {
     qreal min = rge.min + i * step;
     gma_rge gmaStripe(min, min + step);
 
@@ -155,7 +155,7 @@ auto writeMetaData = [](OutputData outputData, QTextStream& stream) {
   stream << "Gamma range min: " << rgeGma.min << '\n';
   stream << "Gamma range max: " << rgeGma.max << '\n';
 
-  for_i (data::Metadata::numAttributes(true)) {
+  for_i_(data::Metadata::numAttributes(true)) {
     stream << data::Metadata::attributeTag(i, true) << ": " <<
               md.attributeValue(i).toDouble() << '\n';
   }
@@ -174,7 +174,7 @@ bool DiffractogramsFrame::writeCurrDiffractogramToFile(rcstr filePath, rcstr sep
 
   auto& curve = outputData.curve_;
 
-  for_i (curve.xs().count())
+  for_i_(curve.xs().count())
     stream << curve.x(i) << separator << curve.y(i) << '\n';
 
   return true;
@@ -198,7 +198,7 @@ bool DiffractogramsFrame::writeAllDiffractogramsToFiles(rcstr filePath, rcstr se
         writeMetaData(outputData, stream);
 
         stream << "Tth" << separator << "Intensity" << '\n';
-        for_i (outputData.curve_.xs().count()) {
+        for_i_(outputData.curve_.xs().count()) {
           stream << outputData.curve_.x(i) << separator << outputData.curve_.y(i) << '\n';
         }
       }
@@ -209,7 +209,7 @@ bool DiffractogramsFrame::writeAllDiffractogramsToFiles(rcstr filePath, rcstr se
       for (auto outputData : outputCollection) {
         writeMetaData(outputData, stream);
         stream << "Tth" << separator << "Intensity" << '\n';
-        for_i (outputData.curve_.xs().count()) {
+        for_i_(outputData.curve_.xs().count()) {
           stream << outputData.curve_.x(i) << separator << outputData.curve_.y(i) << '\n';
         }
       }

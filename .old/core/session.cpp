@@ -399,7 +399,7 @@ ReflectionInfos Session::makeReflectionInfos(
 
     gmaSlices = qMax(1u, gmaSlices);
     qreal step = rge.width() / gmaSlices;
-    for_i (uint(gmaSlices)) {
+    for_i_(uint(gmaSlices)) {
       qreal min = rge.min + i * step;
       gma_rge gmaStripe(min, min + step);
       auto refInfo = makeReflectionInfo(*lens, reflection, gmaStripe);

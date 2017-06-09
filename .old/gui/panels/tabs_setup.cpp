@@ -49,7 +49,7 @@ ReflectionView::ReflectionView(TheHub &hub) : super(hub) {
   setModel(&hub.reflectionsModel);
   EXPECT_(dynamic_cast<Model*>(super::model()))
 
-  for_i (model()->columnCount())
+  for_i_(model()->columnCount())
     resizeColumnToContents(i);
 }
 

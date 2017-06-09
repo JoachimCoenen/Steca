@@ -150,7 +150,7 @@ void searchInQuadrants(Quadrants::rc quadrants, deg alpha, deg beta,
     auto deltaAlpha = info.alpha() - alpha;
     // "Distance" between grid point and current info.
     auto d = angle(alpha, info.alpha(), deltaBeta);
-    for_i (quadrants.count()) {
+    for_i_(quadrants.count()) {
       if (inQuadrant(quadrants.at(i), deltaAlpha, deltaBeta)) {
         if (d >= distances.at(i)) continue;
         distances[i] = d;
@@ -171,7 +171,7 @@ itf_t inverseDistanceWeighing(qreal_vec::rc distances, info_vec::rc infos) {
   RUNTIME_CHECK(infos.count() == N, "infos size should be 4");
   qreal_vec inverseDistances(N);
   qreal     inverseDistanceSum = 0;
-  for_i (NUM_QUADRANTS) {
+  for_i_(NUM_QUADRANTS) {
     if (distances.at(i) == .0) {
       // Points coincide; no need to interpolate.
       auto& in  = infos.at(i);
@@ -187,7 +187,7 @@ itf_t inverseDistanceWeighing(qreal_vec::rc distances, info_vec::rc infos) {
   qreal offset = 0;
   qreal height = 0;
   qreal fwhm   = 0;
-  for_i (N) {
+  for_i_(N) {
     auto& in = infos.at(i);
     auto& d  = inverseDistances.at(i);
     offset += in->tth()   * d;
@@ -209,7 +209,7 @@ itf_t interpolateValues(deg searchRadius, ReflectionInfos::rc infos,
                     infos, interpolationInfos, distances);
   // Check that infos were found in all quadrants.
   uint numQuadrantsOk = 0;
-  for_i (NUM_QUADRANTS) {
+  for_i_(NUM_QUADRANTS) {
     if (interpolationInfos.at(i)) {
       ++numQuadrantsOk;
       continue;
@@ -274,9 +274,9 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
   if (progress)
     progress->setTotal(numAlphas * numBetas); // REVIEW + 1?
 
-  for_int (i, numAlphas + 1) {  // REVIEW why + 1
+  for_var_(i, numAlphas + 1) {  // REVIEW why + 1
     deg const alpha = i * alphaStep;
-    for_int (j, numBetas) {
+    for_var_(j, numBetas) {
       deg const beta = j * betaStep;
 
       if (progress)

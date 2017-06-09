@@ -28,7 +28,7 @@ static void sortColumns(qreal_vec& xs, qreal_vec& ys, uint_vec& is) {
   uint count = xs.count();
 
   is.resize(count);
-  for_i (count)
+  for_i_(count)
     is[i] = i;
 
   std::sort(is.begin(), is.end(), [&xs,&ys](uint i1,uint i2) {
@@ -42,12 +42,12 @@ static void sortColumns(qreal_vec& xs, qreal_vec& ys, uint_vec& is) {
 
   qreal_vec r(count);
 
-  for_i (count)
+  for_i_(count)
     r[i] = xs.at(is.at(i));
 
   xs = r;
 
-  for_i (count)
+  for_i_(count)
     r[i] = ys.at(is.at(i));
 
   ys = r;
@@ -73,7 +73,7 @@ void TabPlot::plot(qreal_vec::rc xs,
 
   typ::Range rgeX, rgeY;
 
-  for_i (count) {
+  for_i_(count) {
     rgeX.extendBy(xs.at(i));
     rgeY.extendBy(ys.at(i));
   }
@@ -188,7 +188,7 @@ void DiagramsFrame::recalculate() {
   uint xi = uint(xAttr());
   uint yi = uint(yAttr());
 
-  for_i (count) {
+  for_i_(count) {
     auto row = rs_.at(i).data();
     xs_[i] = row.at(xi).toDouble();
     ys_[i] = row.at(yi).toDouble();
@@ -201,7 +201,7 @@ void DiagramsFrame::recalculate() {
     uint count = ys_.count();
     ysErrorLo_.resize(count); ysErrorUp_.resize(count);
 
-    for_i (count) {
+    for_i_(count) {
       auto  row   = rs_.at(is.at(i)).data(); // access error over sorted index vec
       qreal sigma = row.at(uint(attr)).toDouble();
       qreal y = ys_.at(i);
@@ -259,7 +259,7 @@ void DiagramsFrame::writeCurrentDiagramOutputFile(rcstr filePath, rcstr separato
 
   bool writeErrors = !ysErrorUp_.isEmpty();
 
-  for_i (xs_.count()) {
+  for_i_(xs_.count()) {
     stream << xs_.at(i) << separator << ys_.at(i);
     if (writeErrors)
       stream << separator << ysErrorLo_.at(i) << separator << ysErrorUp_.at(i);
@@ -273,15 +273,15 @@ void DiagramsFrame::writeAllDataOutputFile(rcstr filePath, rcstr separator) {
 
   auto headers = table_->outHeaders();
 
-  for_i (headers.count())
+  for_i_(headers.count())
     stream << headers.at(to_u(i)) << separator;
 
   stream << '\n';
 
-  for_i (calcPoints_.at(getReflIndex()).count()) {
+  for_i_(calcPoints_.at(getReflIndex()).count()) {
     auto& row = table_->row(i);
 
-    for_i (row.count()) {
+    for_i_(row.count()) {
       QVariant const& var = row.at(i);
       if (typ::isNumeric(var))
         stream << var.toDouble();

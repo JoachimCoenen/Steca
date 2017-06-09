@@ -1,12 +1,12 @@
 # STeCa2
-StressTextureCalculator, version 2. (`STeCa2`, or simply **Steca**)
+StressTextureCalculator, version 2. (`STeCa2`, `Steca2`, or simply `Steca`)
 
-* [[Online STeCa user documentation]](http://apps.jcns.fz-juelich.de/steca2)
-* [[Developers' documentation]](doc.md)
+* [[Online Steca user documentation (GitHub pages)]](https://jburle.github.io/STeCa2/)
+* [[Developers' navigation through the source tree]](nav.md)
 
 ## Branches
 
-* 'master': squashed, only releases
+* 'master': squashed commit history, contains only releases
 * 'develop-2.0.5': continuing 2.0.x development
 * 'develop': on the way to 2.1
 

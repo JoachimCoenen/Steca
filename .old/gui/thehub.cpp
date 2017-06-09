@@ -264,7 +264,7 @@ QByteArray TheHub::saveSession() const {
 
   JsonArr arrFiles;
   // save file path relative to location of session
-  for_i (numFiles()) {
+  for_i_(numFiles()) {
     str absPath = getFile(i)->fileInfo().absoluteFilePath();
     str relPath = QDir::current().relativeFilePath(absPath);
     arrFiles.append(relPath);
@@ -372,7 +372,7 @@ void TheHub::loadSession(QByteArray const& json) THROWS {
                    top.loadPeal(config_key::INTEN_SCALE, peal(1)));
 
   auto reflectionsObj = top.loadArr(config_key::REFLECTIONS);
-  for_i (reflectionsObj.count()) {
+  for_i_(reflectionsObj.count()) {
     calc::shp_Reflection reflection(new calc::Reflection);
     reflection->loadJson(reflectionsObj.objAt(i));
     session_->addReflection(reflection);

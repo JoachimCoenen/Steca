@@ -1,0 +1,18 @@
+get_filename_component (lib ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
+set (CMAKE_CXX_STANDARD 11)
+if (CMAKE_COMPILER_IS_GNUCXX)
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif ()
+
+find_package(Qt5 5.6.2 REQUIRED COMPONENTS Core)
+set (CMAKE_AUTOMOC ON)
+
+file (GLOB_RECURSE files *)
+add_library (${lib} ${files})
+
+target_link_libraries (${lib}
+  Qt5::Core
+)
+
+# eof

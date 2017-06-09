@@ -118,7 +118,7 @@ void DatasetsModel::showMetaInfo(typ::vec<bool> const& metadataRows) {
 
   metaInfoNums_.clear();
 
-  for_i (metadataRows.count())
+  for_i_(metadataRows.count())
     if (metadataRows.at(i))
       metaInfoNums_.append(i);
 
@@ -257,7 +257,7 @@ void ReflectionsModel::remReflection(uint i) {
 
 str_lst ReflectionsModel::names() const {
   str_lst ns;
-  for_i (rowCount())
+  for_i_(rowCount())
     ns.append(displayData(to_u(i)));
   return ns;
 }

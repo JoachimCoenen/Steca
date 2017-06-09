@@ -172,7 +172,7 @@ QVariant Metadata::attributeValue(uint i) const {
 
 row_t Metadata::attributeValues() const {
   row_t attrs;
-  for_i (uint(eAttr::NUM_ALL_ATTRIBUTES))
+  for_i_(uint(eAttr::NUM_ALL_ATTRIBUTES))
     attrs.append(attributeValue(i));
   return attrs;
 }
@@ -180,7 +180,7 @@ row_t Metadata::attributeValues() const {
 row_t Metadata::attributeNaNs() {
   static row_t row;
   if (row.isEmpty())
-    for_i (uint(eAttr::NUM_ALL_ATTRIBUTES))
+    for_i_(uint(eAttr::NUM_ALL_ATTRIBUTES))
       row.append(NAN);
   return row;
 }
@@ -194,7 +194,7 @@ OneDataset::OneDataset(Metadata::rc md, typ::inten_arr::rc intens)
 OneDataset::OneDataset(Metadata::rc md, size2d::rc size, inten_vec const& intens)
   : md_(new Metadata(md)), image_(new Image(size)) {
   EXPECT_(intens.count() == size.count())
-  for_i (intens.count())
+  for_i_(intens.count())
     image_->setInten(i, intens.at(i));
 }
 
@@ -463,7 +463,7 @@ inten_vec Dataset::collectIntens(
   // sum or average
   if (session.intenScaledAvg()) {
     preal scale = session.intenScale();
-    for_i (numBins) {
+    for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
         intens[i] *= scale/cnt;

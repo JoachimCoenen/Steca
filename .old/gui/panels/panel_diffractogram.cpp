@@ -259,7 +259,7 @@ void DiffractogramPlot::plot(typ::Curve::rc dgram, typ::Curve::rc dgramBgFitted,
     clearReflLayer();
     setCurrentLayer("refl");
 
-    for_i (refls.count()) {
+    for_i_(refls.count()) {
       auto& r = refls.at(i);
       auto* graph = addGraph();
       reflGraph_.append(graph);
@@ -299,7 +299,7 @@ void DiffractogramPlot::updateBg() {
   switch (tool_) {
   case eTool::BACKGROUND: {
     typ::Ranges::rc rs = hub_.bgRanges();
-    for_i (rs.count())
+    for_i_(rs.count())
       addBgItem(rs.at(i));
     break;
   }
@@ -550,7 +550,7 @@ void Diffractogram::calcBackground() {
   auto bgPolynom =
       fit::Polynom::fromFit(hub_.bgPolyDegree(), dgram_, hub_.bgRanges());
 
-  for_i (dgram_.count()) {
+  for_i_(dgram_.count()) {
     qreal x = dgram_.x(i), y = bgPolynom.y(x);
     bg_.append(x, y);
     dgramBgFitted_.append(x, dgram_.y(i) - y);
@@ -573,7 +573,7 @@ void Diffractogram::calcReflections() {
   currReflIndex_ = 0;
 
   auto rs = hub_.reflections();
-  for_i (rs.count()) {
+  for_i_(rs.count()) {
     auto& r = rs[i];
     if (r == currentReflection_)
       currReflIndex_ = i;
@@ -585,7 +585,7 @@ void Diffractogram::calcReflections() {
 
     typ::Curve c;
 
-    for_i (dgramBgFitted_.count()) {
+    for_i_(dgramBgFitted_.count()) {
       qreal x = dgramBgFitted_.x(i);
       if (rge.contains(x))
         c.append(x, fun.y(x));
