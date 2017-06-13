@@ -1,10 +1,10 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_MODEL_H
-#define APP_LIB_TYP_QT_MODEL_H
+#ifndef QT_LIB_MODEL_H
+#define QT_LIB_MODEL_H
 
-#include "../inc/defs_h.h"
-#include "../inc/num.h"
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/inc/num.h>
 #include "var.h"
 #include <QAbstractTableModel>
 
@@ -12,29 +12,33 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(lst_model, QAbstractTableModel)
-  use_num_ (cl_n, uint, {}) // col number
-  use_num_ (rw_n, uint, {}) // row number
+  use_num_(cl_n, uint, {}) // col number
+  use_num_(rw_n, uint, {}) // row number
 
   lst_model();
 
-  atr_(bool, isCheckable)
-  vir_set_(checkable, (bool))
+  atr_(bool, isCheckable);
+  set_(setCheckable, (bool));
 
-  abs_mth_(cl_n, cols, ())
-  abs_mth_(rw_n, rows, ())
-  vir_mth_(str,  head, (cl_n))
-  abs_mth_(var,  cell, (rw_n, cl_n))
+  virtual mth_(cl_n, cols, ()) = 0;
+  virtual mth_(rw_n, rows, ()) = 0;
 
-  vir_set_(check, (rw_n))
-  vir_set_(check, (rw_n, bool))
-  vir_mth_(bool, isChecked, (rw_n))
+  virtual mth_(str,  head, (cl_n));
+  virtual mth_(var,  cell, (rw_n, cl_n));
 
-  mth_(void, notify, ())
+  virtual set_(check, (rw_n));
+  virtual set_(check, (rw_n, bool));
+  virtual mth_(bool, isChecked, (rw_n));
+
+  mth_(void, notify, ());
 
 protected:
-  using rcIndex = QModelIndex const&;
-  int columnCount(rcIndex = QModelIndex())       const;
-  int rowCount(rcIndex = QModelIndex())          const;
+  using Index   = QModelIndex;
+  using rcIndex = Index const&;
+
+  int columnCount(rcIndex = Index()) const;
+  int rowCount(rcIndex = Index())    const;
+
   QVariant headerData(int, Qt::Orientation, int) const;
   QVariant data(rcIndex, int)                    const;
 

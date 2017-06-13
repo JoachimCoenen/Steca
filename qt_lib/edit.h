@@ -1,9 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_EDIT_H
-#define APP_LIB_TYP_QT_EDIT_H
+#ifndef QT_LIB_EDIT_H
+#define QT_LIB_EDIT_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 #include <QLineEdit>
 
 namespace l_qt {
@@ -11,9 +11,10 @@ namespace l_qt {
 
 dcl_sub_(edit, QLineEdit)
   edit();
-  set_(ro, (bool = true))
-  set_(text, (strc))
-  mth_(str, text, ())
+
+  mth_(str, text, ());
+  set_(text, (strc));
+  set_(ro, (bool = true));
 dcl_end
 
 //------------------------------------------------------------------------------

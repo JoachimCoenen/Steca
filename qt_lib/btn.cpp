@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "btn.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "str_inc.h"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -11,8 +12,7 @@ btn::btn(strc t) {
 }
 
 btn::ref btn::text(strc t) {
-  base::setText(t);
-  return *this;
+  base::setText(toQt(t)); RT
 }
 
 //------------------------------------------------------------------------------

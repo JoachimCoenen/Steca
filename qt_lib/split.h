@@ -1,9 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_SPLIT_H
-#define APP_LIB_TYP_QT_SPLIT_H
+#ifndef QT_LIB_SPLIT_H
+#define QT_LIB_SPLIT_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 #include <QSplitter>
 
 namespace l_qt {
@@ -17,6 +17,7 @@ struct panel;
 dcl_sub_(split, QSplitter)
   split& hs();
   split& vs();
+
   split& add(QWidget*);
   panel& addPanel();
 
@@ -27,6 +28,7 @@ dcl_end
 dcl_sub_(hSplit, split)
 protected:
   hSplit();
+
   friend struct win;
   friend struct split;
   friend struct box;
@@ -35,6 +37,7 @@ dcl_end
 dcl_sub_(vSplit, split)
 protected:
   vSplit();
+
   friend struct win;
   friend struct split;
   friend struct box;

@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "win.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include "layout.h"
 #include "split.h"
 #include <QCloseEvent>

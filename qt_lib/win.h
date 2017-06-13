@@ -1,9 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_WIN_H
-#define APP_LIB_TYP_QT_WIN_H
+#ifndef QT_LIB_WIN_H
+#define QT_LIB_WIN_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 #include <QMainWindow>
 
 namespace l_qt {
@@ -15,14 +15,14 @@ struct panel;
 dcl_sub_(win, QMainWindow)
   win();
 
-  mth_mut_err_(split&, hs, ())
-  mth_mut_err_(split&, vs, ())
-  mth_mut_err_(panel&, makePanel, ())
+  mth_mut_(split&, hs, ())        may_err;
+  mth_mut_(split&, vs, ())        may_err;
+  mth_mut_(panel&, makePanel, ()) may_err;
 
-  mth_mut_(void, show, (bool = true))
+  mth_mut_(void, show, (bool = true));
 
-  vir_mth_mut_(void, onFirstShow, ())
-  vir_mth_mut_(bool, onClose, ())
+  virtual mth_mut_(void, onFirstShow, ());
+  virtual mth_mut_(bool, onClose, ());
 
 protected:
   void closeEvent(QCloseEvent*);

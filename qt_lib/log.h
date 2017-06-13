@@ -1,9 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_LOG_H
-#define APP_LIB_TYP_QT_LOG_H
+#ifndef QT_LIB_LOG_H
+#define QT_LIB_LOG_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 
 namespace l_qt {
 //------------------------------------------------------------------------------

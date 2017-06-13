@@ -1,13 +1,12 @@
-// (app_lib)
+// (qt_lib)
 
 #include "chk.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
 #include "act.h"
+#include "str_inc.h"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
-
-chk::chk() : chk(str::null) {}
 
 chk::chk(strc t) {
   text(t);
@@ -17,13 +16,12 @@ chk::chk(act& act) {
   action(&act);
 }
 
-chk::ref chk::text(strc text) {
-  base::setText(text);
-  return *this;
+chk::ref chk::text(strc t) {
+  base::setText(toQt(t)); RT
 }
 
 chk::ref chk::action(act* a) {
-  text(a ? a->text().toLower() : str::null);
+  base::setText(a ? toQt(a->text()).toLower() : QString::null);
 
   disconnect(con1);
   disconnect(con2);
@@ -41,12 +39,11 @@ chk::ref chk::action(act* a) {
     });
   }
 
-  return *this;
+  RT
 }
 
 chk::ref chk::check(bool on) {
-  base::setChecked(on);
-  return *this;
+  base::setChecked(on); RT
 }
 
 //------------------------------------------------------------------------------

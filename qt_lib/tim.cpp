@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "tim.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include <QDateTime>
 
 namespace l_qt {

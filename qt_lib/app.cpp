@@ -1,11 +1,12 @@
-// (app_lib)
+// (qt_lib)
 
 #include "app.h"
-#include "../inc/defs_cpp.h"
-#include "../inc/exc.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "dlg_msg.h"
+#include "str_inc.h"
+
 #include "log.h"
 
-#include <QMessageBox>
 #include <QStatusBar>
 #include <QStyleFactory>
 #include <iostream>
@@ -27,15 +28,14 @@ static QtMessageHandler oldHandler;
 static QAtomicInt       noWarning;
 
 static void messageHandler(QtMsgType type, QMessageLogContext const& ctx,
-                           strc msg) {
+                           QString const& msg) {
   switch (type) {
   case QtDebugMsg:
-    std::cerr << "Trace: " << msg.toStdString()
-              << "\t[" << ctx.function << ']' << std::endl;
+    std::cerr << "Trace: " << fromQt(msg) << "\t[" << ctx.function << ']' << std::endl;
     break;
   case QtWarningMsg:
     if (0 == noWarning.load())
-      QMessageBox::warning(QApplication::activeWindow(), qAppName(), msg);
+      dlgWarn(QApplication::activeWindow(), fromQt(msg));
     break;
   default:
     oldHandler(type, ctx, msg);
@@ -55,40 +55,18 @@ static win *mainWin;
 static void logMessage(strc msg, log::eType type) {
   EXPECT_(mainWin)
 
-  QString statusMsg;
   switch (type) {
-  case log::INFO:
-    statusMsg = msg;
-    break;
   case log::POPUP:
-    QMessageBox::information(mainWin, "", msg);
+    dlgInfo(mainWin, msg);
     _if_clang_([[clang::fallthrough]];)
-  case log::WARN:
-    statusMsg = "** " + msg + " **";
+  default:
     break;
   }
 
-  mainWin->statusBar()->showMessage(statusMsg, 3000);
+  mainWin->statusBar()->showMessage(toQt(msg), 3000);
 }
 
-int app::exec() {
-  return execWin(nullptr);
-}
-
-int app::execWin(win& w) {
-  return execWin(&w);
-}
-
-int app::runWin(win& w) {
-  try {
-    return execWin(w);
-  } catch (std::exception const& e) {
-    qWarning("Fatal error: %s", e.what());
-    return -1;
-  }
-}
-
-int app::execWin(win* w) {
+int app::exec(win* w) {
   mainWin = w;
 
   if (mainWin) {
@@ -109,6 +87,15 @@ int app::execWin(win* w) {
   mainWin = nullptr;
 
   return res;
+}
+
+int app::safeExec(win* w) {
+  try {
+    return exec(w);
+  } catch (std::exception const& e) {
+    qWarning("Fatal error: %s", e.what());
+    return -1;
+  }
 }
 
 // Exceptions caught here; displayed in a dialog.

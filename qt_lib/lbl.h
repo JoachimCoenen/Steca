@@ -1,9 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_LBL_H
-#define APP_LIB_TYP_QT_LBL_H
+#ifndef QT_LIB_LBL_H
+#define QT_LIB_LBL_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 #include <QLabel>
 
 namespace l_qt {
@@ -11,7 +11,8 @@ namespace l_qt {
 
 dcl_sub_(lbl, QLabel)
   lbl(strc);
-  set_(text, (strc))
+
+  set_(text, (strc));
 dcl_end
 
 //------------------------------------------------------------------------------

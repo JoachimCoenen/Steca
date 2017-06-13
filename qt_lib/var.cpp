@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "var.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "str_inc.h"
 #include <QDateTime>
 
 namespace l_qt {
@@ -38,7 +39,7 @@ int var::toInt() const {
 }
 
 str var::toStr() const {
-  return base::toString();
+  return fromQt(base::toString());
 }
 
 real var::toReal() const {

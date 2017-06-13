@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "split.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include "layout.h"
 
 namespace l_qt {
@@ -24,7 +25,7 @@ split& split::vs() {
 split& split::add(QWidget* wgt) {
   EXPECT_(wgt)
   addWidget(wgt);
-  return *this;
+  RT
 }
 
 panel& split::addPanel() {

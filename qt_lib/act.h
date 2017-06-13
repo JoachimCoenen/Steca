@@ -1,63 +1,64 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_ACT_H
-#define APP_LIB_TYP_QT_ACT_H
+#ifndef QT_LIB_ACT_H
+#define QT_LIB_ACT_H
 
-#include "../inc/defs_h.h"
-#include "../inc/ptr.h"
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/inc/ptr.h>
+#include <dev_lib/typ/hash.h>
+
 #include <QAction>
 #include <QToolButton>
-#include <QHash>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(act, QAction)
-  act();
   act(strc);
 
-  fry_(l::own<act>, make, (strc tx, strc key))
-  fry_(l::own<act>, make, (strc tx, strc key, strc iconFile))
+  fry_(l::own<act>, make, (strc tx, strc key));
+  fry_(l::own<act>, make, (strc tx, strc key, strc iconFile));
 
-  set_(text, (strc))
-  mth_(str, text, ())
+  set_(text, (strc));
+  mth_(str, text, ());
 
-  set_(tip,  (strc))
-  set_(key,  (strc))
-  set_(icon, (strc fileName))
+  set_(tip,  (strc));
+  set_(key,  (strc));
+  set_(icon, (strc fileName));
 
-  set_(checkable, (bool = true))
-  mth_(bool, isCheckable, ())
-  set_(check, (bool = true))
+  bol_(isCheckable, ());
+  set_(setCheckable, (bool = true));
+  set_(check, (bool = true));
 
   template <typename L>
-  set_inl_(onTrigger, (L l), {
-    checkable(false);
+  set_(onTrigger, (L l)) {
+    setCheckable(false);
     connect(this, &QAction::triggered, l);
-  })
+    RT
+  }
 
   template <typename L>
-  set_inl_(onToggle, (L l),
-    checkable(true);
+  set_(onToggle, (L l)) {
+    setCheckable(true);
     connect(this, &QAction::toggled, l);
-  )
+  }
 dcl_end
 
-//------------------------------------------------------------------------------
+////------------------------------------------------------------------------------
 
-struct win;
+//TODO struct win;
 
-dcl_(acts)
-  acts(win&);
-  set_(add, (strc hash, l::give_me<act>))
-  mth_err_(act&, get, (strc hash))
+//dcl_(acts)
+//  acts(win&);
+//  set_(add, (strc hash, l::give_me<act>));
+//  mth_(act&, get, (strc hash)) may_err;
 
-  cst_(str, QUIT)
+//  cst_(str, QUIT);
 
-protected:
-  win& w;
-  QHash<str, act> as;
-dcl_end
+//protected:
+//  win& w;
+//  l::hash<str, act> as;
+//dcl_end
 
 //------------------------------------------------------------------------------
 
@@ -65,13 +66,13 @@ dcl_sub_(actbtn, QToolButton)
   actbtn();
   actbtn(act&);
 
-  set_(action, (act*))
+  set_(action, (act*));
 
   template <typename L>
-  set_inl_(onAct, (L l),
+  set_(onAct, (L l)) {
     connect(this, &QAction::triggered, l);
-    return *this;
-  )
+    RT
+  }
 dcl_end
 
 //------------------------------------------------------------------------------

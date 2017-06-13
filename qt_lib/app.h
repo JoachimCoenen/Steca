@@ -1,10 +1,11 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_APP_H
-#define APP_LIB_TYP_QT_APP_H
+#ifndef QT_LIB_APP_H
+#define QT_LIB_APP_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
 #include "win.h"
+
 #include <QApplication>
 
 namespace l_qt {
@@ -13,19 +14,17 @@ namespace l_qt {
 dcl_sub_(app, QApplication)
   app(int& argc, char* argv[]);
 
-  int exec();
-  int execWin(win&);
+  int exec(win* = nullptr);
 
   template <typename Win>
   static int run(int& argc, char* argv[]) {
     app a(argc, argv);
     Win w;
-    return a.runWin(w);
+    return a.safeExec(&w);
   }
 
 private:
-  int runWin(win&);
-  int execWin(win*);
+  int  safeExec(win*);
   bool notify(QObject*, QEvent*);
 dcl_end
 

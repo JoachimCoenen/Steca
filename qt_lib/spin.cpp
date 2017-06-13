@@ -1,8 +1,7 @@
-// (app_lib)
+// (qt_lib)
 
 #include "spin.h"
-#include "../inc/defs_cpp.h"
-#include "../typ_qt/wgt_help.h"
+#include <dev_lib/inc/defs_cpp.h>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -12,28 +11,23 @@ spin::spin() {
 }
 
 spin::ref spin::decimals(uint n) {
-  base::setDecimals(int(n));
-  return *this;
+  base::setDecimals(int(n)); RT
 }
 
 spin::ref spin::digitWidth(uint n) {
-  base::setMaximumWidth(int(n * mWidth(*this)));
-  return *this;
+  base::setMaximumWidth(int(n * fontMetrics().width('m'))); RT
 }
 
 spin::ref spin::min(real val) {
-  base::setMinimum(val);
-  return *this;
+  base::setMinimum(val); RT
 }
 
 spin::ref spin::max(real val) {
-  base::setMaximum(val);
-  return *this;
+  base::setMaximum(val); RT
 }
 
 spin::ref spin::val(real val) {
-  base::setValue(val);
-  return *this;
+  base::setValue(val); RT
 }
 
 real spin::val() const {

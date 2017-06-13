@@ -1,7 +1,9 @@
-// (app_lib)
+// (qt_lib)
 
 #include "model.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "str_inc.h"
+
 #include <QSize>
 
 namespace l_qt {
@@ -9,23 +11,21 @@ namespace l_qt {
 
 lst_model::lst_model() : isCheckable(false) {}
 
-lst_model::ref lst_model::checkable(bool on) {
-  mut(isCheckable) = on;
-  return *this;
+lst_model::ref lst_model::setCheckable(bool on) {
+  mut(isCheckable) = on; RT
 }
 
 str lst_model::head(cl_n) const {
-  return str::null;
+  return nullstr;
 }
 
 lst_model::ref lst_model::check(rw_n rw) {
-  check(rw, !isChecked(rw));
-  return *this;
+  check(rw, !isChecked(rw)); RT
 }
 
 lst_model::ref lst_model::check(rw_n, bool) {
   // nothing
-  return *this;
+  RT
 }
 
 bool lst_model::isChecked(rw_n) const {
@@ -53,7 +53,7 @@ QVariant lst_model::headerData(int col, Qt::Orientation, int role) const {
 
   switch (role) {
   case Qt::DisplayRole:
-    return head(cl);
+    return toQt(head(cl));
   default:
     return QVariant();
   }

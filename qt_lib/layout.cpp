@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "layout.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include "split.h"
 
 namespace l_qt {
@@ -27,18 +28,15 @@ grid& grid::gr(uint row, uint col) {
 
 grid::ref grid::add(QWidget* wgt, uint row, uint col) {
   EXPECT_(wgt)
-  addWidget(wgt, int(row), int(col));
-  return *this;
+  addWidget(wgt, int(row), int(col)); RT
 }
 
 grid::ref grid::addRowStretch() {
-  setRowStretch(rowCount(), 0);
-  return *this;
+  setRowStretch(rowCount(), 0); RT
 }
 
 grid::ref grid::addColStretch() {
-  setColumnStretch(columnCount(), 0);
-  return *this;
+  setColumnStretch(columnCount(), 0); RT
 }
 
 grid::grid() {
@@ -79,24 +77,20 @@ split& box::vs() {
 }
 
 box::ref box::margin(uint n) {
-  setMargin(int(n));
-  return *this;
+  setMargin(int(n)); RT
 }
 
 box::ref box::spacing(uint n) {
-  setMargin(int(n));
-  return *this;
+  setMargin(int(n)); RT
 }
 
 box::ref box::add(QWidget* wgt) {
   EXPECT_(wgt)
-  addWidget(wgt);
-  return *this;
+  addWidget(wgt); RT
 }
 
 box::ref box::addStretch() {
-  addStretch();
-  return *this;
+  addStretch(); RT
 }
 
 box::box() : base(QBoxLayout::LeftToRight) {

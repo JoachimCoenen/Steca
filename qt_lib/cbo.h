@@ -1,9 +1,10 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_CBO_H
-#define APP_LIB_TYP_QT_CBO_H
+#ifndef QT_LIB_CBO_H
+#define QT_LIB_CBO_H
 
-#include "../inc/defs_h.h"
+#include <dev_lib/inc/defs_h.h>
+#include "str_inc.h"
 #include <QComboBox>
 
 namespace l_qt {
@@ -11,10 +12,10 @@ namespace l_qt {
 
 dcl_sub_(cbo, QComboBox)
   cbo();
-  cbo(str_lst_rc);
+  cbo(str_vec::rc);
 
-  set_(add, (strc))
-  set_(add, (str_lst_rc))
+  set_(add, (strc));
+  set_(add, (str_vec::rc));
 dcl_end
 
 //------------------------------------------------------------------------------

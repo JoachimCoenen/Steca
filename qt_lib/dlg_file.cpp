@@ -1,15 +1,15 @@
-// (app_libc::str)
+// (qt_lib)
 
 #include "dlg_file.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include <QFileDialog>
-//#include <QMessageBox>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
 str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  QFileDialog dlg(parent, caption, dir, filter);
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -21,13 +21,13 @@ str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
     dlg.setProxyModel(model);
 
   if (dlg.exec() && !dlg.selectedFiles().isEmpty())
-    return dlg.selectedFiles().first();
+    return fromQt(dlg.selectedFiles().first());
 
-  return str::null;
+  return nullstr;
 }
 
-str_lst dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  QFileDialog dlg(parent, caption, dir, filter);
+str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -39,13 +39,13 @@ str_lst dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbst
     dlg.setProxyModel(model);
 
   if (dlg.exec())
-    return dlg.selectedFiles();
+    return fromQt(dlg.selectedFiles());
 
-  return str_lst();
+  return str_vec();
 }
 
 str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter) {
-  QFileDialog dlg(parent, caption, dir, filter);
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -54,9 +54,9 @@ str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter) {
   dlg.setConfirmOverwrite(false);
 
   if (dlg.exec() && !dlg.selectedFiles().isEmpty())
-    return dlg.selectedFiles().first();
+    return fromQt(dlg.selectedFiles().first());
 
-  return str::null;
+  return nullstr;
 }
 
 //------------------------------------------------------------------------------

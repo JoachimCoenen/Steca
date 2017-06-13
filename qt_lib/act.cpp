@@ -1,12 +1,11 @@
-// (app_lib)
+// (qt_lib)
 
 #include "act.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "str_inc.h"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
-
-act::act() : act(str::null) {}
 
 act::act(strc tx) : base(nullptr) {
   text(tx); tip(tx);
@@ -23,36 +22,31 @@ l::own<act> act::make(strc tx, strc key, strc ic) {
 }
 
 act::ref act::text(strc tx) {
-  base::setText(tx);
-  return *this;
+  base::setText(toQt(tx)); RT
 }
 
 str act::text() const {
-  return base::text();
+  return fromQt(base::text());
 }
 
 act::ref act::tip(strc tx) {
-  str tip = tx, s = base::shortcut().toString();
+  QString tip = toQt(tx), s = base::shortcut().toString();
   if (!s.isEmpty())
     tip += " [" + s + "]";
-  base::setToolTip(tip);
-  return *this;
+  base::setToolTip(tip); RT
 }
 
 act::ref act::key(strc key) {
-  base::setShortcut(QKeySequence(key));
-  tip(base::toolTip());
-  return *this;
+  base::setShortcut(QKeySequence(toQt(key)));
+  tip(fromQt(base::toolTip())); RT
 }
 
 act::ref act::icon(strc fileName) {
-  base::setIcon(QIcon(fileName));
-  return *this;
+  base::setIcon(QIcon(toQt(fileName))); RT
 }
 
-act::ref act::checkable(bool on) {
-  base::setCheckable(on);
-  return *this;
+act::ref act::setCheckable(bool on) {
+  base::setCheckable(on); RT
 }
 
 bool act::isCheckable() const {
@@ -65,7 +59,7 @@ act::ref act::check(bool on) {
   else
     base::trigger();
 
-  return *this;
+  RT
 }
 
 //------------------------------------------------------------------------------
@@ -80,8 +74,7 @@ actbtn::actbtn(act& a) {
 }
 
 actbtn::ref actbtn::action(act *a) {
-  base::setDefaultAction(a);
-  return *this;
+  base::setDefaultAction(a); RT
 }
 
 //TODO//------------------------------------------------------------------------------

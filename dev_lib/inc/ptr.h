@@ -69,9 +69,6 @@ private:
   jp<T>& operator-=(sz_t) = delete;
 };
 
-// ad-hoc mutability
-// TODO template <typename T> T* mutp(jp<T> const& p) { return mutp(p.ptr()); }
-
 //------------------------------------------------------------------------------
 // a non-null pointer owning the pointed-to thing
 // only a hint, ownership not enforced
@@ -112,7 +109,7 @@ struct own_ptr : ptr_base {
   T*       operator->()       { return ptr(); }
   T const* operator->() const { return ptr(); }
 
-  set_(set, (T const*const p_))  { mut(p) = p_; return *this; }
+  set_(set, (T const*const p_))  { mut(p) = p_; RT }
 
   // convert to non-null
   own<T> justOwn() const {
@@ -147,13 +144,11 @@ struct scoped : ptr_base {
   }
 
   scoped& operator=(scoped<T>&& that) {
-    reset(that.take());
-    return *this;
+    reset(that.take()); RT
   }
 
   scoped& operator=(own<T>&& that) {
-    reset(that.take());
-    return *this;
+    reset(that.take()); RT
   }
 
   void reset(T* p_) {
@@ -208,7 +203,7 @@ struct shared : protected _shared_base_ {
     if (this != &that) {
       _drop(); mut(ptr_base::p) = mut(c_ptr(that).p); inc();
     }
-    return *this;
+    RT
   }
 
   void reset(T* p) {
@@ -235,5 +230,11 @@ template <typename T> shared<T> share(own<T> p)         { return scope(p);     }
 
 //------------------------------------------------------------------------------
 }
+
+// make a pointed-to value mutable
+template <typename T> T* mutp(l::jp<T> const& p) \
+  { return const_cast<T*>(p.ptr()); }
+
+//------------------------------------------------------------------------------
 #endif
 // eof

@@ -31,7 +31,7 @@ template <typename T>
 
 // runtime check
 #define check_or_err_(cond, ...) \
-  if (!(cond)) err(__VA_ARGS__)
+  if (!(cond)) l::err(__VA_ARGS__)
 
 //------------------------------------------------------------------------------
 }

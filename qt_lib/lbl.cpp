@@ -1,7 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "lbl.h"
-#include "../inc/defs_cpp.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include "str_inc.h"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -11,8 +12,7 @@ lbl::lbl(strc t) {
 }
 
 lbl::ref lbl::text(strc t) {
-  base::setText(t);
-  return *this;
+  base::setText(toQt(t)); RT
 }
 
 //------------------------------------------------------------------------------

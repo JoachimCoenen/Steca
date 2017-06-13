@@ -1,8 +1,8 @@
-// (app_lib)
+// (qt_lib)
 
 #include "lst.h"
-#include "../inc/defs_cpp.h"
-#include "wgt_help.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #include <QHeaderView>
 #include <QKeyEvent>
 
@@ -18,23 +18,19 @@ lst_view::lst_view() : isCheckable(false), hasHeader(false), model(nullptr) {
   });
 }
 
-lst_view::~lst_view() {
-  set(nullptr);
-}
-
 lst_view::ref lst_view::set(lst_model* model_) {
   if (model) {
-    disconnect(mConn);
+    disconnect(con);
     base::setModel(nullptr);
-    model = nullptr;
+    mut(model) = nullptr;
     base::header()->setVisible(false);
   }
 
   if (model_) {
-    base::setModel((model = model_));
+    base::setModel(mutp(mut(model) = model_));
     base::header()->setVisible(hasHeader);
 
-    mConn = connect(model, &QAbstractTableModel::modelReset, [this]() {
+    con = connect(model, &QAbstractTableModel::modelReset, [this]() {
       sizeColumns();
     });
 
@@ -42,32 +38,30 @@ lst_view::ref lst_view::set(lst_model* model_) {
     selectRow(lst_model::rw_n(0));
   }
 
-  return *this;
+  RT
 }
 
 lst_view::ref lst_view::setCheckable(bool on) {
-  mut(isCheckable) = on;
-  return *this;
+  mut(isCheckable) = on; RT
 }
 
 lst_view::ref lst_view::showHeader(bool on) {
-  mut(hasHeader) = on;
-  return *this;
+  mut(hasHeader) = on; RT
 }
 
 lst_view::ref lst_view::selectRow(lst_model::rw_n rw) {
   EXPECT_(base::model())
   base::setCurrentIndex(base::model()->index(int(rw), 1));
-  return *this;
+  RT
 }
 
 int lst_view::selectedRow() const {
   return base::currentIndex().row();
 }
 
-void lst_view::sizeColumns() {
+lst_view::ref lst_view::sizeColumns() {
   if (!model)
-    return;
+    RT
 
   base::hideColumn(0);  // should look like a list; 0th column is tree-like
 
@@ -75,11 +69,13 @@ void lst_view::sizeColumns() {
     base::resizeColumnToContents(i + int(model->colOff()));
 
   if (model->isCheckable) {
-    base::setColumnWidth(1, int(1.6 * mWidth(*this)));
+    base::setColumnWidth(1, int(1.6 * fontMetrics().width('m')));
     base::header()->setSectionResizeMode(1, QHeaderView::Fixed);
   } else {
     base::header()->setSectionResizeMode(1, QHeaderView::Interactive);
   }
+
+  RT
 }
 
 void lst_view::keyPressEvent(QKeyEvent* e) {
@@ -103,14 +99,14 @@ void lst_view::checkRow(int row) {
   if (0 <= row) {
     auto rw = lst_model::rw_n(row);
     EXPECT_(rw < model->rows())
-    model->check(rw);
+    mutp(model)->check(rw);
     QModelIndex index = base::model()->index(int(rw), 1);
     emit dataChanged(index, index);
   }
 }
 
 int lst_view::sizeHintForColumn(int) const {
-  return int(3 * mWidth(*this));
+  return int(3 * fontMetrics().width('m'));
 }
 
 //------------------------------------------------------------------------------

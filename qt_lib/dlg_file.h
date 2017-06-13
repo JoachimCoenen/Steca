@@ -1,18 +1,19 @@
-// (app_lib)
+// (qt_lib)
 
-#ifndef APP_LIB_TYP_QT_DLG_FILE_HPP
-#define APP_LIB_TYP_QT_DLG_FILE_HPP
+#ifndef QT_LIB_DLG_FILE_H
+#define QT_LIB_DLG_FILE_H
 
-#include "../inc/defs_h.h"
-#include <QWidget>
+#include <dev_lib/inc/defs_h.h>
+#include "str_inc.h"
 
 class QAbstractProxyModel;
+class QWidget;
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
 str     dlgOpenFile(QWidget*,  strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
-str_lst dlgOpenFiles(QWidget*, strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
+str_vec dlgOpenFiles(QWidget*, strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
 str     dlgSaveFile(QWidget*,  strc caption, strc dir, strc filter);
 
 //------------------------------------------------------------------------------
