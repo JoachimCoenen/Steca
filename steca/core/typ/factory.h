@@ -28,7 +28,8 @@ namespace core {
 
 template <class ProductBase>
 dcl_(factory)
-  dcl_base_(maker_base)
+  dcl_(maker_base)
+    virtual ~maker_base() {}
     virtual mth_(l::own<ProductBase>, make, ()) = 0;
   dcl_end
 

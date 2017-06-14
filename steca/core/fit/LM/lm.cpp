@@ -34,7 +34,7 @@
 
 #include <qt_lib/log.h>
 
-void msg_cannotSolve(uint n, uint m) {
+void msg_cannotSolve(uint /*n*/, uint /*m*/) {
   l_qt::log::warn("levmar: cannot solve with fewer measurements than unknowns");
 }
 

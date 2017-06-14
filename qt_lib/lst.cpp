@@ -9,7 +9,7 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-lst_view::lst_view() : isCheckable(false), hasHeader(false), model(nullptr) {
+lst_view::lst_view() : model(nullptr), isCheckable(false), hasHeader(false) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
 

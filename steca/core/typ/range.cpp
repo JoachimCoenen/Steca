@@ -17,6 +17,7 @@
 
 #include "range.h"
 #include <dev_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/num.h>
 #include <algorithm>
 
 core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}
@@ -77,8 +78,8 @@ Range Range::inf() {
 
 TEST_("Range::inf",
   auto r = Range::inf();
-  CHECK(qIsInf(r.min)); CHECK_LE(r.min, 0);
-  CHECK(qIsInf(r.max)); CHECK_GE(r.max, 0);
+  CHECK(l::isinf(r.min)); CHECK_LE(r.min, 0);
+  CHECK(l::isinf(r.max)); CHECK_GE(r.max, 0);
 )
 
 bool Range::isDef() const {
@@ -108,8 +109,8 @@ Range::rv_t Range::width() const {
 TEST_("Range::width",
   CHECK(l::isnan(Range().width()));
   CHECK_EQ(0, Range(0).width());
-  CHECK(qIsInf(Range(0,qInf()).width()));
-  CHECK(qIsInf(Range::inf().width()));
+  CHECK(l::isinf(Range(0,l::flt_inf).width()));
+  CHECK(l::isinf(Range::inf().width()));
 )
 
 Range::rv_t Range::center() const {
@@ -119,7 +120,7 @@ Range::rv_t Range::center() const {
 TEST_("Range::center",
   CHECK(l::isnan(Range().center()));
   CHECK_EQ(0, Range(0).center());
-  CHECK(qIsInf(Range(0,qInf()).center()));
+  CHECK(l::isinf(Range(0,l::flt_inf).center()));
   CHECK(l::isnan(Range::inf().center()));
 )
 
@@ -132,7 +133,7 @@ Range Range::safeFrom(rv_t v1, rv_t v2) {
 TEST_("Range::safeFrom",
   CHECK_EQ(Range::safeFrom(2,3), Range(2,3));
   CHECK_EQ(Range::safeFrom(3,2), Range(2,3));
-  CHECK_EQ(Range::safeFrom(+qInf(), -qInf()), Range::inf());
+  CHECK_EQ(Range::safeFrom(+l::flt_inf, -l::flt_inf), Range::inf());
 )
 
 void Range::extendBy(rv_t val) {
@@ -175,7 +176,7 @@ TEST_("Range::contains",
   CHECK(!r.contains(Range()));
   CHECK(!r.contains(Range::inf()));
   CHECK(!r.contains(l::flt_nan));
-  CHECK(!r.contains(qInf()));
+  CHECK(!r.contains(l::flt_inf));
 
   CHECK(r.contains(r));
 
@@ -257,17 +258,17 @@ TEST_("Range::bound",
   auto r = Range(-1, +1);
 
   CHECK(l::isnan(Range().bound(0)));
-  CHECK(l::isnan(Range().bound(qInf())));
+  CHECK(l::isnan(Range().bound(l::flt_inf)));
   CHECK(l::isnan(Range().bound(l::flt_nan)));
   CHECK_EQ(0, Range::inf().bound(0));
-  CHECK(qIsInf(Range::inf().bound(qInf())));
+  CHECK(l::isinf(Range::inf().bound(l::flt_inf)));
   CHECK(l::isnan(Range::inf().bound(l::flt_nan)));
 
   CHECK_EQ(0,  r.bound(0));
   CHECK_EQ(-1, r.bound(-10));
-  CHECK_EQ(-1, r.bound(-qInf()));
+  CHECK_EQ(-1, r.bound(-l::flt_inf));
   CHECK_EQ(+1, r.bound(+10));
-  CHECK_EQ(+1, r.bound(+qInf()));
+  CHECK_EQ(+1, r.bound(+l::flt_inf));
 )
 
 Range::ref Range::operator=(rc that) {
@@ -305,7 +306,7 @@ TEST_("Ranges:=",
   CHECK_NE(rs1, rs2);
   CHECK_EQ(rs2, rs22);
   CHECK_EQ(rs22, rs2);
-  CHECK(rs22.add(Range(-qInf(), -1)));
+  CHECK(rs22.add(Range(-l::flt_inf, -1)));
 
   CHECK_NE(rs22, rs2);
 )
@@ -372,37 +373,37 @@ void Ranges::sort() {
   std::sort(rs.begin(), rs.end(), lessThan);
 }
 
-//TEST_CODE(
-//typedef struct {
-//  Range::rv_t min, max;
-//} min_max;
+TEST_CODE_(
+typedef struct {
+  Range::rv_t min, max;
+} min_max;
 
-//static bool RANGES_EQ(Ranges::rc rs, l::vec<min_max> mm) {
-//  if (rs.size() != mm.size())
-//    return false;
+static bool RANGES_EQ(Ranges::rc rs, l::vec<min_max> mm) {
+  if (rs.size() != mm.size())
+    return false;
 
-//  for_i_(rs.size()) {
-//    auto r = rs.at(i);
-//    auto m = mm.at(i);
-//    if (r.min != m.min || r.max != m.max)
-//      return false;
-//  }
+  for_i_(rs.size()) {
+    auto r = rs.at(i);
+    auto m = mm.at(i);
+    if (r.min != m.min || r.max != m.max)
+      return false;
+  }
 
-//  return true;
-//}
+  return true;
+}
 
-//static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
-//  if (rs1.size() != rs2.size())
-//    return false;
+static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
+  if (rs1.size() != rs2.size())
+    return false;
 
-//  for_i_(rs1.size()) {
-//    if (rs1.at(i) != rs2.at(i))
-//      return false;
-//  }
+  for_i_(rs1.size()) {
+    if (rs1.at(i) != rs2.at(i))
+      return false;
+  }
 
-//  return true;
-//}
-//)
+  return true;
+}
+)
 
 TEST_("Ranges",
   Ranges rs;

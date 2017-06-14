@@ -184,16 +184,16 @@ protected:
 template <typename T>
 struct shared : protected _shared_base_ {
   explicit shared(T const* p = nullptr) : _shared_base_(p) {}
-  shared(shared const& that)   : _shared_base_(that) {}
+  shared(shared const& that) : _shared_base_(that) {}
  ~shared() { _drop(); }
 
   void drop() {
     *this = shared();
   }
 
-  shared& operator=(shared const& that) {
-    if (this != &that) {
-      _drop(); ptr_base::set(that.ptr()); inc();
+  shared& operator=(shared<T> const& that) {
+    if (ptr_base::p != that.ptr_base::p) {
+      _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
     }
     RTHIS
   }

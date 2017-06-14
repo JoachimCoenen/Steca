@@ -12,17 +12,17 @@ if (WITH_TESTS)
     add_compile_options(--coverage)
   endif ()
 
-  set (test_app dev_lib_tests)
+  set (tests dev_lib_tests)
 
   file (GLOB_RECURSE test_src *)
-  add_executable (${test_app} ${test_src})
+  add_executable (${tests} ${test_src})
 
   if (UNIX)
-    target_link_libraries (${test_app} pthread)
+    target_link_libraries (${tests} pthread)
   endif ()
 
   if (WITH_COVERAGE)
-    target_link_libraries (${test_app} gcov)
+    target_link_libraries (${tests} gcov)
   endif ()
 endif ()
 

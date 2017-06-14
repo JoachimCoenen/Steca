@@ -8,8 +8,8 @@
 
 #include "doctest.h"
 
-#define TEST_CODE(...)  __VA_ARGS__
-#define TEST_(name, ...)                 \
+#define TEST_CODE_(...)  __VA_ARGS__
+#define TEST_(name, ...)                \
 namespace {                             \
 DOCTEST_TEST_CASE(name) { __VA_ARGS__ } \
 }
@@ -29,7 +29,7 @@ DOCTEST_TEST_CASE(name) { __VA_ARGS__ } \
 
 #else
 
-#define TEST_CODE(...)
+#define TEST_CODE_(...)
 #define TEST_(name, ...)
 
 #endif

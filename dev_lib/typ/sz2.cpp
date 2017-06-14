@@ -46,8 +46,8 @@ TEST_("sz2",
   CHECK(sz0.isEmpty()); CHECK(sz01.isEmpty()); CHECK(sz10.isEmpty());
   CHECK(!sz12.isEmpty());
 
-  CHECK_EQ(0, sz0.area()); CHECK_EQ(0, sz01.area()); CHECK_EQ(0, sz10.area());
-  CHECK_EQ(2, sz12.area());
+  CHECK_EQ(0, sz0.size()); CHECK_EQ(0, sz01.size()); CHECK_EQ(0, sz10.size());
+  CHECK_EQ(2, sz12.size());
 
   CHECK_EQ(sz01, sz10.transposed());
 )

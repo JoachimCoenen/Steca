@@ -84,9 +84,7 @@ box::ref box::add(QWidget* wgt) {
   addWidget(wgt); RTHIS
 }
 
-box::ref box::addStretch() {
-  addStretch(); RTHIS
-}
+box::ref box::addStretch() SET_(base::addStretch(0))
 
 box::box() : base(QBoxLayout::LeftToRight) {
   base::setSpacing(2);

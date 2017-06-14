@@ -306,7 +306,7 @@ static QString INF_P("+inf"), INF_M("-inf");
 JsonObj& JsonObj::saveReal(strc key, real num) {
   if (l::isnan(num)) {
     // do save nothing for nans
-  } else if (qIsInf(num)) {
+  } else if (l::isinf(num)) {
     insert(key, num < 0 ? INF_M : INF_P);
   } else {
     insert(key, num);
@@ -324,9 +324,9 @@ real JsonObj::loadReal(strc key) const may_err {
   case QJsonValue::String: {  // infinities stored as strings
     auto s = val.toString();
     if (INF_P == s)
-      return +qInf();
+      return +l::flt_inf;
     if (INF_M == s)
-      return -qInf();
+      return -l::flt_inf;
     key_err("bad number format");
   }
   default:

@@ -61,10 +61,10 @@ TEST_("dict",
   CHECK_EQ(3, dict.size());
 )
 
-#ifndef Q_OS_WIN // CDB has some trouble with this
+#ifndef _WIN32 // CDB has some trouble with this
 TEST_("dict-throw",
   Meta::Dict dict;
-  CHECK_THROWS_AS(dict.at(""), c::exc::rc);
+  CHECK_THROWS_AS(dict.at(""), l::exc::rc);
 )
 #endif
 
@@ -96,7 +96,7 @@ void Set::collect(Session::rc s, Image const* corr,
 
   EXPECT_(gmaIndexes)
   EXPECT_(gmaIndexMin <= gmaIndexMax)
-  EXPECT_(gmaIndexMax <= l::to_u(gmaIndexes->size()))
+  EXPECT_(gmaIndexMax <= gmaIndexes->size())
 
   auto size = intens.size();
   EXPECT_(size == counts.size())

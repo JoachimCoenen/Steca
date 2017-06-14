@@ -66,7 +66,7 @@ void _shared_base_::cleanup() {
   delete static_cast<o_cnt*>(mutp(ptr_base::p));
 }
 
-TEST_CODE(
+TEST_CODE_(
 struct __test_instance_cnt {
   static int cnt;
   __test_instance_cnt() { ++cnt; }
