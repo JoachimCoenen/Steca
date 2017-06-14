@@ -3,7 +3,7 @@ include (../cmake.inc)
 
 get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package (Qt5 5.6.2 REQUIRED COMPONENTS Core Gui Widgets)
+find_package (Qt5 5.5.1 REQUIRED COMPONENTS Core Gui Widgets)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
