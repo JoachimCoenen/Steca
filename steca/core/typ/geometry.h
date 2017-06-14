@@ -19,30 +19,30 @@
 #define CORE_GEOMETRY_H
 
 #include "def.h"
-#include <app_lib/typ/ij.h>
-#include <app_lib/typ/sz2.h>
+#include <dev_lib/typ/ij.h>
+#include <dev_lib/typ/sz2.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
 dcl_(Geometry) COMPARABLE EQ_NE
-  cst_(real, MIN_DETECTOR_DISTANCE)
-  cst_(real, MIN_DETECTOR_PIXEL_SIZE)
-  cst_(real, DEF_DETECTOR_DISTANCE)
-  cst_(real, DEF_DETECTOR_PIXEL_SIZE)
+  cst_(real, MIN_DETECTOR_DISTANCE);
+  cst_(real, MIN_DETECTOR_PIXEL_SIZE);
+  cst_(real, DEF_DETECTOR_DISTANCE);
+  cst_(real, DEF_DETECTOR_PIXEL_SIZE);
 
   Geometry();
 
-  atr_(real,  detectorDistance)
-  atr_(real,  pixSize)
-  atr_(l::ij, midPixOffset)
+  atr_(real,  detectorDistance);
+  atr_(real,  pixSize);
+  atr_(l::ij, midPixOffset);
 dcl_end
 
 dcl_(ImageCut) COMPARABLE EQ_NE
-  atr_(uint, left)
-  atr_(uint, top)
-  atr_(uint, right)
-  atr_(uint, bottom)
+  atr_(uint, left);
+  atr_(uint, top);
+  atr_(uint, right);
+  atr_(uint, bottom);
 
   ImageCut();
   ImageCut(uint left, uint top, uint right, uint bottom);

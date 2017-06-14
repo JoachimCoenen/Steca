@@ -11,22 +11,19 @@ namespace l_qt {
 
 lst_model::lst_model() : isCheckable(false) {}
 
-lst_model::ref lst_model::setCheckable(bool on) {
-  mut(isCheckable) = on; RT
-}
+lst_model::ref lst_model::setCheckable(bool on) SET_(mut(isCheckable) = on)
 
 str lst_model::head(cl_n) const {
   return nullstr;
 }
 
-lst_model::ref lst_model::check(rw_n rw) {
-  check(rw, !isChecked(rw)); RT
+var lst_model::cell(rw_n, cl_n) const {
+  return var();
 }
 
-lst_model::ref lst_model::check(rw_n, bool) {
-  // nothing
-  RT
-}
+lst_model::ref lst_model::check(rw_n rw) SET_(check(rw, !isChecked(rw)))
+
+lst_model::ref lst_model::check(rw_n, bool) SET_()
 
 bool lst_model::isChecked(rw_n) const {
   return false;

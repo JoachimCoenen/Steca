@@ -27,31 +27,31 @@ namespace core {
 // A set of x-y datapoints.
 
 dcl_(Curve)
-  atr_(real_vec, xs)
-  atr_(real_vec, ys)
-  atr_(Range, rgeX)
-  atr_(Range, rgeY)
+  atr_(real_vec, xs);
+  atr_(real_vec, ys);
+  atr_(Range, rgeX);
+  atr_(Range, rgeY);
 
   Curve();
 
   void clear();
 
-  mth_(bool, isEmpty, ())
-  mth_(uint, size, ())
-  mth_(bool, isSorted, ())
+  mth_(bool, isEmpty, ());
+  mth_(uint, size, ());
+  mth_(bool, isSorted, ());
 
-  set_(add, (real x, real y))
+  set_(add, (real x, real y));
 
-  mth_(Curve, intersect, (Range::rc))
-  mth_(Curve, intersect, (Ranges::rc))
+  mth_(Curve, intersect, (Range::rc));
+  mth_(Curve, intersect, (Ranges::rc));
 
-  set_(subtract, (Fun::rc))
+  set_(subtract, (Fun::rc));
 
-  mth_(uint, maxYindex, ())  // the index of the maximum y value
-  mth_(real, sumY, ())
+  mth_(uint, maxYindex, ());  // the index of the maximum y value
+  mth_(real, sumY, ());
 };
 
-using curve_vec =  QVector<Curve>;
+using curve_vec =  l::vec<Curve>;
 
 //------------------------------------------------------------------------------
 }

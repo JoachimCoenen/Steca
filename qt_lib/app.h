@@ -15,16 +15,9 @@ dcl_sub_(app, QApplication)
   app(int& argc, char* argv[]);
 
   int exec(win* = nullptr);
-
-  template <typename Win>
-  static int run(int& argc, char* argv[]) {
-    app a(argc, argv);
-    Win w;
-    return a.safeExec(&w);
-  }
+  int safeExec(win* = nullptr);
 
 private:
-  int  safeExec(win*);
   bool notify(QObject*, QEvent*);
 dcl_end
 

@@ -15,8 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.hpp"
-#include <c2/qt/qstr.hpp>
+#include "io.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include <qt_lib/str_inc.h>
+
 // TODO do w/o Qt and move to core or at a level with core?
 #include <QByteArray>
 #include <QFileInfo>
@@ -24,14 +26,13 @@
 #include <QSortFilterProxyModel>
 // also remove Qt5 Widgets from CMakeLists.txt
 #include <QFileSystemModel>
-#include <c2/inc/c_cpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
 // peek at up to maxLen bytes (to establish the file type)
-static QByteArray peek(uint pos, uint maxLen, c::path::rc path) {
-  QFile file(path.p);
+static QByteArray peek(uint pos, uint maxLen, l::path::rc path) {
+  QFile file(path.c_str());
 
   if (file.open(QFile::ReadOnly) && file.seek(pos))
     return file.read(maxLen);
@@ -39,20 +40,20 @@ static QByteArray peek(uint pos, uint maxLen, c::path::rc path) {
   return QByteArray();
 }
 
-bool couldBeCaress(c::path::rc path) {
+bool couldBeCaress(l::path::rc path) {
   static QByteArray const header("\020\012DEFCMD DAT");
   return header == peek(0, l::to_uint(header.size()), path);
 }
 
 // Mar file format
-bool couldBeMar(c::path::rc path) {
+bool couldBeMar(l::path::rc path) {
   static QByteArray const header("mar research");
   return header == peek(0x80, l::to_uint(header.size()), path);
 }
 
 // Text .dat file with metadata for tiff files
-bool couldBeTiffDat(c::path::rc path) {
-  QFile file(path.p);
+bool couldBeTiffDat(l::path::rc path) {
+  QFile file(path.c_str());
 
   if (!file.open(QFile::ReadOnly))
     return false;
@@ -62,7 +63,7 @@ bool couldBeTiffDat(c::path::rc path) {
   QByteArray line;
 
   while (!(line = file.readLine()).isEmpty()) {
-    str s = line;
+    QString s = line;
 
     int commentPos = s.indexOf(';');
     if (commentPos >= 0)
@@ -85,8 +86,8 @@ bool couldBeTiffDat(c::path::rc path) {
 
 //------------------------------------------------------------------------------
 
-data::File::sh load(data::Files& files, c::path::rc path) may_err {
-  check_or_err_(QFileInfo(path.p).exists(), "File does not exist: ", path);
+data::File::sh load(data::Files& files, l::path::rc path) may_err {
+  check_or_err_(QFileInfo(path.c_str()).exists(), CAT("File does not exist: ", path));
 
   data::File::sh file;
 
@@ -97,16 +98,16 @@ data::File::sh load(data::Files& files, c::path::rc path) may_err {
   else if (couldBeTiffDat(path))
     file = loadTiffDat(files, path);
   else
-    c::err("unknown file type: ", path);
+    l::err(CAT("unknown file type: ", path));
 
   check_or_err_(file->sets.size() > 0,
-                "File contains no datasets: ", path);
+                CAT("File contains no datasets: ", path));
 
   // ensure that all datasets have images of the same size
   auto size = file->sets.first()->image->size();
   for (auto& set : file->sets)
     if (set->image->size() != size)
-      c::err("Inconsistent image size in file: ", path);
+      l::err(CAT("Inconsistent image size in file: ", path));
 
   return file;
 }
@@ -131,6 +132,7 @@ QVariant ProxyModel::headerData(int section, Qt::Orientation o, int role) const 
   return base::headerData(section, o, role);
 }
 
+// TODO move to GUI, remove Qt modules from CMakeLists.txt
 QVariant ProxyModel::data(rcidx idx, int role) const {
   if (idx.isValid() && 1 == idx.column()) {
     if (Qt::DisplayRole == role) {
@@ -138,9 +140,9 @@ QVariant ProxyModel::data(rcidx idx, int role) const {
       auto ix0 = fileModel->index(mapToSource(idx).row(), 0, mapToSource(idx.parent()));
       QFileInfo info(fileModel->rootDirectory().filePath(fileModel->fileName(ix0)));
       if (info.isFile()) {
-        str path = toStr(info.absoluteFilePath());
+        auto path = l_qt::fromQt(info.absoluteFilePath());
         if (io::couldBeCaress(path))
-          return "[car] " + str(loadCaressComment(path).p);
+          return QString("[car] %1").arg(loadCaressComment(path).c_str());
         else if (couldBeMar(path))
           return "[mar] ";
         else if (couldBeTiffDat(path))

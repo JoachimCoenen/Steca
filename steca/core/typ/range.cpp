@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "range.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include <algorithm>
 
 core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}
@@ -24,7 +24,7 @@ core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}
 namespace core {
 //------------------------------------------------------------------------------
 
-TEST("Range(min, max)",
+TEST_("Range(min, max)",
   Range r(6,7);
   CHECK_EQ(6, r.min);
   CHECK_EQ(7, r.max);
@@ -39,7 +39,7 @@ COMPARABLE_IMPL(Range) {
 
 DEF_EQ_NE_IMPL(Range)
 
-TEST("Range::compare",
+TEST_("Range::compare",
   Range rn1, rn2, r(1,2), r1(1,2), r2(2,3);
   CHECK_FALSE((rn1 == rn2));
   CHECK_FALSE((rn1 != rn2));
@@ -47,24 +47,23 @@ TEST("Range::compare",
   CHECK_NE(r, r2);
 )
 
-Range::Range() : Range(qQNaN()) {}
+Range::Range() : Range(l::flt_nan) {}
 
-TEST("Range()",
+TEST_("Range()",
   Range r;
   CHECK(!r.isDef());
-  CHECK(qIsNaN(r.min));
-  CHECK(qIsNaN(r.max));
+  CHECK(l::isnan(r.min));
+  CHECK(l::isnan(r.max));
 )
 
-Range::Range(rv_t val) : base(val, val) {
-}
+Range::Range(rv_t val) : base(val, val) {}
 
 Range::Range(rv_t min, rv_t max) : base(min, max) {
-  EXPECT_(!qIsNaN(min) && !qIsNaN(max))
+  EXPECT_(!l::isnan(min) && !l::isnan(max))
   EXPECT_(min <= max)
 }
 
-TEST("Range(v)",
+TEST_("Range(v)",
   Range r(6);
   CHECK_EQ(6, r.min);
   CHECK_EQ(6, r.max);
@@ -73,20 +72,20 @@ TEST("Range(v)",
 Range::Range(rc that) : Range(that.min, that.max) {}
 
 Range Range::inf() {
-  return Range(-qInf(), +qInf());
+  return Range(-l::flt_inf, +l::flt_inf);
 }
 
-TEST("Range::inf",
+TEST_("Range::inf",
   auto r = Range::inf();
   CHECK(qIsInf(r.min)); CHECK_LE(r.min, 0);
   CHECK(qIsInf(r.max)); CHECK_GE(r.max, 0);
 )
 
 bool Range::isDef() const {
-  return !(qIsNaN(min) || qIsNaN(max));
+  return !(l::isnan(min) || l::isnan(max));
 }
 
-TEST("Range::isDef",
+TEST_("Range::isDef",
   CHECK(!Range().isDef());
   CHECK(Range(0,1).isDef());
 )
@@ -95,7 +94,7 @@ bool Range::isEmpty() const {
   return !isDef() || min >= max;
 }
 
-TEST("Range::empty",
+TEST_("Range::empty",
   CHECK(Range().isEmpty());
   CHECK(!Range::inf().isEmpty());
   CHECK(Range(0).isEmpty());
@@ -103,42 +102,42 @@ TEST("Range::empty",
 )
 
 Range::rv_t Range::width() const {
-  return isDef() ? max - min : qQNaN();
+  return isDef() ? max - min : l::flt_nan;
 }
 
-TEST("Range::width",
-  CHECK(qIsNaN(Range().width()));
+TEST_("Range::width",
+  CHECK(l::isnan(Range().width()));
   CHECK_EQ(0, Range(0).width());
   CHECK(qIsInf(Range(0,qInf()).width()));
   CHECK(qIsInf(Range::inf().width()));
 )
 
 Range::rv_t Range::center() const {
-  return isDef() ? (min + max) / 2 : qQNaN();
+  return isDef() ? (min + max) / 2 : l::flt_nan;
 }
 
-TEST("Range::center",
-  CHECK(qIsNaN(Range().center()));
+TEST_("Range::center",
+  CHECK(l::isnan(Range().center()));
   CHECK_EQ(0, Range(0).center());
   CHECK(qIsInf(Range(0,qInf()).center()));
-  CHECK(qIsNaN(Range::inf().center()));
+  CHECK(l::isnan(Range::inf().center()));
 )
 
 Range Range::safeFrom(rv_t v1, rv_t v2) {
   if (!(v1 < v2))
-    mutate::swap(v1, v2);
+    mut_swap(v1, v2);
   return Range(v1, v2);
 }
 
-TEST("Range::safeFrom",
+TEST_("Range::safeFrom",
   CHECK_EQ(Range::safeFrom(2,3), Range(2,3));
   CHECK_EQ(Range::safeFrom(3,2), Range(2,3));
   CHECK_EQ(Range::safeFrom(+qInf(), -qInf()), Range::inf());
 )
 
 void Range::extendBy(rv_t val) {
-  mut(min) = qIsNaN(min) ? val : qMin(min, val);
-  mut(max) = qIsNaN(max) ? val : qMax(max, val);
+  mut(min) = l::isnan(min) ? val : l::min(min, val);
+  mut(max) = l::isnan(max) ? val : l::max(max, val);
 }
 
 void Range::extendBy(Range::rc that) {
@@ -146,7 +145,7 @@ void Range::extendBy(Range::rc that) {
   extendBy(that.max);
 }
 
-TEST("Range::extend",
+TEST_("Range::extend",
   auto r  = Range(1,2);
   r.extendBy(-1);
   CHECK_EQ(r, Range(-1,2));
@@ -162,7 +161,7 @@ bool Range::contains(rc that) const {
   return min <= that.min && that.max <= max;
 }
 
-TEST("Range::contains",
+TEST_("Range::contains",
   auto r = Range(-1, +1);
 
   CHECK(!Range().contains(r));
@@ -175,7 +174,7 @@ TEST("Range::contains",
 
   CHECK(!r.contains(Range()));
   CHECK(!r.contains(Range::inf()));
-  CHECK(!r.contains(qQNaN()));
+  CHECK(!r.contains(l::flt_nan));
   CHECK(!r.contains(qInf()));
 
   CHECK(r.contains(r));
@@ -191,7 +190,7 @@ bool Range::intersects(Range::rc that) const {
   return min <= that.max && that.min <= max;
 }
 
-TEST("Range::intersects",
+TEST_("Range::intersects",
   auto r = Range(-1, +1);
 
   CHECK(!Range().intersects(r));
@@ -215,7 +214,7 @@ Range Range::intersect(Range::rc that) const {
   if (!isDef() || !that.isDef())
     return Range();
 
-  auto min_ = qMax(min, that.min), max_ = qMin(max, that.max);
+  auto min_ = l::max(min, that.min), max_ = l::min(max, that.max);
   if (min_ <= max_)
     return Range(min_, max_);
 
@@ -224,7 +223,7 @@ Range Range::intersect(Range::rc that) const {
   return Range(val, val); // empty, isDef()
 }
 
-TEST("Range::intersect",
+TEST_("Range::intersect",
   auto r = Range(-1, +1);
 
   CHECK(!Range().intersect(r).isDef());
@@ -249,20 +248,20 @@ TEST("Range::intersect",
 )
 
 Range::rv_t Range::bound(rv_t value) const {
-  if (isDef() && !qIsNaN(value))
-    return qBound(min, value, max);
-  return qQNaN();
+  if (isDef() && !l::isnan(value))
+    return l::bound(min, value, max);
+  return l::flt_nan;
 }
 
-TEST("Range::bound",
+TEST_("Range::bound",
   auto r = Range(-1, +1);
 
-  CHECK(qIsNaN(Range().bound(0)));
-  CHECK(qIsNaN(Range().bound(qInf())));
-  CHECK(qIsNaN(Range().bound(qQNaN())));
+  CHECK(l::isnan(Range().bound(0)));
+  CHECK(l::isnan(Range().bound(qInf())));
+  CHECK(l::isnan(Range().bound(l::flt_nan)));
   CHECK_EQ(0, Range::inf().bound(0));
   CHECK(qIsInf(Range::inf().bound(qInf())));
-  CHECK(qIsNaN(Range::inf().bound(qQNaN())));
+  CHECK(l::isnan(Range::inf().bound(l::flt_nan)));
 
   CHECK_EQ(0,  r.bound(0));
   CHECK_EQ(-1, r.bound(-10));
@@ -295,7 +294,7 @@ bool Ranges::operator==(rc that) const {
   return true;
 }
 
-TEST("Ranges:=",
+TEST_("Ranges:=",
   Ranges rs0, rs1, rs2, rs22;
   CHECK(rs1.add(Range(0,1)));
   CHECK(rs2.add(Range(0,1)));  CHECK(rs2.add(Range(3,4)));
@@ -321,7 +320,7 @@ bool Ranges::add(Range::rc range) {
   if (!range.isDef())
     return false;
 
-  QVector<Range> newRanges;
+  l::vec<Range> newRanges;
 
   auto addRange = range;
   for (Range::rc r : rs) {
@@ -331,11 +330,11 @@ bool Ranges::add(Range::rc range) {
       if (range.intersects(r))
         addRange.extendBy(r);
       else
-        newRanges.append(r);
+        newRanges.add(r);
     }
   }
 
-  newRanges.append(addRange);
+  newRanges.add(addRange);
   rs = newRanges;
   sort();
 
@@ -343,18 +342,18 @@ bool Ranges::add(Range::rc range) {
 }
 
 bool Ranges::rem(Range::rc remRange) {
-  QVector<Range> newRanges;
+  l::vec<Range> newRanges;
   bool changed = false;
 
   for (Range::rc r : rs) {
     if (!r.intersect(remRange).isEmpty()) {
       changed = true;
       if (r.min < remRange.min)
-        newRanges.append(Range(r.min, remRange.min));
+        newRanges.add(Range(r.min, remRange.min));
       if (r.max > remRange.max)
-        newRanges.append(Range(remRange.max, r.max));
+        newRanges.add(Range(remRange.max, r.max));
     } else {
-      newRanges.append(r);
+      newRanges.add(r);
     }
   }
 
@@ -378,7 +377,7 @@ void Ranges::sort() {
 //  Range::rv_t min, max;
 //} min_max;
 
-//static bool RANGES_EQ(Ranges::rc rs, QVector<min_max> mm) {
+//static bool RANGES_EQ(Ranges::rc rs, l::vec<min_max> mm) {
 //  if (rs.size() != mm.size())
 //    return false;
 
@@ -405,7 +404,7 @@ void Ranges::sort() {
 //}
 //)
 
-TEST("Ranges",
+TEST_("Ranges",
   Ranges rs;
   CHECK(rs.isEmpty());
   CHECK(RANGES_EQ(rs, rs));

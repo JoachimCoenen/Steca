@@ -17,32 +17,30 @@
 
 #include "data.h"
 #include "../session.h"
-#include <app_lib/inc/defs_cpp.h>
-#include <app_lib/inc/exc.h>
+#include <dev_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/exc.h>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
 uint Meta::Dict::add(strc key) {
   auto it = base::find(key);
-  if (base::end() == it)
-    it = base::insert(key, size());
-  return it.value();
+  return (base::end() == it) ? base::add(key, size()) : it->second;
 }
 
 uint Meta::Dict::at(strc key) const may_err {
   auto it = base::find(key);
   if (base::end() == it)
-    err(str("Dict has no %1").arg(key));
-  return it.value();
+    l::err(str("Dict has no key: ") + key);
+  return it->second;
 }
 
-Meta::Meta(Dict::shc dict_)
+Meta::Meta(Dict::shrc dict_)
 : comment()
 , dict(dict_), vals(dict->size(), 0), tth(0), omg(0), chi(0), phi(0)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(Dict::shc dict_, flt_vec const& vals_,
+Meta::Meta(Dict::shrc dict_, flt_vec const& vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
@@ -51,7 +49,7 @@ Meta::Meta(Dict::shc dict_, flt_vec const& vals_,
   EXPECT_(dict->size() == vals.size())
 }
 
-TEST("dict",
+TEST_("dict",
   Meta::Dict dict;
   CHECK_EQ(0, dict.size());
 
@@ -64,7 +62,7 @@ TEST("dict",
 )
 
 #ifndef Q_OS_WIN // CDB has some trouble with this
-TEST("dict-throw",
+TEST_("dict-throw",
   Meta::Dict dict;
   CHECK_THROWS_AS(dict.at(""), c::exc::rc);
 )
@@ -108,11 +106,11 @@ void Set::collect(Session::rc s, Image const* corr,
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
     auto inten = image->inten(ind);
-    if (qIsNaN(inten))
+    if (l::isnan(inten))
       continue;
 
     inten_t ci = corr ? corr->inten(ind) : 1;
-    if (qIsNaN(ci))
+    if (l::isnan(ci))
       continue;
 
     inten *= ci;
@@ -120,20 +118,20 @@ void Set::collect(Session::rc s, Image const* corr,
     tth_t tth  = map.at(ind).tth;
 
     // bin index
-    auto ti = qFloor((tth - minTth) / deltaTth);
+    auto ti = l::floor((tth - minTth) / deltaTth);
     EXPECT_(ti <= size)
-    ti = qMin(ti, size-1); // it can overshoot due to floating point calculation
+    ti = l::min(l::to_sz(ti), l::to_sz(size-1)); // it can overshoot due to floating point calculation
 
-    intens[ti] += inten;
-    counts[ti] += 1;
+    intens.refAt(ti) += inten;
+    counts.refAt(ti) += 1;
   }
 }
 
 //------------------------------------------------------------------------------
 
 CombinedSet::CombinedSet() : sets()
-, lazyOmg(qQNaN()), lazyPhi(qQNaN()), lazyChi(qQNaN())
-, lazyTim(qQNaN()), lazyMon(qQNaN()), lazyDTim(qQNaN()), lazyDMon(qQNaN()) {}
+, lazyOmg(l::flt_nan), lazyPhi(l::flt_nan), lazyChi(l::flt_nan)
+, lazyTim(l::flt_nan), lazyMon(l::flt_nan), lazyDTim(l::flt_nan), lazyDMon(l::flt_nan) {}
 
 Meta::sh CombinedSet::meta() const {
   if (lazyMeta)
@@ -154,24 +152,24 @@ Meta::sh CombinedSet::meta() const {
 
     EXPECT_(d.vals.size() == s.vals.size())
     for_i_(d.vals.size())
-      mut(d.vals)[i] = d.vals.at(i) + s.vals.at(i);
+      mut(d.vals).refAt(i) += s.vals.at(i);
 
     mut(d.tth) = d.tth + s.tth;
     mut(d.omg) = d.omg + s.omg;
     mut(d.chi) = d.chi + s.chi;
     mut(d.phi) = d.phi + s.phi;
 
-    mut(d.tim) = qMax(d.tim, s.tim);
-    mut(d.mon) = qMax(d.mon, s.mon);
+    mut(d.tim) = l::max(d.tim, s.tim);
+    mut(d.mon) = l::max(d.mon, s.mon);
 
-    mut(d.dTim) += qIsNaN(s.dTim) ? 0.f : s.dTim;
-    mut(d.dMon) += qIsNaN(s.dMon) ? 0.f : s.dMon;
+    mut(d.dTim) += l::isnan(s.dTim) ? 0.f : s.dTim;
+    mut(d.dMon) += l::isnan(s.dMon) ? 0.f : s.dMon;
   }
 
   real fac = 1.0 / n;
 
   for_i_(d.vals.size())
-    mut(d.vals)[i] = inten_t(d.vals.at(i) * fac);
+    mut(d.vals).setAt(i, inten_t(d.vals.at(i) * fac));
 
   mut(d.tth) = d.tth * fac;
   mut(d.omg) = d.omg * fac;
@@ -198,7 +196,7 @@ Image::sh CombinedSet::image() const {
 }
 
 #define AVG_SETS_VAL(lazyVal, fun)  \
-  if (qIsNaN(lazyVal)) {            \
+  if (l::isnan(lazyVal)) {            \
     EXPECT_(!sets.isEmpty())        \
     for (auto& set: sets)           \
       mut(lazyVal) += set->fun();   \
@@ -231,7 +229,7 @@ flt32 CombinedSet::mon() const {
 }
 
 #define SUM_SETS_VAL(lazyVal, fun)  \
-  if (qIsNaN(lazyVal)) {            \
+  if (l::isnan(lazyVal)) {            \
     EXPECT_(!sets.isEmpty())        \
     for (auto& set: sets)           \
       mut(lazyVal) += set->fun();   \
@@ -281,7 +279,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   if (1 < sets.size()) {
     auto one   = sets.first();
     auto delta = tth_t(one->rgeTth(s).width() / pixWidth);
-    numBins = l::to_uint(qCeil(tthWdt / delta));
+    numBins = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins = pixWidth; // simply match the pixel resolution
   }
@@ -300,7 +298,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
-        intens[i] *= flt32(scale/cnt);
+        intens.refAt(i) *= flt32(scale/cnt);
     }
   }
 
@@ -313,7 +311,7 @@ File::File(Files::rc files_, strc name_)
 : files(files_), idx(0), name(name_), comment(), strs(), sets() {}
 
 File::ref File::addSet(Set::sh set) {
-  mut(sets).append(set);
+  mut(sets).add(set);
   return *this;
 }
 
@@ -332,14 +330,14 @@ Files::ref Files::addFile(data::File::sh file) {
      }())
   )
 
-  mut(files).append(file);
+  mut(files).add(file);
   mut(file->idx) = files.size();
   return *this;
 }
 
 Files::ref Files::remFile(uint i) {
   File::sh file = files.at(i);
-  mut(files).remove(i);
+  mut(files).rem(i);
 
   // renumber
   mut(file->idx) = 0;
@@ -351,26 +349,26 @@ Files::ref Files::remFile(uint i) {
 
 //------------------------------------------------------------------------------
 
-TEST("data::sh",
+TEST_("data::sh",
   Files fs;
   File::sh f1(new File(fs, "")), f2(new File(fs, ""));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
-TEST("data",
+TEST_("data",
   Files fs;
 
   File *f1 = new File(fs, ""), *f2 = new File(fs, "");
   CHECK_EQ(0, f1->idx);
   CHECK_EQ(0, f2->idx);
 
-  fs.addFile(c::share(f1));
-  fs.addFile(c::share(f2));
+  fs.addFile(l::share(f1));
+  fs.addFile(l::share(f2));
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(c::share(new Set(c::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0, 0, 0)),
-                              c::share(new Image))));
+  f1->addSet(l::share(new Set(l::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0, 0, 0)),
+                              l::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);
 )

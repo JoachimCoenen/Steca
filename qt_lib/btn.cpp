@@ -11,9 +11,7 @@ btn::btn(strc t) {
   text(t);
 }
 
-btn::ref btn::text(strc t) {
-  base::setText(toQt(t)); RT
-}
+btn::ref btn::text(strc t) SET_(base::setText(toQt(t)))
 
 //------------------------------------------------------------------------------
 }

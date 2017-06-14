@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.hpp"
-#include "io_caress_data.hpp"
-#include <c2/inc/c_cpp>
+#include "io.h"
+#include "io_caress_data.h"
+#include <dev_lib/inc/defs_cpp.h>
 #include <functional>
 #include <cmath>
 /*
@@ -28,7 +28,7 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-str loadCaressComment(c::path::rc) {
+str loadCaressComment(l::path::rc) {
   return ""; // TODO
 }
 
@@ -50,12 +50,12 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
     block = eBlock::NONE;
 
   std::function<void()> checkRobot = [&]() {
-    check_or_err_(eAxes::TABLE != axes, "bad: ", "already have table data");
+    check_or_err_(eAxes::TABLE != axes, "bad: already have table data");
     axes = eAxes::ROBOT;
   };
 
   std::function<void()> checkTable = [&]() {
-    check_or_err_(eAxes::ROBOT != axes, "bad: ", "already have robot data");
+    check_or_err_(eAxes::ROBOT != axes, "bad: already have robot data");
     axes = eAxes::TABLE;
   };
 
@@ -79,13 +79,13 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
-  flt32 tth = qQNaN(), omg = qQNaN(), chi = qQNaN(), phi = qQNaN(),
-        tim = qQNaN(), mon = qQNaN();
+  flt32 tth = l::flt_nan, omg = l::flt_nan, chi = l::flt_nan, phi = l::flt_nan,
+        tim = l::flt_nan, mon = l::flt_nan;
 
-  c::scoped<Image> image;
+  l::scoped<Image> image;
 
   auto doAxis = [&](pcstr ns, std::function<void()> check, flt32& val) -> bool {
-    if (!node.eqi(ns))
+    if (node != ns)
       return false;
     check();
     val = getAsFloat(dt, n);
@@ -105,7 +105,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
   };
 
   auto doVal = [&](pcstr ns, flt32& val) -> bool {
-    if (!node.eqi(ns))
+    if (node != ns)
       return false;
     val = getAsFloat(dt, n);
     return true;
@@ -122,14 +122,14 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
     vals = readVals;
   };
 
-  flt32 lastTim = qQNaN(), lastMon = qQNaN();
+  flt32 lastTim = l::flt_nan, lastMon = l::flt_nan;
 
   auto endDataset = [&]() {
     if (vals.isEmpty())
       return;
 
     // angles
-    check_or_err_(!qIsNaN(tth), "missing TTH");
+    check_or_err_(!l::isnan(tth), "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
     if (robot)
@@ -137,14 +137,14 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
 
     check_or_err_(image.ptr(), "do not have an image");
 
-    check_or_err_(qIsNaN(lastTim) || lastTim <= tim, "decreasing tim");
-    check_or_err_(qIsNaN(lastMon) || lastMon <= mon, "decreasing mon");
+    check_or_err_(l::isnan(lastTim) || lastTim <= tim, "decreasing tim");
+    check_or_err_(l::isnan(lastMon) || lastMon <= mon, "decreasing mon");
 
     flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
-      c::share(new Set(
-        c::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
-        c::share(image.take().ptr()))));
+      l::share(new Set(
+        l::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
+        l::share(image.take().ptr()))));
 
     vals.clear();
     lastTim = tim; lastMon = mon;
@@ -153,16 +153,16 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
   int imageSide = -1;
 
   while (nextDataUnit(elem, node, dt, n)) {
-    if (elem.eqi("READ")) {
+    if (elem == "READ") {
 
       // instrument state - global metadata
       check_or_err_(block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
-      check_or_err_(!node.isEmpty(), "empty READ node");
+      check_or_err_(!node.empty(), "empty READ node");
       if (!doAxes() && !doTimMon())
         addVal(readVals);
 
-    } else if (elem.eqi("SETVALUE")) {
+    } else if (elem == "SETVALUE") {
 
       // begin scan
       if (block != eBlock::SETVALUE) {
@@ -171,19 +171,19 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
         beginDataset();
       }
 
-      check_or_err_(!node.isEmpty(), "empty SETVALUE node");
+      check_or_err_(!node.empty(), "empty SETVALUE node");
       addVal(vals);
 
-    } else if (elem.eqi("MASTER1V")) {
+    } else if (elem == "MASTER1V") {
 
       // scan data
       block = eBlock::MASTER1V;
 
-      check_or_err_(!node.isEmpty(), "empty MASTER1V node");
-      if (node.eqi("ADET")) {
+      check_or_err_(!node.empty(), "empty MASTER1V node");
+      if (node == "ADET") {
         auto adet = getAdet(dt, n);
         auto size = adet.size();
-        auto side = l::to_uint(c::floor(sqrt(size)));
+        auto side = l::to_uint(l::floor(sqrt(size)));
         check_or_err_((side*side == size) && (imageSide < 0 || imageSide == int(side)),
                       "bad image size");
         imageSide = side;
@@ -200,10 +200,10 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
     } else {
 
       endDataset();
-      if (node.isEmpty()) { // file-level info
+      if (node.empty()) { // file-level info
         str s(getAsString(dt, n));
-        if (elem.eqi("COM"))
-          mut(file->comment).set(s);
+        if (elem == "COM")
+          mut(file->comment) = s;
         else
           mut(file->strs).add(std::make_pair(elem, s));
       }
@@ -217,15 +217,15 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
   return file;
 }
 
-File::sh loadCaress(Files& files, c::path::rc path) may_err {
-  check_or_err_(openFile(path), "Cannot open ", path);
+File::sh loadCaress(Files& files, l::path::rc path) may_err {
+  check_or_err_(openFile(path), CAT("Cannot open ", path));
 
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
     return loadOpenCaressFile(files, path.basename());
-  } catch (c::exc& e) {
-    mut(e.msg).set(str::cat(path, e.msg));
+  } catch (l::exc& e) {
+    mut(e.msg) = CAT(path, e.msg);
     throw;
   }
 }

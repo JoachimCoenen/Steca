@@ -16,8 +16,9 @@
  ******************************************************************************/
 
 #include "json.h"
-#include <app_lib/inc/defs_cpp.h>
-#include <QScopedPointer>
+#include <dev_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/ptr.h>
+#include <qt_lib/str_inc.h>
 
 namespace core { namespace key {
 
@@ -48,7 +49,7 @@ static l::ij toIJ(JsonObj::rc obj) may_err {
   );
 }
 
-TEST("IJ::json",
+TEST_("IJ::json",
   l::ij ij(-1,2), ij1(toIJ(toJson(ij)));
   CHECK_EQ(ij, ij1);
 )
@@ -66,7 +67,7 @@ static l::xy toXY(JsonObj::rc obj) may_err {
   );
 }
 
-TEST("XY::json",
+TEST_("XY::json",
   l::xy xy(-1,2), xy1(toXY(toJson(xy)));
   CHECK_EQ(xy, xy1);
 )
@@ -89,7 +90,7 @@ static Range toRange(JsonObj::rc obj) may_err {
   );
 }
 
-TEST("Range::json",
+TEST_("Range::json",
   Range r(-1,2), r1(toRange(toJson(r)));
   CHECK_EQ(r, r1);
 )
@@ -108,7 +109,7 @@ static Ranges toRanges(JsonArr::rc arr) may_err {
   return rs;
 }
 
-TEST("Ranges::json",
+TEST_("Ranges::json",
   Ranges rs;
   rs.add(Range());
   rs.add(Range(9));
@@ -153,7 +154,7 @@ static JsonObj toJson(SumFuns::rc f) {
   obj.saveUint(core::key::COUNT, funCount);
 
   for_i_(funCount)
-    obj.saveObj(core::key::FUN + str::number(i+1), toJson(*f.funs.at(i)));
+    obj.saveObj(CAT(core::key::FUN, (i+1)), toJson(*f.funs.at(i)));
 
   return obj;
 }
@@ -180,20 +181,20 @@ static void loadSumFuns(SumFuns& f, JsonObj::rc obj) may_err {
   EXPECT_(f.funs.isEmpty()) // cannot load twice
 
   for_i_(obj.loadUint(core::key::COUNT))
-    f.add(loadFun(obj.loadObj(core::key::FUN + str::number(i+1))));
+    f.add(loadFun(obj.loadObj(CAT(core::key::FUN, (i+1)))));
 }
 
 static l::own<Fun> loadFun(JsonObj::rc obj) may_err {
-  QScopedPointer<Fun> f(Fun::make(obj.loadStr(core::key::TYPE)).ptr());
-  if (dynamic_cast<SimpleFun*>(f.data()))
+  auto f = l::scope(Fun::make(obj.loadStr(core::key::TYPE)));
+  if (dynamic_cast<SimpleFun*>(f.ptr()))
     loadSimpleFun(static_cast<SimpleFun&>(*f), obj);
-  else if (dynamic_cast<SumFuns*>(f.data()))
+  else if (dynamic_cast<SumFuns*>(f.ptr()))
     loadSumFuns(static_cast<SumFuns&>(*f), obj);
 
-  return l::owned(f.take());
+  return f.take().justOwn();
 }
 
-TEST("Par::json",
+TEST_("Par::json",
   Par par(6,0), par1(toPar(toJson(par)));
   CHECK_EQ(par.val,  par1.val);
   CHECK_EQ(par1.err, 0);
@@ -208,7 +209,7 @@ JsonObj::JsonObj(QJsonObject const& obj) : base(obj) {}
 #define LOAD_DEF(type)      value(key).isUndefined() ? def : load##type(key)
 #define RET_LOAD_DEF(type)  return LOAD_DEF(type);
 
-#define key_err(msg) err(key + ": " +  msg)
+#define key_err(msg) l::err(key + ": " +  msg)
 
 JsonObj& JsonObj::saveObj(strc key, JsonObj::rc obj) {
   insert(key, obj);
@@ -300,10 +301,10 @@ l::pint JsonObj::loadPint(strc key, uint def) const {
   return pint(LOAD_DEF(Pint));
 }
 
-static str INF_P("+inf"), INF_M("-inf");
+static QString INF_P("+inf"), INF_M("-inf");
 
 JsonObj& JsonObj::saveReal(strc key, real num) {
-  if (qIsNaN(num)) {
+  if (l::isnan(num)) {
     // do save nothing for nans
   } else if (qIsInf(num)) {
     insert(key, num < 0 ? INF_M : INF_P);
@@ -319,7 +320,7 @@ real JsonObj::loadReal(strc key) const may_err {
 
   switch (val.type()) {
   case QJsonValue::Undefined:
-    return qQNaN();          // not present means nan
+    return l::flt_nan;          // not present means nan
   case QJsonValue::String: {  // infinities stored as strings
     auto s = val.toString();
     if (INF_P == s)
@@ -382,7 +383,7 @@ str JsonObj::loadStr(strc key) const may_err {
 
   switch (val.type()) {
   case QJsonValue::String:
-    return val.toString();
+    return l_qt::fromQt(val.toString());
   default:
     key_err("not a string");
   }
@@ -439,15 +440,15 @@ JsonObj JsonObj::operator+(JsonObj::rc that) const {
 }
 
 JsonObj::iterator JsonObj::insert(strc key, strc val) {
-  return base::insert(key, val);
+  return base::insert(l_qt::toQt(key), l_qt::toQt(val));
 }
 
 JsonObj::iterator JsonObj::insert(strc key, QJsonValue const& val) {
-  return base::insert(key, val);
+  return base::insert(l_qt::toQt(key), val);
 }
 
 QJsonValue JsonObj::value(strc key) const {
-  return base::value(key);
+  return base::value(l_qt::toQt(key));
 }
 
 //------------------------------------------------------------------------------
@@ -468,7 +469,7 @@ uint JsonArr::count() const {
 JsonObj JsonArr::objAt(uint i) const {
   auto obj = base::at(l::to_i(i));
   if (QJsonValue::Object != obj.type())
-    err("not an object at " + str::number(i));
+    l::err(CAT("not an object at: ", i));
   return base::at(l::to_i(i)).toObject();
 }
 

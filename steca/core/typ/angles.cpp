@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "angles.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include <algorithm>
 #include <cmath>
 
@@ -80,7 +80,7 @@ Angles::rc AngleMap::at(uint i) const {
   return angles->at(i);
 }
 
-static uint lowerBound(QVector<gma_t> const& vec, gma_t x, uint i1, uint i2) {
+static uint lowerBound(l::vec<gma_t> const& vec, gma_t x, uint i1, uint i2) {
   EXPECT_(i1 < i2)
 
   if (1 == i2-i1)
@@ -92,7 +92,7 @@ static uint lowerBound(QVector<gma_t> const& vec, gma_t x, uint i1, uint i2) {
       : lowerBound(vec, x, i1, mid);  // ... we should be so lucky
 }
 
-static uint upperBound(QVector<gma_t> const& vec, gma_t x, uint i1, uint i2) {
+static uint upperBound(l::vec<gma_t> const& vec, gma_t x, uint i1, uint i2) {
   EXPECT_(i1 < i2)
 
   if (1 == i2-i1)
@@ -169,8 +169,8 @@ void AngleMap::calculate() {
     for (uint j = cut.top, jEnd = l::to_uint(size.j - cut.bottom); j < jEnd; ++j) {
       auto& as = angles->at(i, j);
 
-      gmas[gi] = as.gma;
-      gmaIndexes[gi] = i + j * l::to_uint(size.i);
+      gmas.setAt(gi, as.gma);
+      gmaIndexes.setAt(gi,i + j * l::to_uint(size.i));
       ++gi;
 
       mut(rgeTth).extendBy(as.tth);
@@ -182,21 +182,21 @@ void AngleMap::calculate() {
 
   uint_vec is(countWithoutCut);
   for_i_(l::to_uint(is.size()))
-    is[i] = i;
+    is.setAt(i, i);
 
   std::sort(is.begin(), is.end(), [this](uint i1,uint i2) {
     real gma1 = gmas.at(i1), gma2 = gmas.at(i2);
     return gma1 < gma2;
   });
 
-  QVector<gma_t> gv(countWithoutCut);
+  l::vec<gma_t> gv(countWithoutCut);
   for_i_(countWithoutCut)
-    gv[i] = gmas.at(is.at(i));
+    gv.setAt(i, gmas.at(is.at(i)));
   gmas = gv;
 
   uint_vec uv(countWithoutCut);
   for_i_(countWithoutCut)
-    uv[i] = gmaIndexes.at(is.at(i));
+    uv.setAt(i, gmaIndexes.at(is.at(i)));
   gmaIndexes = uv;
 }
 

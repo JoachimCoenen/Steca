@@ -14,10 +14,7 @@ TEST_("deg",
   CHECK_EQ(real(deg(rad(M_PI_2))), 90);
 )
 
-deg::ref deg::operator=(rc that) {
-  mut(val) = that.val;
-  RT
-}
+deg::ref deg::operator=(rc that) SET_(mut(val) = that.val)
 
 rad deg::toRad() const {
   return rad(val * (M_PI / 180));
@@ -55,10 +52,7 @@ TEST_("rad",
   CHECK_EQ(real(rad(deg(90))), M_PI_2);
 )
 
-rad::ref rad::operator=(rc that) {
-  mut(val) = that.val;
-  RT
-}
+rad::ref rad::operator=(rc that) SET_(mut(val) = that.val)
 
 deg rad::toDeg() const {
   return deg(val * (180 / M_PI));

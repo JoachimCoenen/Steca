@@ -19,23 +19,24 @@
 #define CORE_IO_HPP
 
 #include <core/data/data.h>
+#include <dev_lib/typ/path.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress(c::path::rc);
-bool couldBeMar(c::path::rc);
-bool couldBeTiffDat(c::path::rc);
+bool couldBeCaress(l::path::rc);
+bool couldBeMar(l::path::rc);
+bool couldBeTiffDat(l::path::rc);
 
 // load a file; file type will be sensed
-data::File::sh load(data::Files&, c::path::rc) may_err;
+data::File::sh load(data::Files&, l::path::rc) may_err;
 
 // load a specific file type
-data::File::sh loadCaress(data::Files&, c::path::rc)  may_err;
-data::File::sh loadMar(data::Files&, c::path::rc)     may_err;
-data::File::sh loadTiffDat(data::Files&, c::path::rc) may_err;
+data::File::sh loadCaress(data::Files&, l::path::rc)  may_err;
+data::File::sh loadMar(data::Files&, l::path::rc)     may_err;
+data::File::sh loadTiffDat(data::Files&, l::path::rc) may_err;
 
-str loadCaressComment(c::path::rc) may_err;
+str loadCaressComment(l::path::rc) may_err;
 
 //------------------------------------------------------------------------------
 }}

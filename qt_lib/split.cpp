@@ -22,11 +22,7 @@ split& split::vs() {
   return _hvs(new vSplit, this);
 }
 
-split& split::add(QWidget* wgt) {
-  EXPECT_(wgt)
-  addWidget(wgt);
-  RT
-}
+split& split::add(QWidget* wgt) SET_(addWidget(NEEDED_(wgt)))
 
 panel& split::addPanel() {
   auto p = new panel;

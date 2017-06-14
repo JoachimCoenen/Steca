@@ -29,7 +29,7 @@ dcl_base_(cache_base)
 dcl_end
 
 template <typename Key, typename T>
-dcl_reimpl_(cache, cache_base)
+dcl_sub_(cache, cache_base)
 private:
   using rcKey = Key const&;
   using Tsh   = shared<T>;
@@ -43,9 +43,9 @@ private:
 public:
   cache(pint n) : base(n) {}
 
-  mth_(sz_t, size, ())      { return cash.size();     }
-  bol_(isEmpty,    ())      { return cash.isEmpty();  }
-  mth_mut_(void, clear, ()) { trim(0);                }
+  mth_(sz_t, size, ())      VAL_(cash.size())
+  bol_(isEmpty,    ())      VAL_(cash.isEmpty())
+  mth_mut_(void, clear, ()) { trim(0); }
 
   void trim(sz_t n) { // TODO to cache_base (with adapter)
     if (size() > n) {

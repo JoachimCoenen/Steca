@@ -31,34 +31,34 @@ dcl_sub_(act, QAction)
   set_(check, (bool = true));
 
   template <typename L>
-  set_(onTrigger, (L l)) {
+  set_(onTrigger, (L l)) SET_(
     setCheckable(false);
     connect(this, &QAction::triggered, l);
-    RT
-  }
+  )
 
   template <typename L>
   set_(onToggle, (L l)) {
     setCheckable(true);
     connect(this, &QAction::toggled, l);
+    RTHIS
   }
 dcl_end
 
 ////------------------------------------------------------------------------------
 
-//TODO struct win;
+struct win;
 
-//dcl_(acts)
-//  acts(win&);
-//  set_(add, (strc hash, l::give_me<act>));
-//  mth_(act&, get, (strc hash)) may_err;
+dcl_(acts)
+  acts(win&);
+  set_(add, (strc hash, l::give_me<act>));
+  mth_(act&, get, (strc hash)) may_err;
 
-//  cst_(str, QUIT);
+  cst_(str, QUIT);
 
-//protected:
-//  win& w;
-//  l::hash<str, act> as;
-//dcl_end
+protected:
+  win& w;
+  l::hash<str, act const*> as;
+dcl_end
 
 //------------------------------------------------------------------------------
 
@@ -69,10 +69,7 @@ dcl_sub_(actbtn, QToolButton)
   set_(action, (act*));
 
   template <typename L>
-  set_(onAct, (L l)) {
-    connect(this, &QAction::triggered, l);
-    RT
-  }
+  set_(onAct, (L l)) SET_(connect(this, &QAction::triggered, l))
 dcl_end
 
 //------------------------------------------------------------------------------

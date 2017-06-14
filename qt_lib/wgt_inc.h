@@ -1,7 +1,7 @@
 // (qt_lib)
 
-#ifndef QT_LIB_GUI_INC_H
-#define QT_LIB_GUI_INC_H
+#ifndef QT_LIB_WGT_INC_H
+#define QT_LIB_WGT_INC_H
 
 // gui widgets
 #include "act.h"
@@ -16,7 +16,6 @@
 #include "spin.h"
 #include "split.h"
 #include "tabs.h"
-#include "wgt_help.h"
 
 #endif
 // eof

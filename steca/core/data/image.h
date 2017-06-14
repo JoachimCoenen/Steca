@@ -20,29 +20,29 @@
 
 #include "../typ/def.h"
 #include "../typ/range.h"
-#include <app_lib/inc/ptr.h>
-#include <app_lib/typ/arr2.h>
+#include <dev_lib/inc/ptr.h>
+#include <dev_lib/typ/arr2.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_(count_arr2)
+dcl_(count_arr2) SHARED
   using count_rge = Range;
-  atr_(count_rge, rgeCount)
+  atr_(count_rge, rgeCount);
 
   count_arr2(l::sz2);
   count_arr2(rc);
 
-  val_(l::sz2, size, (), cs.sz)
-  val_(bool, isEmpty, (), cs.isEmpty())
+  mth_(l::sz2, size, ()) VAL_(cs.sz)
+  mth_(bool, isEmpty, ()) VAL_(cs.isEmpty())
 
-  val_(inten_t, at, (uint i),         cs.at(i))
-  val_(inten_t, at, (uint i, uint j), cs.at(i,j))
+  mth_(inten_t, at, (uint i))         VAL_(cs.at(i))
+  mth_(inten_t, at, (uint i, uint j)) VAL_(cs.at(i,j))
 
-  set_inl_(setAt, (uint i,         inten_t c), cs.setAt(i, c);    )
-  set_inl_(setAt, (uint i, uint j, inten_t c), cs.setAt(i, j, c); )
+  set_(setAt, (uint i,         inten_t c)) SET_(cs.setAt(i, c))
+  set_(setAt, (uint i, uint j, inten_t c)) SET_(cs.setAt(i, j, c))
 
-  set_(addAt, (uint, uint, inten_t))
+  set_(addAt, (uint, uint, inten_t));
 
 private:
   l::arr2<inten_t> cs;  // could be optimized int8/16/32
@@ -53,20 +53,20 @@ dcl_(Image) SHARED
   Image(l::sz2::rc);
   Image(count_arr2::rc);
 
-  mth_(l::sz2, size, ())
-  set_(clear, ())
-  mth_(bool, isEmpty, ())
+  mth_(l::sz2, size, ());
+  set_(clear, ());
+  mth_(bool, isEmpty, ());
 
-  mth_(inten_t, inten, (uint i, uint j))
-  mth_(inten_t, inten, (uint i))
-  set_(setInten, (uint i, uint j, inten_t val))
-  set_(addInten, (uint i, uint j, inten_t val))
-  set_(addIntens, (rc))
+  mth_(inten_t, inten, (uint i, uint j));
+  mth_(inten_t, inten, (uint i));
+  set_(setInten, (uint i, uint j, inten_t val));
+  set_(addInten, (uint i, uint j, inten_t val));
+  set_(addIntens, (rc));
 
-  val_(inten_rge, rgeInten, (), intens->rgeCount)
+  mth_(inten_rge, rgeInten, ()) VAL_(intens->rgeCount)
 
 private:
-  QSharedPointer<count_arr2> intens;
+  count_arr2::sh intens;
 dcl_end
 
 dcl_(ImageTransform)
@@ -82,7 +82,7 @@ dcl_(ImageTransform)
     MIRROR_ROTATE_3 = MIRROR | ROTATE_3,
   };
 
-  atr_(eTransform, val)
+  atr_(eTransform, val);
 
   // clamps val appropriately
   ImageTransform(uint val = ROTATE_0);
@@ -96,11 +96,9 @@ dcl_(ImageTransform)
   // rotates by one quarter-turn
   ImageTransform nextRotate() const;
 
-  val_(bool, isTransposed, (), 0 != (val & 1))
+  mth_(bool, isTransposed, ()) VAL_(0 != (val & 1))
 
-  bool operator==(rc that) const {
-    return val == that.val;
-  }
+  bol_(operator==, (rc that)) VAL_(val == that.val)
 dcl_end
 
 //------------------------------------------------------------------------------

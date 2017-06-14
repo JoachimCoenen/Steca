@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "curve.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include <algorithm>
 
 namespace core {
@@ -46,8 +46,8 @@ bool Curve::isSorted() const {
 }
 
 Curve::ref Curve::add(real x, real y) {
-  mut(xs).append(x);
-  mut(ys).append(y);
+  mut(xs).add(x);
+  mut(ys).add(y);
   mut(rgeX).extendBy(x);
   mut(rgeY).extendBy(y);
   return *this;
@@ -97,7 +97,7 @@ Curve Curve::intersect(Ranges::rc ranges) const {
 
 Curve::ref Curve::subtract(Fun::rc f) {
   for_i_(size())
-    mut(ys)[i] -= f.y(xs.at(i));
+    mut(ys).refAt(i) -= f.y(xs.at(i));
   return *this;
 }
 

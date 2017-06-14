@@ -12,15 +12,9 @@ cbo::cbo(str_vec::rc ts) {
   add(ts);
 }
 
-cbo::ref cbo::add(strc t) {
-  base::addItem(toQt(t)); RT
-}
+cbo::ref cbo::add(strc t) SET_(base::addItem(toQt(t)))
 
-cbo::ref cbo::add(str_vec::rc ts) {
-  for (auto t : ts)
-    add(t);
-  RT
-}
+cbo::ref cbo::add(str_vec::rc ts) SET_(for (auto t : ts) add(t))
 
 //------------------------------------------------------------------------------
 }

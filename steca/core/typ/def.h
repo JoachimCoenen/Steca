@@ -3,16 +3,15 @@
 #ifndef CORE_DEF_HPP
 #define CORE_DEF_HPP
 
-#include <app_lib/inc/defs_h.h>
-#include <app_lib/typ/trg.h>
-#include <QVector>
-#include <QSharedPointer>
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/typ/trg.h>
+#include <dev_lib/typ/vec.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-using real_vec = QVector<real>;
-using uint_vec = QVector<uint>;
+using real_vec = l::vec<real>;
+using uint_vec = l::vec<uint>;
 
 using tth_t = l::deg;
 using omg_t = l::deg;
@@ -30,15 +29,11 @@ using peak_t = flt32;
 using fwhm_t = flt32;
 
 using inten_t   = flt32;
-using inten_vec = QVector<inten_t>;
+using inten_vec = l::vec<inten_t>;
 using inten_rge = Range;
 
 //------------------------------------------------------------------------------
 }
-
-#define SHARED \
-  using sh  = QSharedPointer<Self>; \
-  using shc = sh const&;
 
 #endif
 // eof

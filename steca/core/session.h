@@ -20,8 +20,9 @@
 
 #include "data/data.h"
 #include "typ/angles.h"
-#include <app_lib/inc/num.h>
-#include <app_lib/typ_qt/cache.h>
+#include <dev_lib/inc/num.h>
+#include <dev_lib/typ/cache.h>
+#include <qt_lib/str_inc.h>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -32,17 +33,17 @@ dcl_(Session)
     MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
   };
 
-  atr_(str_lst, normStrLst)
+  atr_(l_qt::str_vec, normStrLst);
 
   Session();
 
-  mth_(AngleMap::sh,   angleMap, (data::Set::rc))
-  atr_(AngleMap::Key0, angleMapKey0) // current
-  atr_(ImageCut,       imageCut)
-  atr_(l::sz2,         imageSize)
+  mth_(AngleMap::sh,   angleMap, (data::Set::rc));
+  atr_(AngleMap::Key0, angleMapKey0); // current
+  atr_(ImageCut,       imageCut);
+  atr_(l::sz2,         imageSize);
 
-  atr_(bool,    avgScaleIntens)
-  atr_(l::peal, intenScale)
+  atr_(bool,    avgScaleIntens);
+  atr_(l::peal, intenScale);
 
 private:
   mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;

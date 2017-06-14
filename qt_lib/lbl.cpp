@@ -11,9 +11,7 @@ lbl::lbl(strc t) {
   text(t);
 }
 
-lbl::ref lbl::text(strc t) {
-  base::setText(toQt(t)); RT
-}
+lbl::ref lbl::text(strc t) SET_(base::setText(toQt(t)))
 
 //------------------------------------------------------------------------------
 }

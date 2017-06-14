@@ -18,33 +18,33 @@
 #ifndef CORE_MODELS_HPP
 #define CORE_MODELS_HPP
 
-#include <app_lib/typ_qt/model.h>
+#include <qt_lib/model.h>
 
 namespace core_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(ModelFiles, l_qt::lst_model)
   ModelFiles();
-  mth_(cl_n, cols, ())
-  mth_(rw_n, rows, ())
-  mth_(l_qt::var, cell, (rw_n, cl_n))
+  mth_(cl_n, cols, ());
+  mth_(rw_n, rows, ());
+  mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check, (rw_n, bool))
-  mth_(bool, isChecked, (rw_n))
+  set_(check, (rw_n, bool));
+  mth_(bool, isChecked, (rw_n));
 dcl_end
 
 dcl_sub_(ModelDatasets, l_qt::lst_model)
   ModelDatasets();
-  mth_(cl_n, cols, ())
-  mth_(rw_n, rows, ())
-  mth_(l_qt::var, cell, (rw_n, cl_n))
+  mth_(cl_n, cols, ());
+  mth_(rw_n, rows, ());
+  mth_(l_qt::var, cell, (rw_n, cl_n));
 dcl_end
 
 dcl_sub_(ModelMetadata, l_qt::lst_model)
   ModelMetadata();
-  mth_(cl_n, cols, ())
-  mth_(rw_n, rows, ())
-  mth_(l_qt::var, cell, (rw_n, cl_n))
+  mth_(cl_n, cols, ());
+  mth_(rw_n, rows, ());
+  mth_(l_qt::var, cell, (rw_n, cl_n));
 dcl_end
 
 //------------------------------------------------------------------------------

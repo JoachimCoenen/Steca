@@ -17,7 +17,7 @@ tabs::ref tabs::addTab(panel* p, strc title, QWidget* tabBtn) {
   auto n = base::addTab(p, toQt(title));
   if (tabBtn)
     base::tabBar()->setTabButton(n, QTabBar::RightSide, tabBtn);
-  RT
+  RTHIS
 }
 
 //------------------------------------------------------------------------------

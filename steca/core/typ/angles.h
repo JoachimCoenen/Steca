@@ -20,61 +20,64 @@
 
 #include "geometry.h"
 #include "range.h"
-#include <app_lib/typ/arr2.h>
-#include <app_lib/typ/sz2.h>
+#include <dev_lib/inc/ptr.h>
+#include <dev_lib/typ/arr2.h>
+#include <dev_lib/typ/sz2.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
 dcl_(Angles)
-  atr_(tth_t, tth)
-  atr_(gma_t, gma)
+  atr_(tth_t, tth);
+  atr_(gma_t, gma);
 
   Angles();
   Angles(tth_t, gma_t);
 
-  set_(operator=, (rc))
+  set_(operator=, (rc));
 dcl_end
 
 dcl_(AngleMap) SHARED
-  using angle_arr = l::arr2<Angles>;
+  dcl_sub_(angle_arr, l::arr2<Angles>) SHARED
+    using base::base;
+  dcl_end
 
   dcl_(Key0) COMPARABLE EQ_NE
-    atr_(Geometry, geometry)
-    atr_(l::sz2, size)
-    atr_(ImageCut, cut)
-    atr_(l::ij, midPix)
+    atr_(Geometry, geometry);
+    atr_(l::sz2, size);
+    atr_(ImageCut, cut);
+    atr_(l::ij, midPix);
 
     Key0();
     Key0(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix);
   dcl_end
 
   dcl_sub_(Key, Key0) COMPARABLE COMP_OPS
-    atr_(tth_t, midTth)
+    atr_(tth_t, midTth);
 
     Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
     Key(Key0, tth_t midTth);
   dcl_end
 
-  atr_(Key, key)
-  atr_(tth_rge, rgeTth)
-  atr_(gma_rge, rgeGma)
-  atr_(gma_rge, rgeGmaFull)
+  atr_(Key, key);
+  atr_(tth_rge, rgeTth);
+  atr_(gma_rge, rgeGma);
+  atr_(gma_rge, rgeGmaFull);
 
   AngleMap(Key::rc);
 
-  mth_(Angles::rc, at, (uint i, uint j))
-  mth_(Angles::rc, at, (uint i))
+  mth_(Angles::rc, at, (uint i, uint j));
+  mth_(Angles::rc, at, (uint i));
 
-  mth_(void, getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&))
+  mth_(void, getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
 
 private:
-  mth_mut_(void, calculate, ())
-  QSharedPointer<angle_arr> angles;
+  mth_mut_(void, calculate, ());
+  angle_arr::sh angles;
 
   // sorted
-  QVector<gma_t> gmas;
-  uint_vec       gmaIndexes;
+  l::vec<gma_t> gmas;
+  uint_vec      gmaIndexes;
 dcl_end
 
 //------------------------------------------------------------------------------

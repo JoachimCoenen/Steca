@@ -4,6 +4,7 @@
 #define DEV_LIB_EXC_H
 
 #include "defs_h.h"
+#include "str_fmt.h"
 #include <exception>
 
 namespace l {
@@ -20,18 +21,9 @@ dcl_end
 [[noreturn]] void err()     will_err;
 [[noreturn]] void err(strc) will_err;
 
-template <typename T> str cat(strc s, T const& t) {
-  return s + ' ' + std::to_string(t);
-}
-
-template <typename T>
-[[noreturn]] void err(strc msg, T const& t) will_err {
-  throw exc(cat(msg, t));
-}
-
 // runtime check
-#define check_or_err_(cond, ...) \
-  if (!(cond)) l::err(__VA_ARGS__)
+#define check_or_err_(cond, msg) \
+  if (!(cond)) l::err(msg)
 
 //------------------------------------------------------------------------------
 }

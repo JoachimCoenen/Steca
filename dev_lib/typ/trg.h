@@ -16,7 +16,7 @@ dcl_(deg)
   explicit deg(real = 0);
   explicit deg(rad const&);
 
-  cop_(real()) { return val; }
+  cop_(real) VAL_(val)
 
   set_(operator=, (rc));
 
@@ -35,7 +35,7 @@ dcl_(rad)
   explicit rad(real = 0);
   explicit rad(deg const&);
 
-  cop_(real()) { return val; }
+  cop_(real) VAL_(val)
 
   set_(operator=, (rc));
 
@@ -47,7 +47,8 @@ dcl_(rad)
   mth_(real, sin, ());
   mth_(real, cos, ());
 dcl_end
-}
 
+//------------------------------------------------------------------------------
+}
 #endif
 // eof

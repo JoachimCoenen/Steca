@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "io.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include "Mar/MarReader.h"
 
 namespace core { namespace io {
@@ -32,15 +32,15 @@ using data::flt_vec;
 //------------------------------------------------------------------------------
 // Code taken from the original STeCa, only slightly modified.
 
-File::sh loadMar(Files& files, c::path::rc path) may_err {
+File::sh loadMar(Files& files, l::path::rc path) may_err {
   File::sh file(new File(files, path.basename()));
 
   using WORD = short;
 
   FILE *fpIn;
 
-  check_or_err_((fpIn = fopen(path.p, "rb")),
-                "Cannot open data file ", path);
+  check_or_err_((fpIn = fopen(path.c_str(), "rb")),
+                CAT("Cannot open data file: ", path));
 
   struct CloseFile { // TODO remove, replace with QFile etc.
     CloseFile(FILE *fpIn) : fpIn_(fpIn) {}
@@ -73,7 +73,7 @@ File::sh loadMar(Files& files, c::path::rc path) may_err {
     else if (h1 > 10 && h1 < 5000)
       mar345 = 0;
     else
-      c::err("bad format");
+      l::err("bad format");
   }
 
   // Read Header
@@ -103,7 +103,7 @@ File::sh loadMar(Files& files, c::path::rc path) may_err {
 
   if ((pixSizeX < 10) || (pixSizeX > 4000) || (pixSizeY < 10)
      || (pixSizeY > 4000) || (numberOfHigh > 9999999))
-    c::err("bad format");
+    l::err("bad format");
 
   WORD *i2_image = new WORD[pixelSize];
   int *i4_image = new int[pixelSize];
@@ -119,7 +119,7 @@ File::sh loadMar(Files& files, c::path::rc path) may_err {
     int i =
         (int)fread((unsigned char *)i2_image, sizeof(short), pixelSize, fpIn);
     if (i != (int)pixelSize)
-      c::err("WARNING: read not all pixel!");
+      l::err("WARNING: read not all pixel!");
     if (byteswap)
       swapint16((unsigned char *)i2_image, pixelSize * sizeof(WORD));
   }
@@ -217,7 +217,7 @@ File::sh loadMar(Files& files, c::path::rc path) may_err {
   for_i_(pixelSize)
     convertedIntens.setAt(i, inten_t(i4_image[i]));
 
-  auto md = c::scope(new Meta(files.dict));
+  auto md = l::scope(new Meta(files.dict));
 
   mut(md->omg)  = omg_t(omega);
   mut(md->tth)  = tth_t(twoTheta);
@@ -231,9 +231,9 @@ File::sh loadMar(Files& files, c::path::rc path) may_err {
   // REVIEW ?? pictureOverflow
 
   mut(*file).addSet(
-    c::share(new Set(
-      c::share(md),
-      c::share(new Image(convertedIntens)))));
+    l::share(new Set(
+      l::share(md.take().ptr()),
+      l::share(new Image(convertedIntens)))));
 
   delete[] i2_image;
   delete[] i4_image;

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "mat.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ mat3 mat3::rotationCCWz(l::rad angle) {
   return rotationCWz(angle).transposed();
 }
 
-TEST("vec3",
+TEST_("vec3",
   vec3 v(1,2,3);
 
   CHECK_EQ(v._0, 1);
@@ -113,7 +113,7 @@ TEST("vec3",
   CHECK_EQ(v._2, 3);
 )
 
-TEST("mat3",
+TEST_("mat3",
   mat3 m1(0,1,2, 3,4,5, 6,7,8), mc(m1);
   mat3 mt(0,3,6, 1,4,7, 2,5,8);
 
@@ -124,7 +124,7 @@ TEST("mat3",
   CHECK_EQ(mat3(5,14,23, 14,50,86, 23,86,149), m1*mt);
 )
 
-TEST("mat3::rotation",
+TEST_("mat3::rotation",
   l::rad angle(1);
   auto cwx  = mat3::rotationCWx(angle);
   auto cwz  = mat3::rotationCWz(angle);

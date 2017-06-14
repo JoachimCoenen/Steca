@@ -32,31 +32,29 @@ extern str const
 }
 
 dcl_(Par)
-  atr_(real, val)
-  atr_(real, err)
+  atr_(real, val);
+  atr_(real, err);
 
-  Par();
   Par(real, real);
 
-  void set(real val, real err);
-  void setVal(real);
+  set_(set, (real val, real err));
+  set_(setVal, (real));
 
-  ref operator=(rc);
+  set_(operator=, (rc));
 dcl_end
 
-dcl_(Fun) SHARED
+dcl_base_(Fun) SHARED
   Fun();
-  virtual ~Fun();
 
-  virtual sz_t parCount()     const = 0;
-  virtual Par::rc parAt(sz_t) const = 0;
-  virtual void resetPars()    {}
+  virtual mth_(sz_t, parCount, ())     = 0;
+  virtual mth_(Par::rc, parAt, (sz_t)) = 0;
+  virtual set_(resetPars, ())  SET_()
 
   // evaluate the fun y = f(x), with given (parVals) or own pars
-  virtual real y(real x, real const* parVals = nullptr) const = 0;
+  virtual mth_(real, y, (real x, real const* parVals = nullptr)) = 0;
 
   // partial derivative / par, with given (parVals) or own pars
-  virtual real dy(real x, sz_t parIdx, real const* parVals = nullptr) const = 0;
+  virtual mth_(real, dy, (real x, sz_t parIdx, real const* parVals = nullptr)) = 0;
 
   using fryFun = factory<Fun>;
 
@@ -70,42 +68,42 @@ public:
 dcl_end
 
 dcl_sub_(SimpleFun, Fun)
-  atr_(QVector<Par>, pars)
+  atr_(l::vec<Par>, pars);
 
   SimpleFun();
 
-  void    add(Par::rc);
+  set_(add, (Par::rc));
 
-  sz_t    parCount()  const;
-  Par::rc parAt(sz_t) const;
-  void    resetPars();
+  mth_(sz_t,    parCount, ());
+  mth_(Par::rc, parAt, (sz_t));
+  set_(resetPars, ());
 
-  real    parVal(sz_t parIdx, real const* parVals) const;
-  void    setParVal(sz_t parIdx, real val);
+  mth_(real, parVal, (sz_t parIdx, real const* parVals));
+  set_(setParVal, (sz_t parIdx, real val));
 dcl_end
 
 // a fun that is a sum of other funs
 
 dcl_sub_(SumFuns, Fun)
-  void add(l::give_me<Fun>);
+  set_(add, (l::give_me<Fun>));
 
   // aggregate par list for all added funs
-  sz_t    parCount()  const;
-  Par::rc parAt(sz_t) const;
+  mth_(sz_t,    parCount, ());
+  mth_(Par::rc, parAt, (sz_t));
 
-  real  y(real x, real const* parVals = nullptr)              const;
-  real dy(real x, sz_t parIdx, real const* parVals = nullptr) const;
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, sz_t parIdx, real const* parVals = nullptr));
 
   // summed funs
-  QVector<Fun::sh> funs;
+  l::vec<Fun::sh> funs;
 
 protected:
   // the aggregate par list
-  QVector<Par const*> allPars;
+  l::vec<Par const*> allPars;
   // look up the original fun for a given aggregate par index
-  QVector<Fun const*> fun4parIdx;
+  l::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate par index
-  QVector<sz_t> firstParIdx4parIdx;
+  l::vec<sz_t> firstParIdx4parIdx;
 dcl_end
 
 //------------------------------------------------------------------------------

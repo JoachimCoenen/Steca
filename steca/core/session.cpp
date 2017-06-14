@@ -15,9 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.hpp"
-#include <c2/inc/c_cpp>
-#include <c2/c/num.h>
+#include "session.h"
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -36,7 +34,6 @@ AngleMap::sh Session::angleMap(data::Set::rc set) const {
     map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
   return map;
 }
-
 
 //------------------------------------------------------------------------------
 }

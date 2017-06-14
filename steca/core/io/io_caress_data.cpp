@@ -15,10 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io_caress_data.hpp"
-#include <c2/c/num.h>
-#include <c2/cpp/exc.hpp>
-#include <c2/inc/c_cpp>
+#include "io_caress_data.h"
+#include <dev_lib/inc/defs_cpp.h>
+
 #undef CHECK
 #include "Caress/raw.h"
 
@@ -73,27 +72,27 @@ static dtype to_dtype(int32 t) {
     return NONE;
   }
 
-  c::err("unsuported data type: ", t);
+  l::err(CAT("unsuported data type: ", t));
 }
 
 
-static c::mem getUnit(uint n, sz_t sz) {
-  c::mem data(n * sz);
+static mem getUnit(uint n, sz_t sz) {
+  mem data(n * sz);
   if (n > 0)
-    check_or_err_(0 == get_data_unit(mutp(data.p)), "bad data unit");
+    check_or_err_(0 == get_data_unit(data.data()), "bad data unit");
   return data;
 }
 
-static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
-  c::mem data(n * sz);
+static mem getPartition(uint n, sz_t sz, int32 d_type) {
+  mem data(n * sz);
 
   int32 start = 1, ni = int32(n), section = 1;    // Is there ever section other than 1 ?
   while (ni > 0) {
-    c::mem buf(MAXNUMBEROFCHANNELS * sz);
-    int32 n = qMin(ni, MAXNUMBEROFCHANNELS);
-    check_or_err_(0 == get_data_partition(mutp(buf.p), &section, &start, &n, &d_type), "bad data partition");
-    EXPECT_(n == qMin(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
-    c::unsafe::memmov(pstr(data.p)+l::to_u(start-1)*sz, buf.p, l::to_u(n));
+    mem buf(MAXNUMBEROFCHANNELS * sz);
+    int32 n = l::min(ni, MAXNUMBEROFCHANNELS);
+    check_or_err_(0 == get_data_partition(buf.data(), &section, &start, &n, &d_type), "bad data partition");
+    EXPECT_(n == l::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
+    memmove(data.data() + l::to_u(start-1)*sz, buf.data(), l::to_u(n));
     ni -= n; start += n;
   }
 
@@ -101,14 +100,14 @@ static c::mem getPartition(uint n, sz_t sz, int32 d_type) {
 }
 
 bool openFile(strc f) {
-  return OK == open_data_file(f.p, nullptr);
+  return OK == open_data_file(f.c_str(), nullptr);
 }
 
 void closeFile() {
   close_data_file();
 }
 
-c::mem getData(dtype dt, uint n) {
+mem getData(dtype dt, uint n) {
   auto sz = dtype_size(dt);
   if (n > MAXNUMBEROFCHANNELS)
     return getPartition(n, sz, from_dtype(dt));
@@ -117,7 +116,7 @@ c::mem getData(dtype dt, uint n) {
 }
 
 str getString(uint n) {
-  return str(getData(CHR, n));
+  return getData(CHR, n).data();
 }
 
 str getAsString(dtype dt, uint n) {
@@ -129,16 +128,16 @@ str getAsString(dtype dt, uint n) {
 
   switch (dt) {
   case NONE:
-    return str::null;
+    return nullstr;
   case INT16:
-    return str::frm(*static_cast<int16 const*>(m.p));
+    return std::to_string(*reinterpret_cast<int16 const*>(m.data()));
   case INT32:
-    return str::frm(*static_cast<int32 const*>(m.p));
+    return std::to_string(*reinterpret_cast<int32 const*>(m.data()));
   case FLT32:
-    return str::frm(*static_cast<flt32 const*>(m.p));
+    return std::to_string(*reinterpret_cast<flt32 const*>(m.data()));
   default:
     EXPECT_(false)
-    return str::null;
+    return nullstr;
   }
 }
 
@@ -146,7 +145,7 @@ float getAsFloat(dtype dt, uint n) {
   switch (dt) {
   case NONE:
   case CHR:
-    c::err("cannot get as float");
+    l::err("cannot get as float");
   default:
     break;
   }
@@ -157,11 +156,11 @@ float getAsFloat(dtype dt, uint n) {
 
   switch (dt) {
   case INT16:
-    return float(*static_cast<int16 const*>(m.p));
+    return float(*reinterpret_cast<int16 const*>(m.data()));
   case INT32:
-    return float(*static_cast<int32 const*>(m.p));
+    return float(*reinterpret_cast<int32 const*>(m.data()));
   case FLT32:
-    return float(*static_cast<flt32 const*>(m.p));
+    return float(*reinterpret_cast<flt32 const*>(m.data()));
   default:
     EXPECT_(false)
     return 0;
@@ -177,26 +176,26 @@ bool nextDataUnit(str& elem, str& node, dtype& dt, uint& n) {
     check_or_err_(d_number >= 0, "bad d_number");
     n = l::to_uint(d_number);
 
-    elem.set(str(MAXNAMELENGTH, m_elem).trim());
-    node.set(str(MAXNAMELENGTH, m_node).trim());
+    elem = l::trim(str(m_elem, MAXNAMELENGTH));
+    node = l::trim(str(m_node, MAXNAMELENGTH));
 
     return true;
   }
   case 2: // END_OF_FILE_DETECTED (raw.cpp)
     return false;
   default:
-    c::err("bad next_data_unit");
+    l::err("bad next_data_unit");
   }
 }
 
-QVector<int32> getAdet(dtype dt, uint n) {
+l::vec<int32> getAdet(dtype dt, uint n) {
   check_or_err_(INT32==dt, "expecting int32 adet");
 
   auto m = getData(dt, n);
-  QVector<int32> v(n, 0);
+  l::vec<int32> v(n, 0);
 
   auto d = v.data();
-  auto s = static_cast<int32 const*>(m.p);
+  auto s = reinterpret_cast<int32 const*>(m.data());
 
   for_i_(n)
     *d++ = *s++;

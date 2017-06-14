@@ -17,7 +17,7 @@
 
 #include "panel_diffractogram.h"
 #include "../hub.h"
-#include <app_lib/typ_qt/gui_inc.h>
+#include <qt_lib/wgt_inc.h>
 
 namespace gui {
 //------------------------------------------------------------------------------

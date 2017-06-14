@@ -41,16 +41,16 @@ void initFry();
 dcl_sub_(Polynom, SimpleFun)
   Polynom(uint degree = 0);
 
-  set_(degree, (uint))
-  mth_(uint, degree, ())
+  set_(degree, (uint));
+  mth_(uint, degree, ());
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(real, avgY, (Range::rc xx, real const* parVals = nullptr))
+  mth_(real, avgY, (Range::rc xx, real const* parVals = nullptr));
 
-  mth_mut_(void, fit, (Curve::rc, Ranges::rc xx))
-  fry_(Polynom, fromFit, (uint degree, Curve::rc, Ranges::rc xx))
+  mth_mut_(void, fit, (Curve::rc, Ranges::rc xx));
+  fry_(Polynom, fromFit, (uint degree, Curve::rc, Ranges::rc xx));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -62,26 +62,26 @@ enum class ePeakType {
 };
 
 dcl_sub_(PeakFun, SimpleFun)
-  fry_(l::give_me<PeakFun>, factory, (ePeakType))
+  fry_(l::give_me<PeakFun>, factory, (ePeakType));
 
   PeakFun();
 
-  mth_(l::give_me<PeakFun>, clone, ())
-  abs_mth_(ePeakType, type, ())
+  mth_(l::give_me<PeakFun>, clone, ());
+  virtual mth_(ePeakType, type, ()) = 0;
 
-  atr_(Range,  range)
-  atr_(peak_t, guessedPeak)
-  atr_(fwhm_t, guessedFWHM)
+  atr_(Range,  range);
+  atr_(peak_t, guessedPeak);
+  atr_(fwhm_t, guessedFWHM);
 
-  abs_mth_(peak_t, fittedPeak, ())
-  abs_mth_(fwhm_t, fittedFWHM, ())
-  abs_mth_(peak_t, peakError,  ())
-  abs_mth_(fwhm_t, fwhmError,  ())
+  virtual mth_(peak_t, fittedPeak, ()) = 0;
+  virtual mth_(fwhm_t, fittedFWHM, ()) = 0;
+  virtual mth_(peak_t, peakError,  ()) = 0;
+  virtual mth_(fwhm_t, fwhmError,  ()) = 0;
 
-  set_(reset, ())
+  set_(reset, ());
 
-  mth_mut_inl_(void, fit, (Curve::rc curve), { fit(curve, range); })
-  vir_mth_mut_(void, fit, (Curve::rc, Range::rc))
+  mth_mut_(void, fit, (Curve::rc curve)) { fit(curve, range); }
+  virtual mth_mut_(void, fit, (Curve::rc, Range::rc));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -89,17 +89,17 @@ dcl_end
 dcl_sub_(Raw, PeakFun)
   Raw();
 
-  val_(ePeakType, type, (), ePeakType::RAW)
+  mth_(ePeakType, type, ()) VAL_(ePeakType::RAW)
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(peak_t, fittedPeak, ())
-  mth_(fwhm_t, fittedFWHM, ())
-  mth_(peak_t, peakError,  ())
-  mth_(fwhm_t, fwhmError,  ())
+  mth_(peak_t, fittedPeak, ());
+  mth_(fwhm_t, fittedFWHM, ());
+  mth_(peak_t, peakError,  ());
+  mth_(fwhm_t, fwhmError,  ());
 
-  mth_mut_(void, fit, (Curve::rc, Range::rc))
+  mth_mut_(void, fit, (Curve::rc, Range::rc));
 
 private:
 //  typ::Curve fittedCurve_;  // saved from fitting
@@ -117,15 +117,15 @@ dcl_sub_(Gaussian, PeakFun)
 
   Gaussian(real ampl = 1, real xShift = 0, real sigma = 1);
 
-  val_(ePeakType, type, (), ePeakType::GAUSSIAN)
+  mth_(ePeakType, type, ()) VAL_(ePeakType::GAUSSIAN)
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(peak_t, fittedPeak, ())
-  mth_(fwhm_t, fittedFWHM, ())
-  mth_(peak_t, peakError,  ())
-  mth_(fwhm_t, fwhmError,  ())
+  mth_(peak_t, fittedPeak, ());
+  mth_(fwhm_t, fittedFWHM, ());
+  mth_(peak_t, peakError,  ());
+  mth_(fwhm_t, fwhmError,  ());
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -135,15 +135,15 @@ dcl_sub_(Lorentzian, PeakFun)
 
   Lorentzian(real ampl = 1, real xShift = 0, real gamma = 1);
 
-  val_(ePeakType, type, (), ePeakType::LORENTZIAN)
+  mth_(ePeakType, type, ()) VAL_(ePeakType::LORENTZIAN)
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(peak_t, fittedPeak, ())
-  mth_(fwhm_t, fittedFWHM, ())
-  mth_(peak_t, peakError,  ())
-  mth_(fwhm_t, fwhmError,  ())
+  mth_(peak_t, fittedPeak, ());
+  mth_(fwhm_t, fittedFWHM, ());
+  mth_(peak_t, peakError,  ());
+  mth_(fwhm_t, fwhmError,  ());
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -154,15 +154,15 @@ dcl_sub_(PseudoVoigt1, PeakFun)
   PseudoVoigt1(real ampl = 1, real xShift = 0, real sigmaGamma = 1,
                real eta = 0.1);
 
-  val_(ePeakType, type, (), ePeakType::PSEUDOVOIGT1)
+  mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT1)
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(peak_t, fittedPeak, ())
-  mth_(fwhm_t, fittedFWHM, ())
-  mth_(peak_t, peakError,  ())
-  mth_(fwhm_t, fwhmError,  ())
+  mth_(peak_t, fittedPeak, ());
+  mth_(fwhm_t, fittedFWHM, ());
+  mth_(peak_t, peakError,  ());
+  mth_(fwhm_t, fwhmError,  ());
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -173,15 +173,15 @@ dcl_sub_(PseudoVoigt2, PeakFun)
   PseudoVoigt2(real ampl = 1, real xShift = 0, real sigma = 1,
                real gamma = 1, real eta = 0.1);
 
-  val_(ePeakType, type, (), ePeakType::PSEUDOVOIGT2)
+  mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT2)
 
-  mth_(real,  y, (real x, real const* parVals = nullptr))
-  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr))
+  mth_(real,  y, (real x, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  mth_(peak_t, fittedPeak, ())
-  mth_(fwhm_t, fittedFWHM, ())
-  mth_(peak_t, peakError,  ())
-  mth_(fwhm_t, fwhmError,  ())
+  mth_(peak_t, fittedPeak, ());
+  mth_(fwhm_t, fittedFWHM, ());
+  mth_(peak_t, peakError,  ());
+  mth_(fwhm_t, fwhmError,  ());
 dcl_end
 
 //------------------------------------------------------------------------------

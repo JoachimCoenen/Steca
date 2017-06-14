@@ -16,28 +16,25 @@
  ******************************************************************************/
 
 #include "fun.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-Par::Par() : Self(0, 0) {}
-
 Par::Par(real val_, real err_) : val(val_), err(err_) {}
 
-void Par::set(real val_, real err_) {
+Par::ref Par::set(real val_, real err_) {
   mut(val) = val_;
   mut(err) = err_;
+  RTHIS
 }
 
-void Par::setVal(real val_) {
-  mut(val) = val_;
-}
+Par::ref Par::setVal(real val_) SET_(mut(val) = val_)
 
 Par::ref Par::operator=(rc that) {
   mut(val) = that.val;
   mut(err) = that.err;
-  return *this;
+  RTHIS
 }
 
 //------------------------------------------------------------------------------
@@ -64,9 +61,7 @@ l::own<Fun> Fun::make(strc key) may_err {
 
 SimpleFun::SimpleFun() : pars() {}
 
-void SimpleFun::add(Par::rc par) {
-  mut(pars).append(par);
-}
+SimpleFun::ref SimpleFun::add(Par::rc par) SET_(mut(pars).add(par))
 
 sz_t SimpleFun::parCount() const {
   return pars.size();
@@ -76,32 +71,33 @@ Par::rc SimpleFun::parAt(sz_t i) const {
   return pars.at(i);
 }
 
-void SimpleFun::resetPars() {
+SimpleFun::ref SimpleFun::resetPars() {
   for_i_(parCount())
-    mut(pars)[i] = Par(0, 0);
+    mut(pars).setAt(i, Par(0, 0));
+  RTHIS
 }
 
 real SimpleFun::parVal(sz_t i, real const* parVals) const {
   return parVals ? parVals[i] : pars.at(i).val;
 }
 
-void SimpleFun::setParVal(sz_t i, real val) {
-  mut(pars.at(i)).setVal(val);
-}
+SimpleFun::ref SimpleFun::setParVal(sz_t i, real val) SET_(mut(pars.at(i)).setVal(val))
 
 //------------------------------------------------------------------------------
 
-void SumFuns::add(l::give_me<Fun> fun) {
+SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
   sz_t parIdx = parCount();
-  funs.append(Fun::sh(fun.ptr()));
+  funs.add(Fun::sh(fun.ptr()));
 
   for_i_(fun->parCount()) {
     // aggregate par list
-    allPars.append(&fun->parAt(i));
+    allPars.add(&fun->parAt(i));
     // lookup helpers
-    fun4parIdx.append(fun);
-    firstParIdx4parIdx.append(parIdx);
+    fun4parIdx.add(fun);
+    firstParIdx4parIdx.add(parIdx);
   }
+
+  RTHIS
 }
 
 sz_t SumFuns::parCount() const {

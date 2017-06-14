@@ -18,7 +18,7 @@
 #ifndef GUI_WIN_HPP
 #define GUI_WIN_HPP
 
-#include <app_lib/typ_qt/win.h>
+#include <qt_lib/win.h>
 #include "hub.h"
 
 namespace gui {

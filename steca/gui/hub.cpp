@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "hub.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include <QApplication>
 
 namespace gui {
@@ -38,7 +38,7 @@ Worker::Worker(Hub& hub_) : hub(hub_) {}
 
 void Worker::doWork(Task::sh task) {
   EXPECT_(task)
-  task->work();
+  mutp(task)->work();
   emit workDone(task);
 }
 
@@ -65,7 +65,7 @@ void Hub::post(Task* event) {
 
 void Hub::workDone(Task::sh task) {
   EXPECT_(task)
-  task->done();
+  mutp(task)->done();
 }
 
 void Hub::registerMetaTypes() {
@@ -79,7 +79,7 @@ bool Hub::event(QEvent* e) {
     return QObject::event(e);
 
   Task::sh sh(task->clone());
-  sh->set(*this);
+  mutp(sh)->set(*this);
 
   emit doWork(sh);
   return true;

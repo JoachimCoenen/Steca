@@ -59,7 +59,8 @@
 // the base structure is hidden (private)
 // base_rc() allows deliberate access to base
 #define dcl_reimpl_(s, b) \
-  struct s : private b { _self_types_(s) using base = b;
+  struct s : private b { _self_types_(s) using base = b; \
+    base const& base_rc() const { return *this; }
 
 // end of declaration - either one of the above
 #define dcl_end \
@@ -87,11 +88,11 @@
 #define bol_(mth, args)                   mth_(bool, mth, args)
 
 // conversion operator
-#define cop_(op)                          operator op const
+#define cop_(op)                          operator op() const
 
 // setters: allow chaining; useful for reimplementation
 #define set_(mth, args)                   mth_mut_(ref, mth, args)
-#define RT return *this;
+#define RTHIS return *this;
 
 // declare struct as comparable ...
 #define COMPARABLE  int compare(rc) const;
@@ -106,6 +107,12 @@
 // ... equality and inequality ops
 #define COMP_OPS    EQ_NE LGTE
 
+// simple return
+#define VAL_(expr) { return expr; }
+
+// simple return
+#define SET_(...) { __VA_ARGS__; RTHIS }
+
 //------------------------------------------------------------------------------
 // request ad-hoc mutability
 
@@ -115,14 +122,14 @@ template <typename T> struct mut_typ<T const>   { using typ = T; };
 
 // make a pointer value mutable
 template <typename T> T const*& mut(T const*const& t) \
-  { return const_cast<T const*&>(t); }
+  VAL_(const_cast<T const*&>(t))
 // make a value mutable
 template <typename T> T& mut(T const& t) \
-  { return const_cast<T&>(t); }
+  VAL_(const_cast<T&>(t))
 
 // make a pointed-to value mutable
 template <typename T> T* mutp(T const* t) \
-  { return const_cast<T*>(t); }
+  VAL_(const_cast<T*>(t))
 
 // take & null a pointer value
 template <typename T> T const* take_p(T const*const& p) {
@@ -193,6 +200,7 @@ extern str const nullstr;
 #include <assert.h>
 #define EXPECT_(cond) assert(cond);
 #define ENSURE_(cond) assert(cond);
+#define NEEDED_(cond) (assert(cond), cond)
 
 //------------------------------------------------------------------------------
 #endif

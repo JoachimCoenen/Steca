@@ -9,6 +9,8 @@ namespace l {
 
 ptr_base::ptr_base(pcvoid p_) : p(p_) {}
 
+ptr_base::ref ptr_base::set(pcvoid p_) SET_(mut(p) = p_)
+
 TEST_("jp",
   int i = 0;
   auto p1 = jp<int>(&i), p2(p1);

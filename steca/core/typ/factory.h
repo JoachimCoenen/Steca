@@ -18,35 +18,35 @@
 #ifndef CORE_FACTORY_H
 #define CORE_FACTORY_H
 
-#include <app_lib/inc/defs_h.h>
-#include <app_lib/inc/ptr.h>
-#include <QHash>
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/inc/exc.h>
+#include <dev_lib/inc/ptr.h>
+#include <dev_lib/typ/hash.h>
 
 namespace core {
 //-----------------------------------------------------------------------------
 
 template <class ProductBase>
 dcl_(factory)
-  dcl_(maker_base)
-    virtual ~maker_base() {}
-    abs_mth_(l::own<ProductBase>, make, ())
+  dcl_base_(maker_base)
+    virtual mth_(l::own<ProductBase>, make, ()) = 0;
   dcl_end
 
   template <class Product>
   dcl_sub_(maker, maker_base)
-    val_(l::own<ProductBase>, make, (), l::owned(new Product))
+    mth_(l::own<ProductBase>, make, ()) VAL_(l::owned(new Product))
   dcl_end
 
-  set_inl_(add, (strc key, l::give_me<maker_base> m), makers.insert(key, m.ptr()); )
+  set_(add, (strc key, l::give_me<maker_base> m)) SET_(makers.add(key, m.ptr()))
 
-  l::own<ProductBase> make(strc key) const may_err {
+  mth_(l::own<ProductBase>, make, (strc key)) may_err {
     if (!makers.contains(key))
-      err(str("Factory has no maker: %1").arg(key));
-    return makers.value(key)->make();
+      l::err(CAT("Factory has no maker: ", key));
+    return makers.at(key)->make();
   }
 
 protected:
-  QHash<str, maker_base*> makers;
+  l::hash<str, maker_base const*> makers;
 dcl_end
 
 //------------------------------------------------------------------------------

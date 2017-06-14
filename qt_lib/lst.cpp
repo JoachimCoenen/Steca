@@ -38,21 +38,19 @@ lst_view::ref lst_view::set(lst_model* model_) {
     selectRow(lst_model::rw_n(0));
   }
 
-  RT
+  RTHIS
 }
 
-lst_view::ref lst_view::setCheckable(bool on) {
-  mut(isCheckable) = on; RT
-}
+lst_view::ref lst_view::setCheckable(bool on) SET_(mut(isCheckable) = on)
 
 lst_view::ref lst_view::showHeader(bool on) {
-  mut(hasHeader) = on; RT
+  mut(hasHeader) = on; RTHIS
 }
 
 lst_view::ref lst_view::selectRow(lst_model::rw_n rw) {
   EXPECT_(base::model())
   base::setCurrentIndex(base::model()->index(int(rw), 1));
-  RT
+  RTHIS
 }
 
 int lst_view::selectedRow() const {
@@ -61,7 +59,7 @@ int lst_view::selectedRow() const {
 
 lst_view::ref lst_view::sizeColumns() {
   if (!model)
-    RT
+    RTHIS
 
   base::hideColumn(0);  // should look like a list; 0th column is tree-like
 
@@ -75,7 +73,7 @@ lst_view::ref lst_view::sizeColumns() {
     base::header()->setSectionResizeMode(1, QHeaderView::Interactive);
   }
 
-  RT
+  RTHIS
 }
 
 void lst_view::keyPressEvent(QKeyEvent* e) {

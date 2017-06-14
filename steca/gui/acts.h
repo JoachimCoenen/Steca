@@ -18,7 +18,7 @@
 #ifndef GUI_ACTS_HPP
 #define GUI_ACTS_HPP
 
-#include <app_lib/typ_qt/act.h>
+#include <qt_lib/act.h>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -28,18 +28,18 @@ struct Win;
 dcl_sub_(Acts, l_qt::acts)
   Acts(Win&);
 
-  cst_(str, SHOW_FILES)
-  cst_(str, SHOW_DATASETS)
-  cst_(str, SHOW_METADATA)
+  cst_(str, SHOW_FILES);
+  cst_(str, SHOW_DATASETS);
+  cst_(str, SHOW_METADATA);
 
-  cst_(str, FILES_ADD)
-  cst_(str, FILES_REM)
-  cst_(str, CORR_ENABLE)
-  cst_(str, CORR_REM)
+  cst_(str, FILES_ADD);
+  cst_(str, FILES_REM);
+  cst_(str, CORR_ENABLE);
+  cst_(str, CORR_REM);
 
-  cst_(str, DIFF_ZOOM)
-  cst_(str, DIFF_ALL_DSETS)
-  cst_(str, DIFF_FIX_INTEN)
+  cst_(str, DIFF_ZOOM);
+  cst_(str, DIFF_ALL_DSETS);
+  cst_(str, DIFF_FIX_INTEN);
 dcl_end
 
 //------------------------------------------------------------------------------

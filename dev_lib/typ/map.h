@@ -20,9 +20,13 @@ dcl_reimpl_(map, std::map<K COMMA T>)
   using base::erase;
   using base::clear;
   using base::at;
+  using base::find;
 
-  bol_(isEmpty, ())     { return base::empty();       }
-  mth_(sz_t, size, ())  { return to_sz(base::size()); }
+  using typename base::iterator;
+  using typename base::const_iterator;
+
+  bol_(isEmpty, ())     VAL_(base::empty())
+  mth_(sz_t, size, ())  VAL_(to_sz(base::size()))
 
   mth_mut_(T const&, add, (K const& k, T const& t)) {
     base::insert(std::make_pair(k,t));

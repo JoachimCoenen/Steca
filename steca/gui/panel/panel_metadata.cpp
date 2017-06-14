@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_metadata.h"
-#include <app_lib/typ_qt/tabs.h>
+#include <qt_lib/tabs.h>
 #include "../models.h"
 
 namespace gui {

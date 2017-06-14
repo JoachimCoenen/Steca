@@ -25,18 +25,18 @@ namespace core { namespace fit {
 
 dcl_base_(Method)
   Method();
-  mth_(void, fit, (Fun&, Curve::rc))
+  mth_(void, fit, (Fun&, Curve::rc));
 
 protected:
   // these pointers are valid during fit() call, for use in callbackY
-  ptr_ (Fun,      fun)
-  ptr_ (real_vec, xs)
+  ptr_ (Fun,      fun);
+  ptr_ (real_vec, xs);
 
-  abs_mth_(void, approximate, (real*, real const*, real const*, real*, uint,
-                               real const*, uint))
+  virtual mth_(void, approximate, (real*, real const*, real const*, real*, uint,
+                               real const*, uint)) = 0;
 
   // calculate a vector of y(x)
-  mth_(void, callbackY, (real*, real*, int, int, void*))
+  mth_(void, callbackY, (real*, real*, int, int, void*));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ dcl_end
 dcl_sub_(LinearLeastSquare, Method)
 protected:
   mth_(void, approximate, (real*, real const*, real const*, real*, uint,
-                      real const*, uint))
+                      real const*, uint));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -52,8 +52,8 @@ dcl_end
 dcl_sub_(LevenbergMarquardt, Method)
 protected:
   mth_(void, approximate, (real*, real const*, real const*, real*, uint,
-                      real const*, uint))
-  mth_(void, callbackJacobianLM, (real*, real*, int, int, void*))
+                      real const*, uint));
+  mth_(void, callbackJacobianLM, (real*, real*, int, int, void*));
 dcl_end
 
 //------------------------------------------------------------------------------

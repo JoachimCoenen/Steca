@@ -18,10 +18,8 @@
 #ifndef CORE_IO_CARESS_DATA_HPP
 #define CORE_IO_CARESS_DATA_HPP
 
-#include <c2/inc/c_def.h>
-#include <c2/c/mem.h>
-#include <c2/c/str.h>
-#include <c2/cpp/vec.hpp>
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/typ/vec.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -33,12 +31,14 @@ enum dtype {
   NONE, INT16, INT32, FLT32, CHR
 };
 
-c::mem getData(dtype, uint n);
+using mem = l::vec<char>;
+
+mem getData(dtype, uint n);
 str getString(uint n);
 str getAsString(dtype, uint n);
 float  getAsFloat(dtype, uint n);
 
-QVector<int32> getAdet(dtype, uint n);
+l::vec<int32> getAdet(dtype, uint n);
 
 bool nextDataUnit(str& elem, str& node, dtype&, uint& n);
 

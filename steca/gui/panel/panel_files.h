@@ -19,8 +19,8 @@
 #define GUI_PANEL_FILES_HPP
 
 #include "panel.h"
-#include <app_lib/typ_qt/lst.h>
-#include <app_lib/typ_qt/model.h>
+#include <qt_lib/lst.h>
+#include <qt_lib/model.h>
 
 namespace gui {
 //------------------------------------------------------------------------------

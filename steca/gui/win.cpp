@@ -17,8 +17,8 @@
 
 #include "win.h"
 #include "panel/inc.inc"
-#include <app_lib/inc/defs_cpp.h>
-#include <app_lib/typ_qt/gui_inc.h>
+#include <dev_lib/inc/defs_cpp.h>
+#include <qt_lib/wgt_inc.h>
 
 namespace gui {
 //------------------------------------------------------------------------------

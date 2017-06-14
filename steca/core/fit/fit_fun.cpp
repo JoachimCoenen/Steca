@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fit_fun.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 //#include "../typ/factory.hpp"
 //#include "fit_methods.hpp"
 //#include <c2/inc/c_cpp>
@@ -222,7 +222,7 @@ qreal Raw::y(qreal x, qreal const* / *parValues* /) const {
   if (!x_count_ || !range_.contains(x))
     return 0;
 
-  uint i = to_u(qBound(0, qFloor((x - range_.min) / dx_), to_i(x_count_) - 1));
+  uint i = to_u(l::bound(0, qFloor((x - range_.min) / dx_), to_i(x_count_) - 1));
   return fittedCurve_.y(i);
 }
 
@@ -231,7 +231,7 @@ qreal Raw::dy(qreal, uint, qreal const*) const {
 }
 
 peak_t Raw::fittedPeak() const {
-  if (qIsNaN(sum_y_))
+  if (l::isnan(sum_y_))
     sum_y_ = fittedCurve_.sumY();
 
   return peak_t(range_.center(),  // approximate x

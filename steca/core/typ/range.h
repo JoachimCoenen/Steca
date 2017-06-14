@@ -23,8 +23,8 @@
 dcl_(core_Range)
   using rv_t = real;
 
-  atr_(rv_t, min)
-  atr_(rv_t, max)
+  atr_(rv_t, min);
+  atr_(rv_t, max);
   core_Range(rv_t, rv_t);
 dcl_end
 
@@ -64,10 +64,10 @@ dcl_(Ranges) EQ_NE
   Ranges();
 
   void clear()         { rs.clear();          }
-  bool isEmpty() const { return rs.isEmpty(); }
-  sz_t size()    const { return rs.size();    }
+  bool isEmpty() const VAL_(rs.isEmpty())
+  sz_t size()    const VAL_(rs.size())
 
-  Range::rc at(sz_t i) const { return rs.at(i); }
+  Range::rc at(sz_t i) const VAL_(rs.at(i))
 
   // collapses overlapping ranges into one; true if there was a change
   bool add(Range::rc);
@@ -77,7 +77,7 @@ dcl_(Ranges) EQ_NE
 
 private:
   void sort();
-  QVector<Range> rs;
+  l::vec<Range> rs;
 dcl_end
 
 }

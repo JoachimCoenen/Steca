@@ -16,9 +16,7 @@ chk::chk(act& act) {
   action(&act);
 }
 
-chk::ref chk::text(strc t) {
-  base::setText(toQt(t)); RT
-}
+chk::ref chk::text(strc t) SET_(base::setText(toQt(t)))
 
 chk::ref chk::action(act* a) {
   base::setText(a ? toQt(a->text()).toLower() : QString::null);
@@ -39,12 +37,10 @@ chk::ref chk::action(act* a) {
     });
   }
 
-  RT
+  RTHIS
 }
 
-chk::ref chk::check(bool on) {
-  base::setChecked(on); RT
-}
+chk::ref chk::check(bool on) SET_(base::setChecked(on))
 
 //------------------------------------------------------------------------------
 }

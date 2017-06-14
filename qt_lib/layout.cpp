@@ -26,18 +26,13 @@ grid& grid::gr(uint row, uint col) {
   return *gr;
 }
 
-grid::ref grid::add(QWidget* wgt, uint row, uint col) {
-  EXPECT_(wgt)
-  addWidget(wgt, int(row), int(col)); RT
-}
+grid::ref grid::add(QWidget* wgt, uint row, uint col) SET_(
+  addWidget(NEEDED_(wgt), int(row), int(col))
+)
 
-grid::ref grid::addRowStretch() {
-  setRowStretch(rowCount(), 0); RT
-}
+grid::ref grid::addRowStretch() SET_(setRowStretch(rowCount(), 0))
 
-grid::ref grid::addColStretch() {
-  setColumnStretch(columnCount(), 0); RT
-}
+grid::ref grid::addColStretch() SET_(setColumnStretch(columnCount(), 0))
 
 grid::grid() {
   base::setSpacing(2);
@@ -77,20 +72,20 @@ split& box::vs() {
 }
 
 box::ref box::margin(uint n) {
-  setMargin(int(n)); RT
+  setMargin(int(n)); RTHIS
 }
 
 box::ref box::spacing(uint n) {
-  setMargin(int(n)); RT
+  setMargin(int(n)); RTHIS
 }
 
 box::ref box::add(QWidget* wgt) {
   EXPECT_(wgt)
-  addWidget(wgt); RT
+  addWidget(wgt); RTHIS
 }
 
 box::ref box::addStretch() {
-  addStretch(); RT
+  addStretch(); RTHIS
 }
 
 box::box() : base(QBoxLayout::LeftToRight) {

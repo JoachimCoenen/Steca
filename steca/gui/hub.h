@@ -18,7 +18,7 @@
 #ifndef GUI_HUB_HPP
 #define GUI_HUB_HPP
 
-#include <app_lib/inc/defs_h.h>
+#include <dev_lib/inc/defs_h.h>
 #include "acts.h"
 #include <core/session.h>
 

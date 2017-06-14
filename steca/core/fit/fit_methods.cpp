@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fit_methods.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 #include "LM/levmar.h"
 #include <cmath>
 
@@ -40,9 +40,9 @@ void Method::fit(Fun& f, Curve::rc curve) const {
 
   for_i_(parCount) {
     auto par = fun->parAt(i);
-    parVal[i] = par.val;
-    parMin[i] = -qInf(); // it is possible to extend Par by allowed range
-    parMax[i] = +qInf(); // and retrieve from there
+    parVal.setAt(i, par.val);
+    parMin.setAt(i, -l::flt_inf); // it is possible to extend Par by allowed range
+    parMax.setAt(i, l::flt_inf);  // and retrieve from there
   }
 
   approximate(parVal.data(), parMin.data(), parMax.data(),

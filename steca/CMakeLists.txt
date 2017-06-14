@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.1)
 include (../cmake.inc)
 
-find_package(Qt5 5.6.2 REQUIRED COMPONENTS Core Gui Widgets)
+find_package (Qt5 5.6.2 REQUIRED COMPONENTS Core Gui Widgets)
 
 get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
@@ -14,7 +14,7 @@ add_executable (${app} main.cpp)
 add_dependencies (${app} gui core)
 
 target_link_libraries (${app}
-  gui core
+  gui core qt_lib dev_lib
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 

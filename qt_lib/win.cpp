@@ -44,7 +44,7 @@ void win::show(bool on) {
 }
 
 void win::onFirstShow() {}
-bool win::onClose()     { return true; }
+bool win::onClose()     VAL_(true)
 
 void win::closeEvent(QCloseEvent* e) {
   if (onClose())

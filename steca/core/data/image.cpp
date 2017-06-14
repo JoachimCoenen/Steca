@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "image.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ Image::ref Image::addInten(uint i, uint j, inten_t val) {
 
 Image::ref Image::addIntens(rc that) {
   if (size() != that.size())
-    err("inconsistent image size");
+    l::err("inconsistent image size");
 
   auto sz = size();
   for_ij_(l::to_uint(sz.i), l::to_uint(sz.j))

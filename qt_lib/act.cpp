@@ -3,6 +3,8 @@
 #include "act.h"
 #include <dev_lib/inc/defs_cpp.h>
 #include "str_inc.h"
+#include "win.h"
+#include <QMenuBar>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -22,7 +24,7 @@ l::own<act> act::make(strc tx, strc key, strc ic) {
 }
 
 act::ref act::text(strc tx) {
-  base::setText(toQt(tx)); RT
+  base::setText(toQt(tx)); RTHIS
 }
 
 str act::text() const {
@@ -33,20 +35,20 @@ act::ref act::tip(strc tx) {
   QString tip = toQt(tx), s = base::shortcut().toString();
   if (!s.isEmpty())
     tip += " [" + s + "]";
-  base::setToolTip(tip); RT
+  base::setToolTip(tip); RTHIS
 }
 
 act::ref act::key(strc key) {
   base::setShortcut(QKeySequence(toQt(key)));
-  tip(fromQt(base::toolTip())); RT
+  tip(fromQt(base::toolTip())); RTHIS
 }
 
 act::ref act::icon(strc fileName) {
-  base::setIcon(QIcon(toQt(fileName))); RT
+  base::setIcon(QIcon(toQt(fileName))); RTHIS
 }
 
 act::ref act::setCheckable(bool on) {
-  base::setCheckable(on); RT
+  base::setCheckable(on); RTHIS
 }
 
 bool act::isCheckable() const {
@@ -59,7 +61,7 @@ act::ref act::check(bool on) {
   else
     base::trigger();
 
-  RT
+  RTHIS
 }
 
 //------------------------------------------------------------------------------
@@ -74,37 +76,36 @@ actbtn::actbtn(act& a) {
 }
 
 actbtn::ref actbtn::action(act *a) {
-  base::setDefaultAction(a); RT
+  base::setDefaultAction(a); RTHIS
 }
 
-//TODO//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//acts::acts(win& w_) : w(w_)  {
-//  auto mb = w.qt().menuBar();
-//  mb->setNativeMenuBar(false);
-//  mb->setFixedHeight(0); // "hide"
+acts::acts(win& w_) : w(w_)  {
+  auto mb = w.menuBar();
+  mb->setNativeMenuBar(false);
+  mb->setFixedHeight(0); // "hide"
 
-//  auto a = act::make("Quit", "Ctrl+Q");
-//  mut(*a).onTrigger([this]() {
-//    w.qt().close();
-//  });
+  auto a = act::make("Quit", "Ctrl+Q");
+  mut(*a).onTrigger([this]() {
+    w.close();
+  });
 
-//  add(QUIT, a);
-//}
+  add(QUIT, a);
+}
 
-//void acts::add(strc hashKey, c::give_me<act> a) {
-//  auto ap = a.ptr();
-//  as.add(hashKey, ap);
+acts::ref acts::add(strc hashKey, l::give_me<act> a) {
+  as.add(hashKey, a.ptr());
 
-//  auto mb = w.qt().menuBar();
-//  mb->addAction(ap);
-//}
+//TODO  w.menuBar()->addAction(a.ptr());
+  RTHIS
+}
 
-//act& acts::get(strc hashKey) {
-//  return mut(*(as.at(hashKey).ptr()));
-//}
+act& acts::get(strc hashKey) const may_err {
+  return mut(*(as.at(hashKey)));
+}
 
-//str const acts::QUIT("quit");
+str const acts::QUIT("quit");
 
 //------------------------------------------------------------------------------
 }

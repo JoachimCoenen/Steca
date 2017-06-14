@@ -1,7 +1,7 @@
 // (qt_lib)
 
-#ifndef QT_LIB_SPLIT_H
-#define QT_LIB_SPLIT_H
+#ifndef QT_LIB_STR_INC_H
+#define QT_LIB_STR_INC_H
 
 #include <dev_lib/inc/defs_h.h>
 #include <dev_lib/typ/vec.h>

@@ -32,14 +32,8 @@ App::App(int& argc, char* argv[]) : base(argc, argv) {
 }
 
 int App::exec() {
-  try {
-    Win w;
-    return execWin(w);
-
-  } catch (std::exception const& e) {
-    qWarning("Fatal error: %s", e.what());
-    return -1;
-  }
+  Win w;
+  return base::safeExec(&w);
 }
 
 //------------------------------------------------------------------------------

@@ -17,16 +17,16 @@
 
 #include "panel.h"
 #include "../hub.h"
-#include <app_lib/inc/defs_cpp.h>
-#include <app_lib/typ_qt/lbl.h>
+#include <dev_lib/inc/defs_cpp.h>
+#include <qt_lib/lbl.h>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-Panel::Panel(Hub& hub) : Panel(str::null, hub) {}
+Panel::Panel(Hub& hub) : Panel(nullstr, hub) {}
 
 Panel::Panel(strc title, Hub& hub_) : hub(hub_), vb(base::vb()) {
-  if (!title.isEmpty())
+  if (!title.empty())
     vb.add(new l_qt::lbl(title));
 }
 

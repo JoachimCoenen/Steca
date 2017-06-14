@@ -18,7 +18,7 @@
 #ifndef GUI_PANEL_HPP
 #define GUI_PANEL_HPP
 
-#include <app_lib/typ_qt/layout.h>
+#include <qt_lib/layout.h>
 
 namespace gui {
 //------------------------------------------------------------------------------

@@ -18,10 +18,10 @@
 #ifndef CORE_JSON_H
 #define CORE_JSON_H
 
-#include <app_lib/inc/defs_h.h>
-#include <app_lib/inc/num.h>
-#include <app_lib/typ/ij.h>
-#include <app_lib/typ/xy.h>
+#include <dev_lib/inc/defs_h.h>
+#include <dev_lib/inc/num.h>
+#include <dev_lib/typ/ij.h>
+#include <dev_lib/typ/xy.h>
 
 #include <core/typ/range.h>
 #include <core/typ/fun.h>

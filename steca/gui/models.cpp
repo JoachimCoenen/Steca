@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "models.h"
-#include <app_lib/inc/defs_cpp.h>
+#include <dev_lib/inc/defs_cpp.h>
 
 namespace core_qt {
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ using cl_n = ModelDatasets::cl_n;
 //------------------------------------------------------------------------------
 
 ModelFiles::ModelFiles() {
-  checkable(true);
+  setCheckable(true);
 }
 
 cl_n ModelFiles::cols() const {
@@ -53,7 +53,7 @@ bool ModelFiles::isChecked(rw_n) const {
 //------------------------------------------------------------------------------
 
 ModelDatasets::ModelDatasets() {
-  checkable(true);
+  setCheckable(true);
 }
 
 cl_n ModelDatasets::cols() const {
@@ -71,7 +71,7 @@ l_qt::var ModelDatasets::cell(rw_n, cl_n) const {
 //------------------------------------------------------------------------------
 
 ModelMetadata::ModelMetadata() {
-  checkable(true);
+  setCheckable(true);
 }
 
 cl_n ModelMetadata::cols() const {

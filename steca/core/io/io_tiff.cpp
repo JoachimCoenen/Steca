@@ -15,10 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.hpp"
-#include <c2/c/ptr.h>
-#include <c2/qt/qstr.hpp>
-#include <c2/inc/c_cpp>
+#include "io.h"
+#include <dev_lib/inc/defs_cpp.h>
+#include <qt_lib/str_inc.h>
 
 #include <QFile> // TODO do w/o Qt?
 #include <QDataStream>
@@ -64,16 +63,16 @@ using data::flt_vec;
   IS_NUMBER; check_or_err_(val==dataOffset, BAD_FORMAT)
 
 
-static void loadTiff(File& file, c::path::rc path,
+static void loadTiff(File& file, l::path::rc path,
                      phi_t phi, flt32 mon, flt32 tim) may_err {
 
-  auto md = c::scope(new Meta(file.files.dict));
+  auto md = l::scope(new Meta(file.files.dict));
 
   mut(md->phi) = phi;
   mut(md->mon) = mon;
   mut(md->tim) = tim;
 
-  QFile f(path.p);
+  QFile f(path.c_str());
   check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
 
   // see http://www.fileformat.info/format/tiff/egff.htm
@@ -92,7 +91,7 @@ static void loadTiff(File& file, c::path::rc path,
   else if (0x4d4d == magic) // MM - motorola
     is.setByteOrder(QDataStream::BigEndian);
   else
-    c::err("bad magic");
+    l::err("bad magic");
 
   quint16 version; is >> version;
   check_or_err_(42 == version, "bad version");
@@ -120,7 +119,7 @@ static void loadTiff(File& file, c::path::rc path,
       return dataOffset;
     }
 
-    c::err("not a simple number");
+    l::err("not a simple number");
   };
 
   auto asStr = [&]() {
@@ -177,7 +176,7 @@ static void loadTiff(File& file, c::path::rc path,
 
     // text
     case 269: // DocumentName
-      mut(md->comment).set(asStr());
+      mut(md->comment) = asStr();
       break;
 //    case 306: // DateTime
 //      date = asStr();
@@ -227,20 +226,20 @@ static void loadTiff(File& file, c::path::rc path,
   check();
 
   file.addSet(
-    c::share(new Set(
-      c::share(md),
-      c::share(new Image(intens)))));
+    l::share(new Set(
+      l::share(md.take().ptr()),
+      l::share(new Image(intens)))));
 }
 
 //------------------------------------------------------------------------------
 
-File::sh loadTiffDat(Files& files, c::path::rc path) may_err {
+File::sh loadTiffDat(Files& files, l::path::rc path) may_err {
   File::sh file(new File(files, path.basename()));
 
-  QFile f(path.p);
+  QFile f(path.c_str());
   check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
 
-  QFileInfo info(path.p);
+  QFileInfo info(path.c_str());
   QDir dir = info.dir();
 
   QByteArray line;
@@ -280,9 +279,9 @@ File::sh loadTiffDat(Files& files, c::path::rc path) may_err {
 
     try {
       // load one dataset
-      loadTiff(mut(*file), toStr(dir.filePath(tiffFileName)), phi, monitor, expTime);
+      loadTiff(mut(*file), l_qt::fromQt(dir.filePath(tiffFileName)), phi, monitor, expTime);
     } catch (std::exception &e) {
-      c::err(toStr(tiffFileName), ": ", e.what());
+      l::err(CAT(l_qt::fromQt(tiffFileName), ": ", e.what()));
       throw;
     }
   }

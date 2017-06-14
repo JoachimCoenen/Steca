@@ -34,9 +34,7 @@ bool sz2::isEmpty() const {
   return 0==i || 0==j;
 }
 
-sz_t sz2::area() const {
-  return i * j;
-}
+sz_t sz2::size() const VAL_(i * j)
 
 sz2 sz2::transposed() const {
   return sz2(j, i);
