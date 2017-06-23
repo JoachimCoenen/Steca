@@ -12,7 +12,7 @@ add_subdirectory (steca)
 add_subdirectory (tests_lib)
 add_subdirectory (tests_steca)
 
-#file (GLOB_RECURSE md_files *.md)
-#add_custom_target (.all SOURCES ${md_files})
+#file (GLOB_RECURSE other_files .*.sh)
+#add_custom_target (other SOURCES ${other_files})
 
 # eof

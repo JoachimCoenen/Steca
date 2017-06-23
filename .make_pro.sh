@@ -4,8 +4,11 @@ echo -e '# generated project\n' > $PRO
 cat >> $PRO <<EOT
 TEMPLATE = subdirs
 CONFIG += ordered
-SUBDIRS = c2 STeCa
+SUBDIRS = dev_lib qt_lib steca
 EOT
 
-(cd c2    && ./.make_pro.sh)
-(cd STeCa && ./.make_pro.sh)
+(cd dev_lib && ./.make_pro.sh)
+(cd qt_lib  && ./.make_pro.sh)
+(cd steca   && ./.make_pro.sh)
+
+# eof
