@@ -1,7 +1,7 @@
 cd build
-xvfb-run STeCa_tests/STeCa_tests
+xvfb-run tests_steca/tests_steca
 
-if [ $GXX =0 'g++' ]; then
+if [ $GXX == 'g++' ]; then
   lcov -c -d . -o coverage.info
   lcov -r coverage.info 'tests/*' '/opt/*' '/usr/*' -o coverage.info
   lcov -l coverage.info
