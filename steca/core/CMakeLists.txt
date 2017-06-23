@@ -8,7 +8,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif ()
 
-find_package (Qt5 5.5.1 REQUIRED COMPONENTS Core Widgets)
+find_package (Qt5 5.2.1 REQUIRED COMPONENTS Core Widgets)
 set (CMAKE_AUTOMOC ON)
 
 file (GLOB_RECURSE files *)
