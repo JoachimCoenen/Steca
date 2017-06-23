@@ -24,11 +24,12 @@
  * Also, some compilers other than gcc define __GNUC__,
  * therefore gcc should be checked last
  */
-#ifdef _MSC_VER
-#define inline __inline // MSVC
-#elif !defined(__ICC) && !defined(__INTEL_COMPILER) && !defined(__GNUC__)
-#define inline // other than MSVC, ICC, GCC: define empty
-#endif
+// commented out: MSVC "forbids macroizing keywords"
+//#ifdef _MSC_VER
+//#define inline __inline // MSVC
+//#elif !defined(__ICC) && !defined(__INTEL_COMPILER) && !defined(__GNUC__)
+//#define inline // other than MSVC, ICC, GCC: define empty
+//#endif
 
 #ifdef _MSC_VER
 #define LM_FINITE _finite // MSVC
