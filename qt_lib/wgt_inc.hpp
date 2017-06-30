@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_WGT_INC_HPP
-#define QT_LIB_WGT_INC_HPP
+#pragma once
 
 // gui widgets
 #include "act.hpp"
@@ -17,6 +16,5 @@
 #include "split.hpp"
 #include "tabs.hpp"
 
-#endif
 // eof
 

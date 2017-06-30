@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_STR_INC_HPP
-#define QT_LIB_STR_INC_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/typ/vec.hpp>
@@ -20,5 +19,4 @@ str_vec     fromQt(QStringList const&);
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

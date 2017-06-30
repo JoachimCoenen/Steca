@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_VAR_HPP
-#define QT_LIB_VAR_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include "tim.hpp"
@@ -29,5 +28,4 @@ int cmp_tim(var::rc,  var::rc);
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

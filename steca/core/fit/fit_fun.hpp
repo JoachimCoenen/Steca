@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_FIT_FUN_HPP
-#define CORE_FIT_FUN_HPP
+#pragma once
 
 #include "../typ/fun.hpp"
 #include "../typ/curve.hpp"
@@ -186,4 +185,3 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-#endif // FIT_FUN_HPP

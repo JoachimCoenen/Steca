@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TEST_H
-#define DEV_LIB_TEST_H
+#pragma once
 
 #ifdef WITH_TESTS
 //------------------------------------------------------------------------------
@@ -35,5 +34,4 @@ DOCTEST_TEST_CASE(name) { __VA_ARGS__ } \
 #endif
 
 //------------------------------------------------------------------------------
-#endif
 // eof

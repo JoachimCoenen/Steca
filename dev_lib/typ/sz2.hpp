@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TYP_SZ2_HPP
-#define DEV_LIB_TYP_SZ2_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 
@@ -26,5 +25,4 @@ sz2 operator-(sz2::rc, sz2::rc);
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

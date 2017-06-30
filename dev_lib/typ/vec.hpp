@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_VEC_HPP
-#define DEV_LIB_VEC_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 #include "../inc/num.hpp"
@@ -54,5 +53,4 @@ dcl_sub_(str_vec, l::vec<str>)
 dcl_end
 
 //------------------------------------------------------------------------------
-#endif
 // eof

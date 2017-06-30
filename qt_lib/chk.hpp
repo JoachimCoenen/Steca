@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_CHK_HPP
-#define QT_LIB_CHK_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QCheckBox>
@@ -25,5 +24,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -2,6 +2,7 @@
 
 #include "str_fmt.hpp"
 #include "defs.inc"
+
 #include <cctype>
 
 namespace l {

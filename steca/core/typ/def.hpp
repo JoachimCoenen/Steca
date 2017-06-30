@@ -1,7 +1,6 @@
 // (app_lib)
 
-#ifndef CORE_DEF_HPP
-#define CORE_DEF_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/typ/trg.hpp>
@@ -34,6 +33,4 @@ using inten_rge = Range;
 
 //------------------------------------------------------------------------------
 }
-
-#endif
 // eof

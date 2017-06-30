@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_BTN_HPP
-#define QT_LIB_BTN_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QPushButton>
@@ -16,5 +15,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

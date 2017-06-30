@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_HUB_HPP
-#define GUI_HUB_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include "acts.hpp"
@@ -92,5 +91,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_LST_HPP
-#define QT_LIB_LST_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include "model.hpp"
@@ -39,5 +38,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

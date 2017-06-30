@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_SPIN_HPP
-#define QT_LIB_SPIN_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QDoubleSpinBox>
@@ -23,5 +22,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_FIT_METHODS_HPP
-#define CORE_FIT_METHODS_HPP
+#pragma once
 
 #include "fit_fun.hpp"
 
@@ -58,4 +57,3 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-#endif

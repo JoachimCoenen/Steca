@@ -1,8 +1,7 @@
+// (dev_lib)
 // common definitions, include in a *header* file
 
-#ifndef DEV_LIB_DEFS_HPP
-#define DEV_LIB_DEFS_HPP
-//------------------------------------------------------------------------------
+#pragma once
 
 // compiler-dependent diagnostic messages
 #if defined(__clang__) || defined(__GNUC__)
@@ -203,5 +202,4 @@ extern str const nullstr;
 #define NEEDED_(cond) (assert(cond), cond)
 
 //------------------------------------------------------------------------------
-#endif
 // eof

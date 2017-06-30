@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_PTR_HPP
-#define DEV_LIB_PTR_HPP
+#pragma once
 
 #include "defs.hpp"
 
@@ -235,5 +234,4 @@ template <typename T> T* mutp(l::shared<T> const& p) \
   VAL_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------
-#endif
 // eof

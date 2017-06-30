@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TYP_XY_HPP
-#define DEV_LIB_TYP_XY_HPP
+#pragma once
 
 #include "../inc/defs.inc"
 
@@ -20,5 +19,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

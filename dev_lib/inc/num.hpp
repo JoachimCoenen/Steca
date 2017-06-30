@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TYP_NUM_HPP
-#define DEV_LIB_TYP_NUM_HPP
+#pragma once
 
 #include "defs.hpp"
 
@@ -195,5 +194,4 @@ template <typename T> T const& notnan(T const& a, T const& b) {
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

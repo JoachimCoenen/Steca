@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_RIO_HPP
-#define QT_LIB_RIO_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QRadioButton>
@@ -17,5 +16,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

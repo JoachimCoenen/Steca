@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_WIN_HPP
-#define GUI_WIN_HPP
+#pragma once
 
 #include <qt_lib/win.hpp>
 #include "hub.hpp"
@@ -47,5 +46,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_TIM_HPP
-#define QT_LIB_TIM_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/inc/num.hpp>
@@ -20,5 +19,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

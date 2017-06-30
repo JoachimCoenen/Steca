@@ -2,6 +2,7 @@
 
 #include "ptr.hpp"
 #include "defs.inc"
+
 #include <atomic>
 
 namespace l {

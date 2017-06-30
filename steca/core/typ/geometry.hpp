@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_GEOMETRY_HPP
-#define CORE_GEOMETRY_HPP
+#pragma once
 
 #include "def.hpp"
 #include <dev_lib/typ/ij.hpp>
@@ -52,5 +51,4 @@ dcl_(ImageCut) COMPARABLE EQ_NE
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

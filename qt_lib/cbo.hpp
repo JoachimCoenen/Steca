@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_CBO_HPP
-#define QT_LIB_CBO_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include "str_inc.hpp"
@@ -21,5 +20,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

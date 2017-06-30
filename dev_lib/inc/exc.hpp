@@ -1,10 +1,9 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_EXC_HPP
-#define DEV_LIB_EXC_HPP
+#pragma once
 
 #include "defs.hpp"
-#include "str_fmt.hpp"
+#include "str_fmt.hpp"  // typically, who uses err(...), needs CAT
 #include <exception>
 
 namespace l {
@@ -27,5 +26,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

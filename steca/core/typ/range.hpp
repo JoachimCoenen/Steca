@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_RANGE_HPP
-#define CORE_RANGE_HPP
+#pragma once
 
 #include "def.hpp"
 
@@ -81,5 +80,4 @@ private:
 dcl_end
 
 }
-#endif
 // eof

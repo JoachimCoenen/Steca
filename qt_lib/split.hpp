@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_SPLIT_HPP
-#define QT_LIB_SPLIT_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QSplitter>
@@ -45,5 +44,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

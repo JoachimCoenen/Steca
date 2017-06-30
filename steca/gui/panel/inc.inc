@@ -1,5 +1,4 @@
-#ifndef GUI_PANEL_INC_INC
-#define GUI_PANEL_INC_INC
+#pragma once
 
 #include "panel_datasets.hpp"
 #include "panel_diffractogram.hpp"
@@ -8,4 +7,3 @@
 #include "panel_metadata.hpp"
 #include "panel_setup.hpp"
 
-#endif

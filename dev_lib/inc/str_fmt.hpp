@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_STR_FMT_HPP
-#define DEV_LIB_STR_FMT_HPP
+#pragma once
 
 #include "defs.hpp"
 #include <sstream>
@@ -25,5 +24,4 @@ str trim(strc);
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

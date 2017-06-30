@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_MAT_HPP
-#define CORE_MAT_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/typ/trg.hpp>
@@ -50,6 +49,4 @@ dcl_(mat3) COMPARABLE EQ_NE
 dcl_end
 
 }
-
-#endif
 // eof

@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_ANGLES_HPP
-#define CORE_ANGLES_HPP
+#pragma once
 
 #include "geometry.hpp"
 #include "range.hpp"
@@ -82,5 +81,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

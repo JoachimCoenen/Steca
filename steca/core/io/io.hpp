@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_IO_HPP
-#define CORE_IO_HPP
+#pragma once
 
 #include <core/data/data.hpp>
 #include <dev_lib/typ/path.hpp>
@@ -41,4 +40,3 @@ str loadCaressComment(l::path::rc) may_err;
 
 //------------------------------------------------------------------------------
 }}
-#endif

@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_PANEL_METADATA_HPP
-#define GUI_PANEL_METADATA_HPP
+#pragma once
 
 #include "panel.hpp"
 #include <qt_lib/lst.hpp>
@@ -37,5 +36,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

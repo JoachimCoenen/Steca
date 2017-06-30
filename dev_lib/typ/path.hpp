@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_PATH_HPP
-#define DEV_LIB_PATH_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 
@@ -15,5 +14,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

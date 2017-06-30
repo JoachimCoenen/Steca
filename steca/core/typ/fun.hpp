@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_FUN_HPP
-#define CORE_FUN_HPP
+#pragma once
 
 #include "def.hpp"
 #include "factory.hpp"
@@ -108,5 +107,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

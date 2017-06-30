@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_PANEL_HPP
-#define GUI_PANEL_HPP
+#pragma once
 
 #include <qt_lib/layout.hpp>
 
@@ -37,5 +36,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

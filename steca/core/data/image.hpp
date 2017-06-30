@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_IMAGE_HPP
-#define CORE_IMAGE_HPP
+#pragma once
 
 #include "../typ/def.hpp"
 #include "../typ/range.hpp"
@@ -103,5 +102,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

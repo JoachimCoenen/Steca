@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_CURVE_HPP
-#define CORE_CURVE_HPP
+#pragma once
 
 #include "def.hpp"
 #include "fun.hpp"
@@ -55,5 +54,4 @@ using curve_vec =  l::vec<Curve>;
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

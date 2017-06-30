@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_PANEL_IMAGE_HPP
-#define GUI_PANEL_IMAGE_HPP
+#pragma once
 
 #include "panel.hpp"
 
@@ -32,5 +31,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

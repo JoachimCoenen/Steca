@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_TABS_HPP
-#define QT_LIB_TABS_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QTabWidget>
@@ -18,5 +17,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

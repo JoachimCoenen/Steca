@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_DATA_HPP
-#define CORE_DATA_HPP
+#pragma once
 
 #include "../typ/def.hpp"
 #include <dev_lib/typ/map.hpp>
@@ -168,4 +167,3 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-#endif

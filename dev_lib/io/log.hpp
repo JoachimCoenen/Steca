@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_LOG_HPP
-#define DEV_LIB_LOG_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 
@@ -23,5 +22,4 @@ namespace log {
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_LBL_HPP
-#define QT_LIB_LBL_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QLabel>
@@ -17,5 +16,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

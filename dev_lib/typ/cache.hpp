@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_CACHE_HPP
-#define DEV_LIB_CACHE_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 #include "../inc/num.hpp"
@@ -92,5 +91,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

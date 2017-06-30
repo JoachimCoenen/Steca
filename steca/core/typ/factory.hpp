@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_FACTORY_HPP
-#define CORE_FACTORY_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/inc/exc.hpp>
@@ -52,5 +51,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_APP_HPP
-#define QT_LIB_APP_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include "win.hpp"
@@ -33,5 +32,4 @@ public:
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

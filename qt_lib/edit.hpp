@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_EDIT_HPP
-#define QT_LIB_EDIT_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <QLineEdit>
@@ -19,5 +18,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

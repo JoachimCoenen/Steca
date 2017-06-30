@@ -15,8 +15,7 @@
 // * See the COPYING and AUTHORS files for more details.
 // ******************************************************************************/
 
-//#ifndef CORE_JSON_HPP
-//#define CORE_JSON_HPP
+#pragma once
 
 //#include <dev_lib/inc/defs.hpp>
 //#include <dev_lib/inc/num.hpp>
@@ -91,4 +90,3 @@
 
 ////------------------------------------------------------------------------------
 //}
-//#endif

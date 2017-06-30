@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_ACTS_HPP
-#define GUI_ACTS_HPP
+#pragma once
 
 #include <qt_lib/act.hpp>
 
@@ -44,5 +43,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

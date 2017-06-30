@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_THREAD_HPP
-#define DEV_LIB_THREAD_HPP
+#pragma once
 
 #include "vec.hpp"
 #include <thread>
@@ -35,5 +34,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

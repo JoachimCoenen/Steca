@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TRG_HPP
-#define DEV_LIB_TRG_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 
@@ -50,5 +49,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

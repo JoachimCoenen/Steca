@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_MODELS_HPP
-#define CORE_MODELS_HPP
+#pragma once
 
 #include <qt_lib/model.hpp>
 
@@ -49,5 +48,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

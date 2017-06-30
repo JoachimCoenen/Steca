@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_MAP_HPP
-#define DEV_LIB_MAP_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 #include "../inc/ptr.hpp"
@@ -56,5 +55,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

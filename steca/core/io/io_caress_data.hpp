@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_IO_CARESS_DATA_HPP
-#define CORE_IO_CARESS_DATA_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/typ/vec.hpp>
@@ -44,4 +43,3 @@ bool nextDataUnit(str& elem, str& node, dtype&, uint& n);
 
 //------------------------------------------------------------------------------
 }}
-#endif

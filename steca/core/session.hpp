@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef CORE_SESSION_HPP
-#define CORE_SESSION_HPP
+#pragma once
 
 #include "data/data.hpp"
 #include "typ/angles.hpp"
@@ -50,5 +49,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

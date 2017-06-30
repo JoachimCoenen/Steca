@@ -15,8 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#ifndef GUI_APP_HPP
-#define GUI_APP_HPP
+#pragma once
 
 #include <qt_lib/app.hpp>
 
@@ -30,5 +29,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof

@@ -1,7 +1,6 @@
 // (dev_lib)
 
-#ifndef DEV_LIB_TYP_ARR2_HPP
-#define DEV_LIB_TYP_ARR2_HPP
+#pragma once
 
 #include "../inc/defs.hpp"
 #include "sz2.hpp"
@@ -33,6 +32,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
-
 // eof

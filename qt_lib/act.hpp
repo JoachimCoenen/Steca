@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#ifndef QT_LIB_ACT_HPP
-#define QT_LIB_ACT_HPP
+#pragma once
 
 #include <dev_lib/inc/defs.hpp>
 #include <dev_lib/inc/ptr.hpp>
@@ -74,5 +73,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-#endif
 // eof
