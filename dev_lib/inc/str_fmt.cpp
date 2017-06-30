@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "str_fmt.h"
-#include "../inc/defs_cpp.h"
+#include "str_fmt.hpp"
+#include "defs.inc"
 #include <cctype>
 
 namespace l {

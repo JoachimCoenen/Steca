@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "session.h"
+#include "session.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------

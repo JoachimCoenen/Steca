@@ -15,9 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "range.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include <dev_lib/inc/num.h>
+#include "range.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include <dev_lib/inc/num.hpp>
 #include <algorithm>
 
 core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}

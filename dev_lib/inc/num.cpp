@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "num.h"
-#include "../inc/defs_cpp.h"
+#include "num.hpp"
+#include "defs.inc"
 
 #include <cmath>
 #include <limits>

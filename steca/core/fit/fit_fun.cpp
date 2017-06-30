@@ -15,8 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "fit_fun.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "fit_fun.hpp"
+#include <dev_lib/inc/defs.inc>
+
 //#include "../typ/factory.hpp"
 //#include "fit_methods.hpp"
 //#include <c2/inc/c_cpp>

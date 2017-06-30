@@ -1,11 +1,11 @@
 // (qt_lib)
 
-#include "app.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "dlg_msg.h"
-#include "str_inc.h"
+#include "app.hpp"
+#include <dev_lib/inc/defs.inc>
+#include <dev_lib/io/log.hpp>
 
-#include "log.h"
+#include "dlg_msg.hpp"
+#include "str_inc.hpp"
 
 #include <QStatusBar>
 #include <QStyleFactory>
@@ -52,11 +52,11 @@ static void waiting(bool on) {
 
 static win *mainWin;
 
-static void logMessage(strc msg, log::eType type) {
+static void logMessage(strc msg, l::log::eType type) {
   EXPECT_(mainWin)
 
   switch (type) {
-  case log::POPUP:
+  case l::log::MODAL:
     dlgInfo(mainWin, msg);
     _if_clang_([[clang::fallthrough]];)
   default:
@@ -73,13 +73,13 @@ int app::exec(win* w) {
     mainWin->show();
     busy_indicator::handler = waiting;
     oldHandler   = qInstallMessageHandler(messageHandler);
-    log::handler = logMessage;
+    l::log::set(logMessage);
   }
 
   int res = base::exec();
 
   if (mainWin) {
-    log::handler = nullptr;
+    l::log::unset();
     qInstallMessageHandler(nullptr);
     busy_indicator::handler = nullptr;
   }

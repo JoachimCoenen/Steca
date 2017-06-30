@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "models.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "models.hpp"
+#include <dev_lib/inc/defs.inc>
 
 namespace core_qt {
 //------------------------------------------------------------------------------

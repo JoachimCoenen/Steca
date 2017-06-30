@@ -28,6 +28,9 @@ target_link_libraries (${app}
   Qt5::Core Qt5::Gui Qt5::Widgets
 )
 
+file (GLOB testdata testdata.*)
+file (COPY ${testdata} DESTINATION .)
+
 if (UNIX)
   target_link_libraries (${app} pthread)
 endif ()

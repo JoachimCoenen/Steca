@@ -15,10 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "win.h"
+#include "win.hpp"
 #include "panel/inc.inc"
-#include <dev_lib/inc/defs_cpp.h>
-#include <qt_lib/wgt_inc.h>
+#include <dev_lib/inc/defs.inc>
+#include <qt_lib/wgt_inc.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

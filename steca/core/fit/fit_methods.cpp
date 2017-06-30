@@ -15,8 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "fit_methods.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "fit_methods.hpp"
+#include <dev_lib/inc/defs.inc>
+
 #include "LM/levmar.h"
 #include <cmath>
 

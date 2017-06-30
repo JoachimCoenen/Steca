@@ -15,9 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.h"
-#include "io_caress_data.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "io.hpp"
+#include "io_caress_data.hpp"
+#include <dev_lib/inc/defs.inc>
+
 #include <functional>
 #include <cmath>
 /*
@@ -229,6 +230,11 @@ File::sh loadCaress(Files& files, l::path::rc path) may_err {
     throw;
   }
 }
+
+TEST_("loadCaress",
+//  Files files;
+//  auto file = loadCaress(files, l::path("testdata.caress"));
+)
 
 //------------------------------------------------------------------------------
 }}

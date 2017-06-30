@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "app.h"
+#include "app.hpp"
 #include "../manifest.h"
 #include "mainwin.h"
 #include "typ/typ_log.h"
@@ -23,7 +23,6 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QStyleFactory>
-#include <iostream>
 
 //------------------------------------------------------------------------------
 

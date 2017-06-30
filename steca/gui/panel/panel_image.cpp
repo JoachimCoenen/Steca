@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_image.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include <qt_lib/tabs.h>
+#include "panel_image.hpp"
+#include <dev_lib/inc/defs.inc>
+#include <qt_lib/tabs.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

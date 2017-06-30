@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "sz2.h"
-#include "../inc/defs_cpp.h"
+#include "sz2.hpp"
+#include "../inc/defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

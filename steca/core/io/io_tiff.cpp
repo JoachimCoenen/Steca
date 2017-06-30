@@ -15,14 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include <qt_lib/str_inc.h>
-
-#include <QFile> // TODO do w/o Qt?
-#include <QDataStream>
-#include <QFileInfo>
-#include <QDir>
+#include "io.hpp"
+#include <dev_lib/inc/defs.inc>
 
 // The dat file looks like so:
 /*
@@ -72,222 +66,228 @@ static void loadTiff(File& file, l::path::rc path,
   mut(md->mon) = mon;
   mut(md->tim) = tim;
 
-  QFile f(path.c_str());
-  check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
+//  QFile f(path.c_str());
+//  check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
 
-  // see http://www.fileformat.info/format/tiff/egff.htm
-  QDataStream is(&f);
-  is.setFloatingPointPrecision(QDataStream::SinglePrecision);
+//  // see http://www.fileformat.info/format/tiff/egff.htm
+//  QDataStream is(&f);
+//  is.setFloatingPointPrecision(QDataStream::SinglePrecision);
 
-  auto check = [&is]() {
-    check_or_err_(QDataStream::Ok == is.status(), "could not read data");
-  };
+//  auto check = [&is]() {
+//    check_or_err_(QDataStream::Ok == is.status(), "could not read data");
+//  };
 
-  // magic
-  quint16 magic; is >> magic;
+//  // magic
+//  quint16 magic; is >> magic;
 
-  if (0x4949 == magic)      // II - intel
-    is.setByteOrder(QDataStream::LittleEndian);
-  else if (0x4d4d == magic) // MM - motorola
-    is.setByteOrder(QDataStream::BigEndian);
-  else
-    l::err("bad magic");
+//  if (0x4949 == magic)      // II - intel
+//    is.setByteOrder(QDataStream::LittleEndian);
+//  else if (0x4d4d == magic) // MM - motorola
+//    is.setByteOrder(QDataStream::BigEndian);
+//  else
+//    l::err("bad magic");
 
-  quint16 version; is >> version;
-  check_or_err_(42 == version, "bad version");
+//  quint16 version; is >> version;
+//  check_or_err_(42 == version, "bad version");
 
-  quint32 imageWidth    = 0, imageHeight  = 0,
-          bitsPerSample = 0, sampleFormat = 0,
-          rowsPerStrip  = 0xffffffff,
-          stripOffsets  = 0, stripByteCounts = 0;
+//  quint32 imageWidth    = 0, imageHeight  = 0,
+//          bitsPerSample = 0, sampleFormat = 0,
+//          rowsPerStrip  = 0xffffffff,
+//          stripOffsets  = 0, stripByteCounts = 0;
 
-  quint16 tagId, dataType;
-  quint32 dataCount, dataOffset;
+//  quint16 tagId, dataType;
+//  quint32 dataCount, dataOffset;
 
-  auto seek = [&f](qint64 offset) {
-    check_or_err_(f.seek(offset), "bad offset");
-  };
+//  auto seek = [&f](qint64 offset) {
+//    check_or_err_(f.seek(offset), "bad offset");
+//  };
 
-  auto asUint = [&]() -> uint {
-    check_or_err_(1==dataCount, "bad data count");
-    switch (dataType) {
-    case 1: // byte
-      return dataOffset & 0x000000ff; // some tif files did have trash there
-    case 3: // short
-      return dataOffset & 0x0000ffff;
-    case 4:
-      return dataOffset;
-    }
+//  auto asUint = [&]() -> uint {
+//    check_or_err_(1==dataCount, "bad data count");
+//    switch (dataType) {
+//    case 1: // byte
+//      return dataOffset & 0x000000ff; // some tif files did have trash there
+//    case 3: // short
+//      return dataOffset & 0x0000ffff;
+//    case 4:
+//      return dataOffset;
+//    }
 
-    l::err("not a simple number");
-  };
+//    l::err("not a simple number");
+//  };
 
-  auto asStr = [&]() {
-    check_or_err_(2==dataType, "bad data type");
-    auto lastPos = f.pos();
+//  auto asStr = [&]() {
+//    check_or_err_(2==dataType, "bad data type");
+//    auto lastPos = f.pos();
 
-    seek(dataOffset);
-    QByteArray data = f.readLine(dataCount);
-    seek(lastPos);
+//    seek(dataOffset);
+//    QByteArray data = f.readLine(dataCount);
+//    seek(lastPos);
 
-    return str(data);
-  };
+//    return str(data);
+//  };
 
-  quint32 dirOffset; is >> dirOffset; check();
-  seek(dirOffset);
+//  quint32 dirOffset; is >> dirOffset; check();
+//  seek(dirOffset);
 
-  quint16 numDirEntries; is >> numDirEntries;
+//  quint16 numDirEntries; is >> numDirEntries;
 
-  for_i_(numDirEntries) {
-    is >> tagId >> dataType >> dataCount >> dataOffset; check();
+//  for_i_(numDirEntries) {
+//    is >> tagId >> dataType >> dataCount >> dataOffset; check();
 
-    switch (tagId) {
-    // numbers
-    case 256:
-      imageWidth = asUint();
-      break;
-    case 257:
-      imageHeight = asUint();
-      break;
-    case 258:
-      bitsPerSample = asUint();
-      break;
-    case 259: // Compression
-      check_or_err_(1==asUint(), "compressed data");
-      break;
-    case 273:
-      stripOffsets = asUint();
-      break;
-    case 277: // SamplesPerPixel
-      check_or_err_(1==asUint(), "more than one sample per pixel");
-      break;
-    case 278:
-      rowsPerStrip = asUint();
-      break;
-    case 279:
-      stripByteCounts = asUint();
-      break;
-    case 284: // PlanarConfiguration
-      check_or_err_(1==asUint(), "not planar");
-      break;
-    case 339:
-      sampleFormat = asUint(); // 1 unsigned, 2 signed, 3 IEEE
-      break;
-
-    // text
-    case 269: // DocumentName
-      mut(md->comment) = asStr();
-      break;
-//    case 306: // DateTime
-//      date = asStr();
+//    switch (tagId) {
+//    // numbers
+//    case 256:
+//      imageWidth = asUint();
 //      break;
-    default:
-//      TR("* NEW TAG *" << tagId << dataType << dataCount << dataOffset)
-      break;
-    }
-  }
+//    case 257:
+//      imageHeight = asUint();
+//      break;
+//    case 258:
+//      bitsPerSample = asUint();
+//      break;
+//    case 259: // Compression
+//      check_or_err_(1==asUint(), "compressed data");
+//      break;
+//    case 273:
+//      stripOffsets = asUint();
+//      break;
+//    case 277: // SamplesPerPixel
+//      check_or_err_(1==asUint(), "more than one sample per pixel");
+//      break;
+//    case 278:
+//      rowsPerStrip = asUint();
+//      break;
+//    case 279:
+//      stripByteCounts = asUint();
+//      break;
+//    case 284: // PlanarConfiguration
+//      check_or_err_(1==asUint(), "not planar");
+//      break;
+//    case 339:
+//      sampleFormat = asUint(); // 1 unsigned, 2 signed, 3 IEEE
+//      break;
 
-  check_or_err_(
-      imageWidth>0 && imageHeight>0 && stripOffsets>0 && stripByteCounts>0 &&
-      imageHeight <= rowsPerStrip, "bad format");
+//    // text
+//    case 269: // DocumentName
+//      mut(md->comment) = asStr();
+//      break;
+////    case 306: // DateTime
+////      date = asStr();
+////      break;
+//    default:
+////      TR("* NEW TAG *" << tagId << dataType << dataCount << dataOffset)
+//      break;
+//    }
+//  }
 
-  check_or_err_(
-      (1==sampleFormat || 2==sampleFormat || 3==sampleFormat) &&
-      32==bitsPerSample, "unhandled format");
+//  check_or_err_(
+//      imageWidth>0 && imageHeight>0 && stripOffsets>0 && stripByteCounts>0 &&
+//      imageHeight <= rowsPerStrip, "bad format");
 
-  l::sz2 size(imageWidth, imageHeight);
+//  check_or_err_(
+//      (1==sampleFormat || 2==sampleFormat || 3==sampleFormat) &&
+//      32==bitsPerSample, "unhandled format");
 
-  uint count = imageWidth * imageHeight;
-  count_arr2 intens(size);
+//  l::sz2 size(imageWidth, imageHeight);
 
-  check_or_err_((bitsPerSample/8) * count == stripByteCounts, "bad format");
+//  uint count = imageWidth * imageHeight;
+//  count_arr2 intens(size);
 
-  seek(stripOffsets);
+//  check_or_err_((bitsPerSample/8) * count == stripByteCounts, "bad format");
 
-  for_i_(intens.size().size())
-    switch (sampleFormat) {
-    case 1: {
-      quint32 sample; is >> sample;
-      intens.setAt(i, sample);
-      break;
-    }
-    case 2: {
-      qint32 sample; is >> sample;
-      intens.setAt(i, sample);
-      break;
-    }
-    case 3: {
-      float sample; is >> sample;
-      intens.setAt(i, sample);
-      break;
-    }
-    }
+//  seek(stripOffsets);
 
-  check();
+//  for_i_(intens.size().size())
+//    switch (sampleFormat) {
+//    case 1: {
+//      quint32 sample; is >> sample;
+//      intens.setAt(i, sample);
+//      break;
+//    }
+//    case 2: {
+//      qint32 sample; is >> sample;
+//      intens.setAt(i, sample);
+//      break;
+//    }
+//    case 3: {
+//      float sample; is >> sample;
+//      intens.setAt(i, sample);
+//      break;
+//    }
+//    }
 
-  file.addSet(
-    l::share(new Set(
-      l::share(md.take().ptr()),
-      l::share(new Image(intens)))));
+//  check();
+
+//  file.addSet(
+//    l::share(new Set(
+//      l::share(md.take().ptr()),
+//      l::share(new Image(intens)))));
+//}
+
+////------------------------------------------------------------------------------
+
+//File::sh loadTiffDat(Files& files, l::path::rc path) may_err {
+//  File::sh file(new File(files, path.basename()));
+
+//  QFile f(path.c_str());
+//  check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
+
+//  QFileInfo info(path.c_str());
+//  QDir dir = info.dir();
+
+//  QByteArray line;
+//  while (!(line = f.readLine()).isEmpty()) {
+//    QString s(line);
+
+//    // cut off comment
+//    int commentPos = s.indexOf(';');
+//    if (commentPos >= 0)
+//      s = s.left(commentPos);
+
+//    // split to parts
+//    if ((s = s.simplified()).isEmpty())
+//      continue;
+
+//    auto lst = s.split(' ');
+//    auto cnt = lst.count();
+//    check_or_err_(2 <= cnt && cnt <= 4, "bad metadata format");
+
+//    // file, phi, monitor, expTime
+//    bool ok;
+//    QString tiffFileName = lst.at(0);
+//    auto phi = phi_t(lst.at(1).toFloat(&ok));
+//    check_or_err_(ok, "bad phi value");
+
+//    qreal monitor = 0;
+//    if (cnt > 2) {
+//      monitor = lst.at(2).toDouble(&ok);
+//      check_or_err_(ok, "bad monitor value");
+//    }
+
+//    qreal expTime = 0;
+//    if (cnt > 3) {
+//      expTime = lst.at(3).toDouble(&ok);
+//      check_or_err_(ok, "bad expTime value");
+//    }
+
+//    try {
+//      // load one dataset
+//      loadTiff(mut(*file), l_qt::fromQt(dir.filePath(tiffFileName)), phi, monitor, expTime);
+//    } catch (std::exception &e) {
+//      l::err(CAT(l_qt::fromQt(tiffFileName), ": ", e.what()));
+//      throw;
+//    }
+//  }
+
+//  return file;
 }
 
-//------------------------------------------------------------------------------
-
-File::sh loadTiffDat(Files& files, l::path::rc path) may_err {
-  File::sh file(new File(files, path.basename()));
-
-  QFile f(path.c_str());
-  check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
-
-  QFileInfo info(path.c_str());
-  QDir dir = info.dir();
-
-  QByteArray line;
-  while (!(line = f.readLine()).isEmpty()) {
-    QString s(line);
-
-    // cut off comment
-    int commentPos = s.indexOf(';');
-    if (commentPos >= 0)
-      s = s.left(commentPos);
-
-    // split to parts
-    if ((s = s.simplified()).isEmpty())
-      continue;
-
-    auto lst = s.split(' ');
-    auto cnt = lst.count();
-    check_or_err_(2 <= cnt && cnt <= 4, "bad metadata format");
-
-    // file, phi, monitor, expTime
-    bool ok;
-    QString tiffFileName = lst.at(0);
-    auto phi = phi_t(lst.at(1).toFloat(&ok));
-    check_or_err_(ok, "bad phi value");
-
-    qreal monitor = 0;
-    if (cnt > 2) {
-      monitor = lst.at(2).toDouble(&ok);
-      check_or_err_(ok, "bad monitor value");
-    }
-
-    qreal expTime = 0;
-    if (cnt > 3) {
-      expTime = lst.at(3).toDouble(&ok);
-      check_or_err_(ok, "bad expTime value");
-    }
-
-    try {
-      // load one dataset
-      loadTiff(mut(*file), l_qt::fromQt(dir.filePath(tiffFileName)), phi, monitor, expTime);
-    } catch (std::exception &e) {
-      l::err(CAT(l_qt::fromQt(tiffFileName), ": ", e.what()));
-      throw;
-    }
-  }
-
-  return file;
-}
+TEST_("loadTiff",
+  Files files;
+  File::sh file(new File(files, ""));
+  loadTiff(mut(*file), l::path("testdata.tif"), phi_t(0), 0, 0);
+)
 
 //------------------------------------------------------------------------------
 }}

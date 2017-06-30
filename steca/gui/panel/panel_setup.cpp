@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_setup.h"
-#include <qt_lib/tabs.h>
+#include "panel_setup.hpp"
+#include <qt_lib/tabs.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

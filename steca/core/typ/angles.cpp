@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "angles.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "angles.hpp"
+#include <dev_lib/inc/defs.inc>
 #include <algorithm>
 #include <cmath>
 

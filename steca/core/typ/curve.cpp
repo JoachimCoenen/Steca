@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "curve.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "curve.hpp"
+#include <dev_lib/inc/defs.inc>
 #include <algorithm>
 
 namespace core {

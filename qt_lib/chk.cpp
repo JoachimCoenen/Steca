@@ -1,9 +1,10 @@
 // (qt_lib)
 
-#include "chk.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "act.h"
-#include "str_inc.h"
+#include "chk.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "act.hpp"
+#include "str_inc.hpp"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

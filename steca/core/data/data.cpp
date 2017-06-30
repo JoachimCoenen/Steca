@@ -15,10 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "data.h"
-#include "../session.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include <dev_lib/inc/exc.h>
+#include "data.hpp"
+#include "../session.hpp"
+
+#include <dev_lib/inc/defs.inc>
+#include <dev_lib/inc/exc.hpp>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------

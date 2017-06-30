@@ -15,8 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "hub.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "hub.hpp"
+#include <dev_lib/inc/defs.inc>
+
 #include <QApplication>
 
 namespace gui {

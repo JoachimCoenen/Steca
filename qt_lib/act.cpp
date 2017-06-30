@@ -1,9 +1,10 @@
 // (qt_lib)
 
-#include "act.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "str_inc.h"
-#include "win.h"
+#include "act.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "str_inc.hpp"
+#include "win.hpp"
 #include <QMenuBar>
 
 namespace l_qt {

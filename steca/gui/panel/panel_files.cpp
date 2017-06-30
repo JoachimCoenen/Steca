@@ -15,10 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_files.h"
-#include "../hub.h"
-#include <qt_lib/wgt_inc.h>
-#include "../models.h"
+#include "panel_files.hpp"
+#include "../hub.hpp"
+#include <qt_lib/wgt_inc.hpp>
+#include "../models.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

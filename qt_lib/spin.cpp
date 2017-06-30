@@ -1,7 +1,7 @@
 // (qt_lib)
 
-#include "spin.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "spin.hpp"
+#include <dev_lib/inc/defs.inc>
 
 namespace l_qt {
 //------------------------------------------------------------------------------

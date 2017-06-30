@@ -23,7 +23,8 @@
  * also lm_core.c
  ********************************************************************************/
 
-#include <stdio.h>
+#include <dev_lib/io/log.hpp>
+
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
@@ -32,10 +33,8 @@
 #include "compiler.h"
 #include "misc.h"
 
-#include <qt_lib/log.h>
-
 void msg_cannotSolve(uint /*n*/, uint /*m*/) {
-  l_qt::log::warn("levmar: cannot solve with fewer measurements than unknowns");
+  l::log::warn("levmar: cannot solve with fewer measurements than unknowns");
 }
 
 #define EPSILON       1E-12

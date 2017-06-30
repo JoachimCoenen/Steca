@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "trg.h"
-#include "../inc/defs_cpp.h"
+#include "trg.hpp"
+#include "../inc/defs.inc"
 #include <cmath>
 
 namespace l {

@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_metadata.h"
-#include <qt_lib/tabs.h>
-#include "../models.h"
+#include "panel_metadata.hpp"
+#include <qt_lib/tabs.hpp>
+#include "../models.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

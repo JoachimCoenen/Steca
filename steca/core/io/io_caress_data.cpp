@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io_caress_data.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "io_caress_data.hpp"
+#include <dev_lib/inc/defs.inc>
 
 #undef CHECK
 #include "Caress/raw.h"

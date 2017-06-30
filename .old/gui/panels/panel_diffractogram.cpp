@@ -15,10 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_diffractogram.h"
-#include "calc/calc_lens.h"
-#include "thehub.h"
-#include "gui_cfg.h"
+#include "panel_diffractogram.hpp"
+#include "calc/calc_lens.hpp"
+#include "thehub.hpp"
+#include "gui_cfg.hpp"
 
 namespace gui { namespace panel {
 //------------------------------------------------------------------------------

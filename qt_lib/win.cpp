@@ -1,10 +1,10 @@
 // (qt_lib)
 
-#include "win.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "win.hpp"
+#include <dev_lib/inc/defs.inc>
 
-#include "layout.h"
-#include "split.h"
+#include "layout.hpp"
+#include "split.hpp"
 #include <QCloseEvent>
 
 namespace l_qt {

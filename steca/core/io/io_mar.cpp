@@ -15,8 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "io.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "io.hpp"
+#include <dev_lib/inc/defs.inc>
+
 #include "Mar/MarReader.h"
 
 namespace core { namespace io {
@@ -132,7 +133,7 @@ File::sh loadMar(Files& files, l::path::rc path) may_err {
   //*** Read and correct high bytes ***
   //***********************************
   /* There are some high intensity values stored in the image */
-  bool pictureOverflow = false;
+//  bool pictureOverflow = false;
   if (numberOfHigh) {
     int pair[2];
 
@@ -167,7 +168,7 @@ File::sh loadMar(Files& files, l::path::rc path) may_err {
       // dataset will set the overflow flag)
       if (pair[1] == 999999.0) {
         pair[1] = 128000;
-        pictureOverflow = true;
+//        pictureOverflow = true;
       }
 
       // Correct high pixel

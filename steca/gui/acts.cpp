@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "acts.h"
-#include "win.h"
+#include "acts.hpp"
+#include "win.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

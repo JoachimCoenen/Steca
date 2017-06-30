@@ -1,8 +1,9 @@
 // (qt_lib)
 
-#include "edit.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "str_inc.h"
+#include "edit.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "str_inc.hpp"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

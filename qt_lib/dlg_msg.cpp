@@ -1,8 +1,9 @@
 // (qt_lib)
 
-#include "dlg_msg.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "str_inc.h"
+#include "dlg_msg.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "str_inc.hpp"
 
 #include <QMessageBox>
 

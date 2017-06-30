@@ -15,10 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel.h"
-#include "../hub.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include <qt_lib/lbl.h>
+#include "panel.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "../hub.hpp"
+#include <qt_lib/lbl.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "xy.h"
-#include "../inc/defs_cpp.h"
+#include "xy.hpp"
+#include "../inc/defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------

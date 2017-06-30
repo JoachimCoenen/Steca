@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_datasets.h"
-#include <qt_lib/wgt_inc.h>
-#include "../models.h"
+#include "panel_datasets.hpp"
+#include <qt_lib/wgt_inc.hpp>
+#include "../models.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

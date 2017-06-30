@@ -1,8 +1,9 @@
 // (qt_lib)
 
-#include "model.h"
-#include <dev_lib/inc/defs_cpp.h>
-#include "str_inc.h"
+#include "model.hpp"
+#include <dev_lib/inc/defs.inc>
+
+#include "str_inc.hpp"
 
 #include <QSize>
 

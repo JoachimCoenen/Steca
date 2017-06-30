@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "app.h"
+#include "app.hpp"
 #include "manifest"
-#include "win.h"
+#include "win.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "arr2.h"
-#include "../inc/defs_cpp.h"
+#include "arr2.hpp"
+#include "../inc/defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

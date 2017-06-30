@@ -1,9 +1,9 @@
 // (qt_lib)
 
-#include "split.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "split.hpp"
+#include <dev_lib/inc/defs.inc>
 
-#include "layout.h"
+#include "layout.hpp"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

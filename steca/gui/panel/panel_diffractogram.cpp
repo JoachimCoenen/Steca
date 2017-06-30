@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "panel_diffractogram.h"
-#include "../hub.h"
-#include <qt_lib/wgt_inc.h>
+#include "panel_diffractogram.hpp"
+#include "../hub.hpp"
+#include <qt_lib/wgt_inc.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

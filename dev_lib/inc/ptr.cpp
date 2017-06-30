@@ -1,7 +1,7 @@
 // (dev_lib)
 
-#include "ptr.h"
-#include "defs_cpp.h"
+#include "ptr.hpp"
+#include "defs.inc"
 #include <atomic>
 
 namespace l {

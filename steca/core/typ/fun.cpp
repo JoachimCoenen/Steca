@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "fun.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "fun.hpp"
+#include <dev_lib/inc/defs.inc>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ Fun::fryFun Fun::funFry;
 
 void Fun::initFry() {
   ONLY_ONCE
-  addMaker(key::SUM, l::owned(new fryFun::maker<SumFuns>));
+//  addMaker(key::SUM, l::owned(new fryFun::maker<SumFuns>));
 }
 
 void Fun::addMaker(strc key, l::give_me<fryFun::maker_base> maker) {

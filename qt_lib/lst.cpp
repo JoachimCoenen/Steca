@@ -1,7 +1,7 @@
 // (qt_lib)
 
-#include "lst.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "lst.hpp"
+#include <dev_lib/inc/defs.inc>
 
 #include <QHeaderView>
 #include <QKeyEvent>

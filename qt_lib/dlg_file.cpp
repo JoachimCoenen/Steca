@@ -1,7 +1,7 @@
 // (qt_lib)
 
-#include "dlg_file.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "dlg_file.hpp"
+#include <dev_lib/inc/defs.inc>
 
 #include <QFileDialog>
 

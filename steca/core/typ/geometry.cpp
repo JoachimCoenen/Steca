@@ -15,8 +15,8 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "geometry.h"
-#include <dev_lib/inc/defs_cpp.h>
+#include "geometry.hpp"
+#include <dev_lib/inc/defs.inc>
 
 namespace core {
 //------------------------------------------------------------------------------
