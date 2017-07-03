@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <dev_lib/inc/defs.hpp>
+#include <dev_lib/defs.hpp>
 #include <dev_lib/typ/vec.hpp>
 
 namespace core { namespace io {

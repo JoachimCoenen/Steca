@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../inc/defs.inc"
+#include "../defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../inc/defs.hpp"
+#include "../defs.hpp"
 #include "../inc/num.hpp"
 #include "../inc/ptr.hpp"
 #include "map.hpp"

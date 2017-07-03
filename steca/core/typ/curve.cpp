@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "curve.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 #include <algorithm>
 
 namespace core {

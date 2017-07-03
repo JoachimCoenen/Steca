@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "act.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 
 #include "str_inc.hpp"
 #include "win.hpp"

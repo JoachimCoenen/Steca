@@ -17,7 +17,7 @@
 
 #include "win.hpp"
 #include "panel/inc.inc"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 #include <qt_lib/wgt_inc.hpp>
 
 namespace gui {

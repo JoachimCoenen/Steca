@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "ij.hpp"
-#include "../inc/defs.inc"
+#include "../defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

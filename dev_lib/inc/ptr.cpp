@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "ptr.hpp"
-#include "defs.inc"
+#include "../defs.inc"
 
 #include <atomic>
 

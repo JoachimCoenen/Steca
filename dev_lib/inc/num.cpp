@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "num.hpp"
-#include "defs.inc"
+#include "../defs.inc"
 
 #include <cmath>
 #include <limits>
@@ -84,6 +84,14 @@ int64 ceil(flt32 f) {
 
 int64 ceil(flt64 f) {
   return to_num<int64>(std::ceil(f));
+}
+
+int64 round(flt32 f) {
+  return to_num<int64>(std::round(f));
+}
+
+int64 round(flt64 f) {
+  return to_num<int64>(std::round(f));
 }
 
 TEST_("num",

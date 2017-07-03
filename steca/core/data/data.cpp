@@ -18,7 +18,7 @@
 #include "data.hpp"
 #include "../session.hpp"
 
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 #include <dev_lib/inc/exc.hpp>
 
 namespace core { namespace data {

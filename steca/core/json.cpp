@@ -611,7 +611,7 @@
 // ******************************************************************************/
 
 //#include "json.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 //#include <dev_lib/inc/ptr.hpp>
 
 namespace core { namespace key {

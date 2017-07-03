@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fit_fun.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 
 //#include "../typ/factory.hpp"
 //#include "fit_methods.hpp"

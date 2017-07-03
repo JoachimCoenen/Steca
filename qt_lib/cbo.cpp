@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "cbo.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 
 namespace l_qt {
 //------------------------------------------------------------------------------

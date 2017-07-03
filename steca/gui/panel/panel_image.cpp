@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_image.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 #include <qt_lib/tabs.hpp>
 
 namespace gui {

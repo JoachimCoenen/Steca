@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "defs.hpp"
+#include "../defs.hpp"
 
 typedef void*       pvoid;
 typedef void const* pcvoid;

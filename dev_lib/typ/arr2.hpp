@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../inc/defs.hpp"
+#include "../defs.hpp"
 #include "sz2.hpp"
 #include "vec.hpp"
 

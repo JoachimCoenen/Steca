@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <dev_lib/inc/defs.hpp>
+#include <dev_lib/defs.hpp>
 #include <QCheckBox>
 
 namespace l_qt {

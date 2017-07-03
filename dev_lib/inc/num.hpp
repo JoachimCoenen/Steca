@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "defs.hpp"
+#include "../defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
@@ -173,6 +173,9 @@ int64 floor(flt64);
 
 int64 ceil(flt32);
 int64 ceil(flt64);
+
+int64 round(flt32);
+int64 round(flt64);
 
 template <typename T> T const& min(T const& a, T const& b) {
   return (a < b) ? a : b;

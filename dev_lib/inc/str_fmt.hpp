@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "defs.hpp"
+#include "../defs.hpp"
 #include <sstream>
 
 namespace l {

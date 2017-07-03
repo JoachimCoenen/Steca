@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "exc.hpp"
-#include "defs.inc"
+#include "../defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

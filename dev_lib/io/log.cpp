@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "log.hpp"
-#include "../inc/defs.inc"
+#include "../defs.inc"
 
 #include "../typ/vec.hpp"
 #include <iostream>

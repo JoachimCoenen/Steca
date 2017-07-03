@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "app.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 #include <dev_lib/io/log.hpp>
 
 #include "dlg_msg.hpp"

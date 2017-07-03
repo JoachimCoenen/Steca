@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel.hpp"
-#include <dev_lib/inc/defs.inc>
+#include <dev_lib/defs.inc>
 
 #include "../hub.hpp"
 #include <qt_lib/lbl.hpp>
