@@ -27,13 +27,15 @@ using data::File;
 using data::Set;
 using data::Meta;
 
+using l_io::path;
+
 enum {
   CHARTYPE = 16,
   PAREN    = 0x80,
   THESIS   = 0x81,
 };
 
-File::sh loadCaressNew(Files& files, l::path::rc path) may_err {
+File::sh loadCaressNew(Files& files, path::rc path) may_err {
   File::sh file(new File(files, path.basename()));
 
   std::ifstream is(path, std::ios::binary);

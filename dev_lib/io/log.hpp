@@ -4,7 +4,7 @@
 
 #include <dev_lib/defs.hpp>
 
-namespace l {
+namespace l_io {
 //------------------------------------------------------------------------------
 
 namespace log {

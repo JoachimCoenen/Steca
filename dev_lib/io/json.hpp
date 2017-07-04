@@ -32,7 +32,7 @@
 
 #include <iostream>
 
-namespace l {
+namespace l_io {
 //------------------------------------------------------------------------------
 
 dcl_(Json)
@@ -40,10 +40,18 @@ dcl_(Json)
     NUM, STR, VEC, OBJ,
   };
 
+  dcl_(indent_t)
+    atr_(uint, depth);
+    atr_(bool, newLine);
+
+    indent_t();
+    mth_(indent_t, next, (bool newLine));
+  dcl_end
+
   dcl_base_(Val)
     atr_(Typ, typ);
     Val(Typ);
-    virtual mth_(void, saveTo, (std::ostream&, uint indent)) = 0;
+    virtual mth_(void, saveTo, (std::ostream&, indent_t)) = 0;
   dcl_end
 
   template <Typ Ttyp, typename Tval>
@@ -54,30 +62,30 @@ dcl_(Json)
 
   dcl_sub_(ValNum, TypVal<NUM COMMA flt32>)
     using base::base;
-    mth_(void, saveTo, (std::ostream&, uint indent));
+    mth_(void, saveTo, (std::ostream&, indent_t));
   dcl_end
 
   dcl_sub_(ValStr, TypVal<STR COMMA str>)
     using base::base;
-    mth_(void, saveTo, (std::ostream&, uint indent));
+    mth_(void, saveTo, (std::ostream&, indent_t));
   dcl_end
 
-  using Vec = vec<Json>;
+  using Vec = l::vec<Json>;
 
   dcl_sub_(ValVec, TypVal<VEC COMMA Vec>)
     using base::base;
-    mth_(void, saveTo, (std::ostream&, uint indent));
+    mth_(void, saveTo, (std::ostream&, indent_t));
   dcl_end
 
-  using Obj = map<str, Json>;
+  using Obj = l::map<str, Json>;
 
   dcl_sub_(ValObj, TypVal<OBJ COMMA Obj>)
     using base::base;
-    mth_(void, saveTo, (std::ostream&, uint indent));
+    mth_(void, saveTo, (std::ostream&, indent_t));
   dcl_end
 
   // data
-  atr_(shared<Val>, val);
+  atr_(l::shared<Val>, val);
 
   explicit Json(flt32);
   explicit Json(strc);
@@ -90,14 +98,14 @@ dcl_(Json)
   mth_(Vec::rc, asVec, ());
   mth_(Obj::rc, asObj, ());
 
-  mth_(void, saveTo,   (std::ostream&, uint indent = 0));
+  mth_(void, saveTo,   (std::ostream&));
+  mth_(void, saveTo,   (std::ostream&, indent_t));
   fry_(Json, loadFrom, (std::istream&)) may_err;
 
   fry_(Json, loadNum, (std::istream&)) may_err;
   fry_(Json, loadStr, (std::istream&)) may_err;
   fry_(Json, loadVec, (std::istream&)) may_err;
   fry_(Json, loadObj, (std::istream&)) may_err;
-
 dcl_end
 
 //------------------------------------------------------------------------------

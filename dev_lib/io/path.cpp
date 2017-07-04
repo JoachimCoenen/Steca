@@ -8,7 +8,7 @@
   #include <string.h>
 #endif
 
-namespace l {
+namespace l_io {
 //------------------------------------------------------------------------------
 
 path::path(strc s) : base(s) {}

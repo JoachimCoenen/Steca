@@ -18,25 +18,25 @@
 #pragma once
 
 #include <core/data/data.hpp>
-#include <dev_lib/typ/path.hpp>
+#include <dev_lib/io/path.hpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress(l::path::rc);
-bool couldBeMar(l::path::rc);
-bool couldBeTiffDat(l::path::rc);
+bool couldBeCaress(l_io::path::rc);
+bool couldBeMar(l_io::path::rc);
+bool couldBeTiffDat(l_io::path::rc);
 
 // load a file; file type will be sensed
-data::File::sh load(data::Files&, l::path::rc) may_err;
+data::File::sh load(data::Files&, l_io::path::rc) may_err;
 
 // load a specific file type
-data::File::sh loadCaress(data::Files&, l::path::rc)  may_err;
-data::File::sh loadCaressNew(data::Files&, l::path::rc)  may_err;
-data::File::sh loadMar(data::Files&, l::path::rc)     may_err;
-data::File::sh loadTiffDat(data::Files&, l::path::rc) may_err;
+data::File::sh loadCaress(data::Files&,    l_io::path::rc) may_err;
+data::File::sh loadCaressNew(data::Files&, l_io::path::rc) may_err;
+data::File::sh loadMar(data::Files&,       l_io::path::rc) may_err;
+data::File::sh loadTiffDat(data::Files&,   l_io::path::rc) may_err;
 
-str loadCaressComment(l::path::rc) may_err;
+str loadCaressComment(l_io::path::rc) may_err;
 
 //------------------------------------------------------------------------------
 }}

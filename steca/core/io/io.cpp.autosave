@@ -34,8 +34,8 @@ namespace core { namespace io {
 
 bool couldBeCaress(l_io::path::rc path) {
   l_io::fbin fin(path);
-//  static QByteArray const header("\020\012DEFCMD DAT");
-//  return header == peek(0, l::to_uint(header.size()), path);
+  l_io::buf header("\020\012DEFCMD DAT");
+  return header == fin.read();
 }
 
 // Mar file format

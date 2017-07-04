@@ -34,7 +34,7 @@
 #include "misc.h"
 
 void msg_cannotSolve(uint /*n*/, uint /*m*/) {
-  l::log::warn("levmar: cannot solve with fewer measurements than unknowns");
+  l_io::log::warn("levmar: cannot solve with fewer measurements than unknowns");
 }
 
 #define EPSILON       1E-12

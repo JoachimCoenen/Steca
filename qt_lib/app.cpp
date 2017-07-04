@@ -52,11 +52,11 @@ static void waiting(bool on) {
 
 static win *mainWin;
 
-static void logMessage(strc msg, l::log::eType type) {
+static void logMessage(strc msg, l_io::log::eType type) {
   EXPECT_(mainWin)
 
   switch (type) {
-  case l::log::MODAL:
+  case l_io::log::MODAL:
     dlgInfo(mainWin, msg);
     _if_clang_([[clang::fallthrough]];)
   default:
@@ -73,13 +73,13 @@ int app::exec(win* w) {
     mainWin->show();
     busy_indicator::handler = waiting;
     oldHandler   = qInstallMessageHandler(messageHandler);
-    l::log::set(logMessage);
+    l_io::log::set(logMessage);
   }
 
   int res = base::exec();
 
   if (mainWin) {
-    l::log::unset();
+    l_io::log::unset();
     qInstallMessageHandler(nullptr);
     busy_indicator::handler = nullptr;
   }

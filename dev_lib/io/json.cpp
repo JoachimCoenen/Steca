@@ -2,31 +2,46 @@
 
 #include "json.hpp"
 #include <dev_lib/defs.inc>
+#include <fstream>
 
-namespace l {
+namespace l_io {
 //------------------------------------------------------------------------------
+
+Json::indent_t::indent_t() : depth(0), newLine(false) {}
+
+Json::indent_t Json::indent_t::next(bool newLine) const {
+  indent_t nextLevel(*this);
+  ++mut(nextLevel.depth);
+  if (newLine)
+    mut(nextLevel.newLine) = true;
+  return nextLevel;
+}
 
 Json::Val::Val(Typ typ_) : typ(typ_) {}
 Json::Val::~Val() {}
 
-static void space(std::ostream& os, uint indent) {
-  for_i_(indent * 2)
-    os << ' ';
+static void space(std::ostream& os, Json::indent_t& indent, bool force = false) {
+  if (indent.newLine || force) {
+    os << "\n";
+    for_i_(indent.depth * 2)  // indent by 2 spaces
+      os << ' ';
+    mut(indent.newLine) = false;
+  }
 }
 
 static str INF_P("+inf"), INF_M("-inf");
 
-void Json::ValNum::saveTo(std::ostream& os, uint indent) const {
-  EXPECT_(!isnan(val))
+void Json::ValNum::saveTo(std::ostream& os, indent_t indent) const {
+  EXPECT_(!l::isnan(val))
   space(os, indent);
 
-  if (isinf(val))
+  if (l::isinf(val))
     os << (val ? INF_P : INF_M);
   else
     os << val;
 }
 
-void Json::ValStr::saveTo(std::ostream& os, uint indent) const {
+void Json::ValStr::saveTo(std::ostream& os, indent_t indent) const {
   space(os, indent);
 
   /* The original https://github.com/dropbox/json11
@@ -53,37 +68,37 @@ void Json::ValStr::saveTo(std::ostream& os, uint indent) const {
   os << '"';
 }
 
-void Json::ValVec::saveTo(std::ostream& os, uint indent) const {
+void Json::ValVec::saveTo(std::ostream& os, indent_t indent) const {
   space(os, indent);
-  os << "[\n";
+  os << "[";
 
   uint i = 0;
   for (auto& v : val) {
     if (0 < i++)
-      os << ",\n";
-    v.val->saveTo(os, indent + 1);
+      os << ",";
+    v.val->saveTo(os, indent.next(true));
   }
 
-  os << "\n";
-  space(os, indent);
+  space(os, indent, true);
   os << "]";
 }
 
-void Json::ValObj::saveTo(std::ostream& os, uint indent) const {
+void Json::ValObj::saveTo(std::ostream& os, indent_t indent) const {
   space(os, indent);
-  os << "{\n";
+  os << "{";
 
   uint i = 0;
   for (auto& v : val) {
     if (0 < i++)
-      os << ",\n";
-    space(os, indent + 1);
-    os << '"' << v.first << "\":\n";
-    v.second.saveTo(os, indent + 2);
+      os << ",";
+
+    auto indent1 = indent.next(true);
+    space(os, indent1);
+    os << '"' << v.first << "\": ";
+    v.second.saveTo(os, indent1);
   }
 
-  os << "\n";
-  space(os, indent);
+  space(os, indent, true);
   os << "}";
 }
 
@@ -117,9 +132,13 @@ Json::Obj::rc Json::asObj() const {
   return (*static_cast<ValObj const*>(val.ptr())).val;
 }
 
-void Json::saveTo(std::ostream& os, uint indent) const {
-  val->saveTo(os, indent);
+void Json::saveTo(std::ostream& os) const {
+  val->saveTo(os, indent_t());
   os << "\n";
+}
+
+void Json::saveTo(std::ostream& os, indent_t indent) const {
+  val->saveTo(os, indent);
 }
 
 static void check(std::istream& is) may_err {
@@ -173,7 +192,7 @@ Json Json::loadFrom(std::istream& is) may_err {
     return loadObj(is);
   }
 
-  err("bad json");
+  l::err("bad json");
 }
 
 Json Json::loadNum(std::istream& is) may_err {
@@ -190,9 +209,9 @@ Json Json::loadNum(std::istream& is) may_err {
   }
 
   if ((0 != sig) && isMatch(is, 'i') && isMatch(is, 'n') && isMatch(is, 'f'))
-    return Json(sig * flt_inf);
+    return Json(sig * l::flt_inf);
 
-  err("json: bad number");
+  l::err("json: bad number");
 }
 
 Json Json::loadStr(std::istream& is) may_err {
@@ -244,16 +263,10 @@ Json Json::loadObj(std::istream& is) may_err {
 
 //------------------------------------------------------------------------------
 
-dcl_(TestInt)
-  atr_(int, val);
-  TestInt(int val_) : val(val_) {}
-
-  mth_(l::Json, toJson, ()) VAL_(l::Json(val))
-dcl_end
 
 TEST_("json",
   Json::Obj obj; obj.add("a", Json(2));
-  Json::Vec vec({Json(8), Json(flt_inf), Json("f"), Json(8)});
+  Json::Vec vec({Json(8), Json(l::flt_inf), Json("f"), Json(8)});
 
   Json::Obj obj2;
   obj2.add("obj", Json(obj)); obj2.add("vec", Json(vec));
@@ -262,13 +275,12 @@ TEST_("json",
 
   std::stringstream ss;
   json.saveTo(ss);
-  TR_(ss.str())
 
   Json json2 = Json::loadFrom(ss);
   std::stringstream ss2;
   json2.saveTo(ss2);
-  TR_(ss2.str())
 
+  CHECK_EQ(json, json2);
   CHECK_EQ(ss.str(), ss2.str());
 )
 

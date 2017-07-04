@@ -6,7 +6,7 @@
 #include "../typ/vec.hpp"
 #include <iostream>
 
-namespace l { namespace log {
+namespace l_io { namespace log {
 //------------------------------------------------------------------------------
 
 static void stdHandler(strc msg, eType type) {
@@ -46,7 +46,7 @@ void popup(strc msg) {
     handler(msg, MODAL);
 }
 
-static vec<handler_t> handlers;
+static l::vec<handler_t> handlers;
 
 void set(handler_t handler_) {
   handlers.add(handler);

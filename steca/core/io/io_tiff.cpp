@@ -45,6 +45,8 @@ using data::Meta;
 
 using data::flt_vec;
 
+using l_io::path;
+
 //------------------------------------------------------------------------------
 
 #define IS_ASCII \
@@ -57,7 +59,7 @@ using data::flt_vec;
   IS_NUMBER; check_or_err_(val==dataOffset, BAD_FORMAT)
 
 
-static void loadTiff(File& file, l::path::rc path,
+static void loadTiff(File& file, path::rc path,
                      phi_t phi, flt32 mon, flt32 tim) may_err {
 
   auto md = l::scope(new Meta(file.files.dict));
@@ -286,7 +288,7 @@ static void loadTiff(File& file, l::path::rc path,
 TEST_("loadTiff",
   Files files;
   File::sh file(new File(files, ""));
-  loadTiff(mut(*file), l::path("testdata.tif"), phi_t(0), 0, 0);
+  loadTiff(mut(*file), path("testdata.tif"), phi_t(0), 0, 0);
 )
 
 //------------------------------------------------------------------------------

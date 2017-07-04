@@ -4,7 +4,7 @@
 
 #include "../defs.hpp"
 
-namespace l {
+namespace l_io {
 //------------------------------------------------------------------------------
 
 dcl_sub_(path, str)
