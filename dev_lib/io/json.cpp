@@ -280,7 +280,6 @@ TEST_("json",
   std::stringstream ss2;
   json2.saveTo(ss2);
 
-  CHECK_EQ(json, json2);
   CHECK_EQ(ss.str(), ss2.str());
 )
 

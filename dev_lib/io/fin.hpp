@@ -19,8 +19,16 @@ dcl_reimpl_(fbin, std::fstream)
   atr_(str, basename);
   fbin(path::rc);
 
-  mth_(void, check, ()) may_err;
-  mth_mut_(buf, read, (uint n));
+  [[noreturn]] mth_(void, err, (strc msg)) will_err;
+
+  mth_mut_(bool, hasMore, ());
+  mth_mut_(uint, read, (void*, uint n, bool exact = true)) may_err;
+  mth_mut_(buf,  read, (uint n, bool exact = true))        may_err;
+
+  mth_mut_(uint8,  get8,  ()) may_err;
+  mth_mut_(uint16, get16, ()) may_err;
+  mth_mut_(uint32, get32, ()) may_err;
+  mth_mut_(uint64, get64, ()) may_err;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -17,7 +17,7 @@
 
 #include "io.hpp"
 #include <dev_lib/defs.inc>
-#include <dev_lib/io/fio.hpp>
+#include <dev_lib/io/fin.hpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -33,9 +33,8 @@ namespace core { namespace io {
 //}
 
 bool couldBeCaress(l_io::path::rc path) {
-  l_io::fbin fin(path);
-//  static QByteArray const header("\020\012DEFCMD DAT");
-//  return header == peek(0, l::to_uint(header.size()), path);
+  l_io::buf header("\020\012DEFCMD DAT");
+  return header == l_io::fbin(path).read(header.size(), false);
 }
 
 // Mar file format
@@ -148,10 +147,6 @@ data::File::sh load(data::Files& files, l_io::path::rc path) may_err {
 
 //  return base::data(idx, role);
 //}
-
-TEST_("loadCaress",
-  CHECK(couldBeCaress(l_io::path("testdata.caress")));
-)
 
 //------------------------------------------------------------------------------
 }}

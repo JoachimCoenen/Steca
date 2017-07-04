@@ -216,7 +216,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
   return file;
 }
 
-File::sh loadCaress(Files& files, l_io::path::rc path) may_err {
+File::sh loadCaressOld(Files& files, l_io::path::rc path) may_err {
   check_or_err_(openFile(path), CAT("Cannot open ", path));
 
   struct __ { ~__() { closeFile(); } } autoClose;
@@ -228,11 +228,6 @@ File::sh loadCaress(Files& files, l_io::path::rc path) may_err {
     throw;
   }
 }
-
-//TEST_("loadCaress",
-//  Files files;
-//  auto file = loadCaress(files, l::path("testdata.caress"));
-//)
 
 //------------------------------------------------------------------------------
 }}

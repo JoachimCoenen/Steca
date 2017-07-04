@@ -43,6 +43,9 @@ dcl_reimpl_(vec, std::vector<T>)
   set_(setAt, (uint i, T const& t)) SET_(base::operator[](i) = t)
 
   mth_mut_(T&, refAt, (uint i))     VAL_(base::operator[](i))
+
+  mth_(bool, operator==, (rc that)) VAL_(base_rc() == that.base_rc())
+  mth_(bool, operator!=, (rc that)) VAL_(base_rc() != that.base_rc())
 dcl_end
 
 //------------------------------------------------------------------------------
