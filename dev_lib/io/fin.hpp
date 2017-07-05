@@ -25,6 +25,8 @@ dcl_reimpl_(fbin, std::fstream)
   mth_mut_(uint, read, (void*, uint n, bool exact = true)) may_err;
   mth_mut_(buf,  read, (uint n, bool exact = true))        may_err;
 
+  set_(seek, (uint32)) may_err;
+
   mth_mut_(uint8,  get8,  ()) may_err;
   mth_mut_(uint16, get16, ()) may_err;
   mth_mut_(uint32, get32, ()) may_err;

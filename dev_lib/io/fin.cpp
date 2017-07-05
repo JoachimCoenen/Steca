@@ -42,11 +42,17 @@ uint fbin::read(void* buf, uint n, bool exact) may_err {
   return gc;
 }
 
-buf fbin::read(uint n, bool exact) {
+buf fbin::read(uint n, bool exact) may_err {
   buf b(n);
   n = read(b.data(), n, exact);
   b.resize(n);
   return b;
+}
+
+fbin::ref fbin::seek(uint32 pos) may_err {
+  base::seekg(pos);
+  check_or_err_(good(), CAT("cannot seek: ", basename));
+  RTHIS
 }
 
 uint8 fbin::get8() may_err {
