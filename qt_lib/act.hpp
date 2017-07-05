@@ -36,11 +36,10 @@ dcl_sub_(act, QAction)
   )
 
   template <typename L>
-  set_(onToggle, (L l)) {
+  set_(onToggle, (L l)) SET_(
     setCheckable(true);
     connect(this, &QAction::toggled, l);
-    RTHIS
-  }
+  )
 dcl_end
 
 ////------------------------------------------------------------------------------

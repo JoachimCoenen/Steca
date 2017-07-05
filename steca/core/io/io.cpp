@@ -18,6 +18,7 @@
 #include "io.hpp"
 #include <dev_lib/defs.inc>
 #include <dev_lib/io/fin.hpp>
+#include <algorithm>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -44,63 +45,51 @@ bool couldBeMar(l_io::path::rc path) {
 
 // Text .dat file with metadata for tiff files
 bool couldBeTiffDat(l_io::path::rc path) {
-//  QFile file(path.c_str());
+  bool couldBe = false;
 
-//  if (!file.open(QFile::ReadOnly))
-//    return false;
+  try {
+    l_io::ftin fin(path);
+    while (!couldBe && fin.hasMore()) {
+      str line = fin.getline();
 
-//  bool couldBe = false;
+      // very naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
+      std::transform(line.begin(), line.end(), line.begin(), ::tolower);
+      auto pos = line.find_first_of(".tif");
+      if (str::npos != pos)
+        couldBe = true;
+    }
+  } catch(l::exc::rc) {
+    return false;
+  }
 
-//  QByteArray line;
-
-//  while (!(line = file.readLine()).isEmpty()) {
-//    QString s = line;
-
-//    int commentPos = s.indexOf(';');
-//    if (commentPos >= 0)
-//      s = s.left(commentPos);
-
-//    if ((s = s.simplified()).isEmpty())
-//      continue;
-
-//    auto lst = s.split(' ');
-//    int cnt = lst.count();
-//    if (cnt < 2 || cnt > 4)
-//      return false;
-
-//    couldBe = true;
-//  }
-
-//  return couldBe;
+  return couldBe;
 }
 
 
 //------------------------------------------------------------------------------
 
 data::File::sh load(data::Files& files, l_io::path::rc path) may_err {
-//  check_or_err_(QFileInfo(path.c_str()).exists(), CAT("File does not exist: ", path));
+  data::File::sh file;
 
-//  data::File::sh file;
+  if (couldBeCaress(path))
+    file = loadCaress(files, path);
+  else if (couldBeMar(path))
+    file = loadMar(files, path);
+  else if (couldBeTiffDat(path))
+    file = loadTiffDat(files, path);
+  else
+    l::err(CAT("unknown file type: ", path));
 
-//  if (couldBeCaress(path))
-//    file = loadCaress(files, path);
-//  else if (couldBeMar(path))
-//    file = loadMar(files, path);
-//  else if (couldBeTiffDat(path))
-//    file = loadTiffDat(files, path);
-//  else
-//    l::err(CAT("unknown file type: ", path));
+  check_or_err_(file->sets.size() > 0,
+                CAT("File contains no datasets: ", path));
 
-//  check_or_err_(file->sets.size() > 0,
-//                CAT("File contains no datasets: ", path));
+  // ensure that all datasets have images of the same size
+  auto size = file->sets.first()->image->size();
+  for (auto& set : file->sets)
+    if (set->image->size() != size)
+      l::err(CAT("Inconsistent image size in file: ", path));
 
-//  // ensure that all datasets have images of the same size
-//  auto size = file->sets.first()->image->size();
-//  for (auto& set : file->sets)
-//    if (set->image->size() != size)
-//      l::err(CAT("Inconsistent image size in file: ", path));
-
-//  return file;
+  return file;
 }
 
 //------------------------------------------------------------------------------

@@ -7,6 +7,8 @@
 namespace l_io { namespace endian {
 //------------------------------------------------------------------------------
 
+enum ness { le, be };
+
 uint16 from_be(uint16);
 uint16 from_le(uint16);
 

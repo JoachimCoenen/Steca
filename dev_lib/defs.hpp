@@ -55,10 +55,10 @@
   struct s : b1, b2 { _self_types_(s) using base = b2;
 
 // begin declaration of a sub-struct that reimplements another:
-// the base structure is hidden (private)
+// the base structure is hidden (protected, so subclasses also can access it)
 // base_rc() allows deliberate access to base
 #define dcl_reimpl_(s, b) \
-  struct s : private b { _self_types_(s) using base = b; \
+  struct s : protected b { _self_types_(s) using base = b; \
     base const& base_rc() const { return *this; }
 
 // end of declaration - either one of the above
