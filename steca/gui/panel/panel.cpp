@@ -24,10 +24,10 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-Panel::Panel(Hub& hub) : Panel(nullstr, hub) {}
+Panel::Panel(Hub& hub) : Panel(str::null, hub) {}
 
 Panel::Panel(strc title, Hub& hub_) : hub(hub_), vb(base::vb()) {
-  if (!title.empty())
+  if (!title.isEmpty())
     vb.add(new l_qt::lbl(title));
 }
 

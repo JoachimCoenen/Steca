@@ -159,7 +159,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
       // instrument state - global metadata
       check_or_err_(block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
-      check_or_err_(!node.empty(), "empty READ node");
+      check_or_err_(!node.isEmpty(), "empty READ node");
       if (!doAxes() && !doTimMon())
         addVal(readVals);
 
@@ -172,7 +172,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
         beginDataset();
       }
 
-      check_or_err_(!node.empty(), "empty SETVALUE node");
+      check_or_err_(!node.isEmpty(), "empty SETVALUE node");
       addVal(vals);
 
     } else if (elem == "MASTER1V") {
@@ -180,7 +180,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
       // scan data
       block = eBlock::MASTER1V;
 
-      check_or_err_(!node.empty(), "empty MASTER1V node");
+      check_or_err_(!node.isEmpty(), "empty MASTER1V node");
       if (node == "ADET") {
         auto adet = getAdet(dt, n);
         auto size = adet.size();
@@ -199,7 +199,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
       }
     } else {
       endDataset();
-      if (node.empty()) { // file-level info
+      if (node.isEmpty()) { // file-level info
         str s(getAsString(dt, n));
         if (elem == "COM")
           mut(file->comment) = s;

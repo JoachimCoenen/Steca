@@ -15,7 +15,7 @@ lst_model::lst_model() : isCheckable(false) {}
 lst_model::ref lst_model::setCheckable(bool on) SET_(mut(isCheckable) = on)
 
 str lst_model::head(cl_n) const {
-  return nullstr;
+  return str::null;
 }
 
 var lst_model::cell(rw_n, cl_n) const {

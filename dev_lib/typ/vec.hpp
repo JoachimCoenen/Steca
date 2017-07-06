@@ -53,6 +53,7 @@ dcl_end
 
 dcl_sub_(str_vec, l::vec<str>)
   using base::base;
+  fry_(str_vec, split, (strc));
 dcl_end
 
 //------------------------------------------------------------------------------

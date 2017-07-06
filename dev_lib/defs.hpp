@@ -176,22 +176,15 @@ using real = flt64;
 #endif
 
 //------------------------------------------------------------------------------
-// strings
-
-using pcstr = char const*;
-
-#include <string>
-
-using str  = std::string;
-using strc = str const&;
-
-extern str const nullstr;
-
-//------------------------------------------------------------------------------
 // exception annotations
 
 #define may_err  noexcept(false)
 #define will_err noexcept(false)
+
+//------------------------------------------------------------------------------
+// strings
+
+#include "str.hpp"
 
 //------------------------------------------------------------------------------
 // debug support

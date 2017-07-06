@@ -23,7 +23,7 @@ str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
   if (dlg.exec() && !dlg.selectedFiles().isEmpty())
     return fromQt(dlg.selectedFiles().first());
 
-  return nullstr;
+  return str::null;
 }
 
 str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
@@ -56,7 +56,7 @@ str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter) {
   if (dlg.exec() && !dlg.selectedFiles().isEmpty())
     return fromQt(dlg.selectedFiles().first());
 
-  return nullstr;
+  return str::null;
 }
 
 //------------------------------------------------------------------------------

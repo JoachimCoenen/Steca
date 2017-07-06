@@ -128,7 +128,7 @@ str getAsString(dtype dt, uint n) {
 
   switch (dt) {
   case NONE:
-    return nullstr;
+    return str::null;
   case INT16:
     return std::to_string(*reinterpret_cast<int16 const*>(m.data()));
   case INT32:
@@ -137,7 +137,7 @@ str getAsString(dtype dt, uint n) {
     return std::to_string(*reinterpret_cast<flt32 const*>(m.data()));
   default:
     EXPECT_(false)
-    return nullstr;
+    return str::null;
   }
 }
 

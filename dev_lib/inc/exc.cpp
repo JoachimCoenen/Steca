@@ -9,7 +9,7 @@ namespace l {
 exc::exc(strc msg_) noexcept : msg(msg_), silent(false) {}
 
 [[noreturn]] void err() will_err {
-  throw exc(nullstr);
+  throw exc(str::null);
 }
 
 [[noreturn]] void err(strc msg) will_err {

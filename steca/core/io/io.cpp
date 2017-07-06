@@ -51,7 +51,7 @@ bool couldBeTiffDat(l_io::path::rc path) {
   try {
     FileTiffDat fin(path);
     while (!couldBe && fin.hasMore()) {
-      auto row = fin.getrow();
+      auto row = fin.getRow();
       EXPECT_(row.size() > 0)
       str fileName = row.at(0);
 

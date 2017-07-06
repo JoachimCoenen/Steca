@@ -39,8 +39,9 @@ Aus-Weimin-00009.tif -50
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-str_vec FileTiffDat::FileTiffDat::getrow() may_err {
+str_vec FileTiffDat::FileTiffDat::getRow() may_err {
   check_or_err_(!done, "no more data");
+
   for (;;) {
     if (!hasMore()) {
       done = true;
@@ -52,16 +53,7 @@ str_vec FileTiffDat::FileTiffDat::getrow() may_err {
     if (str::npos != commentPos)
       line = line.substr(0, commentPos);
 
-    str_vec vec;
-
-    std::stringstream splitter;
-    splitter << line;
-    while (splitter.good()) {
-      str token; splitter >> token;
-      if (!token.empty())
-        vec.add(token);
-    }
-
+    auto vec = str_vec::split(line);
     if (!vec.isEmpty())
       return vec;
   }
@@ -255,7 +247,7 @@ File::sh loadTiffDat(Files& files, l_io::path::rc path) may_err {
   FileTiffDat fin(path);
 
   while (fin.hasMore()) {
-    auto row = fin.getrow();
+    auto row = fin.getRow();
     EXPECT_(row.size() > 0)
     auto cnt = row.size();
     check_or_err_(2 <= cnt && cnt <= 4, "bad metadata format");
@@ -265,19 +257,19 @@ File::sh loadTiffDat(Files& files, l_io::path::rc path) may_err {
 
     phi_t phi;
     guard_err_("bad phi value",
-      phi = phi_t(std::stof(row.at(1)));
+      phi = phi_t(row.at(1).asFlt());
     );
 
     flt32 monitor = 0;
     if (cnt > 2)
       guard_err_("bad monitor value",
-        monitor = phi_t(std::stof(row.at(2)));
+        monitor = phi_t(row.at(2).asFlt());
       );
 
     flt32 expTime = 0;
     if (cnt > 3)
       guard_err_("bad expTime value",
-        monitor = phi_t(std::stof(row.at(3)));
+        monitor = phi_t(row.at(3).asFlt());
       );
 
     // load one dataset

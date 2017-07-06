@@ -26,7 +26,7 @@ namespace core { namespace io {
 
 dcl_sub_(FileTiffDat, l_io::ftin)
   using base::base;
-  mth_mut_(str_vec, getrow, ()) may_err;
+  mth_mut_(str_vec, getRow, ()) may_err;
 private:
   bool done = false;
 dcl_end
