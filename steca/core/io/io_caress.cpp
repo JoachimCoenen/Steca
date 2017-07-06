@@ -229,10 +229,10 @@ File::sh loadCaress(Files& files, l_io::path::rc path) may_err {
   }
 }
 
-//TEST_("loadCaress",
-//  Files files;
-//  loadCaress(files, l_io::path("testdata.caress"));
-//)
+TEST_("loadCaress",
+  Files files;
+  loadCaress(files, l_io::path("testdata.caress"));
+)
 
 //------------------------------------------------------------------------------
 }}

@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 #include "io.hpp"
+#include "io_tiff.hpp"
 #include <dev_lib/defs.inc>
 #include <dev_lib/io/fin.hpp>
 #include <algorithm>
@@ -48,13 +49,15 @@ bool couldBeTiffDat(l_io::path::rc path) {
   bool couldBe = false;
 
   try {
-    l_io::ftin fin(path);
+    FileTiffDat fin(path);
     while (!couldBe && fin.hasMore()) {
-      str line = fin.getline();
+      auto row = fin.getrow();
+      EXPECT_(row.size() > 0)
+      str fileName = row.at(0);
 
-      // very naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
-      std::transform(line.begin(), line.end(), line.begin(), ::tolower);
-      auto pos = line.find_first_of(".tif");
+      // naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
+      std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
+      auto pos = fileName.find_first_of(".tif");
       if (str::npos != pos)
         couldBe = true;
     }
@@ -64,7 +67,6 @@ bool couldBeTiffDat(l_io::path::rc path) {
 
   return couldBe;
 }
-
 
 //------------------------------------------------------------------------------
 

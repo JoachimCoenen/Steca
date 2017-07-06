@@ -24,6 +24,10 @@ dcl_end
 #define check_or_err_(cond, msg) \
   if (!(cond)) l::err(msg)
 
+#define guard_err_(msg, ...) \
+  try { __VA_ARGS__ } catch (std::exception& e) { \
+    l::err(CAT(msg, ": ", e.what())); }
+
 //------------------------------------------------------------------------------
 }
 // eof

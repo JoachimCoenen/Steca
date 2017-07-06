@@ -15,9 +15,9 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+#include "io_tiff.hpp"
 #include "io.hpp"
 #include <dev_lib/defs.inc>
-#include <dev_lib/io/fin.hpp>
 
 // The dat file looks like so:
 /*
@@ -37,6 +37,36 @@ Aus-Weimin-00009.tif -50
 */
 
 namespace core { namespace io {
+//------------------------------------------------------------------------------
+
+str_vec FileTiffDat::FileTiffDat::getrow() may_err {
+  check_or_err_(!done, "no more data");
+  for (;;) {
+    if (!hasMore()) {
+      done = true;
+      return str_vec();
+    }
+
+    str line = base::getline();
+    auto commentPos = line.find_first_of(';');
+    if (str::npos != commentPos)
+      line = line.substr(0, commentPos);
+
+    str_vec vec;
+
+    std::stringstream splitter;
+    splitter << line;
+    while (splitter.good()) {
+      str token; splitter >> token;
+      if (!token.empty())
+        vec.add(token);
+    }
+
+    if (!vec.isEmpty())
+      return vec;
+  }
+}
+
 //------------------------------------------------------------------------------
 
 using data::Files;
@@ -69,16 +99,6 @@ static void loadTiff(File& file, l_io::path::rc path,
   l_io::fbin fin(path);
 
   // see http://www.fileformat.info/format/tiff/egff.htm
-
-
-//  QDataStream is(&f);
-//  is.setFloatingPointPrecision(QDataStream::SinglePrecision);
-
-//  auto check = [&is]() {
-//    check_or_err_(QDataStream::Ok == is.status(), "could not read data");
-//  };
-
-  // magic
   auto magic = fin.get16();
 
   if (0x4949 == magic)      // II - intel
@@ -170,11 +190,11 @@ static void loadTiff(File& file, l_io::path::rc path,
     case 269: // DocumentName
       mut(md->comment) = asStr();
       break;
-//    case 306: // DateTime
-//      date = asStr();
-//      break;
+    case 306: // DateTime
+      mut(md->date) = asStr();
+      break;
     default:
-//      TR("* NEW TAG *" << tagId << dataType << dataCount << dataOffset)
+      // nothing
       break;
     }
   }
@@ -185,7 +205,7 @@ static void loadTiff(File& file, l_io::path::rc path,
 
   check_or_err_(
       (1==sampleFormat || 2==sampleFormat || 3==sampleFormat) &&
-      32==bitsPerSample, "unhandled format");
+       32==bitsPerSample, "unhandled format");
 
   l::sz2 size(imageWidth, imageHeight);
 
@@ -221,68 +241,57 @@ static void loadTiff(File& file, l_io::path::rc path,
       l::share(new Image(intens)))));
 }
 
-////------------------------------------------------------------------------------
-
-File::sh loadTiffDat(Files& files, l_io::path::rc path) may_err {
-//  File::sh file(new File(files, path.basename()));
-
-//  QFile f(path.c_str());
-//  check_or_err_(f.open(QFile::ReadOnly), "cannot open file");
-
-//  QFileInfo info(path.c_str());
-//  QDir dir = info.dir();
-
-//  QByteArray line;
-//  while (!(line = f.readLine()).isEmpty()) {
-//    QString s(line);
-
-//    // cut off comment
-//    int commentPos = s.indexOf(';');
-//    if (commentPos >= 0)
-//      s = s.left(commentPos);
-
-//    // split to parts
-//    if ((s = s.simplified()).isEmpty())
-//      continue;
-
-//    auto lst = s.split(' ');
-//    auto cnt = lst.count();
-//    check_or_err_(2 <= cnt && cnt <= 4, "bad metadata format");
-
-//    // file, phi, monitor, expTime
-//    bool ok;
-//    QString tiffFileName = lst.at(0);
-//    auto phi = phi_t(lst.at(1).toFloat(&ok));
-//    check_or_err_(ok, "bad phi value");
-
-//    qreal monitor = 0;
-//    if (cnt > 2) {
-//      monitor = lst.at(2).toDouble(&ok);
-//      check_or_err_(ok, "bad monitor value");
-//    }
-
-//    qreal expTime = 0;
-//    if (cnt > 3) {
-//      expTime = lst.at(3).toDouble(&ok);
-//      check_or_err_(ok, "bad expTime value");
-//    }
-
-//    try {
-//      // load one dataset
-//      loadTiff(mut(*file), l_qt::fromQt(dir.filePath(tiffFileName)), phi, monitor, expTime);
-//    } catch (std::exception &e) {
-//      l::err(CAT(l_qt::fromQt(tiffFileName), ": ", e.what()));
-//      throw;
-//    }
-//  }
-
-//  return file;
-}
-
 TEST_("loadTiff",
   Files files;
   File::sh file(new File(files, ""));
   loadTiff(mut(*file), l_io::path("testdata.tif"), phi_t(0), 0, 0);
+)
+
+//------------------------------------------------------------------------------
+
+File::sh loadTiffDat(Files& files, l_io::path::rc path) may_err {
+  File::sh file(new File(files, path.basename()));
+
+  FileTiffDat fin(path);
+
+  while (fin.hasMore()) {
+    auto row = fin.getrow();
+    EXPECT_(row.size() > 0)
+    auto cnt = row.size();
+    check_or_err_(2 <= cnt && cnt <= 4, "bad metadata format");
+
+    // file, phi, monitor, expTime
+    str tiffFileName = row.at(0);
+
+    phi_t phi;
+    guard_err_("bad phi value",
+      phi = phi_t(std::stof(row.at(1)));
+    );
+
+    flt32 monitor = 0;
+    if (cnt > 2)
+      guard_err_("bad monitor value",
+        monitor = phi_t(std::stof(row.at(2)));
+      );
+
+    flt32 expTime = 0;
+    if (cnt > 3)
+      guard_err_("bad expTime value",
+        monitor = phi_t(std::stof(row.at(3)));
+      );
+
+    // load one dataset
+    guard_err_(tiffFileName,
+      loadTiff(mut(*file), l_io::path(tiffFileName), phi, monitor, expTime);
+    )
+  }
+
+  return file;
+}
+
+TEST_("loadTiffDat",
+  Files files;
+  loadTiffDat(files, l_io::path("testdata.tifdat"));
 )
 
 //------------------------------------------------------------------------------

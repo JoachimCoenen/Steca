@@ -37,6 +37,7 @@ dcl_(Meta) SHARED // metadata
   };
 
   atr_(str, comment);
+  atr_(str, date);
 
   atr_(Dict::sh, dict); // other than the values stored explicitly below
   atr_(flt_vec,  vals);
