@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../defs.inc"
+#include "../defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
@@ -15,6 +15,8 @@ dcl_(xy) COMPARABLE EQ_NE
   xy(real, real);
 
   bol_(isDef, ());
+
+  set_(set, (real, real));
 dcl_end
 
 //------------------------------------------------------------------------------

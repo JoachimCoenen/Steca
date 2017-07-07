@@ -15,6 +15,8 @@ dcl_(sz2) COMPARABLE EQ_NE
   sz2();
   sz2(uint, uint);
 
+  set_(operator=, (rc));
+
   bol_(isEmpty, ());
 
   mth_(sz_t, size,       ());

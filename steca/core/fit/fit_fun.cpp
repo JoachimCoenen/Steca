@@ -17,11 +17,7 @@
 
 #include "fit_fun.hpp"
 #include <dev_lib/defs.inc>
-
-//#include "../typ/factory.hpp"
-//#include "fit_methods.hpp"
-//#include <c2/inc/c_cpp>
-//#include <cmath>
+#include "fit_methods.hpp"
 
 namespace core {
 
@@ -33,64 +29,56 @@ void initFry() {
 
   Fun::initFry();
 
-//  Fun::addMaker(key::POLYNOM,      c::owned(new Fun::fryFun::maker<Gaussian>));
-//  Fun::addMaker(key::RAW,          c::owned(new Fun::fryFun::maker<Raw>));
-//  Fun::addMaker(key::GAUSSIAN,     c::owned(new Fun::fryFun::maker<Gaussian>));
-//  Fun::addMaker(key::LORENTZIAN,   c::owned(new Fun::fryFun::maker<Lorentzian>));
-//  Fun::addMaker(key::PSEUDOVOIGT1, c::owned(new Fun::fryFun::maker<PseudoVoigt1>));
-//  Fun::addMaker(key::PSEUDOVOIGT2, c::owned(new Fun::fryFun::maker<PseudoVoigt2>));
+  Fun::addMaker(key::POLYNOM,      l::owned(new Fun::fryFun::maker<Gaussian>));
+  Fun::addMaker(key::RAW,          l::owned(new Fun::fryFun::maker<Raw>));
+  Fun::addMaker(key::GAUSSIAN,     l::owned(new Fun::fryFun::maker<Gaussian>));
+  Fun::addMaker(key::LORENTZIAN,   l::owned(new Fun::fryFun::maker<Lorentzian>));
+  Fun::addMaker(key::PSEUDOVOIGT1, l::owned(new Fun::fryFun::maker<PseudoVoigt1>));
+  Fun::addMaker(key::PSEUDOVOIGT2, l::owned(new Fun::fryFun::maker<PseudoVoigt2>));
 }
 
-/*
 //------------------------------------------------------------------------------
 
 Polynom::Polynom(uint degree) {
   setDegree(degree);
 }
 
+Polynom::ref Polynom::setDegree(uint degree) {
+  base::setParCount(degree + 1);
+  RTHIS
+}
+
 uint Polynom::degree() const {
-  uint parCount = super::parameterCount();
+  uint parCount = base::parCount();
   ENSURE_(parCount > 0)
   return parCount - 1;
 }
 
-void Polynom::setDegree(uint degree) {
-  super::setParameterCount(degree + 1);
-}
-
-// the power with *uint* exponent
-static qreal pow_n(qreal x, uint n) {
-  qreal val = 1;
-  while (n-- > 0)
-    val *= x;
-  return val;
-}
-
-qreal Polynom::y(qreal x, qreal const* parValues) const {
-  qreal val = 0, xPow = 1;
-  for_i_(parameters_.count()) {
-    val += parValue(i, parValues) * xPow;
+real Polynom::y(real x, real const* parVals) const {
+  real val = 0, xPow = 1;
+  for_i_(pars.size()) {
+    val += parVal(i, parVals) * xPow;
     xPow *= x;
   }
   return val;
 }
 
-qreal Polynom::dy(qreal x, uint i, qreal const*) const {
-  return pow_n(x, i);
+real Polynom::dy(real x, uint i, real const*) const {
+  return l::pow(x, i);
 }
 
 // REVIEW
-qreal Polynom::avgY(Range::rc rgeX, qreal const* parValues) const {
-  EXPECT_(rgeX.isValid())
+real Polynom::avgY(Range::rc rgeX, real const* parVals) const {
+  EXPECT_(rgeX.isDef())
 
-  qreal w = rgeX.width();
+  real w = rgeX.width();
   if (w <= 0)
-    return y(rgeX.min, parValues);
+    return y(rgeX.min, parVals);
 
-  qreal minY = 0, maxY = 0, minPow = 1, maxPow = 1;
+  real minY = 0, maxY = 0, minPow = 1, maxPow = 1;
 
-  for_i_(parameters_.count()) {
-    qreal facY = parValue(i, parValues) / (i + 1);
+  for_i_(pars.size()) {
+    real facY = parVal(i, parVals) / (i + 1);
     minY += facY * (minPow *= rgeX.min);
     maxY += facY * (maxPow *= rgeX.max);
   }
@@ -108,70 +96,64 @@ Polynom Polynom::fromFit(uint degree, Curve::rc curve, Ranges::rc ranges) {
   return poly;
 }
 
-JsonObj Polynom::saveJson() const {
-  JsonObj obj;
-  obj.saveString(json_key::TYPE, json_fun_key::POLYNOM);
-  return super::saveJson() + obj;
+Json Polynom::save() const {
+  return base::save()
+      .add(key::TYPE, key::POLYNOM);
 }
 
-void Polynom::loadJson(JsonObj::rc obj) THROWS {
-  super::loadJson(obj);
+Polynom::ref Polynom::load(Json::rc json) may_err {
+  base::load(json);
+  RTHIS
 }
 
 //------------------------------------------------------------------------------
 
-PeakFunction* PeakFunction::factory(ePeakType type) {
+l::own<PeakFun> PeakFun::factory(ePeakType type) {
   switch (type) {
   case ePeakType::RAW:
-    return new Raw();
+    return l::owned(new Raw());
   case ePeakType::GAUSSIAN:
-    return new Gaussian();
+    return l::owned(new Gaussian());
   case ePeakType::LORENTZIAN:
-    return new Lorentzian();
+    return l::owned(new Lorentzian());
   case ePeakType::PSEUDOVOIGT1:
-    return new PseudoVoigt1();
+    return l::owned(new PseudoVoigt1());
   case ePeakType::PSEUDOVOIGT2:
-    return new PseudoVoigt2();
+    return l::owned(new PseudoVoigt2());
   default:
-    NEVER return nullptr;
+    NEVER return l::own<Self>(nullptr);
   }
 }
 
-PeakFunction* PeakFunction::clone() const {
-  PeakFunction *f = factory(type());
-  *f = *this;
+l::own<PeakFun> PeakFun::clone() const {
+  auto  f = factory(type());
+  auto& r = mut(*f);
+
+  // do not copy guessed values
+  mut(r.pars)  = pars;
+  mut(r.range) = range;
+
   return f;
 }
 
-void PeakFunction::setRange(Range::rc range) {
-  range_ = range;
+PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::flt_nan) {}
+
+PeakFun::ref PeakFun::reset() {
+  base::reset();
+  mut(guessedPeak).set(0, 0);
+  mut(guessedFWHM) = 0;
+  RTHIS
 }
 
-PeakFunction::PeakFunction() : guessedPeak_(), guessedFWHM_(NAN) {}
-
-void PeakFunction::setGuessedPeak(peak_t::rc peak) {
-  guessedPeak_ = peak;
-}
-
-void PeakFunction::setGuessedFWHM(fwhm_t fwhm) {
-  guessedFWHM_ = fwhm;
-}
-
-void PeakFunction::reset() {
-  super::reset();
-  setGuessedPeak(guessedPeak_);
-  setGuessedFWHM(guessedFWHM_);
-}
-
-void PeakFunction::fit(Curve::rc curve, Range::rc range) {
+void PeakFun::fit(Curve::rc curve, Range::rc range) {
   Curve c = prepareFit(curve, range);
   if (c.isEmpty())
     return;
 
 //  if (!guessedPeak().isValid()) {  // calculate guesses // TODO caching temporarily disabled, until it works correctly
     uint peakIndex  = c.maxYindex();
-    auto peakTth    = c.x(peakIndex);
-    auto peakIntens = c.y(peakIndex);
+    auto peakTth    = c.xs.at(peakIndex);
+    auto peakIntens = c.ys.at(peakIndex);
 
     // half-maximum indices
     uint hmi1 = peakIndex, hmi2 = peakIndex;
@@ -179,39 +161,39 @@ void PeakFunction::fit(Curve::rc curve, Range::rc range) {
     // left
     for (uint i = peakIndex; i-- > 0;) {
       hmi1 = i;
-      if (c.y(i) < peakIntens / 2) break;
+      if (c.ys.at(i) < peakIntens / 2) break;
     }
 
     // right
-    for (uint i = peakIndex, iCnt = c.count(); i < iCnt; ++i) {
+    for (uint i = peakIndex, iEnd = c.size(); i < iEnd; ++i) {
       hmi2 = i;
-      if (c.y(i) < peakIntens / 2) break;
+      if (c.ys.at(i) < peakIntens / 2) break;
     }
 
-    setGuessedPeak(XY(peakTth, peakIntens));
-    setGuessedFWHM(c.x(hmi2) - c.x(hmi1));
+    mut(guessedPeak).set(peakTth, peakIntens);
+    mut(guessedFWHM) = c.xs.at(hmi2) - c.xs.at(hmi1);
 //  }
 
   LevenbergMarquardt().fit(*this, c);
 }
 
-Curve PeakFunction::prepareFit(Curve::rc curve, Range::rc range) {
-  reset();
-  return curve.intersect(range);
+Json PeakFun::save() const {
+  return base::save()
+      .add(key::RANGE, range)
+      .add(key::PEAK, guessedPeak.save())
+      .add(key::FWHM, guessedFWHM);
 }
 
-JsonObj PeakFunction::saveJson() const {
-  return super::saveJson()
-      .saveRange(json_key::RANGE, range_)
-      .saveObj(json_key::PEAK, guessedPeak_.saveJson())
-      .saveQreal(json_key::FWHM, guessedFWHM_);
-}
-
-void PeakFunction::loadJson(JsonObj::rc obj) THROWS {
+void PeakFun::loadJson(JsonObj::rc obj) THROWS {
   super::loadJson(obj);
   range_ = obj.loadRange(json_key::RANGE);
   guessedPeak_.loadJson(obj.loadObj(json_key::PEAK));
   guessedFWHM_ = obj.loadQreal(json_key::FWHM);
+}
+
+Curve PeakFun::prepareFit(Curve::rc curve, Range::rc range) {
+  reset();
+  return curve.intersect(range);
 }
 
 //------------------------------------------------------------------------------

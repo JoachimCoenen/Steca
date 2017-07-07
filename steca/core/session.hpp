@@ -17,8 +17,11 @@
 
 #pragma once
 
+#include "calc/lens.hpp"
 #include "data/data.hpp"
 #include "typ/angles.hpp"
+#include "typ/curve.hpp"
+
 #include <dev_lib/inc/num.hpp>
 #include <dev_lib/typ/cache.hpp>
 
@@ -26,25 +29,45 @@ namespace core {
 //------------------------------------------------------------------------------
 
 dcl_(Session)
-  enum class eNorm {
-    NONE,
-    MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
-  };
-
   atr_(str_vec, normStrLst);
 
   Session();
 
   mth_(AngleMap::sh,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current
+
+  atr_(ImageTransform, imageTransform);
   atr_(ImageCut,       imageCut);
   atr_(l::sz2,         imageSize);
 
-  atr_(bool,    avgScaleIntens);
-  atr_(l::peal, intenScale);
+  atr_(bool,           avgScaleIntens);
+  atr_(l::peal,        intenScale);
+
+  atr_(bool,           corrEnabled);
+  mth_(Image::sh,      intensCorr, ());
+
+  atr_(data::File::sh, corrFile);
+  atr_(Image::sh,      corrImage);
+
+  mth_(calc::ImageLens::sh, imageLens,
+        (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
+  mth_(calc::DatasetLens::sh, datasetLens,
+        (data::CombinedSet::rc, data::CombinedSets::rc,
+         eNorm, bool trans, bool cut));
+  mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
+
+  atr_(uint,   bgPolyDegree);
+  atr_(Ranges, bgRanges);
+
+  mth_(real, calcAvgBackground, (data::CombinedSet::rc));
+  mth_(real, calcAvgBackground, (data::CombinedSets::rc));
 
 private:
   mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
+  mutable Image::sh intensCorrImage;
+  mutable bool corrHasNaNs;
+
+  void calcIntensCorr() const;
 dcl_end
 
 //------------------------------------------------------------------------------

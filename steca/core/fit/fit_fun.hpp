@@ -21,15 +21,7 @@
 #include "../typ/curve.hpp"
 #include "../typ/range.hpp"
 
-namespace core {
-
-namespace key {
-extern str const
-  PEAK, FWHM,
-  POLYNOM, RAW, GAUSSIAN, LORENTZIAN, PSEUDOVOIGT1, PSEUDOVOIGT2;
-}
-
-namespace fit {
+namespace core { namespace fit {
 //------------------------------------------------------------------------------
 
 void initFry();
@@ -40,7 +32,7 @@ void initFry();
 dcl_sub_(Polynom, SimpleFun)
   Polynom(uint degree = 0);
 
-  set_(degree, (uint));
+  set_(setDegree, (uint));
   mth_(uint, degree, ());
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
@@ -61,11 +53,11 @@ enum class ePeakType {
 };
 
 dcl_sub_(PeakFun, SimpleFun)
-  fry_(l::give_me<PeakFun>, factory, (ePeakType));
+  fry_(l::own<PeakFun>, factory, (ePeakType));
 
   PeakFun();
 
-  mth_(l::give_me<PeakFun>, clone, ());
+  mth_(l::own<PeakFun>, clone, ());
   virtual mth_(ePeakType, type, ()) = 0;
 
   atr_(Range,  range);
@@ -81,6 +73,9 @@ dcl_sub_(PeakFun, SimpleFun)
 
   mth_mut_(void, fit, (Curve::rc curve)) { fit(curve, range); }
   virtual mth_mut_(void, fit, (Curve::rc, Range::rc));
+
+  protected:
+  mth_mut_(Curve, prepareFit, (Curve::rc curve, Range::rc range));
 dcl_end
 
 //------------------------------------------------------------------------------

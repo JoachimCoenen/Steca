@@ -18,11 +18,17 @@
 #pragma once
 
 #include "../typ/def.hpp"
+#include "../typ/image.hpp"
 #include <dev_lib/typ/map.hpp>
-#include "image.hpp"
 
 namespace core {
+
 struct Session;
+
+enum class eNorm {
+  NONE,
+  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
+};
 
 namespace data {
 //------------------------------------------------------------------------------
@@ -66,6 +72,8 @@ dcl_(Set) SHARED   // one dataset, as acquired
 
   Set(Meta::sh, Image::sh);
 
+  mth_(l::sz2, imageSize, ());
+
   mth_(tth_t::rc, tth, ()) VAL_(meta->tth)
   mth_(omg_t::rc, omg, ()) VAL_(meta->omg)
   mth_(phi_t::rc, phi, ()) VAL_(meta->phi)
@@ -89,10 +97,15 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+struct CombinedSets;
+
 dcl_(CombinedSet) SHARED   // one or more Set
   atr_(l::vec<Set::sh>, sets);
+  ptr_(CombinedSets, parent);
 
   CombinedSet();
+
+  mth_(l::sz2, imageSize, ());
 
   mth_(Meta::sh,  meta,  ());
   mth_(Image::sh, image, ());
@@ -112,6 +125,8 @@ dcl_(CombinedSet) SHARED   // one or more Set
   mth_(tth_rge,   rgeTth,     (Session const&));
 
   mth_(inten_rge, rgeInten, ());
+  mth_(inten_vec, collectIntens, (Session const&,
+                                  Image const* intensCorr, gma_rge::rc));
 
 private:
   mut_(Meta::sh,  lazyMeta);
@@ -135,6 +150,21 @@ dcl_(CombinedSets) SHARED
   atr_(l::vec<CombinedSet::sh>, sets);
 
   CombinedSets();
+
+  mth_(l::sz2, imageSize, ());
+
+  mth_(flt32,  mon, ());
+  mth_(flt32, dTim, ());
+  mth_(flt32, dMon, ());
+
+  mth_(inten_rge::rc, rgeFixedInten, (Session const&, bool trans, bool cut));
+
+private:
+  mut_(flt32, lazyMon);
+  mut_(flt32, lazyDTim);
+  mut_(flt32, lazyDMon);
+
+  mutable inten_rge lazyRgeFixedInten;
 dcl_end
 
 //------------------------------------------------------------------------------

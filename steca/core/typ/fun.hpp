@@ -23,13 +23,6 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-namespace key {
-extern str const
-  I, J, X, Y, MIN, MAX,
-  PARAMS, TYPE, FUN, SUM,
-  VALUE, RANGE, COUNT;
-}
-
 dcl_(Par)
   atr_(real, val);
   atr_(real, err);
@@ -63,7 +56,7 @@ protected:
 public:
   static void initFry();
   static void addMaker(strc key, l::give_me<fryFun::maker_base>);
-  static l::own<Fun> make(strc key)       may_err;
+  static l::own<Fun> make(strc key) may_err;
 dcl_end
 
 dcl_sub_(SimpleFun, Fun)
@@ -71,6 +64,9 @@ dcl_sub_(SimpleFun, Fun)
 
   SimpleFun();
 
+  set_(reset, ());
+
+  set_(setParCount, (uint));
   set_(add, (Par::rc));
 
   mth_(sz_t,    parCount, ());

@@ -21,8 +21,6 @@
 #include <dev_lib/inc/num.hpp>
 #include <algorithm>
 
-core_Range::core_Range(rv_t min_, rv_t max_) : min(min_), max(max_) {}
-
 namespace core {
 //------------------------------------------------------------------------------
 
@@ -58,9 +56,9 @@ TEST_("Range()",
   CHECK(l::isnan(r.max));
 )
 
-Range::Range(rv_t val) : base(val, val) {}
+Range::Range(rv_t val) : Range(val, val) {}
 
-Range::Range(rv_t min, rv_t max) : base(min, max) {
+Range::Range(rv_t min_, rv_t max_) : min(min_), max(max_) {
   EXPECT_(!l::isnan(min) && !l::isnan(max))
   EXPECT_(min <= max)
 }

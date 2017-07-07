@@ -30,6 +30,8 @@ dcl_reimpl_(vec, std::vector<T>)
   mth_(T const&, first, ())         VAL_(base::front())
   mth_(T const&, last,  ())         VAL_(base::back())
 
+  set_(operator=, (rc that))        SET_(base::operator=(that))
+
   set_(add, (T&& t))                SET_(base::push_back(std::move(t)))
   set_(add, (T const& t))           SET_(base::push_back(t))
   set_(rem, (uint i))               SET_(erase(begin() + i))

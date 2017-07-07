@@ -46,7 +46,7 @@ Fun::fryFun Fun::funFry;
 
 void Fun::initFry() {
   ONLY_ONCE
-//  addMaker(key::SUM, l::owned(new fryFun::maker<SumFuns>));
+  addMaker(key::SUM, l::owned(new fryFun::maker<SumFuns>));
 }
 
 void Fun::addMaker(strc key, l::give_me<fryFun::maker_base> maker) {
@@ -60,6 +60,19 @@ l::own<Fun> Fun::make(strc key) may_err {
 //------------------------------------------------------------------------------
 
 SimpleFun::SimpleFun() : pars() {}
+
+SimpleFun::ref SimpleFun::reset() {
+  for (auto& par : pars)
+    mut(par) = Par(0, 0);
+  RTHIS
+}
+
+SimpleFun::ref SimpleFun::setParCount(uint cnt) {
+  mut(pars).clear();
+  for_i_(cnt)
+    mut(pars).add(Par(0,0));
+  RTHIS
+}
 
 SimpleFun::ref SimpleFun::add(Par::rc par) SET_(mut(pars).add(par))
 

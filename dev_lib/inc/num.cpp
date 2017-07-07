@@ -70,31 +70,7 @@ bool isnormal(flt64 f) {
   return std::isnormal(f);
 }
 
-int64 floor(flt32 f) {
-  return to_num<int64>(std::floor(f));
-}
-
-int64 floor(flt64 f) {
-  return to_num<int64>(std::floor(f));
-}
-
-int64 ceil(flt32 f) {
-  return to_num<int64>(std::ceil(f));
-}
-
-int64 ceil(flt64 f) {
-  return to_num<int64>(std::ceil(f));
-}
-
-int64 round(flt32 f) {
-  return to_num<int64>(std::round(f));
-}
-
-int64 round(flt64 f) {
-  return to_num<int64>(std::round(f));
-}
-
-TEST_("num",
+TEST_("num nan/fin/normal",
   float f;
   f = float(flt_nan);
     CHECK(isnan(f));  CHECK(!isfin(f)); CHECK(!isinf(f));
@@ -120,7 +96,31 @@ TEST_("num",
   CHECK_NE(0.0, subnormal); CHECK(!isnormal(subnormal));
 )
 
-TEST_("num",
+int64 floor(flt32 f) {
+  return to_num<int64>(std::floor(f));
+}
+
+int64 floor(flt64 f) {
+  return to_num<int64>(std::floor(f));
+}
+
+int64 ceil(flt32 f) {
+  return to_num<int64>(std::ceil(f));
+}
+
+int64 ceil(flt64 f) {
+  return to_num<int64>(std::ceil(f));
+}
+
+int64 round(flt32 f) {
+  return to_num<int64>(std::round(f));
+}
+
+int64 round(flt64 f) {
+  return to_num<int64>(std::round(f));
+}
+
+TEST_("num floor/ceil/...",
   CHECK_EQ(real(1), peal(1));
   CHECK_EQ(uint(1), pint(1));
 
@@ -136,6 +136,22 @@ TEST_("num",
 
   CHECK_EQ(1, notnan(1., 2.)); CHECK_EQ(flt_inf, notnan(flt_inf, 2.));
   CHECK_EQ(2, notnan(flt_nan, 2.));
+)
+
+real pow(real x, uint n) {
+  real val = 1;
+  while (n-- > 0)
+    val *= x;
+  return val;
+}
+
+TEST_("num pow",
+  CHECK_EQ( 1, pow( 0,0));
+  CHECK_EQ( 1, pow( 1,0));
+  CHECK_EQ( 0, pow( 0,1));
+  CHECK_EQ( 1, pow(-1,0));
+  CHECK_EQ(-1, pow(-1,1));
+  CHECK_EQ(64, pow( 2,6));
 )
 
 //------------------------------------------------------------------------------

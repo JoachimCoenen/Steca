@@ -19,17 +19,14 @@
 
 #include "def.hpp"
 
-dcl_(core_Range)
+namespace core {
+
+dcl_(Range) COMPARABLE EQ_NE
   using rv_t = real;
 
   atr_(rv_t, min);
   atr_(rv_t, max);
-  core_Range(rv_t, rv_t);
-dcl_end
 
-namespace core {
-
-dcl_sub_(Range, core_Range) COMPARABLE EQ_NE
   Range();                          // undef'd (NaN)
   Range(rv_t);                      // singular, min == max
   Range(rv_t, rv_t);                // the usual

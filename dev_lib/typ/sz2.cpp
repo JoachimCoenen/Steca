@@ -30,6 +30,12 @@ TEST_("sz2",
   CHECK_EQ(sz0, sz00); CHECK_NE(sz00, sz12); CHECK_NE(sz12, sz0);
 )
 
+sz2::ref sz2::operator=(rc that) {
+  mut(i) = that.i;
+  mut(j) = that.j;
+  RTHIS
+}
+
 bool sz2::isEmpty() const {
   return 0==i || 0==j;
 }

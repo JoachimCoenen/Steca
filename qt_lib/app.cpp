@@ -71,17 +71,17 @@ int app::exec(win* w) {
 
   if (mainWin) {
     mainWin->show();
-    busy_indicator::handler = waiting;
     oldHandler   = qInstallMessageHandler(messageHandler);
     l_io::log::set(logMessage);
+    l_io::busy::set(waiting);
   }
 
   int res = base::exec();
 
   if (mainWin) {
+    l_io::busy::unset();
     l_io::log::unset();
     qInstallMessageHandler(nullptr);
-    busy_indicator::handler = nullptr;
   }
 
   mainWin = nullptr;
@@ -111,20 +111,6 @@ bool app::notify(QObject* receiver, QEvent* event) {
 
   return false;
 }
-
-//------------------------------------------------------------------------------
-
-busy_indicator::busy_indicator() {
-  if (handler)
-    handler(true);
-}
-
-busy_indicator::~busy_indicator() {
-  if (handler)
-    handler(false);
-}
-
-void (*busy_indicator::handler)(bool) = nullptr;
 
 //------------------------------------------------------------------------------
 }

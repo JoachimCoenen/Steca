@@ -18,74 +18,46 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
-#include "acts.hpp"
-#include <core/session.hpp>
 
-#include <QObject>
-#include <QEvent>
-#include <QThread>
-
-namespace gui {
+namespace calc {
 //------------------------------------------------------------------------------
 
-struct Hub;
+dcl_(Reflection)
+//  CLASS(Reflection)
+//public:
 
-dcl_sub_(Task, QEvent) SHARED
-  Task();
- ~Task();
+//  static str_vec::rc typeStrLst();
+//  static rcstr       typeTag(fit::ePeakType);
 
-  void set(Hub& hub);
-  virtual Task* clone() = 0;
+//  Reflection(fit::ePeakType = fit::ePeakType::RAW);
 
-  virtual void work() = 0;
-  virtual void done() = 0;
+//  fit::ePeakType type() const;
+//  void setType(fit::ePeakType);
 
-  Hub* hub;
+//  fit::PeakFunction::rc peakFunction() const;  // REMOVE
+
+//  typ::Range::rc range() const;
+//  void setRange(typ::Range::rc);
+
+//  void invalidateGuesses();
+
+//  void setGuessPeak(peak_t::rc peak) { peakFunction_->setGuessedPeak(peak); }
+//  void setGuessFWHM(fwhm_t fwhm)     { peakFunction_->setGuessedFWHM(fwhm); }
+
+//  void fit(typ::Curve::rc);
+
+//_private
+//  void setPeakFunction(fit::ePeakType);
+//  void setPeakFunction(fit::PeakFunction*);
+
+//  scoped<fit::PeakFunction*> peakFunction_;
+
+//public:
+//  typ::JsonObj saveJson() const;
+//  void loadJson(typ::JsonObj::rc) THROWS;
 dcl_end
 
-//------------------------------------------------------------------------------
-}
-
-namespace gui {
-//------------------------------------------------------------------------------
-
-dcl_sub_(Worker, QObject)
-  Worker(Hub&);
-
-  void doWork(Task::sh);
-
-signals:
-  void workDone(Task::sh);
-
-private:
-  Hub& hub;
-  Q_OBJECT
-dcl_end
-
-//------------------------------------------------------------------------------
-
-struct Win;
-
-dcl_sub2_(Hub, QObject, core::Session)
-  Hub(Win&);
- ~Hub();
-
-  Acts acts;
-
-  void post(Task*);
-  void workDone(Task::sh);
-
-signals:
-  void doWork(Task::sh);
-
-private:
-  void registerMetaTypes();
-  bool event(QEvent*);
-
-  QThread thread;
-  Worker  worker;
-  Q_OBJECT
-dcl_end
+//typedef typ::vec<shp_Reflection> Reflections;
 
 //------------------------------------------------------------------------------
 }

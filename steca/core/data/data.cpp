@@ -20,6 +20,8 @@
 
 #include <dev_lib/defs.inc>
 #include <dev_lib/inc/exc.hpp>
+#include <dev_lib/io/log.hpp>
+#include "../typ/range.hpp"
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -73,6 +75,11 @@ TEST_("dict-throw",
 
 Set::Set(Meta::sh meta_, Image::sh image_)
 : idx(0), meta(meta_), image(image_) {}
+
+l::sz2 Set::imageSize() const {
+  EXPECT_(image)
+  return image->size();
+}
 
 gma_rge Set::rgeGma(Session::rc s) const {
   return s.angleMap(*this)->rgeGma;
@@ -130,9 +137,16 @@ void Set::collect(Session::rc s, Image const* corr,
 
 //------------------------------------------------------------------------------
 
-CombinedSet::CombinedSet() : sets()
+CombinedSet::CombinedSet() : sets(), parent(nullptr)
+, lazyMeta(), lazyImage()
 , lazyOmg(l::flt_nan), lazyPhi(l::flt_nan), lazyChi(l::flt_nan)
 , lazyTim(l::flt_nan), lazyMon(l::flt_nan), lazyDTim(l::flt_nan), lazyDMon(l::flt_nan) {}
+
+l::sz2 CombinedSet::imageSize() const {
+  EXPECT_(!sets.isEmpty())
+  // all images have the same size; simply take the first one
+  return sets.first()->imageSize();
+}
 
 Meta::sh CombinedSet::meta() const {
   if (lazyMeta)
@@ -269,6 +283,46 @@ inten_rge CombinedSet::rgeInten() const {
   RGE_SETS_COMBINE(intersect, rgeInten())
 }
 
+inten_vec CombinedSet::collectIntens(
+    Session::rc session, Image const* intensCorr, gma_rge::rc rgeGma) const
+{
+  auto tthRge = rgeTth(session);
+  auto tthWdt = tth_t(tthRge.width());
+
+  auto cut = session.imageCut;
+  uint pixWidth = session.imageSize.i - cut.left - cut.right;
+
+  uint numBins;
+  if (1 < sets.size()) {  // combined datasets
+    auto one   = sets.first();
+    auto delta = tth_t(one->rgeTth(session).width() / pixWidth);
+    numBins    = l::to_uint(l::ceil(tthWdt / delta));
+  } else {
+    numBins    = pixWidth; // simply match the number of pixels
+  }
+
+  inten_vec intens(numBins, 0);
+  uint_vec  counts(numBins, 0);
+
+  auto minTth   = tth_t(tthRge.min);
+  auto deltaTth = tth_t(tthWdt / numBins);
+
+  for (auto& one : sets)
+    one->collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
+
+  // sum or average
+  if (session.avgScaleIntens) {
+    auto scale = session.intenScale;
+    for_i_(numBins) {
+      auto cnt = counts.at(i);
+      if (cnt > 0)
+        intens.refAt(i) *= scale/cnt;
+    }
+  }
+
+  return intens;
+}
+
 inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rgeGma) const {
   tth_rge tthRge = rgeTth(s);
   tth_t   tthWdt = tth_t(tthRge.width());
@@ -304,6 +358,51 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   }
 
   return intens;
+}
+
+//------------------------------------------------------------------------------
+
+CombinedSets::CombinedSets() : sets()
+, lazyMon(l::flt_nan), lazyDTim(l::flt_nan), lazyDMon(l::flt_nan) {}
+
+l::sz2 CombinedSets::imageSize() const {
+  if (sets.isEmpty())
+    return l::sz2(0,0);
+
+  // all images have the same size; simply take the first one
+  return sets.first()->imageSize();
+}
+
+flt32 CombinedSets::mon() const {
+  AVG_SETS_VAL(lazyMon, mon)
+  return lazyMon;
+}
+
+flt32 CombinedSets::dTim() const {
+  AVG_SETS_VAL(lazyDTim, dTim)
+  return lazyDTim;
+}
+
+flt32 CombinedSets::dMon() const {
+  AVG_SETS_VAL(lazyDMon, dMon)
+  return lazyDMon;
+}
+
+inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool cut) const {
+  if (!lazyRgeFixedInten.isDef()) {
+    l_io::busy __;
+
+    for (auto& set: sets)
+      for (auto& one : set->sets) {
+        if (one->image) {
+          auto& image = *one->image;
+          auto imageLens = session.imageLens(image,*this,trans,cut);
+          lazyRgeFixedInten.extendBy(imageLens->rgeInten(false));
+        }
+      }
+  }
+
+  return lazyRgeFixedInten;
 }
 
 //------------------------------------------------------------------------------

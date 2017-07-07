@@ -7,18 +7,28 @@
 namespace l_io {
 //------------------------------------------------------------------------------
 
-namespace log {
+struct log {
   enum eType { INFO, WARN, MODAL };
 
-  void info(strc);
-  void warn(strc);
-  void modal(strc);
+  static void info(strc);
+  static void warn(strc);
+  static void modal(strc);
 
   typedef void (*handler_t)(strc, eType);
 
-  void set(handler_t);
-  void unset();
-}
+  static void set(handler_t);
+  static void unset();
+};
+
+struct busy {
+  typedef void (*handler_t)(bool);
+
+  static void set(handler_t);
+  static void unset();
+
+  busy();
+ ~busy();
+};
 
 //------------------------------------------------------------------------------
 }

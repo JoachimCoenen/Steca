@@ -6,57 +6,80 @@
 #include "../typ/vec.hpp"
 #include <iostream>
 
-namespace l_io { namespace log {
+namespace l_io {
 //------------------------------------------------------------------------------
 
-static void stdHandler(strc msg, eType type) {
+static void stdHandler(strc msg, log::eType type) {
   switch (type) {
-  case INFO:
+  case log::INFO:
     std::cout << "INFO ";
     break;
-  case WARN:
+  case log::WARN:
     std::cout << "WARN ";
     break;
-  case MODAL:
+  case log::MODAL:
     std::cout << "MSG: ";
     break;
   }
 
   std::cout << msg;
 
-  if (MODAL == type)
+  if (log::MODAL == type)
     while ('\n' != std::getchar())
       ;
 }
 
-static void (*handler)(strc, eType) = stdHandler;
+static void (*logHandler)(strc, log::eType) = stdHandler;
 
-void info(strc msg) {
-  if (handler)
-    handler(msg, INFO);
+void log::info(strc msg) {
+  if (logHandler)
+    logHandler(msg, INFO);
 }
 
-void warn(strc msg) {
-  if (handler)
-    handler(msg, WARN);
+void log::warn(strc msg) {
+  if (logHandler)
+    logHandler(msg, WARN);
 }
 
-void popup(strc msg) {
-  if (handler)
-    handler(msg, MODAL);
+void log::modal(strc msg) {
+  if (logHandler)
+    logHandler(msg, MODAL);
 }
 
-static l::vec<handler_t> handlers;
+static l::vec<log::handler_t> logHandlers;
 
-void set(handler_t handler_) {
-  handlers.add(handler);
-  handler = handler_;
+void log::set(handler_t handler) {
+  logHandlers.add((logHandler = handler));
 }
 
-void unset() {
-  handler = handlers.pop();
+void log::unset() {
+  logHandler = logHandlers.pop();
 }
 
 //------------------------------------------------------------------------------
-}}
+
+static void (*busyHandler)(bool) = nullptr;
+
+static l::vec<busy::handler_t> busyHandlers;
+
+void busy::set(handler_t handler) {
+  busyHandlers.add((busyHandler = handler));
+}
+
+void busy::unset() {
+  busyHandler = busyHandlers.pop();
+}
+
+busy::busy() {
+  if (busyHandler)
+    busyHandler(true);
+}
+
+busy::~busy() {
+  if (busyHandler)
+    busyHandler(false);
+}
+
+//------------------------------------------------------------------------------
+}
 // eof

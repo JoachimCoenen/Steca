@@ -17,35 +17,41 @@
 
 #pragma once
 
-#include <dev_lib/defs.hpp>
-#include <dev_lib/typ/trg.hpp>
-#include <dev_lib/typ/vec.hpp>
-#include <dev_lib/typ/xy.hpp>
 
-namespace core {
+#include <dev_lib/defs.hpp>
+#include <dev_lib/typ/vec.hpp>
+
+#include "reflection_info.hpp"
+
+//#include "typ/typ_types.h"
+//#include "typ/typ_async.h"
+
+namespace calc {
 //------------------------------------------------------------------------------
 
-using real_vec = l::vec<real>;
-using uint_vec = l::vec<uint>;
+dcl_(itf_t)
+//  CLASS(itf_t)
 
-using tth_t = l::deg;
-using omg_t = l::deg;
-using phi_t = l::deg;
-using chi_t = l::deg;
+//  itf_t();
+//  itf_t(inten_t, tth_t, fwhm_t);
 
-using gma_t = l::deg;
+//  void operator+=(rc);
 
-struct Range;
+//  inten_t inten;
+//  tth_t   tth;
+//  fwhm_t  fwhm;
+dcl_end
 
-using tth_rge = Range;
-using gma_rge = Range;
+using itfs_t = l::vec<itf_t>;
 
-using peak_t = l::xy;
-using fwhm_t = flt32;
+//// Interpolates reflection infos to a single point using idw.
+//itf_t interpolateValues(typ::deg searchRadius, ReflectionInfos::rc infos,
+//                        typ::deg alpha, typ::deg beta);
 
-using inten_t   = flt32;
-using inten_vec = l::vec<inten_t>;
-using inten_rge = Range;
+//ReflectionInfos interpolate(ReflectionInfos::rc,
+//                            typ::deg alphaStep, typ::deg betaStep, typ::deg idwRadius,
+//                            typ::deg averagingAlphaMax, typ::deg averagingRadius, qreal inclusionTreshold,
+//                            Progress*);
 
 //------------------------------------------------------------------------------
 }

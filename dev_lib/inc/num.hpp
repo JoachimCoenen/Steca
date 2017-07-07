@@ -195,6 +195,8 @@ template <typename T> T const& notnan(T const& a, T const& b) {
   return !isnan(a) ? a : b;
 }
 
+real pow(real x, uint n);
+
 //------------------------------------------------------------------------------
 }
 // eof

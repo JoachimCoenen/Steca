@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "xy.hpp"
-#include "../defs.hpp"
+#include "../defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------
@@ -20,6 +20,12 @@ DEF_EQ_NE_IMPL(xy)
 
 bool xy::isDef() const {
   return !(isnan(x) || isnan(y));
+}
+
+xy::ref xy::set(real x_, real y_) {
+  mut(x) = x_;
+  mut(y) = y_;
+  RTHIS
 }
 
 //------------------------------------------------------------------------------

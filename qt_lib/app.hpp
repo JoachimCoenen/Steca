@@ -21,15 +21,5 @@ private:
 dcl_end
 
 //------------------------------------------------------------------------------
-
-struct busy_indicator final {
-public:
-  busy_indicator();
- ~busy_indicator();
-
-  static void (*handler)(bool);
-};
-
-//------------------------------------------------------------------------------
 }
 // eof

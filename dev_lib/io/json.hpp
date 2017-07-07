@@ -32,6 +32,13 @@
 
 #include <iostream>
 
+namespace l {
+
+struct ij;
+struct xy;
+
+}
+
 namespace l_io {
 //------------------------------------------------------------------------------
 
@@ -87,16 +94,31 @@ dcl_(Json)
   // data
   atr_(l::shared<Val>, val);
 
+  Json(Typ);
+
   explicit Json(flt32);
   explicit Json(strc);
   explicit Json(Vec::rc);
   explicit Json(Obj::rc);
 
-  mth_(int,     asInt, ());
-  mth_(flt32,   asFlt, ());
-  mth_(strc,    asStr, ());
-  mth_(Vec::rc, asVec, ());
-  mth_(Obj::rc, asObj, ());
+  explicit Json(strc, Json::rc);
+
+  set_(add, (strc key, rc that)) may_err;
+  set_(add, (rc that))           may_err;
+
+  mth_(Json, operator+, (rc that)) may_err;
+
+  mth_(Json::rc, at, (strc)) may_err;
+
+  mth_(uint, size, ())       may_err;
+  mth_(Json::rc, at, (uint)) may_err;
+
+  mth_(int,     asInt,  ()) may_err;
+  mth_(uint,    asUint, ()) may_err;
+  mth_(flt32,   asFlt,  ()) may_err;
+  mth_(strc,    asStr,  ()) may_err;
+  mth_(Vec::rc, asVec,  ()) may_err;
+  mth_(Obj::rc, asObj,  ()) may_err;
 
   mth_(void, saveTo,   (std::ostream&));
   mth_(void, saveTo,   (std::ostream&, indent_t));
@@ -106,6 +128,12 @@ dcl_(Json)
   fry_(Json, loadStr, (std::istream&)) may_err;
   fry_(Json, loadVec, (std::istream&)) may_err;
   fry_(Json, loadObj, (std::istream&)) may_err;
+
+  Json(l::ij const&);
+  mth_(l::ij, asIJ, ()) may_err;
+
+  Json(l::xy const&);
+  mth_(l::xy, asXY, ()) may_err;
 dcl_end
 
 //------------------------------------------------------------------------------
