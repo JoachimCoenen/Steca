@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <dev_lib/defs.hpp>
+#include "../defs.hpp"
 
 namespace l_io {
 //------------------------------------------------------------------------------
@@ -21,13 +21,22 @@ struct log {
 };
 
 struct busy {
+  busy();
+ ~busy();
+
   typedef void (*handler_t)(bool);
 
   static void set(handler_t);
   static void unset();
+};
 
-  busy();
- ~busy();
+struct progress {
+  typedef void (*handler_t)(uint val, uint total);
+
+  static void step(uint val, uint total);
+
+  static void set(handler_t);
+  static void unset();
 };
 
 //------------------------------------------------------------------------------

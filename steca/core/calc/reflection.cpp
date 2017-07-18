@@ -57,7 +57,7 @@ namespace core { namespace calc {
 
 //void Reflection::invalidateGuesses() {
 //  peakFunction_->setGuessedPeak(peak_t());
-//  peakFunction_->setGuessedFWHM(NAN);
+//  peakFunction_->setGuessedFWHM(l::flt_nan);
 //}
 
 //void Reflection::fit(typ::Curve::rc curve) {

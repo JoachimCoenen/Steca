@@ -60,6 +60,16 @@ void log::unset() {
 
 static void (*busyHandler)(bool) = nullptr;
 
+busy::busy() {
+  if (busyHandler)
+    busyHandler(true);
+}
+
+busy::~busy() {
+  if (busyHandler)
+    busyHandler(false);
+}
+
 static l::vec<busy::handler_t> busyHandlers;
 
 void busy::set(handler_t handler) {
@@ -70,14 +80,23 @@ void busy::unset() {
   busyHandler = busyHandlers.pop();
 }
 
-busy::busy() {
-  if (busyHandler)
-    busyHandler(true);
+//------------------------------------------------------------------------------
+
+static void (*progressHandler)(uint, uint) = nullptr;
+
+void progress::step(uint val, uint total) {
+  if (progressHandler)
+    progressHandler(val, total);
 }
 
-busy::~busy() {
-  if (busyHandler)
-    busyHandler(false);
+static l::vec<progress::handler_t> progressHandlers;
+
+void progress::set(handler_t handler) {
+  progressHandlers.add((progressHandler = handler));
+}
+
+void progress::unset() {
+  progressHandler = progressHandlers.pop();
 }
 
 //------------------------------------------------------------------------------

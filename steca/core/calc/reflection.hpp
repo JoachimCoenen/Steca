@@ -20,6 +20,7 @@
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/ptr.hpp>
 #include "../fit/fit_fun.hpp"
+#include "../typ/def.hpp"
 
 namespace core { namespace calc {
 //------------------------------------------------------------------------------

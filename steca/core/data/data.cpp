@@ -305,7 +305,7 @@ inten_vec CombinedSet::collectIntens(
   uint_vec  counts(numBins, 0);
 
   auto minTth   = tth_t(tthRge.min);
-  auto deltaTth = tth_t(tthWdt / numBins);
+  auto deltaTth = tthWdt / real(numBins);
 
   for (auto& one : sets)
     one->collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
@@ -342,7 +342,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   inten_vec intens(numBins, 0);
   uint_vec  counts(numBins, 0);
 
-  auto minTth = tth_t(tthRge.min), deltaTth = tth_t(tthWdt / numBins);
+  auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);
 
   for (auto& one : sets)
     one->collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);

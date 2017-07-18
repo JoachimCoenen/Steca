@@ -18,18 +18,34 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
+#include <dev_lib/typ/trg.hpp>
 #include <dev_lib/typ/vec.hpp>
 
-//#include "data/data_dataset.h"
-//#include "typ/typ_types.h"
-//#include "def/defs.h"
-//#include "typ/typ_strlst.h"
-//#include "typ/typ_variant.h"
+#include "../data/data.hpp"
+#include "../typ/def.hpp"
+#include "../typ/range.hpp"
 
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(ReflectionInfo)
+  atr_(l::deg,  alpha);
+  atr_(l::deg,  beta);
+  atr_(gma_rge, rgeGma);
+
+  atr_(inten_t, inten); atr_(inten_t, intenError);
+  atr_(tth_t,   tth);   atr_(tth_t,   tthError);
+  atr_(fwhm_t,  fwhm);  atr_(fwhm_t,  fwhmError);
+
+  atr_(data::Meta::sh, md);
+
+  ReflectionInfo(l::deg alpha, l::deg beta);
+  ReflectionInfo(l::deg alpha, l::deg beta, gma_rge,
+                 inten_t, inten_t /*error*/, tth_t, tth_t /*error*/, fwhm_t, fwhm_t /*error*/);
+  ReflectionInfo(data::Meta::sh,
+                 l::deg alpha, l::deg beta, gma_rge,
+                 inten_t, inten_t /*error*/, tth_t, tth_t /*error*/, fwhm_t, fwhm_t /*error*/);
+
 //class ReflectionInfo final {
 //  enum class eField {
 //    ALPHA, BETA, GAMMA1, GAMMA2,
@@ -51,12 +67,7 @@ dcl_(ReflectionInfo)
 
 //  ReflectionInfo();
 
-//  ReflectionInfo(data::shp_Metadata, typ::deg alpha, typ::deg beta, gma_rge,
-//                 inten_t, inten_t /*error*/, tth_t, tth_t /*error*/, fwhm_t, fwhm_t /*error*/);
 //  ReflectionInfo(data::shp_Metadata, typ::deg alpha, typ::deg beta, gma_rge);
-//  ReflectionInfo(typ::deg alpha, typ::deg beta, gma_rge,
-//                 inten_t, inten_t /*error*/, tth_t, tth_t /*error*/, fwhm_t, fwhm_t /*error*/);
-//  ReflectionInfo(typ::deg alpha, typ::deg beta);
 
 //  typ::deg alpha()      const { return alpha_;  }
 //  typ::deg beta()       const { return beta_;   }
@@ -75,14 +86,7 @@ dcl_(ReflectionInfo)
 //  typ::row_t data() const;
 
 //_private
-//  data::shp_Metadata md_;
 
-//  typ::deg alpha_, beta_;
-//  gma_rge  rgeGma_;
-
-//  inten_t inten_, intenError_;
-//  tth_t   tth_,   tthError_;
-//  fwhm_t  fwhm_,  fwhmError_;
 dcl_end
 
 ////------------------------------------------------------------------------------

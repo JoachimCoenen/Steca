@@ -21,7 +21,10 @@ dcl_(deg)
 
   mth_(rad, toRad,      ());
   mth_(deg, operator+,  (rc));
+  mth_(deg, operator-,  (rc));
+  mth_(deg, operator-,  ());
   mth_(deg, operator*,  (real));
+  mth_(deg, operator/,  (real));
   mth_(deg, normalized, ());
 
   mth_(real, sin, ());
@@ -40,7 +43,10 @@ dcl_(rad)
 
   mth_(deg, toDeg,      ());
   mth_(rad, operator+,  (rc));
+  mth_(rad, operator-,  (rc));
+  mth_(rad, operator-,  ());
   mth_(rad, operator*,  (real));
+  mth_(rad, operator/,  (real));
   mth_(rad, normalized, ());
 
   mth_(real, sin, ());

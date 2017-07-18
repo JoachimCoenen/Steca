@@ -20,6 +20,33 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
+ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta)
+: ReflectionInfo(alpha, beta, Range(),
+                 inten_t(l::flt_nan), inten_t(l::flt_nan),
+                 tth_t(l::flt_nan), tth_t(l::flt_nan),
+                 fwhm_t(l::flt_nan), fwhm_t(l::flt_nan))
+{}
+
+ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta, gma_rge rgeGma,
+    inten_t inten, inten_t intenError, tth_t tth, tth_t tthError, fwhm_t fwhm, fwhm_t fwhmError)
+  : ReflectionInfo(data::Meta::sh(), alpha, beta, rgeGma,
+                   inten, intenError, tth, tthError, fwhm, fwhmError)
+{
+}
+
+ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
+    l::deg alpha_, l::deg beta_, gma_rge rgeGma_,
+    inten_t inten_, inten_t intenError_,
+    tth_t   tth_,   tth_t   tthError_,
+    fwhm_t  fwhm_,  fwhm_t  fwhmError_)
+: md(md_)
+, alpha(alpha_), beta(beta_), rgeGma(rgeGma_)
+, inten(inten_), intenError(intenError_)
+, tth(tth_),     tthError(tthError_)
+, fwhm(fwhm_),  fwhmError(fwhmError_)
+{
+}
+
 //using namespace typ;
 //using namespace data;
 
@@ -82,48 +109,24 @@ namespace core { namespace calc {
 
 //ReflectionInfo::ReflectionInfo()
 //: ReflectionInfo(shp_Metadata(),
-//                 NAN, NAN, Range(),
-//                 inten_t(NAN), inten_t(NAN),
-//                 tth_t(NAN),   tth_t(NAN),
-//                 NAN, NAN)
+//                 l::flt_nan, l::flt_nan, Range(),
+//                 inten_t(l::flt_nan), inten_t(l::flt_nan),
+//                 tth_t(l::flt_nan),   tth_t(l::flt_nan),
+//                 l::flt_nan, l::flt_nan)
 //{
 //}
 
-//ReflectionInfo::ReflectionInfo(shp_Metadata md, deg alpha, deg beta,
-//                               gma_rge rgeGma,
-//                               inten_t inten, inten_t intenError,
-//                               tth_t   tth,   tth_t tthError,
-//                               fwhm_t  fwhm,  fwhm_t fwhmError)
-//: md_(md), alpha_(alpha), beta_(beta), rgeGma_(rgeGma)
-//, inten_(inten), intenError_(intenError)
-//, tth_(tth),     tthError_(tthError)
-//, fwhm_(fwhm),  fwhmError_(fwhmError)
-//{
-//}
 
 //ReflectionInfo::ReflectionInfo(shp_Metadata md, deg alpha, deg beta,
 //                               gma_rge rgeGma)
 //: ReflectionInfo(md, alpha, beta, rgeGma,
-//                 inten_t(NAN), inten_t(NAN),
-//                 tth_t(NAN),   tth_t(NAN),
-//                 fwhm_t(NAN),  fwhm_t(NAN))
+//                 inten_t(l::flt_nan), inten_t(l::flt_nan),
+//                 tth_t(l::flt_nan),   tth_t(l::flt_nan),
+//                 fwhm_t(l::flt_nan),  fwhm_t(l::flt_nan))
 //{
 //}
 
-//ReflectionInfo::ReflectionInfo(deg alpha, deg beta, gma_rge rgeGma,
-//    inten_t inten, inten_t intenError, tth_t tth, tth_t tthError, fwhm_t fwhm, fwhm_t fwhmError)
-//: ReflectionInfo(shp_Metadata(), alpha, beta, rgeGma,
-//                 inten, intenError, tth, tthError, fwhm, fwhmError)
-//{
-//}
 
-//ReflectionInfo::ReflectionInfo(deg alpha, deg beta)
-//: ReflectionInfo(alpha, beta, Range(),
-//                 inten_t(NAN), inten_t(NAN),
-//                 tth_t(NAN), tth_t(NAN),
-//                 fwhm_t(NAN), fwhm_t(NAN))
-//{
-//}
 
 //row_t ReflectionInfo::data() const {
 //  row_t row{QVariant(alpha()), QVariant(beta()),
@@ -176,7 +179,7 @@ namespace core { namespace calc {
 //}
 
 //void ReflectionInfos::invalidate() {
-//  avgInten_ = inten_t(NAN);
+//  avgInten_ = inten_t(l::flt_nan);
 //  rgeInten_.invalidate();
 //}
 

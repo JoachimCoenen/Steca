@@ -22,37 +22,33 @@
 #include <dev_lib/typ/vec.hpp>
 
 #include "reflection_info.hpp"
+#include "../typ/def.hpp"
 
-//#include "typ/typ_types.h"
-//#include "typ/typ_async.h"
-
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(itf_t)
-//  CLASS(itf_t)
+  atr_(inten_t, inten);
+  atr_(tth_t,   tth);
+  atr_(fwhm_t,  fwhm);
 
-//  itf_t();
-//  itf_t(inten_t, tth_t, fwhm_t);
+  itf_t();
+  itf_t(inten_t, tth_t, fwhm_t);
 
-//  void operator+=(rc);
-
-//  inten_t inten;
-//  tth_t   tth;
-//  fwhm_t  fwhm;
+  set_(operator=,  (rc));
+  set_(operator+=, (rc));
 dcl_end
 
 using itfs_t = l::vec<itf_t>;
 
-//// Interpolates reflection infos to a single point using idw.
-//itf_t interpolateValues(typ::deg searchRadius, ReflectionInfos::rc infos,
-//                        typ::deg alpha, typ::deg beta);
+// Interpolates reflection infos to a single point using idw.
+itf_t interpolateValues(l::deg searchRadius, ReflectionInfos::rc infos,
+                        l::deg alpha, l::deg beta);
 
-//ReflectionInfos interpolate(ReflectionInfos::rc,
-//                            typ::deg alphaStep, typ::deg betaStep, typ::deg idwRadius,
-//                            typ::deg averagingAlphaMax, typ::deg averagingRadius, qreal inclusionTreshold,
-//                            Progress*);
+ReflectionInfos interpolate(ReflectionInfos::rc,
+    l::deg alphaStep, l::deg betaStep, l::deg idwRadius,
+    l::deg averagingAlphaMax, l::deg averagingRadius, real inclusionTreshold);
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof

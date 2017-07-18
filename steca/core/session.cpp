@@ -120,7 +120,7 @@ void Session::calcIntensCorr() const {
     if (inten > 0) {
       factor = avg / inten;
     } else {
-      factor = NAN;
+      factor = l::flt_nan;
       corrHasNaNs = true;
     }
 

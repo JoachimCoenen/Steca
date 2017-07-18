@@ -195,7 +195,7 @@ void DatasetLens::setNorm(eNorm norm) {
     break;
   }
 
-  normFactor = inten_t((num > 0 && den > 0) ? num / den : NAN);
+  normFactor = inten_t((num > 0 && den > 0) ? num / den : l::flt_nan);
   if (l::isnan(normFactor))
     l_io::log::warn("Bad normalisation value");
 }

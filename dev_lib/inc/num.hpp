@@ -177,6 +177,10 @@ int64 ceil(flt64);
 int64 round(flt32);
 int64 round(flt64);
 
+template <typename T> T abs(T const& v) {
+  return (0 <= v) ? v : -v;
+}
+
 template <typename T> T const& min(T const& a, T const& b) {
   return (a < b) ? a : b;
 }

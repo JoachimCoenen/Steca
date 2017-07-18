@@ -24,8 +24,20 @@ deg deg::operator+(rc that) const {
   return deg(val + that.val);
 }
 
+deg deg::operator-(rc that) const {
+  return deg(val - that.val);
+}
+
+deg deg::operator-() const {
+  return deg(-val);
+}
+
 deg deg::operator*(real fac) const {
   return deg(val * fac);
+}
+
+deg deg::operator/(real fac) const {
+  return deg(val / fac);
 }
 
 deg deg::normalized() const {
@@ -62,8 +74,20 @@ rad rad::operator+(rc that) const {
   return rad(val + that.val);
 }
 
+rad rad::operator-(rc that) const {
+  return rad(val - that.val);
+}
+
+rad rad::operator-() const {
+  return rad(-val);
+}
+
 rad rad::operator*(real fac) const {
   return rad(val * fac);
+}
+
+rad rad::operator/(real fac) const {
+  return rad(val / fac);
 }
 
 rad rad::normalized() const {
