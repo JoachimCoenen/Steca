@@ -18,6 +18,12 @@ COMPARABLE_IMPL(xy) {
 
 DEF_EQ_NE_IMPL(xy)
 
+xy::ref xy::operator=(rc that) {
+  mut(x) = that.y;
+  mut(y) = that.y;
+  RTHIS
+}
+
 bool xy::isDef() const {
   return !(isnan(x) || isnan(y));
 }

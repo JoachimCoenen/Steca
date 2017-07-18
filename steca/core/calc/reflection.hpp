@@ -18,13 +18,14 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
+#include <dev_lib/inc/ptr.hpp>
+#include "../fit/fit_fun.hpp"
 
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(Reflection)
-//  CLASS(Reflection)
-//public:
+  atr_(l::scoped<fit::PeakFun const>, peakFun);
 
 //  static str_vec::rc typeStrLst();
 //  static rcstr       typeTag(fit::ePeakType);
@@ -50,7 +51,6 @@ dcl_(Reflection)
 //  void setPeakFunction(fit::ePeakType);
 //  void setPeakFunction(fit::PeakFunction*);
 
-//  scoped<fit::PeakFunction*> peakFunction_;
 
 //public:
 //  typ::JsonObj saveJson() const;
@@ -60,5 +60,5 @@ dcl_end
 //typedef typ::vec<shp_Reflection> Reflections;
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof

@@ -26,7 +26,7 @@
 //#include "typ/typ_strlst.h"
 //#include "typ/typ_variant.h"
 
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(ReflectionInfo)
@@ -105,5 +105,5 @@ dcl_sub_(ReflectionInfos, l::vec<ReflectionInfo>)
 dcl_end
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof

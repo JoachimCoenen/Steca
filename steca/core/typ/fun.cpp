@@ -42,21 +42,6 @@ Par::ref Par::operator=(rc that) {
 Fun::Fun()  {}
 Fun::~Fun() {}
 
-Fun::fryFun Fun::funFry;
-
-void Fun::initFry() {
-  ONLY_ONCE
-  addMaker(key::SUM, l::owned(new fryFun::maker<SumFuns>));
-}
-
-void Fun::addMaker(strc key, l::give_me<fryFun::maker_base> maker) {
-  funFry.add(key, maker);
-}
-
-l::own<Fun> Fun::make(strc key) may_err {
-  return funFry.make(key);
-}
-
 //------------------------------------------------------------------------------
 
 SimpleFun::SimpleFun() : pars() {}
@@ -95,6 +80,10 @@ real SimpleFun::parVal(sz_t i, real const* parVals) const {
 }
 
 SimpleFun::ref SimpleFun::setParVal(sz_t i, real val) SET_(mut(pars.at(i)).setVal(val))
+
+real SimpleFun::parErr(sz_t i) const {
+  return pars.at(i).err;
+}
 
 //------------------------------------------------------------------------------
 

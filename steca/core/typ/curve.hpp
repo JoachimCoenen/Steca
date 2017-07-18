@@ -33,6 +33,8 @@ dcl_(Curve)
 
   Curve();
 
+  set_(operator=, (rc));
+
   void clear();
 
   mth_(bool, isEmpty, ());

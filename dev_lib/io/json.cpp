@@ -111,6 +111,10 @@ void Json::ValObj::saveTo(std::ostream& os, indent_t indent) const {
   os << "}";
 }
 
+//------------------------------------------------------------------------------
+
+Json::~Json() {}
+
 Json::Json(Typ typ) : val(nullptr) {
   Val *v;
   switch (typ) {
@@ -150,7 +154,7 @@ Json::ref Json::add(strc key, rc that) {
 }
 
 Json::ref Json::add(rc that) may_err {
-  check_or_err_(VEC == that.val->typ, "json: bad type");
+  check_or_err_(VEC == val->typ, "json: bad type");
   auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
 
   mut(vec).add(that);
@@ -161,7 +165,6 @@ Json Json::operator+(rc that) const may_err {
   Json plus(*this);
 
   check_or_err_(OBJ == plus.val->typ, "json: bad type");
-  auto& plusObj = (*static_cast<ValObj const*>(plus.val.ptr())).val;
 
   check_or_err_(OBJ == that.val->typ, "json: bad type");
   auto& thatObj = (*static_cast<ValObj const*>(that.val.ptr())).val;

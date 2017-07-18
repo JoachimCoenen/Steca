@@ -71,6 +71,10 @@ dcl_sub_(PeakFun, SimpleFun)
 
   set_(reset, ());
 
+  virtual set_(setRange, (Range::rc r))         SET_(mut(range)       = r)
+  virtual set_(setGuessedPeak, (peak_t::rc p))  SET_(mut(guessedPeak) = p)
+  virtual set_(setGuessedFWHM, (fwhm_t f))      SET_(mut(guessedFWHM) = f)
+
   mth_mut_(void, fit, (Curve::rc curve)) { fit(curve, range); }
   virtual mth_mut_(void, fit, (Curve::rc, Range::rc));
 
@@ -93,15 +97,17 @@ dcl_sub_(Raw, PeakFun)
   mth_(peak_t, peakError,  ());
   mth_(fwhm_t, fwhmError,  ());
 
+  set_(setRange, (Range::rc r));
+
   mth_mut_(void, fit, (Curve::rc, Range::rc));
 
 private:
-//  typ::Curve fittedCurve_;  // saved from fitting
-//  void prepareY();
+  Curve fittedCurve;  // saved from fitting
+  void prepareY();
 
-//  mutable uint  x_count_;
-//  mutable real dx_;
-//  mutable real sum_y_;
+  mutable uint x_count;
+  mutable real dx;
+  mutable real sum_y;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -112,6 +118,9 @@ dcl_sub_(Gaussian, PeakFun)
   Gaussian(real ampl = 1, real xShift = 0, real sigma = 1);
 
   mth_(ePeakType, type, ()) VAL_(ePeakType::GAUSSIAN)
+
+  set_(setGuessedPeak, (peak_t::rc));
+  set_(setGuessedFWHM, (fwhm_t));
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
@@ -130,6 +139,9 @@ dcl_sub_(Lorentzian, PeakFun)
   Lorentzian(real ampl = 1, real xShift = 0, real gamma = 1);
 
   mth_(ePeakType, type, ()) VAL_(ePeakType::LORENTZIAN)
+
+  set_(setGuessedPeak, (peak_t::rc));
+  set_(setGuessedFWHM, (fwhm_t));
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
@@ -150,6 +162,9 @@ dcl_sub_(PseudoVoigt1, PeakFun)
 
   mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT1)
 
+  set_(setGuessedPeak, (peak_t::rc));
+  set_(setGuessedFWHM, (fwhm_t));
+
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
@@ -168,6 +183,9 @@ dcl_sub_(PseudoVoigt2, PeakFun)
                real gamma = 1, real eta = 0.1);
 
   mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT2)
+
+  set_(setGuessedPeak, (peak_t::rc));
+  set_(setGuessedFWHM, (fwhm_t));
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));

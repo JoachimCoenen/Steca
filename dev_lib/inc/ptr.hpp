@@ -138,8 +138,10 @@ struct scoped : ptr_base {
     reset(nullptr);
   }
 
-  scoped& operator=(scoped<T>&& that) SET_(reset(that.take()))
-  scoped& operator=(own<T>&& that)    SET_(reset(that.take()))
+  template <typename O>
+  scoped& operator=(scoped<O>& that) SET_(reset(that.take()))
+  template <typename O>
+  scoped& operator=(own<O>& that)    SET_(reset(that.take()))
 
   void reset(T* p_) {
     delete static_cast<T*>(mutp(p));
@@ -147,12 +149,14 @@ struct scoped : ptr_base {
   }
 
   own_ptr<T> take() {
-    // T may be const and put const back
     return own_ptr<T>(static_cast<T*>(mutp(take_p(p))));
   }
 
+  own<T> takeOwn() {
+    return take().justOwn();
+  }
+
   T* ptr() const {
-    // T may be const and put const back
     return static_cast<T*>(mutp(p));
   }
   operator T*()   const VAL_(ptr())

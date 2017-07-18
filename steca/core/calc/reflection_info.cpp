@@ -17,7 +17,7 @@
 
 #include "reflection_info.hpp"
 
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 //using namespace typ;
@@ -181,6 +181,6 @@ namespace calc {
 //}
 
 //------------------------------------------------------------------------------
-}
+}}
 
 // eof

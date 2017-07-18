@@ -42,7 +42,7 @@ struct xy;
 namespace l_io {
 //------------------------------------------------------------------------------
 
-dcl_(Json)
+dcl_base_(Json)
   enum Typ {
     NUM, STR, VEC, OBJ,
   };

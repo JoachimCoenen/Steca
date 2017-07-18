@@ -59,8 +59,7 @@ TEST_("Range()",
 Range::Range(rv_t val) : Range(val, val) {}
 
 Range::Range(rv_t min_, rv_t max_) : min(min_), max(max_) {
-  EXPECT_(!l::isnan(min) && !l::isnan(max))
-  EXPECT_(min <= max)
+  EXPECT_((l::isnan(min) || l::isnan(max)) || min <= max)
 }
 
 TEST_("Range(v)",

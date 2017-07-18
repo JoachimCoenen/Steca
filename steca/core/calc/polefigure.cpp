@@ -20,7 +20,7 @@
 //#include "typ/typ_async.h"
 //#include <qmath.h>
 
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 //using namespace typ;
@@ -340,5 +340,5 @@ namespace calc {
 //}
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof

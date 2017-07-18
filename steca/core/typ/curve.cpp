@@ -24,6 +24,14 @@ namespace core {
 
 Curve::Curve() : xs(), ys() {}
 
+Curve::ref Curve::operator=(rc that) {
+  mut(xs)   = that.xs;
+  mut(ys)   = that.ys;
+  mut(rgeX) = that.rgeX;
+  mut(rgeY) = that.rgeY;
+  RTHIS
+}
+
 void Curve::clear() {
   mut(xs).clear();
   mut(ys).clear();

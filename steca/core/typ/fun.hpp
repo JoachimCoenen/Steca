@@ -18,7 +18,7 @@
 #pragma once
 
 #include "def.hpp"
-#include "factory.hpp"
+#include <dev_lib/inc/ptr.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -47,16 +47,6 @@ dcl_base_(Fun) SHARED
 
   // partial derivative / par, with given (parVals) or own pars
   virtual mth_(real, dy, (real x, sz_t parIdx, real const* parVals = nullptr)) = 0;
-
-  using fryFun = factory<Fun>;
-
-protected:
-  static fryFun funFry;
-
-public:
-  static void initFry();
-  static void addMaker(strc key, l::give_me<fryFun::maker_base>);
-  static l::own<Fun> make(strc key) may_err;
 dcl_end
 
 dcl_sub_(SimpleFun, Fun)
@@ -73,8 +63,10 @@ dcl_sub_(SimpleFun, Fun)
   mth_(Par::rc, parAt, (sz_t));
   set_(resetPars, ());
 
-  mth_(real, parVal, (sz_t parIdx, real const* parVals));
+  mth_(real, parVal, (sz_t parIdx, real const* parVals = nullptr));
   set_(setParVal, (sz_t parIdx, real val));
+
+  mth_(real, parErr, (sz_t parIdx));
 dcl_end
 
 // a fun that is a sum of other funs

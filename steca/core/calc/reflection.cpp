@@ -17,7 +17,7 @@
 
 #include "reflection.hpp"
 
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 //str_vec::rc Reflection::typeStrLst() {
@@ -91,5 +91,5 @@ namespace calc {
 //}
 
 //------------------------------------------------------------------------------
-}
+}}
 // eof

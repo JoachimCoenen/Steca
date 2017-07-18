@@ -14,6 +14,8 @@ dcl_(xy) COMPARABLE EQ_NE
   xy();
   xy(real, real);
 
+  set_(operator=, (rc));
+
   bol_(isDef, ());
 
   set_(set, (real, real));

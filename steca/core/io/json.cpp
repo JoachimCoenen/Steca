@@ -19,7 +19,7 @@
 #include <dev_lib/defs.inc>
 #include "../typ/fun.hpp"
 #include "../fit/fit_fun.hpp"
-#include "../fit/fit.hpp"
+#include "../calc/reflection.hpp"
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -38,12 +38,17 @@ str const
 
 //------------------------------------------------------------------------------
 
+Json::rc Json::asSelf(base::rc that) may_err {
+  check_or_err_(dynamic_cast<Self const*>(&that), "bad Jason");
+  return static_cast<Self::rc>(that);
+}
+
 Json::Json(Range::rc v) : base(OBJ) {
   add(key::MIN, Json(v.min));
   add(key::MAX, Json(v.max));
 }
 
-Range Json::asRange() const {
+Range Json::asRange() const may_err {
   return Range(at(key::MIN).asFlt(), at(key::MAX).asFlt());
 }
 
@@ -52,70 +57,171 @@ Json::Json(Ranges::rc v) : base(VEC) {
     add(Json(v.at(i)));
 }
 
-Ranges Json::asRanges() const {
+Ranges Json::asRanges() const may_err {
   Ranges res;
   for_i_(size())
     res.add(at(i).asRange());
   return res;
 }
 
-Json::Json(Par::rc v) : base(OBJ) {
-  add(key::VALUE, Json(v.val));
-  add(key::RANGE, Json(Range()));
+//------------------------------------------------------------------------------
+// functions
+
+static Json jsonObj(Par::rc v) {
+  return Json(Json::OBJ)
+          .add(key::VALUE, Json(v.val))
+          .add(key::RANGE, Json(Range()));
 }
 
-Par Json::asPar() const {
-  return Par(at(key::VALUE).asFlt(), at(key::RANGE).asFlt());
+static Par asPar(Json::rc obj) {
+  return Par(obj.at(key::VALUE).asFlt(), obj.at(key::RANGE).asFlt());
 }
 
-Json::Json(SimpleFun::rc v) : base(OBJ) {
-  Json::Vec ps;
-  for (auto& par : v.pars)
-    ps.add(Json(par));
-
-  add(key::PARAMS, Json(ps));
+template <typename T, typename O> T const* isType(O const* o) {
+  return dynamic_cast<T const*>(o);
 }
 
-void Json::load(SimpleFun& fun) const may_err {
-  Json ps = at(key::PARAMS);
-  for_i_(ps.size())
-    fun.add(ps.at(i).asPar());
+template <typename T, typename O> T const& asType(O const& o) {
+  ENSURE_(isType<T>(&o))
+  return static_cast<T const&>(o);
 }
 
-Json::Json(SumFuns::rc v) : base(OBJ) {
-  add(key::TYPE, Json(key::SUM));
+Json::Json(Fun const& fun) may_err : base(OBJ) {
+  if (isType<SumFuns>(&fun)) {
 
-  uint funCount = v.funs.size();
-  add(key::COUNT, Json(funCount));
+    auto& f = asType<SumFuns>(fun);
 
-  for_i_(funCount)
-    add(CAT(key::FUN, (i + 1)), save(*(v.funs.at(i))));
+    add(key::TYPE, Json(key::SUM));
+
+    uint funCount = f.funs.size();
+    add(key::COUNT, Json(funCount));
+
+    for_i_(funCount)
+      add(CAT(key::FUN, (i + 1)), Json(*(f.funs.at(i))));
+
+  } else if (isType<SimpleFun>(&fun)) {
+
+    auto& f = asType<SimpleFun>(fun);
+
+    if (isType<fit::Polynom>(&fun)) {
+
+      add(key::TYPE, Json(key::POLYNOM));
+
+    } else if (isType<fit::PeakFun>(&fun)) {
+
+      auto& f = asType<fit::PeakFun>(fun);
+
+      if (isType<fit::Raw>(&f))
+        add(key::TYPE, Json(key::RAW));
+      else if (isType<fit::Gaussian>(&f))
+        add(key::TYPE, Json(key::GAUSSIAN));
+      else if (isType<fit::Lorentzian>(&f))
+        add(key::TYPE, Json(key::LORENTZIAN));
+      else if (isType<fit::PseudoVoigt1>(&f))
+        add(key::TYPE, Json(key::PSEUDOVOIGT1));
+      else if (isType<fit::PseudoVoigt2>(&f))
+        add(key::TYPE, Json(key::PSEUDOVOIGT2));
+      else
+        l::err("bad PeakFun");
+
+      add(key::RANGE, Json(f.range));
+      add(key::PEAK,  Json(f.guessedPeak));
+      add(key::FWHM,  Json(f.guessedFWHM));
+
+    } else
+      l::err("bad SimpleFun");
+
+    Json::Vec ps;
+    for (auto& par : f.pars)
+      ps.add(jsonObj(par));
+
+    add(key::PARAMS, Json(ps));
+
+  } else
+    l::err("bad Fun");
 }
 
-void Json::load(SumFuns& fun) const may_err {
-  check_or_err_(fun.funs.isEmpty(), "cannot load twice");
-  uint funCount = at(key::COUNT).asUint();
+l::own<Fun> Json::asFun() const may_err {
+  str type = at(key::TYPE).asStr();
 
-  for_i_(funCount)
-    fun.add(make(at(CAT(key::FUN, (i+1))).asObj()));
+  if (key::SUM == type) {
+    auto f = l::scope(new SumFuns);
+
+    uint funCount = at(key::COUNT).asUint();
+    for_i_(funCount)
+      f->add(at(CAT(key::FUN, (i+1))).asFun());
+
+    return f.takeOwn();
+
+  } else { // SimpleFun
+
+    auto loadSimpleFun = [this](SimpleFun& f) {
+      Json ps = at(key::PARAMS);
+      for_i_(ps.size())
+        f.add(asPar(ps.at(i)));
+    };
+
+    if (key::POLYNOM == type) {
+
+      auto f = l::scope(new fit::Polynom);
+      loadSimpleFun(*f);
+      return f.takeOwn();
+
+    } else { // PeakFun
+
+      auto loadPeakFun = [this, &loadSimpleFun](fit::PeakFun& f) {
+        loadSimpleFun(f);
+        mut(f.range)       = at(key::RANGE).asRange();
+        mut(f.guessedPeak) = at(key::PEAK).asXY();
+        mut(f.guessedFWHM) = at(key::FWHM).asFlt();
+      };
+
+      if (key::RAW == type) {
+        auto f = l::scope(new fit::Raw);
+        loadPeakFun(*f);
+        return f.takeOwn();
+      }
+
+      if (key::GAUSSIAN == type) {
+        auto f = l::scope(new fit::Gaussian);
+        loadPeakFun(*f);
+        return f.takeOwn();
+      }
+
+      if (key::LORENTZIAN == type) {
+        auto f = l::scope(new fit::Lorentzian);
+        loadPeakFun(*f);
+        return f.takeOwn();
+      }
+
+      if (key::PSEUDOVOIGT1 == type) {
+        auto f = l::scope(new fit::PseudoVoigt1);
+        loadPeakFun(*f);
+        return f.takeOwn();
+      }
+
+      if (key::PSEUDOVOIGT2 == type) {
+        auto f = l::scope(new fit::PseudoVoigt2);
+        loadPeakFun(*f);
+        return f.takeOwn();
+      }
+
+      l::err("bad PeakFun");
+
+    }
+  }
 }
 
-Json(core::fit::Polynom::rc pol) : base(OBJ) {
-  JsonObj obj;
-  obj.saveString(json_key::TYPE, json_fun_key::POLYNOM);
-  return super::saveJson() + obj;
-}
+Json::Json(calc::Reflection::rc r) : Json(*r.peakFun) {}
 
-void Json::load(fit::Polynom&) const may_err {
+l::own<calc::Reflection> Json::asReflection() const may_err {
+  auto fun = l::scope(asFun());
+  check_or_err_(isType<fit::PeakFun>(fun.ptr()), "must be a peak function");
 
-}
-
-Json::Json(fit::PeakFun::rc) {
-
-}
-
-void Json::load(fit::Polynom&) const may_err {
-
+  auto r = l::scope(new calc::Reflection);
+  auto p = static_cast<fit::PeakFun const*>(fun.take().ptr());
+  mut(r->peakFun).reset(p);
+  return r.takeOwn();
 }
 
 //------------------------------------------------------------------------------

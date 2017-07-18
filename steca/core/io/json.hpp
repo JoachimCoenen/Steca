@@ -18,20 +18,16 @@
 #pragma once
 
 #include <dev_lib/io/json.hpp>
+#include <dev_lib/typ/factory.hpp>
 
 namespace core {
 
 struct Range;
 struct Ranges;
-
-struct Par;
 struct Fun;
-struct SimpleFun;
-struct SumFuns;
 
-namespace fit {
-struct Polynom;
-struct PeakFun;
+namespace calc {
+  struct Reflection;
 }
 
 namespace io {
@@ -40,13 +36,12 @@ namespace io {
 dcl_sub_(Json, l_io::Json)
   using base::base;
 
-  static Json::rc asSelf(base::rc that)
-    VAL_(static_cast<Self::rc>(that))
+  static Json::rc asSelf(base::rc that) may_err;
 
-  mth_(Json::rc, at, (strc key)) may_err
-    VAL_(asSelf(base::at(key)))
-  mth_(Json::rc, at, (uint i)) may_err
-    VAL_(asSelf(base::at(i)))
+  mth_(Json::rc, at, (strc key)) may_err  VAL_(asSelf(base::at(key)))
+  mth_(Json::rc, at, (uint i))   may_err  VAL_(asSelf(base::at(i)))
+  set_(add, (strc key, rc that)) may_err  SET_(base::add(key, that))
+  set_(add, (rc that))           may_err  SET_(base::add(that));
 
   Json(Range const&);
   mth_(Range, asRange, ()) may_err;
@@ -54,23 +49,13 @@ dcl_sub_(Json, l_io::Json)
   Json(Ranges const&);
   mth_(Ranges, asRanges, ()) may_err;
 
-  Json(Par const&);
-  mth_(Par, asPar, ()) may_err;
+  Json(Fun const&) may_err;
+  mth_(l::own<Fun>, asFun, ()) may_err;
 
-  fry_(Json, save, (Fun const&)) may_err;
-
-  Json(SimpleFun const&);
-  mth_(void, load, (SimpleFun&)) may_err;
-
-  Json(SumFuns const&);
-  mth_(void, load, (SumFuns&)) may_err;
-
-  Json(fit::Polynom const&);
-  mth_(void, load, (fit::Polynom&)) may_err;
-
-  fry_(Json, save, (fit::PeakFun const&));
-  mth_(void, load, (fit::PeakFun&)) may_err;
+  Json(calc::Reflection const&);
+  mth_(l::own<calc::Reflection>, asReflection, ()) may_err;
 dcl_end
+
 
 //------------------------------------------------------------------------------
 }}
