@@ -19,7 +19,7 @@ COMPARABLE_IMPL(xy) {
 DEF_EQ_NE_IMPL(xy)
 
 xy::ref xy::operator=(rc that) {
-  mut(x) = that.y;
+  mut(x) = that.x;
   mut(y) = that.y;
   RTHIS
 }

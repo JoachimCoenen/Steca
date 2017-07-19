@@ -176,8 +176,8 @@ bool nextDataUnit(str& elem, str& node, dtype& dt, uint& n) {
     check_or_err_(d_number >= 0, "bad d_number");
     n = l::to_uint(d_number);
 
-    elem = l::trim(str(m_elem, MAXNAMELENGTH));
-    node = l::trim(str(m_node, MAXNAMELENGTH));
+    elem = str(m_elem, MAXNAMELENGTH).trimmed();
+    node = str(m_node, MAXNAMELENGTH).trimmed();
 
     return true;
   }

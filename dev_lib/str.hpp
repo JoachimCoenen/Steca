@@ -21,6 +21,8 @@ dcl_sub_(str, std::string)
 
   static str const null;
 
+  mth_(str, trimmed, ());
+
 private:
   bool empty() const; // disallow
 dcl_end
