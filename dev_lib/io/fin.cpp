@@ -2,31 +2,13 @@
 
 #include "fin.hpp"
 #include <dev_lib/defs.inc>
-#include <string.h>
 
 namespace l_io {
 //------------------------------------------------------------------------------
 
-buf::buf(sz_t sz) : base(sz, '\0') {}
-
-buf::buf(pcstr p) : base() {
-  if (!p)
-    p ="";
-
-  auto n = strlen(p);
-  resize(n);
-  memcpy(data(), p, n);
-}
-
-str buf::asStr() const {
-  return str(data(), size());
-}
-
-//------------------------------------------------------------------------------
-
 fin::fin(path::rc path, bool binary)
 : base(path, binary ? (base::in | base::binary) : base::in)
-, basename(path.basename()) {
+, basename(path.filename()) {
   check_or_err_(good(), CAT("cannot open: ", path));
 }
 
@@ -64,8 +46,8 @@ uint fbin::read(void* buf, uint n, bool exact) may_err {
   return gc;
 }
 
-buf fbin::read(uint n, bool exact) may_err {
-  buf b(n);
+l::buf fbin::read(uint n, bool exact) may_err {
+  l::buf b(n);
   n = read(b.data(), n, exact);
   b.resize(n);
   return b;

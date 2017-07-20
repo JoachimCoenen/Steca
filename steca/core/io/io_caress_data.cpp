@@ -76,19 +76,19 @@ static dtype to_dtype(int32 t) {
 }
 
 
-static mem getUnit(uint n, sz_t sz) {
-  mem data(n * sz);
+static buf getUnit(uint n, sz_t sz) {
+  buf data(n * sz);
   if (n > 0)
     check_or_err_(0 == get_data_unit(data.data()), "bad data unit");
   return data;
 }
 
-static mem getPartition(uint n, sz_t sz, int32 d_type) {
-  mem data(n * sz);
+static buf getPartition(uint n, sz_t sz, int32 d_type) {
+  buf data(n * sz);
 
   int32 start = 1, ni = int32(n), section = 1;    // Is there ever section other than 1 ?
   while (ni > 0) {
-    mem buf(MAXNUMBEROFCHANNELS * sz);
+    buf buf(MAXNUMBEROFCHANNELS * sz);
     int32 n = l::min(ni, MAXNUMBEROFCHANNELS);
     check_or_err_(0 == get_data_partition(buf.data(), &section, &start, &n, &d_type), "bad data partition");
     EXPECT_(n == l::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
@@ -107,7 +107,7 @@ void closeFile() {
   close_data_file();
 }
 
-mem getData(dtype dt, uint n) {
+buf getData(dtype dt, uint n) {
   auto sz = dtype_size(dt);
   if (n > MAXNUMBEROFCHANNELS)
     return getPartition(n, sz, from_dtype(dt));

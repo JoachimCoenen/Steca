@@ -36,7 +36,7 @@ using l_io::path;
 // Code taken from the original STeCa, only slightly modified.
 
 File::sh loadMar(Files& files, path::rc path) may_err {
-  File::sh file(new File(files, path.basename()));
+  File::sh file(new File(files, path.filename()));
 
   using WORD = short;
 
@@ -243,6 +243,11 @@ File::sh loadMar(Files& files, path::rc path) may_err {
 
   return file;
 }
+
+TEST_("loadMar",
+  Files files;
+  loadMar(files, l_io::path("testdata.mar1600"));
+)
 
 //------------------------------------------------------------------------------
 }}

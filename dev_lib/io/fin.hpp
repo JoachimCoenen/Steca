@@ -3,20 +3,13 @@
 #pragma once
 
 #include "../defs.hpp"
-#include "../typ/vec.hpp"
+#include "../typ/buf.hpp"
 #include "endian.hpp"
 #include "path.hpp"
 #include <fstream>
 
 namespace l_io {
 //------------------------------------------------------------------------------
-
-dcl_sub_(buf, l::vec<char>)
-  buf(sz_t);
-  buf(pcstr);
-
-  mth_(str, asStr, ());
-dcl_end
 
 dcl_reimpl_(fin, std::fstream)
   atr_(str, basename);
@@ -39,8 +32,8 @@ dcl_sub_(fbin, fin)
 
   set_(seek, (pos_type pos)) may_err SET_(base::seek(pos);)
 
-  mth_mut_(uint, read, (void*, uint n, bool exact = true)) may_err;
-  mth_mut_(buf,  read, (uint n, bool exact = true))        may_err;
+  mth_mut_(uint,   read, (void*, uint n, bool exact = true)) may_err;
+  mth_mut_(l::buf, read, (uint n, bool exact = true))        may_err;
 
   mth_mut_(uint8,  get8,     ()) may_err;
   mth_mut_(uint16, get16,    ()) may_err;

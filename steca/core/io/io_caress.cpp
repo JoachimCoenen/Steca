@@ -222,7 +222,7 @@ File::sh loadCaress(Files& files, l_io::path::rc path) may_err {
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(files, path.basename());
+    return loadOpenCaressFile(files, path.filename());
   } catch (l::exc& e) {
     mut(e.msg) = CAT(path, e.msg);
     throw;

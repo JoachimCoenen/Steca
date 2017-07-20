@@ -22,10 +22,11 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+struct Hub;
 struct Win;
 
 dcl_sub_(Acts, l_qt::acts)
-  Acts(Win&);
+  Acts(Hub&, Win&);
 
   cst_(str, SHOW_FILES);
   cst_(str, SHOW_DATASETS);

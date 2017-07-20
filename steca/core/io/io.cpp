@@ -27,7 +27,7 @@ namespace core { namespace io {
 // Caress format
 bool couldBeCaress(l_io::path::rc path) {
   try {
-    l_io::buf header("\020\012DEFCMD DAT");
+    l::buf header("\020\012DEFCMD DAT");
     return header == l_io::fbin(path).read(header.size());
   } catch(l::exc::rc) {
     return false;
@@ -37,7 +37,7 @@ bool couldBeCaress(l_io::path::rc path) {
 // Mar format
 bool couldBeMar(l_io::path::rc path) {
   try {
-    l_io::buf header("mar research");
+    l::buf header("mar research");
     return header == l_io::fbin(path).seek(0x80).read(header.size());
   } catch(l::exc::rc) {
     return false;

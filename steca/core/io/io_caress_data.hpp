@@ -18,7 +18,7 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
-#include <dev_lib/typ/vec.hpp>
+#include <dev_lib/typ/buf.hpp>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -30,9 +30,9 @@ enum dtype {
   NONE, INT16, INT32, FLT32, CHR
 };
 
-using mem = l::vec<char>;
+using buf = l::buf;
 
-mem getData(dtype, uint n);
+buf getData(dtype, uint n);
 str getString(uint n);
 str getAsString(dtype, uint n);
 float  getAsFloat(dtype, uint n);

@@ -2,20 +2,16 @@
 
 #pragma once
 
-#include "../defs.hpp"
+#include "vec.hpp"
 
-namespace l_io {
+namespace l {
 //------------------------------------------------------------------------------
 
-dcl_sub_(path, str)
-  path(strc);
+dcl_sub_(buf, vec<char>)
+  buf(sz_t);
+  buf(pcstr);
 
-  mth_(str,  filename, ());
-  mth_(path, dir,      ());
-  mth_(path, absolute, ());
-
-  fry_(str,  cwd, ());
-  mth_(void, cd,  ());
+  mth_(str, asStr, ());
 dcl_end
 
 //------------------------------------------------------------------------------

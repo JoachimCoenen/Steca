@@ -18,73 +18,22 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
-#include "acts.hpp"
+#include <qt_lib/hub.hpp>
 #include <core/session.hpp>
-
-#include <QObject>
-#include <QEvent>
-#include <QThread>
+#include "acts.hpp"
 
 namespace gui {
-//------------------------------------------------------------------------------
-
-struct Hub;
-
-dcl_sub_(Task, QEvent) SHARED
-  Task();
- ~Task();
-
-  void set(Hub& hub);
-  virtual Task* clone() = 0;
-
-  virtual void work() = 0;
-  virtual void done() = 0;
-
-  Hub* hub;
-dcl_end
-
-//------------------------------------------------------------------------------
-}
-
-namespace gui {
-//------------------------------------------------------------------------------
-
-dcl_sub_(Worker, QObject)
-  Worker(Hub&);
-
-  void doWork(Task::sh);
-
-signals:
-  void workDone(Task::sh);
-
-private:
-  Hub& hub;
-  Q_OBJECT
-dcl_end
-
 //------------------------------------------------------------------------------
 
 struct Win;
 
-dcl_sub2_(Hub, QObject, core::Session)
+dcl_sub2_(Hub, l_qt::Hub, core::Session)
+  ref_(Win,  win);
+  atr_(Acts, acts);
+
   Hub(Win&);
- ~Hub();
 
-  Acts acts;
-
-  void post(Task*);
-  void workDone(Task::sh);
-
-signals:
-  void doWork(Task::sh);
-
-private:
-  void registerMetaTypes();
-  bool event(QEvent*);
-
-  QThread thread;
-  Worker  worker;
-  Q_OBJECT
+  set_(addFiles, ());
 dcl_end
 
 //------------------------------------------------------------------------------
