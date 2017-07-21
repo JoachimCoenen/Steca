@@ -18,7 +18,7 @@ dcl_(threads)
   threads();
 
   template<typename L>
-  mth_mut_(void, distribute, (L l, sz_t n)) {
+  act_mut_(distribute, (L l, sz_t n)) {
     sz_t m = n / nc, mr = n % nc;
     for (sz_t i=0, from=0, to; i<nc; ++i, from=to)
       ts.setAt(i, thread(l, from, (to = from + (i ? m : m+mr))));

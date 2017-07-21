@@ -29,7 +29,7 @@ dcl_sub_(ModelFiles, l_qt::lst_model)
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
   set_(check, (rw_n, bool));
-  mth_(bool, isChecked, (rw_n));
+  bol_(isChecked, (rw_n));
 dcl_end
 
 dcl_sub_(ModelDatasets, l_qt::lst_model)

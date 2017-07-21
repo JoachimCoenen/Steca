@@ -52,7 +52,7 @@ dcl_(ImageTransform)
   // rotates by one quarter-turn
   ImageTransform nextRotate() const;
 
-  mth_(bool, isTransposed, ()) VAL_(0 != (val & 1))
+  bol_(isTransposed, ()) VAL_(0 != (val & 1))
 
   bol_(operator==, (rc that)) VAL_(val == that.val)
 dcl_end
@@ -65,7 +65,7 @@ dcl_(count_arr2) SHARED
   count_arr2(rc);
 
   mth_(l::sz2, size, ()) VAL_(cs.sz)
-  mth_(bool, isEmpty, ()) VAL_(cs.isEmpty())
+  bol_(isEmpty, ()) VAL_(cs.isEmpty())
 
   mth_(inten_t, at, (uint i))         VAL_(cs.at(i))
   mth_(inten_t, at, (uint i, uint j)) VAL_(cs.at(i,j))
@@ -86,7 +86,7 @@ dcl_(Image) SHARED
 
   mth_(l::sz2, size, ());
   set_(clear, ());
-  mth_(bool, isEmpty, ());
+  bol_(isEmpty, ());
 
   mth_(inten_t, inten, (uint i, uint j));
   mth_(inten_t, inten, (uint i));

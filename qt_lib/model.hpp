@@ -27,9 +27,9 @@ dcl_sub_(lst_model, QAbstractTableModel)
 
   virtual set_(check, (rw_n));
   virtual set_(check, (rw_n, bool));
-  virtual mth_(bool, isChecked, (rw_n));
+  virtual bol_(isChecked, (rw_n));
 
-  mth_(void, notify, ());
+  act_(notify, ());
 
 protected:
   using Index   = QModelIndex;

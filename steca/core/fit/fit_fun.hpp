@@ -40,7 +40,7 @@ dcl_sub_(Polynom, SimpleFun)
 
   mth_(real, avgY, (Range::rc xx, real const* parVals = nullptr));
 
-  mth_mut_(void, fit, (Curve::rc, Ranges::rc xx));
+  act_mut_(fit, (Curve::rc, Ranges::rc xx));
   fry_(Polynom, fromFit, (uint degree, Curve::rc, Ranges::rc xx));
 dcl_end
 
@@ -75,8 +75,8 @@ dcl_sub_(PeakFun, SimpleFun)
   virtual set_(setGuessedPeak, (peak_t::rc p))  SET_(mut(guessedPeak) = p)
   virtual set_(setGuessedFWHM, (fwhm_t f))      SET_(mut(guessedFWHM) = f)
 
-  mth_mut_(void, fit, (Curve::rc curve)) { fit(curve, range); }
-  virtual mth_mut_(void, fit, (Curve::rc, Range::rc));
+  act_mut_(fit, (Curve::rc curve)) { fit(curve, range); }
+  virtual act_mut_(fit, (Curve::rc, Range::rc));
 
   protected:
   mth_mut_(Curve, prepareFit, (Curve::rc curve, Range::rc range));
@@ -99,7 +99,7 @@ dcl_sub_(Raw, PeakFun)
 
   set_(setRange, (Range::rc r));
 
-  mth_mut_(void, fit, (Curve::rc, Range::rc));
+  act_mut_(fit, (Curve::rc, Range::rc));
 
 private:
   Curve fittedCurve;  // saved from fitting

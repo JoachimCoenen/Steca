@@ -14,10 +14,9 @@ namespace l_io {
 dcl_reimpl_(fin, std::fstream)
   atr_(str, basename);
 
-  [[noreturn]] mth_(void, err, (strc msg)) will_err;
+  [[noreturn]] act_(err, (strc msg)) will_err;
 
   mth_mut_(bool, hasMore, ());
-
   mth_mut_(pos_type, tell, ());
 
 protected:

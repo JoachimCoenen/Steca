@@ -19,12 +19,12 @@ dcl_base_(cache_base)
 
   cache_base(pint maxItems);
 
-  virtual mth_mut_(void, trim, (sz_t))  = 0;
+  virtual act_mut_(trim, (sz_t))  = 0;
   virtual mth_(sz_t, size, ())          = 0;
 
-  mth_mut_(void, prepAdd, ());
+  act_mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
-  mth_mut_(void, touch, (mru_t&));
+  act_mut_(touch, (mru_t&));
 dcl_end
 
 template <typename Key, typename T>
@@ -44,7 +44,7 @@ public:
 
   mth_(sz_t, size, ())      VAL_(cash.size())
   bol_(isEmpty,    ())      VAL_(cash.isEmpty())
-  mth_mut_(void, clear, ()) { trim(0); }
+  act_mut_(clear, ()) { trim(0); }
 
   void trim(sz_t n) { // TODO to cache_base (with adapter)
     if (size() > n) {
