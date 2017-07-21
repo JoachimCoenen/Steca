@@ -20,6 +20,8 @@
 #include <dev_lib/defs.inc>
 #include <qt_lib/wgt_inc.hpp>
 #include <qt_lib/dlg_about.hpp>
+#include <QApplication>
+#include <manifest>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -74,7 +76,23 @@ Win::Win() : hub(*this) {
 }
 
 void Win::about() {
-  l_qt::dlgAbout(this);
+  auto const arch =
+#ifdef __x86_64__
+  "(64b)";
+#else
+  str::null;
+#endif
+
+  auto infoText = QString(
+    "<h4>%1 ver. %2 %4</h4>"
+    "<p>StressTextureCalculator</p>"
+    "<p>Copyright: Forschungszentrum Jülich GmbH 2016-2017</p>"
+    "<p><a href='%3'>%3</a></p>")
+    .arg(qApp->applicationName()).arg(qApp->applicationVersion())
+    .arg(STECA2_PAGES_URL)
+    .arg(arch);
+
+  l_qt::dlgAbout(this, l_qt::fromQt(infoText));
 }
 
 bool Win::onClose() {

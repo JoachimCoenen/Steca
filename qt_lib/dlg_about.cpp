@@ -8,13 +8,14 @@
 
 #include <QApplication>
 #include <QDialog>
+#include <QDialogButtonBox>
 
 //------------------------------------------------------------------------------
 
 namespace {
 
 dcl_sub_(AboutDialog, QDialog)
-  AboutDialog(QWidget*);
+  AboutDialog(QWidget*, strc infoText);
 
 protected:
   void accept();
@@ -24,7 +25,7 @@ protected:
 //  QDoubleSpinBox *detDistance_, *detPixelSize_;
 dcl_end
 
-AboutDialog::AboutDialog(QWidget *parent) : base(parent, Qt::Dialog) {
+AboutDialog::AboutDialog(QWidget *parent, strc infoText) : base(parent, Qt::Dialog) {
 //  Settings s(config_key::GROUP_CONFIG);
 
   int PAD = 12;
@@ -44,46 +45,31 @@ AboutDialog::AboutDialog(QWidget *parent) : base(parent, Qt::Dialog) {
 
   hb->setSpacing(PAD);
 
-//  auto logo = l_qt::lbl(str::null);
-//  logo->setPixmap(QPixmap(":/icon/retroStier")
-//                  .scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-//  hb->addWidget(logo);
+  auto logo = new l_qt::lbl(str::null);
+  hb->addWidget(logo);
+  logo->setPixmap(QPixmap(":/icon/logo")
+                  .scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
-//#ifdef __x86_64__
-//  str arch = "(64b)";
-//#else
-//  str arch = EMPTY_STR;
-//#endif
 
-//  auto info = label(
-//      str("<h4>%1 ver. %2 %5</h4>"
-//          "<p>StressTextureCalculator</p>"
-//          "<p>Copyright: Forschungszentrum Jülich GmbH %3</p>"
-//          "<p><a href='%4'>%4</a></p>")
-//          .arg(qApp->applicationName()).arg(qApp->applicationVersion())
-//          .arg(QDate::currentDate().toString("yyyy"))
-//          .arg(STECA2_PAGES_URL)
-//          .arg(arch));
+  auto info = new l_qt::lbl(infoText);
+  info->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  info->setOpenExternalLinks(true);
+#ifdef Q_OS_MAC
+  // a smaller font (a hint found in Qt source code)
+  info->setFont(QToolTip::font());
+#endif
 
-//  info->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-//  info->setOpenExternalLinks(true);
-//#ifdef Q_OS_MAC
-//  // a smaller font (a hint found in Qt source code)
-//  info->setFont(QToolTip::font());
-//#endif
+  hb->addWidget(info);
 
-//  hb->addWidget(info);
+  auto hline = []() {
+    auto frame = new QFrame;
+    frame->setFrameShape(QFrame::HLine);
+    frame->setFrameShadow(QFrame::Sunken);
+    return frame;
+  };
 
-//  auto hline = []() {
-//    auto frame = new QFrame;
-//    frame->setFrameShape(QFrame::HLine);
-//    frame->setFrameShadow(QFrame::Sunken);
-//    return frame;
-//  };
-
-//  // configuration
-
-//  vb->addWidget(hline());
+  // configuration
+  vb->addWidget(hline());
 
 //  hb = hbox();
 //  vb->addLayout(hb);
@@ -118,12 +104,12 @@ AboutDialog::AboutDialog(QWidget *parent) : base(parent, Qt::Dialog) {
 
 //  // buttons
 
-//  vb->addWidget(hline());
+  vb->addWidget(hline());
 
-//  auto bb = new QDialogButtonBox(QDialogButtonBox::Ok);
-//  vb->addWidget(bb);
+  auto bb = new QDialogButtonBox(QDialogButtonBox::Ok);
+  vb->addWidget(bb);
 
-//  connect(bb, &QDialogButtonBox::accepted, this, &QDialog::accept);
+  connect(bb, &QDialogButtonBox::accepted, this, &QDialog::accept);
 }
 
 void AboutDialog::accept() {
@@ -147,8 +133,9 @@ void AboutDialog::mouseDoubleClickEvent(QMouseEvent *) {
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-void dlgAbout(QWidget* parent) {
-  AboutDialog(parent).exec();
+void dlgAbout(QWidget* parent, strc infoText) {
+  AboutDialog dlg(parent, infoText);
+  dlg.exec();
 }
 
 //------------------------------------------------------------------------------
