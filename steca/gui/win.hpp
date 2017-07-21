@@ -34,7 +34,8 @@ dcl_sub_(Win, l_qt::win)
   Win();
   Hub hub;
 
-  bool onClose();
+  act_mut_(about, ());
+  mth_mut_(bool, onClose, ());
 
   PanelFiles         *panelFiles;
   PanelDatasets      *panelDatasets;

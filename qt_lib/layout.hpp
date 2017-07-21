@@ -24,11 +24,7 @@ dcl_sub_(grid, QGridLayout)
   set_(addRowStretch, ());
   set_(addColStretch, ());
 
-protected:
   grid();
-
-  friend struct box;
-  friend struct panel;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -45,26 +41,15 @@ dcl_sub_(box, QBoxLayout)
   set_(add, (QWidget*));
   set_(addStretch, ());
 
-protected:
   box();
 dcl_end
 
 dcl_sub_(hbox, box)
-protected:
   hbox();
-
-friend struct box;
-  friend struct grid;
-  friend struct panel;
 dcl_end
 
 dcl_sub_(vbox, box)
-protected:
   vbox();
-
-friend struct box;
-  friend struct grid;
-  friend struct panel;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -19,6 +19,7 @@
 #include "panel/inc.inc"
 #include <dev_lib/defs.inc>
 #include <qt_lib/wgt_inc.hpp>
+#include <qt_lib/dlg_about.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -72,8 +73,12 @@ Win::Win() : hub(*this) {
   }).check();
 }
 
+void Win::about() {
+  l_qt::dlgAbout(this);
+}
+
 bool Win::onClose() {
-  return true; // dlgYes("Quit?");
+  return true; // TODO dlgYes("Quit?");
 }
 
 //------------------------------------------------------------------------------
