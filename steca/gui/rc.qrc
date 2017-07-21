@@ -27,6 +27,7 @@
         <file alias="showBackground">rc/show_background.svg</file>
         <file alias="retroStier">rc/retro_stier.svg</file>
         <file alias="angle">rc/angle.svg</file>
+        <file alias="tool_a">rc/tool_a.svg</file>
         <file alias="tool_d">rc/tool_d.svg</file>
         <file alias="tool_m">rc/tool_m.svg</file>
         <file alias="tool_f">rc/tool_f.svg</file>

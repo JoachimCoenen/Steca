@@ -18,9 +18,13 @@ dcl_sub_(win, QMainWindow)
   mth_mut_(split&, vs, ())        may_err;
   mth_mut_(panel&, makePanel, ()) may_err;
 
-  mth_mut_(void, show, (bool = true));
+  virtual act_mut_(show, (bool = true));
 
-  virtual mth_mut_(void, onFirstShow, ());
+  virtual act_(about, ()) {}
+
+  virtual act_mut_(quit, ());
+
+  virtual act_mut_(onFirstShow, ());
   virtual mth_mut_(bool, onClose, ());
 
 protected:

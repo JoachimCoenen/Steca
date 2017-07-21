@@ -56,6 +56,7 @@ Win::Win() : hub(*this) {
   tb.add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
   tb.add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
   tb.addStretch();
+  tb.add(new l_qt::actbtn(a.get(a.ABOUT)));
   tb.add(new l_qt::actbtn(a.get(a.QUIT)));
 
   a.get(a.SHOW_FILES).onToggle([this](bool on) {

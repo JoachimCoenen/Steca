@@ -14,6 +14,10 @@ act::act(strc tx) : base(nullptr) {
   text(tx); tip(tx);
 }
 
+l::own<act> act::make(strc tx) {
+  return make(tx, str::null);
+}
+
 l::own<act> act::make(strc tx, strc key) {
   auto a = new act(tx); a->key(key);
   return l::owned(a);
@@ -87,12 +91,19 @@ acts::acts(win& w_) : w(w_)  {
   mb->setNativeMenuBar(false);
   mb->setFixedHeight(0); // "hide"
 
-  auto a = act::make("Quit", "Ctrl+Q");
-  mut(*a).onTrigger([this]() {
-    w.close();
+  auto actAbout = act::make("About...");
+  mut(*actAbout).onTrigger([this]() {
+    w.about();
   });
 
-  add(QUIT, a);
+  add(ABOUT, actAbout);
+
+  auto actQuit = act::make("Quit", "Ctrl+Q");
+  mut(*actQuit).onTrigger([this]() {
+    w.quit();
+  });
+
+  add(QUIT, actQuit);
 }
 
 acts::ref acts::add(strc hashKey, l::give_me<act> a) {
@@ -106,6 +117,7 @@ act& acts::get(strc hashKey) const may_err {
   return mut(*(as.at(hashKey)));
 }
 
+str const acts::ABOUT("about");
 str const acts::QUIT("quit");
 
 //------------------------------------------------------------------------------

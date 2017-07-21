@@ -11,7 +11,7 @@ buf::buf(sz_t sz) : base(sz, '\0') {}
 
 buf::buf(pcstr p) : base() {
   if (!p)
-    p ="";
+    p = "";
 
   auto n = strlen(p);
   resize(n);

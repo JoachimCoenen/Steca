@@ -15,6 +15,7 @@ namespace l_qt {
 dcl_sub_(act, QAction)
   act(strc);
 
+  fry_(l::own<act>, make, (strc tx));
   fry_(l::own<act>, make, (strc tx, strc key));
   fry_(l::own<act>, make, (strc tx, strc key, strc iconFile));
 
@@ -51,6 +52,7 @@ dcl_(acts)
   set_(add, (strc hash, l::give_me<act>));
   mth_(act&, get, (strc hash)) may_err;
 
+  cst_(str, ABOUT);
   cst_(str, QUIT);
 
 protected:

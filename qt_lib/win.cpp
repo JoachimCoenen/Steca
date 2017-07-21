@@ -43,6 +43,10 @@ void win::show(bool on) {
   base::setVisible(on);
 }
 
+void win::quit() {
+  base::close();
+}
+
 void win::onFirstShow() {}
 bool win::onClose()     VAL_(true)
 

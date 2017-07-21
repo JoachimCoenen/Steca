@@ -11,15 +11,15 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 void dlgInfo(QWidget* parent, strc text) {
-  QMessageBox::information(parent, "", toQt(text));
+  QMessageBox::information(parent, QString::null, toQt(text));
 }
 
 void dlgWarn(QWidget* parent, strc text) {
-  QMessageBox::warning(parent, "", toQt(text));
+  QMessageBox::warning(parent, QString::null, toQt(text));
 }
 
 bool dlgYes(QWidget* parent, strc text) {
-  return QMessageBox::Yes == QMessageBox::question(parent, "", toQt(text));
+  return QMessageBox::Yes == QMessageBox::question(parent, QString::null, toQt(text));
 }
 
 //------------------------------------------------------------------------------

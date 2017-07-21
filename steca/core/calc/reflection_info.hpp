@@ -29,6 +29,8 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(ReflectionInfo)
+  atr_(data::Meta::sh, md);
+
   atr_(l::deg,  alpha);
   atr_(l::deg,  beta);
   atr_(gma_rge, rgeGma);
@@ -36,8 +38,6 @@ dcl_(ReflectionInfo)
   atr_(inten_t, inten); atr_(inten_t, intenError);
   atr_(tth_t,   tth);   atr_(tth_t,   tthError);
   atr_(fwhm_t,  fwhm);  atr_(fwhm_t,  fwhmError);
-
-  atr_(data::Meta::sh, md);
 
   ReflectionInfo(l::deg alpha, l::deg beta);
   ReflectionInfo(l::deg alpha, l::deg beta, gma_rge,

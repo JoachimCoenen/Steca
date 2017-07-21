@@ -27,6 +27,7 @@ void f() { L(); }
 Acts::Acts(Hub& hub, Win& win) : base(win) {
   using act = l_qt::act;
 
+  get(ABOUT).icon(":/icon/tool_a");
   get(QUIT).icon(":/icon/tool_q");
 
   add(SHOW_FILES,     act::make("Show files",                 "Ctrl+1", ":/icon/tool_f"));
