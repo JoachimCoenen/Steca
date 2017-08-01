@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
   #include <stdlib.h>
+  #include <direct.h>
 #else
   #include <libgen.h>
   #include <unistd.h>
@@ -18,8 +19,11 @@ path::path(strc s) : base(s) {}
 
 str path::filename() const {
 #ifdef _WIN32
-  _splitpath
-  // return str(std::tr2::sys::path(*this).stem().generic_string().c_str());
+  char fname[_MAX_FNAME], ext[_MAX_EXT];
+  _splitpath(c_str(), nullptr, nullptr, fname, ext);
+  char path[_MAX_PATH];
+  _makepath(path, nullptr, nullptr, fname, ext);
+  return path;
 #else
   l::buf copy(c_str());
   return str(basename(copy.data()));
@@ -28,8 +32,11 @@ str path::filename() const {
 
 path path::dir() const {
 #ifdef _WIN32
-  _splitpath
-  // return str(std::tr2::sys::path(*this).stem().generic_string().c_str());
+  char drive[_MAX_DRIVE], dir[_MAX_DIR];
+  _splitpath(c_str(), drive, dir, nullptr, nullptr);
+  char path[_MAX_PATH];
+  _makepath(path, drive, dir, nullptr, nullptr);
+  return path;
 #else
   l::buf copy(c_str());
   return path(dirname(copy.data()));
@@ -37,10 +44,11 @@ path path::dir() const {
 }
 
 path path::absolute() const {
-  l::buf dir(FILENAME_MAX);
 #ifdef _WIN32
-  return path(_realpath(c_str(), dir.data()));
+  char path[_MAX_PATH];
+  return _fullpath(path, c_str(), _MAX_PATH);
 #else
+  l::buf dir(FILENAME_MAX);
   return path(realpath(c_str(), dir.data()));
 #endif
 }
@@ -66,4 +74,3 @@ void path::cd() const {
 //------------------------------------------------------------------------------
 }
 // eof
-extern int chdir (const char *__path) __THROW __nonnull ((1)) __wur;

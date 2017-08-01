@@ -166,7 +166,7 @@ real Raw::y(real x, real const*) const {
   if (!x_count || !range.contains(x))
     return 0;
 
-  uint i = l::to_u(l::bound(0l, l::floor((x - range.min) / dx), l::to_num<int64>(x_count) - 1));
+  uint i = l::to_u(l::bound(int64(0), l::floor((x - range.min) / dx), l::to_num<int64>(x_count) - 1));
   return fittedCurve.ys.at(i);
 }
 

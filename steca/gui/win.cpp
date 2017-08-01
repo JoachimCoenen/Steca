@@ -76,11 +76,11 @@ Win::Win() : hub(*this) {
 }
 
 void Win::about() {
-  auto const arch =
-#ifdef __x86_64__
+  QString const arch =
+#if defined(__x86_64__) || defined(_WIN64)
   "(64b)";
 #else
-  str::null;
+  QString::null;
 #endif
 
   auto infoText = QString(

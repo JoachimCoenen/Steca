@@ -95,6 +95,7 @@ dcl_base_(Json)
   atr_(l::shared<Val>, val);
 
   Json(Typ);
+  Json(rc) = default;
 
   explicit Json(flt32);
   explicit Json(strc);

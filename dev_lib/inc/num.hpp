@@ -140,6 +140,12 @@ inline typename __num_trait<I>::u_typ to_u(I i) {
 
 #endif
 
+// cast to int
+template <typename N>
+inline int to_int(N n) {
+  return to_num<int>(n);
+}
+
 // cast to uint
 template <typename N>
 inline uint to_uint(N n) {

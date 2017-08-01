@@ -5,6 +5,7 @@
 #include <dev_lib/typ/ij.hpp>
 #include <dev_lib/typ/xy.hpp>
 #include <fstream>
+#include <cctype>
 
 namespace l_io {
 //------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ void Json::ValNum::saveTo(std::ostream& os, indent_t indent) const {
   space(os, indent);
 
   if (l::isinf(val))
-    os << (val ? INF_P : INF_M);
+    os << (0 <= val ? INF_P : INF_M);
   else
     os << val;
 }
@@ -195,13 +196,13 @@ Json::rc Json::at(uint i) const may_err {
 
 int Json::asInt() const may_err {
   check_or_err_(NUM == val->typ, "json: bad type");
-  return l::round((*static_cast<ValNum const*>(val.ptr())).val);
+  return l::to_int(l::round((*static_cast<ValNum const*>(val.ptr())).val));
 }
 
 uint Json::asUint() const may_err {
   int i = asInt();
   check_or_err_(0 <= i, "json: bad number");
-  return i;
+  return l::to_uint(i);
 }
 
 flt32 Json::asFlt() const may_err {
@@ -262,14 +263,14 @@ static void match(std::istream& is, char c) may_err {
   if (isMatch(is, c))
     return;
 
-  char d = is.peek();
+  auto d = is.peek();
   l::err(CAT("json: expecting '", c, "', have '", d, "'"));
 }
 
 Json Json::loadFrom(std::istream& is) may_err {
   skipSpace(is);
 
-  char c = is.peek();
+  auto c = is.peek();
   if (std::isdigit(c))
     return loadNum(is);
 
