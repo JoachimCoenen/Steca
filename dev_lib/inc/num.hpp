@@ -160,7 +160,7 @@ inline sz_t to_sz(N n) {
 
 //------------------------------------------------------------------------------
 
-extern real const flt_nan; // silent nan
+extern real const flt_nan; // quiet nan
 extern real const flt_inf;
 
 bool isnan(flt32);

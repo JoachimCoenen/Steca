@@ -116,7 +116,7 @@ buf getData(dtype dt, uint n) {
 }
 
 str getString(uint n) {
-  return getData(CHR, n).data();
+  return getData(CHR, n + 1 /*for \0 */).data();
 }
 
 str getAsString(dtype dt, uint n) {

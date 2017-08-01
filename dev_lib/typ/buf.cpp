@@ -13,7 +13,7 @@ buf::buf(pcstr p) : base() {
   if (!p)
     p = "";
 
-  auto n = strlen(p);
+  auto n = strlen(p) + 1;
   resize(n);
   memcpy(data(), p, n);
 }

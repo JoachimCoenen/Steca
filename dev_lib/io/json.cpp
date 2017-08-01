@@ -289,20 +289,20 @@ Json Json::loadFrom(std::istream& is) may_err {
 }
 
 Json Json::loadNum(std::istream& is) may_err {
-  int sig = 0;
+  bool neg = false;
   if (isMatch(is, '+'))
-    sig = +1;
+    ; // eat +
   else if (isMatch(is, '-'))
-    sig = -1;
+    neg = true;
 
   if (std::isdigit(is.peek())) {
     flt32 v; is >> v;
     check(is);
-    return Json((0==sig ? +1 : sig) * v);
+    return Json(neg ? -v : v);
   }
 
-  if ((0 != sig) && isMatch(is, 'i') && isMatch(is, 'n') && isMatch(is, 'f'))
-    return Json(sig * l::flt_inf);
+  if (isMatch(is, 'i') && isMatch(is, 'n') && isMatch(is, 'f'))
+    return Json(flt32(neg ? -l::flt_inf : +l::flt_inf));
 
   l::err("json: bad number");
 }
