@@ -1,2 +1,2 @@
-cd build
-STeCa_tests/STeCa_tests
+cd build/tests_steca
+./tests_steca

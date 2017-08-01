@@ -1,2 +1,2 @@
-cd build
-xvfb-run tests_steca/tests_steca
+cd build/tests_steca
+xvfb-run ./tests_steca
