@@ -85,6 +85,7 @@
 
 // a predicate
 #define bol_(mth, args)                   mth_(bool, mth, args)
+#define bol_mut_(mth, args)               mth_mut_(bool, mth, args)
 
 // conversion operator
 #define cop_(op)                          operator op() const

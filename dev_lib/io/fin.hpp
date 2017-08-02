@@ -16,7 +16,7 @@ dcl_reimpl_(fin, std::fstream)
 
   [[noreturn]] act_(err, (strc msg)) will_err;
 
-  mth_mut_(bool, hasMore, ());
+  bol_mut_(hasMore, ());
   mth_mut_(pos_type, tell, ());
 
 protected:

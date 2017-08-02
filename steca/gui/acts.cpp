@@ -27,12 +27,16 @@ void f() { L(); }
 Acts::Acts(Hub& hub, Win& win) : base(win) {
   using act = l_qt::act;
 
+#ifndef Q_OS_OSX
+  get(FULL_SCREEN).key("F11").icon(":/icon/tool_fs");
+#endif
+
   get(ABOUT).icon(":/icon/tool_a");
   get(QUIT).icon(":/icon/tool_q");
 
-  add(SHOW_FILES,     act::make("Show files",                 "Ctrl+1", ":/icon/tool_f"));
-  add(SHOW_DATASETS,  act::make("Show datasets",              "Ctrl+2", ":/icon/tool_d"));
-  add(SHOW_METADATA,  act::make("Show metadata",              "Ctrl+3", ":/icon/tool_m"));
+  add(SHOW_FILES,     act::make("Show files",                 "Ctrl+F", ":/icon/tool_f"));
+  add(SHOW_DATASETS,  act::make("Show datasets",              "Ctrl+D", ":/icon/tool_d"));
+  add(SHOW_METADATA,  act::make("Show metadata",              "Ctrl+M", ":/icon/tool_m"));
 
   add(FILES_ADD,      act::make("Add files...",               "",       ":/icon/add"));
   add(FILES_REM,      act::make("Remove selected file",       "",       ":/icon/rem"));
@@ -58,7 +62,6 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   get(CORR_REM).onTrigger([]() {
 
   });
-
 }
 
 str const Acts::SHOW_FILES      ("showFiles");

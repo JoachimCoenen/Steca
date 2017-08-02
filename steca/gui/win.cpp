@@ -59,20 +59,30 @@ Win::Win() : hub(*this) {
   tb.add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
   tb.add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
   tb.addStretch();
+
+#ifndef Q_OS_OSX
+  tb.add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
+#endif
   tb.add(new l_qt::actbtn(a.get(a.ABOUT)));
   tb.add(new l_qt::actbtn(a.get(a.QUIT)));
 
   a.get(a.SHOW_FILES).onToggle([this](bool on) {
     panelFiles->setVisible(on);
-  }).check();
+  });
 
   a.get(a.SHOW_DATASETS).onToggle([this](bool on) {
     panelDatasets->setVisible(on);
-  }).check();
+  });
 
   a.get(a.SHOW_METADATA).onToggle([this](bool on) {
     panelMetadata->setVisible(on);
-  }).check();
+  });
+
+  statusBar();
+}
+
+l_qt::acts const& Win::getActs() const {
+  return hub.acts;
 }
 
 void Win::about() {
@@ -95,8 +105,22 @@ void Win::about() {
   l_qt::dlgAbout(this, l_qt::fromQt(infoText));
 }
 
+void Win::onFirstShow() {
+  checkActions();
+}
+
 bool Win::onClose() {
   return true; // TODO dlgYes("Quit?");
+}
+
+void Win::checkActions() {
+  auto &a = hub.acts;
+#ifndef Q_OS_OSX
+  a.get(a.FULL_SCREEN).check(isFullScreen());
+#endif
+  a.get(a.SHOW_FILES).check(panelFiles->isVisible());
+  a.get(a.SHOW_DATASETS).check(panelDatasets->isVisible());
+  a.get(a.SHOW_METADATA).check(panelMetadata->isVisible());
 }
 
 //------------------------------------------------------------------------------

@@ -43,7 +43,7 @@ dcl_sub_(act, QAction)
   )
 dcl_end
 
-////------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 struct win;
 
@@ -51,6 +51,10 @@ dcl_(acts)
   acts(win&);
   set_(add, (strc hash, l::give_me<act>));
   mth_(act&, get, (strc hash)) may_err;
+
+#ifndef Q_OS_OSX
+  cst_(str, FULL_SCREEN);
+#endif
 
   cst_(str, ABOUT);
   cst_(str, QUIT);

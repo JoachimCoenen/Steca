@@ -91,31 +91,42 @@ acts::acts(win& w_) : w(w_)  {
   mb->setNativeMenuBar(false);
   mb->setFixedHeight(0); // "hide"
 
+#ifndef Q_OS_OSX
+  auto actFullScreen = act::make("FullScreen");
+  mut(*actFullScreen).onToggle([this](bool on) {
+    w.fullScreen(on);
+  });
+#endif
+
   auto actAbout = act::make("About...");
   mut(*actAbout).onTrigger([this]() {
     w.about();
   });
-
-  add(ABOUT, actAbout);
 
   auto actQuit = act::make("Quit", "Ctrl+Q");
   mut(*actQuit).onTrigger([this]() {
     w.quit();
   });
 
+#ifndef Q_OS_OSX
+  add(FULL_SCREEN, actFullScreen);
+#endif
+  add(ABOUT, actAbout);
   add(QUIT, actQuit);
 }
 
 acts::ref acts::add(strc hashKey, l::give_me<act> a) {
   as.add(hashKey, a.ptr());
-
-//TODO  w.menuBar()->addAction(a.ptr());
   RTHIS
 }
 
 act& acts::get(strc hashKey) const may_err {
   return mut(*(as.at(hashKey)));
 }
+
+#ifndef Q_OS_OSX
+str const acts::FULL_SCREEN("fullScreen");
+#endif
 
 str const acts::ABOUT("about");
 str const acts::QUIT("quit");

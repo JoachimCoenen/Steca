@@ -3,6 +3,7 @@
 #include "win.hpp"
 #include <dev_lib/defs.inc>
 
+#include "act.hpp"
 #include "layout.hpp"
 #include "split.hpp"
 #include <QCloseEvent>
@@ -35,20 +36,28 @@ panel& win::makePanel() may_err {
 }
 
 void win::show(bool on) {
+  base::setVisible(on);
   if (on && firstShow) {
     firstShow = false;
     onFirstShow();
   }
+}
 
-  base::setVisible(on);
+void win::fullScreen(bool on) {
+  if (on)
+    showFullScreen();
+  else
+    showNormal();
+
+#ifndef Q_OS_OSX
+  auto &a = getActs();
+  a.get(a.FULL_SCREEN).check(on);
+#endif
 }
 
 void win::quit() {
   base::close();
 }
-
-void win::onFirstShow() {}
-bool win::onClose()     RET_(true)
 
 void win::closeEvent(QCloseEvent* e) {
   if (onClose())

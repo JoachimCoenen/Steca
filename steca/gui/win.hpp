@@ -34,8 +34,11 @@ dcl_sub_(Win, l_qt::win)
   Win();
   Hub hub;
 
+  mth_(l_qt::acts const&, getActs, ());
+
   act_mut_(about, ());
-  mth_mut_(bool, onClose, ());
+  act_mut_(onFirstShow, ());
+  bol_mut_(onClose, ());
 
   PanelFiles         *panelFiles;
   PanelDatasets      *panelDatasets;
@@ -43,6 +46,9 @@ dcl_sub_(Win, l_qt::win)
   PanelImage         *panelImage;
   PanelDiffractogram *panelDiffractogram;
   PanelMetadata      *panelMetadata;
+
+private:
+  act_mut_(checkActions, ());
 dcl_end
 
 //------------------------------------------------------------------------------

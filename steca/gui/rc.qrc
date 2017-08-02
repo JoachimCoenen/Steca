@@ -31,6 +31,7 @@
         <file alias="tool_d">rc/tool_d.svg</file>
         <file alias="tool_m">rc/tool_m.svg</file>
         <file alias="tool_f">rc/tool_f.svg</file>
+        <file alias="tool_fs">rc/tool_fs.svg</file>
         <file alias="tool_q">rc/tool_q.svg</file>
         <file>rc/ge.wav</file>
     </qresource>
