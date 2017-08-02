@@ -73,8 +73,8 @@ Win::Win() : hub(*this) {
 #ifndef Q_OS_OSX
   tb->add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
 #endif
-  tb->add(new l_qt::actbtn(a.get(a.ABOUT)));
   tb->addSpacing(8);
+  tb->add(new l_qt::actbtn(a.get(a.ABOUT)));
   tb->add(new l_qt::actbtn(a.get(a.QUIT)));
 
   a.get(a.SHOW_FILES).onToggle([this](bool on) {

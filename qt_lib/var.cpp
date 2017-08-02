@@ -35,16 +35,22 @@ bool var::isNum() const {
   }
 }
 
-int var::toInt() const {
-  return base::toInt();
+int var::toInt() const may_err {
+  bool ok;
+  auto val = base::toInt(&ok);
+  check_or_err_(ok, "bad int var");
+  return val;
 }
 
 str var::toStr() const {
   return fromQt(base::toString());
 }
 
-real var::toReal() const {
-  return base::toDouble();
+real var::toReal() const may_err {
+  bool ok;
+  auto val = base::toDouble(&ok);
+  check_or_err_(ok, "bad int var");
+  return val;
 }
 
 tim var::toTim() const {

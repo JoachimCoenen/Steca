@@ -26,4 +26,4 @@ build_script:
 - cmake -G "%CMAKE_GENERATOR%" ..
 - cmake --build . --config %BUILD_CONF% -- /clp:ErrorsOnly
 - cd tests_steca
-- $(configuration)/tests_steca
+- %BUILD_CONF%/tests_steca
