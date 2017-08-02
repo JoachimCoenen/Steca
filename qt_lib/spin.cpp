@@ -20,7 +20,7 @@ spin::ref spin::max(real val) SET_(base::setMaximum(val))
 
 spin::ref spin::val(real val) SET_(base::setValue(val))
 
-real spin::val() const VAL_(base::value())
+real spin::val() const RET_(base::value())
 
 //------------------------------------------------------------------------------
 }

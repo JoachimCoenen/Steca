@@ -60,10 +60,10 @@ dcl_(Ranges) EQ_NE
   Ranges();
 
   void clear()         { rs.clear();          }
-  bool isEmpty() const VAL_(rs.isEmpty())
-  sz_t size()    const VAL_(rs.size())
+  bool isEmpty() const RET_(rs.isEmpty())
+  sz_t size()    const RET_(rs.size())
 
-  Range::rc at(sz_t i) const VAL_(rs.at(i))
+  Range::rc at(sz_t i) const RET_(rs.at(i))
 
   // collapses overlapping ranges into one; true if there was a change
   bool add(Range::rc);

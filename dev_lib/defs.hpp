@@ -111,7 +111,7 @@
 #define COMP_OPS    EQ_NE LGTE
 
 // simple return
-#define VAL_(expr) { return expr; }
+#define RET_(expr) { return expr; }
 
 // simple return
 #define SET_(...) { __VA_ARGS__; RTHIS }
@@ -125,14 +125,14 @@ template <typename T> struct mut_typ<T const>   { using typ = T; };
 
 // make a pointer value mutable
 template <typename T> T const*& mut(T const*const& t) \
-  VAL_(const_cast<T const*&>(t))
+  RET_(const_cast<T const*&>(t))
 // make a value mutable
 template <typename T> T& mut(T const& t) \
-  VAL_(const_cast<T&>(t))
+  RET_(const_cast<T&>(t))
 
 // make a pointed-to value mutable
 template <typename T> T* mutp(T const* t) \
-  VAL_(const_cast<T*>(t))
+  RET_(const_cast<T*>(t))
 
 // take & null a pointer value
 template <typename T> T const* take_p(T const*const& p) {

@@ -15,7 +15,7 @@ dcl_(deg)
   explicit deg(real = 0);
   explicit deg(rad const&);
 
-  cop_(real) VAL_(val)
+  cop_(real) RET_(val)
 
   set_(operator=, (rc));
 
@@ -37,7 +37,7 @@ dcl_(rad)
   explicit rad(real = 0);
   explicit rad(deg const&);
 
-  cop_(real) VAL_(val)
+  cop_(real) RET_(val)
 
   set_(operator=, (rc));
 

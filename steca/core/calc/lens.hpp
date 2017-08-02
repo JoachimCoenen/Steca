@@ -60,7 +60,7 @@ dcl_sub_(ImageLens, LensBase) SHARED
   ImageLens(Session const&, Image::rc, data::CombinedSets::rc,
             bool trans, bool cut);
 
-  mth_(l::sz2, size, ()) VAL_(base::transCutSize(image.size()));
+  mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()));
   mth_(inten_t, imageInten, (uint i, uint j));
 
   inten_rge::rc rgeInten(bool fixed) const;

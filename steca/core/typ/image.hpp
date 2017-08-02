@@ -52,9 +52,9 @@ dcl_(ImageTransform)
   // rotates by one quarter-turn
   ImageTransform nextRotate() const;
 
-  bol_(isTransposed, ()) VAL_(0 != (val & 1))
+  bol_(isTransposed, ()) RET_(0 != (val & 1))
 
-  bol_(operator==, (rc that)) VAL_(val == that.val)
+  bol_(operator==, (rc that)) RET_(val == that.val)
 dcl_end
 
 dcl_(count_arr2) SHARED
@@ -64,11 +64,11 @@ dcl_(count_arr2) SHARED
   count_arr2(l::sz2, inten_t = 0);
   count_arr2(rc);
 
-  mth_(l::sz2, size, ()) VAL_(cs.sz)
-  bol_(isEmpty, ()) VAL_(cs.isEmpty())
+  mth_(l::sz2, size, ()) RET_(cs.sz)
+  bol_(isEmpty, ()) RET_(cs.isEmpty())
 
-  mth_(inten_t, at, (uint i))         VAL_(cs.at(i))
-  mth_(inten_t, at, (uint i, uint j)) VAL_(cs.at(i,j))
+  mth_(inten_t, at, (uint i))         RET_(cs.at(i))
+  mth_(inten_t, at, (uint i, uint j)) RET_(cs.at(i,j))
 
   set_(setAt, (uint i,         inten_t c)) SET_(cs.setAt(i, c))
   set_(setAt, (uint i, uint j, inten_t c)) SET_(cs.setAt(i, j, c))
@@ -94,7 +94,7 @@ dcl_(Image) SHARED
   set_(addInten, (uint i, uint j, inten_t val));
   set_(addIntens, (rc));
 
-  mth_(inten_rge, rgeInten, ()) VAL_(intens->rgeCount)
+  mth_(inten_rge, rgeInten, ()) RET_(intens->rgeCount)
 
 private:
   count_arr2::sh intens;

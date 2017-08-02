@@ -74,21 +74,21 @@ dcl_(Set) SHARED   // one dataset, as acquired
 
   mth_(l::sz2, imageSize, ());
 
-  mth_(tth_t::rc, tth, ()) VAL_(meta->tth)
-  mth_(omg_t::rc, omg, ()) VAL_(meta->omg)
-  mth_(phi_t::rc, phi, ()) VAL_(meta->phi)
-  mth_(chi_t::rc, chi, ()) VAL_(meta->chi)
+  mth_(tth_t::rc, tth, ()) RET_(meta->tth)
+  mth_(omg_t::rc, omg, ()) RET_(meta->omg)
+  mth_(phi_t::rc, phi, ()) RET_(meta->phi)
+  mth_(chi_t::rc, chi, ()) RET_(meta->chi)
 
-  mth_(flt32,     tim, ()) VAL_(meta->tim)
-  mth_(flt32,     mon, ()) VAL_(meta->mon)
-  mth_(flt32,    dTim, ()) VAL_(meta->dTim)
-  mth_(flt32,    dMon, ()) VAL_(meta->dMon)
+  mth_(flt32,     tim, ()) RET_(meta->tim)
+  mth_(flt32,     mon, ()) RET_(meta->mon)
+  mth_(flt32,    dTim, ()) RET_(meta->dTim)
+  mth_(flt32,    dMon, ()) RET_(meta->dMon)
 
   mth_(gma_rge,   rgeGma,     (Session const&));
   mth_(gma_rge,   rgeGmaFull, (Session const&));
   mth_(tth_rge,   rgeTth,     (Session const&));
 
-  mth_(inten_rge, rgeInten, ()) VAL_(image->rgeInten())
+  mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
   act_(collect, (Session const&, Image const* corr,
                        core::inten_vec&, core::uint_vec&, gma_rge::rc,

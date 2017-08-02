@@ -29,7 +29,7 @@ dcl_(factory)
 protected:
   template <class Product>
   dcl_sub_(maker, maker_base)
-    mth_(l::own<ProductBase>, make, ()) VAL_(l::owned(new Product))
+    mth_(l::own<ProductBase>, make, ()) RET_(l::owned(new Product))
   dcl_end
 
   l::hash<str, maker_base const*> makers;

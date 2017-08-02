@@ -32,27 +32,27 @@
 
 // (in)equality ops
 #define EQ_NE_IMPL(T) \
-bool T::operator==(rc that) const VAL_(0 == compare(that)) \
-bool T::operator!=(rc that) const VAL_(0 != compare(that))
+bool T::operator==(rc that) const RET_(0 == compare(that)) \
+bool T::operator!=(rc that) const RET_(0 != compare(that))
 
 #define LGTE_IMPL(T) \
-bool T::operator< (rc that) const VAL_(0 >  compare(that)) \
-bool T::operator<=(rc that) const VAL_(0 >= compare(that)) \
-bool T::operator> (rc that) const VAL_(0 <  compare(that)) \
-bool T::operator>=(rc that) const VAL_(0 <= compare(that))
+bool T::operator< (rc that) const RET_(0 >  compare(that)) \
+bool T::operator<=(rc that) const RET_(0 >= compare(that)) \
+bool T::operator> (rc that) const RET_(0 <  compare(that)) \
+bool T::operator>=(rc that) const RET_(0 <= compare(that))
 
 #define COMP_OPS_IMPL(T) EQ_NE_IMPL(T) LGTE_IMPL(T)
 
 // (in)equality ops for types that may be undefined
 #define DEF_EQ_NE_IMPL(T) \
-bool T::operator==(rc that) const VAL_(isDef() && that.isDef() && 0 == compare(that)) \
-bool T::operator!=(rc that) const VAL_(isDef() && that.isDef() && 0 != compare(that))
+bool T::operator==(rc that) const RET_(isDef() && that.isDef() && 0 == compare(that)) \
+bool T::operator!=(rc that) const RET_(isDef() && that.isDef() && 0 != compare(that))
 
 #define DEF_LGTE_IMPL(T) \
-bool T::operator< (rc that) const VAL_(isDef() && that.isDef() && 0 >  compare(that)) \
-bool T::operator<=(rc that) const VAL_(isDef() && that.isDef() && 0 >= compare(that)) \
-bool T::operator> (rc that) const VAL_(isDef() && that.isDef() && 0 <  compare(that)) \
-bool T::operator>=(rc that) const VAL_(isDef() && that.isDef() && 0 <= compare(that))
+bool T::operator< (rc that) const RET_(isDef() && that.isDef() && 0 >  compare(that)) \
+bool T::operator<=(rc that) const RET_(isDef() && that.isDef() && 0 >= compare(that)) \
+bool T::operator> (rc that) const RET_(isDef() && that.isDef() && 0 <  compare(that)) \
+bool T::operator>=(rc that) const RET_(isDef() && that.isDef() && 0 <= compare(that))
 
 #define DEF_COMP_OPS_IMPL(T) DEF_EQ_NE_IMPL(T) DEF_LGTE_IMPL(T)
 

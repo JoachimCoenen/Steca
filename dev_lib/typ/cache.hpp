@@ -42,8 +42,8 @@ private:
 public:
   cache(pint n) : base(n) {}
 
-  mth_(sz_t, size, ())      VAL_(cash.size())
-  bol_(isEmpty,    ())      VAL_(cash.isEmpty())
+  mth_(sz_t, size, ())      RET_(cash.size())
+  bol_(isEmpty,    ())      RET_(cash.isEmpty())
   act_mut_(clear, ()) { trim(0); }
 
   void trim(sz_t n) { // TODO to cache_base (with adapter)

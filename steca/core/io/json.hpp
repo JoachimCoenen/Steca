@@ -38,8 +38,8 @@ dcl_sub_(Json, l_io::Json)
 
   static Json::rc asSelf(base::rc that) may_err;
 
-  mth_(Json::rc, at, (strc key)) may_err  VAL_(asSelf(base::at(key)))
-  mth_(Json::rc, at, (uint i))   may_err  VAL_(asSelf(base::at(i)))
+  mth_(Json::rc, at, (strc key)) may_err  RET_(asSelf(base::at(key)))
+  mth_(Json::rc, at, (uint i))   may_err  RET_(asSelf(base::at(i)))
   set_(add, (strc key, rc that)) may_err  SET_(base::add(key, that))
   set_(add, (rc that))           may_err  SET_(base::add(that));
 

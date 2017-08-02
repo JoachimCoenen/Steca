@@ -16,13 +16,13 @@ dcl_(arr2)
 
   arr2(sz2 sz_, T val = T()) : sz(sz_), ts(sz.i, vec<T>(sz.j, val)) {}
 
-  bol_(isEmpty, ()) VAL_(sz.isEmpty())
+  bol_(isEmpty, ()) RET_(sz.isEmpty())
 
-  mth_(T const&, at, (sz_t i, sz_t j))  VAL_(ts.at(i).at(j))
-  mth_(T const&, at, (sz_t i))          VAL_(at(i%sz.i, i/sz.j))
+  mth_(T const&, at, (sz_t i, sz_t j))  RET_(ts.at(i).at(j))
+  mth_(T const&, at, (sz_t i))          RET_(at(i%sz.i, i/sz.j))
 
-  mth_mut_(T&, refAt, (sz_t i, sz_t j)) VAL_(mut(at(i,j)))
-  mth_mut_(T&, refAt, (sz_t i))         VAL_(mut(at(i)))
+  mth_mut_(T&, refAt, (sz_t i, sz_t j)) RET_(mut(at(i,j)))
+  mth_mut_(T&, refAt, (sz_t i))         RET_(mut(at(i)))
 
   set_(setAt, (sz_t i, sz_t j, T&& t))      SET_(refAt(i, j) = t)
   set_(setAt, (sz_t i, sz_t j, T const& t)) SET_(refAt(i, j) = t)

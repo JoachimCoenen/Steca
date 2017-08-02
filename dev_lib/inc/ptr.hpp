@@ -40,12 +40,12 @@ struct jp : ptr_base {
   template <typename O>
   jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.p)))
 
-  T const* ptr()        const VAL_(static_cast<T const*>(p))
-  operator T const*()   const VAL_(ptr())
-  T const* operator->() const VAL_(ptr())
+  T const* ptr()        const RET_(static_cast<T const*>(p))
+  operator T const*()   const RET_(ptr())
+  T const* operator->() const RET_(ptr())
 
-  bool operator==(T* const& o) const VAL_(p == o)
-  bool operator!=(T* const& o) const VAL_(p != o)
+  bool operator==(T* const& o) const RET_(p == o)
+  bool operator!=(T* const& o) const RET_(p != o)
 
 protected:
   void set(T* p_) {
@@ -86,8 +86,8 @@ struct own : jp<T> {
 };
 
 // helpers
-template <typename T> own<T>       owned(T* p)       VAL_(own<T>(p))
-template <typename T> own<T const> owned(T const* p) VAL_(own<T>(p))
+template <typename T> own<T>       owned(T* p)       RET_(own<T>(p))
+template <typename T> own<T const> owned(T const* p) RET_(own<T>(p))
 
 //------------------------------------------------------------------------------
 // a maybe null pointer owning the pointed-to thing
@@ -98,12 +98,12 @@ struct own_ptr : ptr_base {
   own_ptr() : ptr_base(nullptr) {}
   own_ptr(T const*const p) : ptr_base(p) {}
 
-  T const* ptr()      const   VAL_(static_cast<T const*>(p))
-  T* ptr()                    VAL_(static_cast<T*>(mutp(p)))
-  operator T const*() const   VAL_(ptr())
-  operator T*()               VAL_(ptr())
-  T*       operator->()       VAL_(ptr())
-  T const* operator->() const VAL_(ptr())
+  T const* ptr()      const   RET_(static_cast<T const*>(p))
+  T* ptr()                    RET_(static_cast<T*>(mutp(p)))
+  operator T const*() const   RET_(ptr())
+  operator T*()               RET_(ptr())
+  T*       operator->()       RET_(ptr())
+  T const* operator->() const RET_(ptr())
 
   set_(set, (T const*const p_)) SET_(mut(p) = p_)
 
@@ -121,7 +121,7 @@ template <typename T>
 struct give_me : own<T> { using base = own<T>;
   using base::base;
   explicit give_me(T* p) : base(p) {}
-  give_me(own<T> p)      : base(p) {}  // to satisfy
+  give_me(own<T> p)      : base(p) {}
 };
 
 //------------------------------------------------------------------------------
@@ -160,14 +160,14 @@ struct scoped : ptr_base {
   T* ptr() const {
     return static_cast<T*>(mutp(p));
   }
-  operator T*()   const VAL_(ptr())
-  T* operator->() const VAL_(ptr())
+  operator T*()   const RET_(ptr())
+  T* operator->() const RET_(ptr())
 };
 
 // a handy way to make a scoped pointer
-template <typename T> scoped<T> scope(T* p)             VAL_(scoped<T>(p))
-template <typename T> scoped<T const> scope(T const* p) VAL_(scoped<T>(p))
-template <typename T> scoped<T> scope(own<T> p)         VAL_(scope(p))
+template <typename T> scoped<T> scope(T* p)             RET_(scoped<T>(p))
+template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
+template <typename T> scoped<T> scope(own<T> p)         RET_(scope(p))
 
 //------------------------------------------------------------------------------
 // shared - the main way to handle large immutable data
@@ -205,9 +205,9 @@ struct shared : protected _shared_base_ {
     *this = shared(p);
   }
 
-  T const* ptr()        const VAL_(static_cast<T const*>(p()))
-  operator T const*()   const VAL_(ptr())
-  T const* operator->() const VAL_(ptr())
+  T const* ptr()        const RET_(static_cast<T const*>(p()))
+  operator T const*()   const RET_(ptr())
+  T const* operator->() const RET_(ptr())
 
 private:
   void _drop() {
@@ -219,9 +219,9 @@ private:
 };
 
 // a handy way to make a shared pointer
-template <typename T> shared<T> share(T* p)             VAL_(shared<T>(p))
-template <typename T> shared<T const> share(T const* p) VAL_(shared<T>(p))
-template <typename T> shared<T> share(own<T> p)         VAL_(scope(p))
+template <typename T> shared<T> share(T* p)             RET_(shared<T>(p))
+template <typename T> shared<T const> share(T const* p) RET_(shared<T>(p))
+template <typename T> shared<T> share(own<T> p)         RET_(scope(p))
 
 // declare struct as shared
 #define SHARED \
@@ -233,10 +233,10 @@ template <typename T> shared<T> share(own<T> p)         VAL_(scope(p))
 
 // make a pointed-to value mutable
 template <typename T> T* mutp(l::jp<T> const& p) \
-  VAL_(const_cast<T*>(p.ptr()))
+  RET_(const_cast<T*>(p.ptr()))
 
 template <typename T> T* mutp(l::shared<T> const& p) \
-  VAL_(const_cast<T*>(p.ptr()))
+  RET_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------
 // eof

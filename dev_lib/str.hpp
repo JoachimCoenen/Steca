@@ -15,7 +15,7 @@ dcl_sub_(str, std::string)
   using base::c_str;
   using base::length;
 
-  bol_(isEmpty, ()) VAL_(base::empty())
+  bol_(isEmpty, ()) RET_(base::empty())
 
   mth_(flt32, asFlt, ()) may_err;
 

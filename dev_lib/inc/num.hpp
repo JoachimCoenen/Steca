@@ -11,7 +11,7 @@ namespace l {
 #ifndef NDEBUG
   #define use_num_(T, Base, ...) struct T {       \
     explicit T(Base val_) : val(val_) __VA_ARGS__ \
-    operator Base() const VAL_(val)               \
+    operator Base() const RET_(val)               \
   protected:                                      \
     Base val;                                     \
   };

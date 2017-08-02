@@ -87,7 +87,7 @@ dcl_end
 dcl_sub_(Raw, PeakFun)
   Raw();
 
-  mth_(ePeakType, type, ()) VAL_(ePeakType::RAW)
+  mth_(ePeakType, type, ()) RET_(ePeakType::RAW)
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
@@ -117,7 +117,7 @@ dcl_sub_(Gaussian, PeakFun)
 
   Gaussian(real ampl = 1, real xShift = 0, real sigma = 1);
 
-  mth_(ePeakType, type, ()) VAL_(ePeakType::GAUSSIAN)
+  mth_(ePeakType, type, ()) RET_(ePeakType::GAUSSIAN)
 
   set_(setGuessedPeak, (peak_t::rc));
   set_(setGuessedFWHM, (fwhm_t));
@@ -138,7 +138,7 @@ dcl_sub_(Lorentzian, PeakFun)
 
   Lorentzian(real ampl = 1, real xShift = 0, real gamma = 1);
 
-  mth_(ePeakType, type, ()) VAL_(ePeakType::LORENTZIAN)
+  mth_(ePeakType, type, ()) RET_(ePeakType::LORENTZIAN)
 
   set_(setGuessedPeak, (peak_t::rc));
   set_(setGuessedFWHM, (fwhm_t));
@@ -160,7 +160,7 @@ dcl_sub_(PseudoVoigt1, PeakFun)
   PseudoVoigt1(real ampl = 1, real xShift = 0, real sigmaGamma = 1,
                real eta = 0.1);
 
-  mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT1)
+  mth_(ePeakType, type, ()) RET_(ePeakType::PSEUDOVOIGT1)
 
   set_(setGuessedPeak, (peak_t::rc));
   set_(setGuessedFWHM, (fwhm_t));
@@ -182,7 +182,7 @@ dcl_sub_(PseudoVoigt2, PeakFun)
   PseudoVoigt2(real ampl = 1, real xShift = 0, real sigma = 1,
                real gamma = 1, real eta = 0.1);
 
-  mth_(ePeakType, type, ()) VAL_(ePeakType::PSEUDOVOIGT2)
+  mth_(ePeakType, type, ()) RET_(ePeakType::PSEUDOVOIGT2)
 
   set_(setGuessedPeak, (peak_t::rc));
   set_(setGuessedFWHM, (fwhm_t));

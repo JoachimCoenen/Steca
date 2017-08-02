@@ -25,10 +25,10 @@ dcl_reimpl_(vec, std::vector<T>)
   using base::at;
   using base::data;
 
-  bol_(isEmpty, ())           VAL_(base::empty())
-  mth_(sz_t, size, ())        VAL_(to_sz(base::size()))
-  mth_(T const&, first, ())   VAL_(base::front())
-  mth_(T const&, last,  ())   VAL_(base::back())
+  bol_(isEmpty, ())           RET_(base::empty())
+  mth_(sz_t, size, ())        RET_(to_sz(base::size()))
+  mth_(T const&, first, ())   RET_(base::front())
+  mth_(T const&, last,  ())   RET_(base::back())
 
   set_(operator=, (rc that))  SET_(base::operator=(that))
 
@@ -44,10 +44,10 @@ dcl_reimpl_(vec, std::vector<T>)
   set_(setAt, (uint i, T&& t))      SET_(base::operator[](i) = std::move(t))
   set_(setAt, (uint i, T const& t)) SET_(base::operator[](i) = t)
 
-  mth_mut_(T&, refAt, (uint i))     VAL_(base::operator[](i))
+  mth_mut_(T&, refAt, (uint i))     RET_(base::operator[](i))
 
-  bol_(operator==, (rc that)) VAL_(base_rc() == that.base_rc())
-  bol_(operator!=, (rc that)) VAL_(base_rc() != that.base_rc())
+  bol_(operator==, (rc that)) RET_(base_rc() == that.base_rc())
+  bol_(operator!=, (rc that)) RET_(base_rc() != that.base_rc())
 dcl_end
 
 //------------------------------------------------------------------------------
