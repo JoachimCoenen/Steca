@@ -22,7 +22,7 @@
 
 namespace core {
 
-dcl_(vec3) COMPARABLE EQ_NE
+dcl_(vec3)
   atr_(real, _0);
   atr_(real, _1);
   atr_(real, _2);
@@ -30,7 +30,7 @@ dcl_(vec3) COMPARABLE EQ_NE
   vec3(real, real, real);
 dcl_end
 
-dcl_(mat3) COMPARABLE EQ_NE
+dcl_(mat3)
   atr_(real, _00); atr_(real, _01); atr_(real, _02);
   atr_(real, _10); atr_(real, _11); atr_(real, _12);
   atr_(real, _20); atr_(real, _21); atr_(real, _22);
