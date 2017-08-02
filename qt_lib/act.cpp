@@ -93,26 +93,28 @@ acts::acts(win& w_) : w(w_)  {
 
 #ifndef Q_OS_OSX
   auto actFullScreen = act::make("FullScreen");
+  add(FULL_SCREEN, actFullScreen);
+
   mut(*actFullScreen).onToggle([this](bool on) {
     w.fullScreen(on);
   });
 #endif
 
   auto actAbout = act::make("About...");
-  mut(*actAbout).onTrigger([this]() {
-    w.about();
+  add(ABOUT, actAbout);
+
+  mut(*actAbout).onToggle([this](bool on) {
+    if (on)
+      w.about();
+    get(ABOUT).check(false);
   });
 
   auto actQuit = act::make("Quit", "Ctrl+Q");
+  add(QUIT, actQuit);
+
   mut(*actQuit).onTrigger([this]() {
     w.quit();
   });
-
-#ifndef Q_OS_OSX
-  add(FULL_SCREEN, actFullScreen);
-#endif
-  add(ABOUT, actAbout);
-  add(QUIT, actQuit);
 }
 
 acts::ref acts::add(strc hashKey, l::give_me<act> a) {

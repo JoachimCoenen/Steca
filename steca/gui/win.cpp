@@ -21,6 +21,7 @@
 #include <qt_lib/wgt_inc.hpp>
 #include <qt_lib/dlg_about.hpp>
 #include <QApplication>
+#include <QStatusBar>
 #include <manifest>
 
 namespace gui {
@@ -35,7 +36,6 @@ Win::Win() : hub(*this) {
   panelMetadata      = new PanelMetadata(hub);
 
   auto &hb = makePanel().hb(); // main: horizontal layout
-  auto &tb = hb.vb();   // toolbar
 
   auto &sp = hb.hs();
 
@@ -55,16 +55,27 @@ Win::Win() : hub(*this) {
 
   auto &a = hub.acts;
 
-  tb.add(new l_qt::actbtn(a.get(a.SHOW_FILES)));
-  tb.add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
-  tb.add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
-  tb.addStretch();
+  // status & tool bars
+  auto bar = statusBar(); // make one
+  bar->setSizeGripEnabled(false);
+
+  auto tw = new QWidget;  // toolbar widget
+  bar->addPermanentWidget(tw);
+
+  auto tb = new l_qt::hbox; // toolbar
+  tw->setLayout(tb);
+
+  tb->add(new l_qt::actbtn(a.get(a.SHOW_FILES)));
+  tb->add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
+  tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
+  tb->addSpacing(8);
 
 #ifndef Q_OS_OSX
-  tb.add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
+  tb->add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
 #endif
-  tb.add(new l_qt::actbtn(a.get(a.ABOUT)));
-  tb.add(new l_qt::actbtn(a.get(a.QUIT)));
+  tb->add(new l_qt::actbtn(a.get(a.ABOUT)));
+  tb->addSpacing(8);
+  tb->add(new l_qt::actbtn(a.get(a.QUIT)));
 
   a.get(a.SHOW_FILES).onToggle([this](bool on) {
     panelFiles->setVisible(on);
@@ -77,8 +88,6 @@ Win::Win() : hub(*this) {
   a.get(a.SHOW_METADATA).onToggle([this](bool on) {
     panelMetadata->setVisible(on);
   });
-
-  statusBar();
 }
 
 l_qt::acts const& Win::getActs() const {
