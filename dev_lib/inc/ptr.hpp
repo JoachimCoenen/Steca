@@ -119,7 +119,6 @@ struct own_ptr : ptr_base {
 
 template <typename T>
 struct give_me : own<T> { using base = own<T>;
-  using base::base;
   explicit give_me(T* p) : base(p) {}
   give_me(own<T> p)      : base(p) {}
 };

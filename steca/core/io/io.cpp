@@ -27,7 +27,7 @@ namespace core { namespace io {
 // Caress format
 bool couldBeCaress(l_io::path::rc path) {
   try {
-    l::buf header("\020\012DEFCMD DAT");
+    l::buf header("\020\012DEFCMD DAT", false);
     return header == l_io::fbin(path).read(header.size());
   } catch(l::exc::rc) {
     return false;
@@ -37,7 +37,7 @@ bool couldBeCaress(l_io::path::rc path) {
 // Mar format
 bool couldBeMar(l_io::path::rc path) {
   try {
-    l::buf header("mar research");
+    l::buf header("mar research", false);
     return header == l_io::fbin(path).seek(0x80).read(header.size());
   } catch(l::exc::rc) {
     return false;
@@ -93,50 +93,6 @@ data::File::sh load(data::Files& files, l_io::path::rc path) may_err {
 
   return file;
 }
-
-//------------------------------------------------------------------------------
-
-//typedef QModelIndex const& rcidx;
-
-//dcl_sub_(ProxyModel, QSortFilterProxyModel)
-//  int columnCount(rcidx) const;
-//  QVariant headerData(int, Qt::Orientation, int = Qt::DisplayRole) const;
-//  QVariant data(rcidx, int = Qt::DisplayRole) const;
-//dcl_end
-
-//int ProxyModel::columnCount(rcidx) const {
-//  return 2;
-//}
-
-//QVariant ProxyModel::headerData(int section, Qt::Orientation o, int role) const {
-//  if (1 == section && Qt::Horizontal == o && role == Qt::DisplayRole)
-//    return "Comment";
-//  return base::headerData(section, o, role);
-//}
-
-//// TODO move to GUI, remove Qt modules from CMakeLists.txt
-//QVariant ProxyModel::data(rcidx idx, int role) const {
-//  if (idx.isValid() && 1 == idx.column()) {
-//    if (Qt::DisplayRole == role) {
-//      QFileSystemModel* fileModel = qobject_cast<QFileSystemModel*>(sourceModel());
-//      auto ix0 = fileModel->index(mapToSource(idx).row(), 0, mapToSource(idx.parent()));
-//      QFileInfo info(fileModel->rootDirectory().filePath(fileModel->fileName(ix0)));
-//      if (info.isFile()) {
-//        auto path = l_qt::fromQt(info.absoluteFilePath());
-//        if (io::couldBeCaress(path))
-//          return QString("[car] %1").arg(loadCaressComment(path).c_str());
-//        else if (couldBeMar(path))
-//          return "[mar] ";
-//        else if (couldBeTiffDat(path))
-//          return "[tif] ";
-//      }
-//    }
-
-//    return QVariant();
-//  }
-
-//  return base::data(idx, role);
-//}
 
 //------------------------------------------------------------------------------
 }}

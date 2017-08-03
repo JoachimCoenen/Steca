@@ -29,8 +29,23 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-str loadCaressComment(l_io::path::rc) {
-  return ""; // TODO
+str loadCaressComment(l_io::path::rc path) {
+  str comment;
+
+  try {
+    check_or_err_(openFile(path), str::null);
+    struct __ { ~__() { closeFile(); } } autoClose;
+
+    str elem, node; dtype dt; uint n;
+    while (nextDataUnit(elem, node, dt, n)) {
+      if (elem == "COM") {
+        comment = getAsString(dt, n);
+        break;
+      }
+    }
+  } catch (l::exc&) {}
+
+  return comment;
 }
 
 //------------------------------------------------------------------------------
@@ -80,6 +95,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
+  // TODO make nanable flt32/64
   flt32 tth = l::flt_nan, omg = l::flt_nan, chi = l::flt_nan, phi = l::flt_nan,
         tim = l::flt_nan, mon = l::flt_nan;
 
@@ -187,7 +203,7 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
         auto side = l::to_uint(l::floor(sqrt(size)));
         check_or_err_((side*side == size) && (imageSide < 0 || imageSide == int(side)),
                       "bad image size");
-        imageSide = side;
+        imageSide = l::to_i(side);
 
         count_arr2 cs(l::sz2(side, side));
         for_i_(size)
@@ -218,7 +234,6 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
 
 File::sh loadCaress(Files& files, l_io::path::rc path) may_err {
   check_or_err_(openFile(path), CAT("Cannot open ", path));
-
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {

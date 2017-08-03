@@ -9,12 +9,8 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-dcl_sub_(FileDialog, QFileDialog)
-  using base::base;
-dcl_end
-
 str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -32,7 +28,7 @@ str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
 }
 
 str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -49,12 +45,30 @@ str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbst
   return str_vec();
 }
 
-str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter) {
-  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
+  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
   dlg.setFileMode(QFileDialog::AnyFile);
+  dlg.setAcceptMode(QFileDialog::AcceptSave);
+  dlg.setConfirmOverwrite(false);
+
+  if (model)
+    dlg.setProxyModel(model);
+
+  if (dlg.exec() && !dlg.selectedFiles().isEmpty())
+    return fromQt(dlg.selectedFiles().first());
+
+  return str::null;
+}
+
+str dlgSaveDir(QWidget* parent, strc caption, strc dir) {
+  QFileDialog dlg(parent, toQt(caption), toQt(dir));
+
+  dlg.setOption(QFileDialog::DontUseNativeDialog);
+  dlg.setViewMode(QFileDialog::Detail);
+  dlg.setFileMode(QFileDialog::Directory);
   dlg.setAcceptMode(QFileDialog::AcceptSave);
   dlg.setConfirmOverwrite(false);
 

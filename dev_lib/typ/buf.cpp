@@ -9,11 +9,11 @@ namespace l {
 
 buf::buf(sz_t sz) : base(sz, '\0') {}
 
-buf::buf(pcstr p) : base() {
+buf::buf(pcstr p, bool zeroByte) : base() {
   if (!p)
     p = "";
 
-  auto n = strlen(p) + 1;
+  auto n = strlen(p) + (zeroByte ? 1 : 0);
   resize(n);
   memcpy(data(), p, n);
 }
