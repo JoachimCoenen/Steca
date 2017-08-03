@@ -32,6 +32,7 @@ dcl_sub_(win, QMainWindow)
 protected:
   void closeEvent(QCloseEvent*);
   bool firstShow;
+  QByteArray initialState;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -27,6 +27,14 @@ app::app(int& argc, char* argv[]) : base(argc, argv) {
 static QtMessageHandler oldHandler;
 static QAtomicInt       noWarning;
 
+app::NoWarnings::NoWarnings() {
+  ++noWarning;
+}
+
+app::NoWarnings::~NoWarnings() {
+  --noWarning;
+}
+
 static void messageHandler(QtMsgType type, QMessageLogContext const& ctx,
                            QString const& msg) {
   switch (type) {

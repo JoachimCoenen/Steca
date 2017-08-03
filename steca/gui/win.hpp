@@ -19,6 +19,7 @@
 
 #include <qt_lib/win.hpp>
 #include "hub.hpp"
+#include <QNetworkAccessManager>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -40,6 +41,8 @@ dcl_sub_(Win, l_qt::win)
   act_mut_(onFirstShow, ());
   bol_mut_(onClose, ());
 
+  act_(checkUpdate, (bool completeReport = true));
+
   PanelFiles         *panelFiles;
   PanelDatasets      *panelDatasets;
   PanelSetup         *panelSetup;
@@ -49,6 +52,7 @@ dcl_sub_(Win, l_qt::win)
 
 private:
   act_mut_(checkActions, ());
+  mutable QNetworkAccessManager netMan;
 dcl_end
 
 //------------------------------------------------------------------------------

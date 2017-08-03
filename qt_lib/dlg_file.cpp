@@ -4,12 +4,17 @@
 #include <dev_lib/defs.inc>
 
 #include <QFileDialog>
+#include <QStyle>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
+dcl_sub_(FileDialog, QFileDialog)
+  using base::base;
+dcl_end
+
 str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -27,7 +32,7 @@ str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
 }
 
 str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
-  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);
@@ -45,7 +50,7 @@ str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbst
 }
 
 str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter) {
-  QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
+  FileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
   dlg.setViewMode(QFileDialog::Detail);

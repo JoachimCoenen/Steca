@@ -15,26 +15,16 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "app.hpp"
-#include "../manifest.h"
-#include "win.hpp"
+#include "settings.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-App::App(int& argc, char* argv[]) : base(argc, argv) {
-  setApplicationName(APPLICATION_NAME);
-  setApplicationVersion(
-    #include "VERSION"
-  );
-  setOrganizationName(ORGANIZATION_NAME);
-  setOrganizationDomain(ORGANIZATION_DOMAIN);
-}
+pcstr const Settings::GROUP_CONFIG    = "config";
 
-int App::exec() {
-  Win w;
-  return base::safeExec(&w);
-}
+pcstr const Settings::STARTUP_ABOUT   = "startup about";
+pcstr const Settings::STARTUP_UPDATE  = "startup check update";
+pcstr const Settings::CURRENT_VERSION = "current version";
 
 //------------------------------------------------------------------------------
 }

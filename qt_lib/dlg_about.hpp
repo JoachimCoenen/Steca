@@ -3,12 +3,22 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
-#include <QWidget>
+#include <QDialog>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-void dlgAbout(QWidget*, strc infoText);
+dcl_reimpl_(DlgAbout, QDialog)
+  DlgAbout(QWidget*);
+
+  int exec();
+
+protected:
+  virtual mth_(str,      infoText, ()) = 0;
+  virtual mth_(QLayout*, extra,    ()) RET_(nullptr)
+
+  act_mut_(construct, ());
+dcl_end
 
 //------------------------------------------------------------------------------
 }

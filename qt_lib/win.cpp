@@ -4,6 +4,7 @@
 #include <dev_lib/defs.inc>
 
 #include "act.hpp"
+#include "settings.hpp"
 #include "layout.hpp"
 #include "split.hpp"
 #include <QCloseEvent>
@@ -39,6 +40,15 @@ void win::show(bool on) {
   base::setVisible(on);
   if (on && firstShow) {
     firstShow = false;
+
+    if (initialState.isEmpty())
+      initialState = saveState();
+
+    using S = Settings;
+    S s(S::GROUP_MAINWIN);
+    restoreGeometry(s.value(S::GEOMETRY).toByteArray());
+    restoreState(s.value(S::STATE).toByteArray());
+
     onFirstShow();
   }
 }
@@ -60,10 +70,16 @@ void win::quit() {
 }
 
 void win::closeEvent(QCloseEvent* e) {
-  if (onClose())
+  if (onClose()) {
+    using S = Settings;
+    S s(S::GROUP_MAINWIN);
+    s.setValue(S::GEOMETRY, saveGeometry());
+    s.setValue(S::STATE, saveState());
+
     e->accept();
-  else
+  } else {
     e->ignore();
+  }
 }
 
 //------------------------------------------------------------------------------

@@ -15,26 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "app.hpp"
-#include "../manifest.h"
-#include "win.hpp"
+#pragma once
+
+#include <dev_lib/defs.hpp>
+#include <qt_lib/settings.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-App::App(int& argc, char* argv[]) : base(argc, argv) {
-  setApplicationName(APPLICATION_NAME);
-  setApplicationVersion(
-    #include "VERSION"
-  );
-  setOrganizationName(ORGANIZATION_NAME);
-  setOrganizationDomain(ORGANIZATION_DOMAIN);
-}
+dcl_sub_(Settings, l_qt::Settings)
+  using base::base;
 
-int App::exec() {
-  Win w;
-  return base::safeExec(&w);
-}
+  cst_(pcstr, GROUP_CONFIG);
+
+  cst_(pcstr, STARTUP_ABOUT);
+  cst_(pcstr, STARTUP_UPDATE);
+  cst_(pcstr, CURRENT_VERSION);
+dcl_end
 
 //------------------------------------------------------------------------------
 }

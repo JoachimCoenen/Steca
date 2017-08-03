@@ -3,7 +3,7 @@ include (../cmake.inc)
 
 get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package (Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets)
+find_package (Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
 set (CMAKE_AUTOMOC ON)
 
 add_definitions (-DWITH_TESTS)
@@ -25,7 +25,7 @@ list(REMOVE_ITEM files ${CMAKE_HOME_DIRECTORY}/steca/main.cpp)
 add_executable (${app} ${files} ${files})
 
 target_link_libraries (${app}
-  Qt5::Core Qt5::Gui Qt5::Widgets
+  Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia Qt5::Network
 )
 
 file (GLOB testdata testdata.*)

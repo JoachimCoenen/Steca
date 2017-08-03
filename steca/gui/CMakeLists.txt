@@ -3,7 +3,7 @@ include (../../cmake.inc)
 
 get_filename_component (lib ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package(Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
@@ -11,7 +11,7 @@ file (GLOB_RECURSE files *)
 add_library (${lib} ${files} rc.qrc)
 
 target_link_libraries (${lib}
-  Qt5::Core Qt5::Gui Qt5::Widgets
+  Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia Qt5::Network
 )
 
 # eof

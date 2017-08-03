@@ -16,6 +16,11 @@ dcl_sub_(app, QApplication)
   int exec(win* = nullptr);
   int safeExec(win* = nullptr);
 
+  dcl_(NoWarnings)
+    NoWarnings();
+   ~NoWarnings();
+  dcl_end
+
 private:
   bool notify(QObject*, QEvent*);
 dcl_end

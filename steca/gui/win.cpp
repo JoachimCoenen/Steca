@@ -16,13 +16,21 @@
  ******************************************************************************/
 
 #include "win.hpp"
+#include "../manifest.h"
+#include "app.hpp"
 #include "panel/inc.inc"
-#include <dev_lib/defs.inc>
-#include <qt_lib/wgt_inc.hpp>
-#include <qt_lib/dlg_about.hpp>
+#include "settings.hpp"
+
 #include <QApplication>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QStatusBar>
-#include <manifest>
+#include <QtMultimedia/QSound>
+
+#include <dev_lib/defs.inc>
+#include <qt_lib/dlg_about.hpp>
+#include <qt_lib/dlg_msg.hpp>
+#include <qt_lib/wgt_inc.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -94,32 +102,144 @@ l_qt::acts const& Win::getActs() const {
   return hub.acts;
 }
 
-void Win::about() {
-  QString const arch =
+namespace  {
+
+dcl_sub_(DlgAbout, l_qt::DlgAbout)
+  using base::base;
+
+  mth_(str,      infoText, ());
+  mth_(QLayout*, extra,    ());
+
+  mutable l_qt::chk *chkAbout, *chkUpdate;
+
+  void accept();
+  void mouseDoubleClickEvent(QMouseEvent*);
+dcl_end
+
+str DlgAbout::infoText() const {
+  str const arch =
 #if defined(__x86_64__) || defined(_WIN64)
-  "(64b)";
+  " (64b)";
 #else
-  QString::null;
+  "";
 #endif
 
-  auto infoText = QString(
-    "<h4>%1 ver. %2 %4</h4>"
-    "<p>StressTextureCalculator</p>"
-    "<p>Copyright: Forschungszentrum Jülich GmbH 2016-2017</p>"
-    "<p><a href='%3'>%3</a></p>")
-    .arg(qApp->applicationName()).arg(qApp->applicationVersion())
-    .arg(STECA2_PAGES_URL)
-    .arg(arch);
+  return  CAT(
+    "<h4>", APPLICATION_NAME, " ver. ", APPLICATION_VERSION, arch, "</h4>",
+    "<p>StressTextureCalculator</p>",
+    "<p>Copyright: Forschungszentrum Jülich GmbH 2016-2017</p>",
+    "<p><a href='", STECA2_PAGES_URL, "'>", STECA2_PAGES_URL, "</a></p>");
+  }
+}
 
-  l_qt::dlgAbout(this, l_qt::fromQt(infoText));
+QLayout* DlgAbout::extra() const {
+  auto vb = new l_qt::vbox;
+  auto& hb = vb->hb();
+
+  hb.addWidget(new l_qt::lbl("at startup: "));
+  hb.addWidget((chkAbout  = new l_qt::chk("&show this dialog")));
+  hb.addWidget((chkUpdate = new l_qt::chk("&check for update")));
+  hb.addStretch();
+
+  using S = Settings;
+  S s(S::GROUP_CONFIG);
+
+  chkAbout->check(s.readBool(S::STARTUP_ABOUT, true));
+  chkUpdate->check(s.readBool(S::STARTUP_UPDATE, true));
+
+  //// TODO put back
+  // auto& gr = vb->gr();
+  ////  g->addWidget(label("default det. distance"), 0, 0, Qt::AlignRight);
+  //  g->addWidget((detDistance_ = spinDoubleCell(gui_cfg::em4_2, typ::Geometry::MIN_DETECTOR_DISTANCE)), 0, 1);
+  ////  g->addWidget(label("default pixel size"), 1, 0, Qt::AlignRight);
+  //  g->addWidget((detPixelSize_ = spinDoubleCell(gui_cfg::em4_2, typ::Geometry::MIN_DETECTOR_PIXEL_SIZE)), 1, 1);
+  //  g->addColumnStretch();
+
+  //  detPixelSize_->setDecimals(3);
+  //  detDistance_->setValue(s.readReal(config_key::DET_DISTANCE, typ::Geometry::DEF_DETECTOR_DISTANCE));
+  //  detPixelSize_->setValue(s.readReal(config_key::DET_PIX_SIZE, typ::Geometry::DEF_DETECTOR_PIXEL_SIZE));
+
+  //// TODO put back
+  //  detDistance_->setVisible(false);
+  //  detPixelSize_->setVisible(false);
+
+  return vb;
+}
+
+void DlgAbout::accept() {
+  using S = Settings;
+  S s(S::GROUP_CONFIG);
+
+  s.saveBool(S::STARTUP_ABOUT,  chkAbout->isChecked());
+  s.saveBool(S::STARTUP_UPDATE, chkUpdate->isChecked());
+
+//TODO  s.saveReal(config_key::DET_DISTANCE, detDistance_->value());
+//  s.saveReal(config_key::DET_PIX_SIZE, detPixelSize_->value());
+
+  base::accept();
+}
+
+void DlgAbout::mouseDoubleClickEvent(QMouseEvent *) {
+  QSound::play(":/HAL/good_evening");
+}
+
+void Win::about() {
+  DlgAbout(this).exec();
 }
 
 void Win::onFirstShow() {
   checkActions();
+
+  using S = Settings;
+  S s(S::GROUP_CONFIG);
+
+  auto ver = APPLICATION_VERSION;
+  if (ver != s.readStr(Settings::CURRENT_VERSION)) {
+    // we have a newer (or older) version
+    s.saveStr(S::CURRENT_VERSION, ver);
+    s.saveBool(S::STARTUP_UPDATE, true);
+    s.saveBool(S::STARTUP_ABOUT,  true);
+  }
+
+  if (s.readBool(S::STARTUP_UPDATE, true))
+    checkUpdate(false);
+  if (s.readBool(S::STARTUP_ABOUT, true))
+    about();
 }
 
 bool Win::onClose() {
   return true; // TODO dlgYes("Quit?");
+}
+
+void Win::checkUpdate(bool completeReport) const {
+  App::NoWarnings __;
+
+  QNetworkRequest req;
+
+  QString const ver = APPLICATION_VERSION;
+
+  auto qry = ver + "\t| " + QSysInfo::prettyProductName();
+  req.setUrl(QUrl(QString(STECA2_VERSION_URL) + "?" + qry));
+  auto reply = netMan.get(req);
+
+  connect(reply, &QNetworkReply::finished, [this, completeReport, reply]() {
+    reply->deleteLater();
+    if (QNetworkReply::NoError == reply->error()) {
+      auto lastVer = reply->readAll().trimmed().toStdString();
+
+      auto ver  = APPLICATION_VERSION;
+      auto name = APPLICATION_NAME;
+
+      if (ver != lastVer)
+        l_qt::dlgInfo(mutp(this),
+          CAT("<p>The latest released ", name, " version is ", lastVer,
+              ". You have version ", ver, ".</p>",
+              "<p><a href='", STECA2_DOWNLOAD_URL, "'>Get new ", name, "</a></p>"));
+      else if (completeReport)
+        l_qt::dlgInfo(mutp(this),
+          CAT("<p>You have the latest released ", name, " version (", ver, ").</p>"));
+    }
+  });
 }
 
 void Win::checkActions() {
