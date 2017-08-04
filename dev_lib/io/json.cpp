@@ -4,7 +4,6 @@
 #include <dev_lib/defs.inc>
 #include <dev_lib/typ/ij.hpp>
 #include <dev_lib/typ/xy.hpp>
-#include <fstream>
 #include <cctype>
 
 namespace l_io {
@@ -398,4 +397,3 @@ TEST_("json",
 //------------------------------------------------------------------------------
 }
 // eof
-

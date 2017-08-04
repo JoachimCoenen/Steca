@@ -6,14 +6,22 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-exc::exc(strc msg_) noexcept : msg(msg_), silent(false) {}
+exc::exc(strc msg_, bool silent_) noexcept : msg(msg_), silent(silent_) {}
 
 [[noreturn]] void err() will_err {
-  throw exc(str::null);
+  throw exc(str::null, false);
 }
 
 [[noreturn]] void err(strc msg) will_err {
-  throw exc(msg);
+  throw exc(msg, false);
+}
+
+[[noreturn]] void errSilent() will_err {
+  throw exc(str::null, true);
+}
+
+[[noreturn]] void errSilent(strc msg) will_err {
+  throw exc(msg, true);
 }
 
 TEST_("exc",

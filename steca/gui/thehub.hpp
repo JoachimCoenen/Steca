@@ -17,10 +17,11 @@
 
 #pragma once
 
-#include <dev_lib/defs.hpp>
-#include <qt_lib/hub.hpp>
-#include <core/session.hpp>
 #include "acts.hpp"
+#include <core/session.hpp>
+#include <dev_lib/defs.hpp>
+#include <dev_lib/io/path.hpp>
+#include <qt_lib/hub.hpp>
 
 /* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
  * names (hub & thehub) *must* differ, because that's how MOC operates: on base
@@ -37,7 +38,10 @@ dcl_sub2_(Hub, l_qt::Hub, core::Session)
 
   Hub(Win&);
 
-  set_(clear,     ());  // sigReset
+  set_(sessionClear, ())          emits(sigReset);
+  set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
+  mth_(void, sessionSave, (l_io::path))             may_err;
+
   set_(addFiles,  ());
 
 signals:

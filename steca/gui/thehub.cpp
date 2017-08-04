@@ -17,11 +17,16 @@
 
 #include "thehub.hpp"
 #include "win.hpp"
+
 #include <core/io/io.hpp>
+#include <core/io/json.hpp>
 #include <dev_lib/defs.inc>
+#include <dev_lib/io/fio.hpp>
 #include <dev_lib/io/path.hpp>
 #include <dev_lib/typ/hash.hpp>
 #include <qt_lib/dlg_file.hpp>
+#include <qt_lib/dlg_msg.hpp>
+
 #include <QFileSystemModel>
 #include <QSortFilterProxyModel>
 
@@ -85,10 +90,30 @@ QVariant FileProxyModel::data(rcidx idx, int role) const {
 
 Hub::Hub(Win& win_) : win(win_), acts(*this, win_) {}
 
-Hub::ref Hub::clear() {
+Hub::ref Hub::sessionClear() {
   base::clear();
   emit sigReset();
   RTHIS
+}
+
+Hub::ref Hub::sessionLoad(l_io::path path) may_err {
+  l_io::ftin file(path);
+  path.cwd();
+
+  using core::io::Json;
+  auto json = Json::asSelf(Json::loadFrom(file.asStream()));
+
+  base::load(json);
+  emit sigReset();
+
+  RTHIS
+}
+
+void Hub::sessionSave(l_io::path path) const may_err {
+  l_io::ftout file(path);
+  path.cwd();
+
+  base::save().saveTo(file.asStream());
 }
 
 Hub::ref Hub::addFiles() {

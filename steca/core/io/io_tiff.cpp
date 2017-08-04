@@ -48,7 +48,7 @@ str_vec FileTiffDat::FileTiffDat::getRow() may_err {
       return str_vec();
     }
 
-    str line = base::getline();
+    str line = base::getLine();
     auto commentPos = line.find_first_of(';');
     if (str::npos != commentPos)
       line = line.substr(0, commentPos);

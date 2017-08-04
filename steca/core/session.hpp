@@ -19,6 +19,7 @@
 
 #include "calc/lens.hpp"
 #include "data/data.hpp"
+#include "io/json.hpp"
 #include "typ/angles.hpp"
 #include "typ/curve.hpp"
 
@@ -34,6 +35,8 @@ dcl_(Session)
   Session();
 
   set_(clear, ());
+  set_(load, (io::Json::rc)) may_err;
+  mth_(io::Json, save, ());
 
   mth_(AngleMap::sh,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current

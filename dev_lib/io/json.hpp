@@ -120,8 +120,9 @@ dcl_base_(Json)
   mth_(Vec::rc, asVec,  ()) may_err;
   mth_(Obj::rc, asObj,  ()) may_err;
 
-  act_(saveTo,   (std::ostream&));
-  act_(saveTo,   (std::ostream&, indent_t));
+  act_(saveTo, (std::ostream&));
+  act_(saveTo, (std::ostream&, indent_t));
+
   fry_(Self, loadFrom, (std::istream&)) may_err;
 
   fry_(Self, loadNum, (std::istream&)) may_err;

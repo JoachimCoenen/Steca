@@ -55,6 +55,137 @@ Session::ref Session::clear() {
 //  intenScale_ = preal(1);
 }
 
+Session::ref Session::load(io::Json::rc) may_err {
+  RTHIS
+//  QJsonParseError parseError;
+//  QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
+//  RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
+//                "Error parsing session file");
+
+//  TakesLongTime __;
+
+//  clearSession();
+
+//  typ::JsonObj top(doc.object());
+
+//  auto files = top.loadArr(config_key::FILES);
+//  for (auto file : files) {
+//    str  filePath = file.toString();
+//    QDir dir(filePath);
+//    RUNTIME_CHECK(dir.makeAbsolute(),
+//                  str("Invalid file path: %1").arg(filePath));
+//    addFile(dir.absolutePath());
+//  }
+
+//  auto sels = top.loadArr(config_key::SELECTED_FILES, true);
+//  uint_vec selIndexes;
+//  for (auto sel : sels) {
+//    int i = sel.toInt(), index = qBound(0, i, to_i(files.count()));
+//    RUNTIME_CHECK(i == index, str("Invalid selection index: %1").arg(i));
+//    selIndexes.append(to_u(index));
+//  }
+
+//  std::sort(selIndexes.begin(), selIndexes.end());
+//  int lastIndex = -1;
+//  for (uint index : selIndexes) {
+//    RUNTIME_CHECK(lastIndex < to_i(index), str("Duplicate selection index"));
+//    lastIndex = to_i(index);
+//  }
+
+//  collectDatasetsFromFiles(selIndexes,top.loadPint(config_key::COMBINE,1));
+
+//  setCorrFile(top.loadString(config_key::CORR_FILE, EMPTY_STR));
+
+//  auto det = top.loadObj(config_key::DETECTOR);
+//  setGeometry(det.loadPreal(config_key::DET_DISTANCE), det.loadPreal(config_key::DET_PIX_SIZE),
+//              det.loadIJ(config_key::BEAM_OFFSET));
+
+//  auto cut = top.loadObj(config_key::CUT);
+//  uint x1 = cut.loadUint(config_key::LEFT),  y1 = cut.loadUint(config_key::TOP),
+//       x2 = cut.loadUint(config_key::RIGHT), y2 = cut.loadUint(config_key::BOTTOM);
+//  setImageCut(true, false, typ::ImageCut(x1, y1, x2, y2));
+
+//  setImageRotate(typ::ImageTransform(top.loadUint(config_key::TRANSFORM)));
+
+//  typ::Ranges bgRanges;
+//  bgRanges.loadJson(top.loadArr(config_key::BG_RANGES));
+//  setBgRanges(bgRanges);
+
+//  setBgPolyDegree(top.loadUint(config_key::BG_DEGREE));
+
+//  setIntenScaleAvg(top.loadBool(config_key::INTEN_SCALED_AVG, true),
+//                   top.loadPreal(config_key::INTEN_SCALE, preal(1)));
+
+//  auto reflectionsObj = top.loadArr(config_key::REFLECTIONS);
+//  for_i (reflectionsObj.count()) {
+//    calc::shp_Reflection reflection(new calc::Reflection);
+//    reflection->loadJson(reflectionsObj.objAt(i));
+//    session_->addReflection(reflection);
+//  }
+
+//  emit sigReflectionsChanged();
+}
+
+io::Json Session::save() const {
+  return io::Json(io::Json::OBJ);
+//  using typ::JsonObj;
+//  using typ::JsonArr;
+
+//  JsonObj top;
+
+//  auto& geo = session_->geometry();
+//  top.saveObj(config_key::DETECTOR, JsonObj()
+//      .savePreal(config_key::DET_DISTANCE, geo.detectorDistance)
+//      .savePreal(config_key::DET_PIX_SIZE, geo.pixSize)
+//      .saveObj(config_key::BEAM_OFFSET, geo.midPixOffset.saveJson()));
+
+//  auto& cut = session_->imageCut();
+//  top.saveObj(config_key::CUT, JsonObj()
+//      .saveUint(config_key::LEFT, cut.left)
+//      .saveUint(config_key::TOP, cut.top)
+//      .saveUint(config_key::RIGHT, cut.right)
+//      .saveUint(config_key::BOTTOM, cut.bottom));
+
+//  auto& trn = session_->imageTransform();
+//  top.saveUint(config_key::TRANSFORM, trn.val);
+
+//  JsonArr arrFiles;
+//  // save file path relative to location of session
+//  for_i (numFiles()) {
+//    str absPath = getFile(i)->fileInfo().absoluteFilePath();
+//    str relPath = QDir::current().relativeFilePath(absPath);
+//    arrFiles.append(relPath);
+//  }
+
+//  top.saveArr(config_key::FILES, arrFiles);
+
+//  JsonArr arrSelectedFiles;
+//  for (uint i : collectedFromFiles())
+//    arrSelectedFiles.append(to_i(i));
+
+//  top.saveArr(config_key::SELECTED_FILES, arrSelectedFiles);
+//  top.saveUint(config_key::COMBINE, datasetsGroupedBy_);
+
+//  if (hasCorrFile()) {
+//    str absPath = session_->corrFile()->fileInfo().absoluteFilePath();
+//    str relPath = QDir::current().relativeFilePath(absPath);
+//    top.saveString(config_key::CORR_FILE, relPath);
+//  }
+
+//  top.saveUint(config_key::BG_DEGREE, bgPolyDegree());
+//  top.saveArr(config_key::BG_RANGES, bgRanges().saveJson());
+//  top.saveBool(config_key::INTEN_SCALED_AVG, intenScaledAvg());
+//  top.savePreal(config_key::INTEN_SCALE, intenScale());
+
+//  JsonArr arrReflections;
+//  for (auto& reflection : reflections())
+//    arrReflections.append(reflection->saveJson());
+
+//  top.saveArr(config_key::REFLECTIONS, arrReflections);
+
+//  return QJsonDocument(top.sup()).toJson();
+}
+
 AngleMap::sh Session::angleMap(data::Set::rc set) const {
   AngleMap::Key key(angleMapKey0, set.tth());
   auto map = angleMapCache.get(key);
