@@ -78,6 +78,10 @@ Win::Win() : hub(*this) {
   tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
   tb->addSpacing(8);
 
+  tb->add(new l_qt::actbtn(a.get(a.SESSION_LOAD)));
+  tb->add(new l_qt::actbtn(a.get(a.SESSION_SAVE)));
+  tb->addSpacing(8);
+
 #ifndef Q_OS_OSX
   tb->add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
 #endif

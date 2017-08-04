@@ -28,7 +28,7 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   using act = l_qt::act;
 
 #ifndef Q_OS_OSX
-  get(FULL_SCREEN).key("F11").icon(":/icon/tool_fs");
+  get(FULL_SCREEN).key("F11").icon(":/icon/full");
 #endif
 
   get(ABOUT).icon(":/icon/tool_a");
@@ -37,6 +37,9 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(SHOW_FILES,     act::make("Show files",                 "Ctrl+F", ":/icon/tool_f"));
   add(SHOW_DATASETS,  act::make("Show datasets",              "Ctrl+D", ":/icon/tool_d"));
   add(SHOW_METADATA,  act::make("Show metadata",              "Ctrl+M", ":/icon/tool_m"));
+
+  add(SESSION_LOAD,   act::make("Load session",               "",       ":/icon/load"));
+  add(SESSION_SAVE,   act::make("Save session",               "",       ":/icon/save"));
 
   add(FILES_ADD,      act::make("Add files...",               "",       ":/icon/add"));
   add(FILES_REM,      act::make("Remove selected file",       "",       ":/icon/rem"));
@@ -67,6 +70,9 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
 str const Acts::SHOW_FILES      ("showFiles");
 str const Acts::SHOW_DATASETS   ("showDatasets");
 str const Acts::SHOW_METADATA   ("showMetadata");
+
+str const Acts::SESSION_LOAD    ("sessionLoad");
+str const Acts::SESSION_SAVE    ("sessionSave");
 
 str const Acts::FILES_ADD       ("filesAdd");
 str const Acts::FILES_REM       ("filesRem");

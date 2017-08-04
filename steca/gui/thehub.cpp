@@ -15,7 +15,7 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "hub.hpp"
+#include "thehub.hpp"
 #include "win.hpp"
 #include <core/io/io.hpp>
 #include <dev_lib/defs.inc>
@@ -84,6 +84,12 @@ QVariant FileProxyModel::data(rcidx idx, int role) const {
 //------------------------------------------------------------------------------
 
 Hub::Hub(Win& win_) : win(win_), acts(*this, win_) {}
+
+Hub::ref Hub::clear() {
+  base::clear();
+  emit sigReset();
+  RTHIS
+}
 
 Hub::ref Hub::addFiles() {
   auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_files.hpp"
-#include "../hub.hpp"
+#include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
 #include "../models.hpp"
 

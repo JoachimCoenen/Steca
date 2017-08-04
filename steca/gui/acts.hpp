@@ -32,6 +32,9 @@ dcl_sub_(Acts, l_qt::acts)
   cst_(str, SHOW_DATASETS);
   cst_(str, SHOW_METADATA);
 
+  cst_(str, SESSION_LOAD);
+  cst_(str, SESSION_SAVE);
+
   cst_(str, FILES_ADD);
   cst_(str, FILES_REM);
   cst_(str, CORR_ENABLE);

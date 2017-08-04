@@ -33,6 +33,28 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
+Session::ref Session::clear() {
+  RTHIS
+  //TODO
+//  while (0 < numFiles())
+//    remFile(0);
+
+//  remCorrFile();
+//  corrEnabled_ = corrHasNaNs_ = false;
+
+//  bgPolyDegree_ = 0;
+//  bgRanges_.clear();
+
+//  reflections_.clear();
+
+//  norm_ = eNorm::NONE;
+
+//  angleMapCache_.clear();
+
+//  intenScaledAvg_ = true;
+//  intenScale_ = preal(1);
+}
+
 AngleMap::sh Session::angleMap(data::Set::rc set) const {
   AngleMap::Key key(angleMapKey0, set.tth());
   auto map = angleMapCache.get(key);

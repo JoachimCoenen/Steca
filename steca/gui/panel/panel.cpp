@@ -18,7 +18,7 @@
 #include "panel.hpp"
 #include <dev_lib/defs.inc>
 
-#include "../hub.hpp"
+#include "../thehub.hpp"
 #include <qt_lib/lbl.hpp>
 
 namespace gui {

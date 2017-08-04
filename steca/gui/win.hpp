@@ -18,7 +18,7 @@
 #pragma once
 
 #include <qt_lib/win.hpp>
-#include "hub.hpp"
+#include "thehub.hpp"
 #include <QNetworkAccessManager>
 
 namespace gui {

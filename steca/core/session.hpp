@@ -33,6 +33,8 @@ dcl_(Session)
 
   Session();
 
+  set_(clear, ());
+
   mth_(AngleMap::sh,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current
 

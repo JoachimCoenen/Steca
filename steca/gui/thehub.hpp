@@ -22,6 +22,10 @@
 #include <core/session.hpp>
 #include "acts.hpp"
 
+/* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
+ * names (hub & thehub) *must* differ, because that's how MOC operates: on base
+ * file names */
+
 namespace gui {
 //------------------------------------------------------------------------------
 
@@ -33,7 +37,14 @@ dcl_sub2_(Hub, l_qt::Hub, core::Session)
 
   Hub(Win&);
 
-  set_(addFiles, ());
+  set_(clear,     ());  // sigReset
+  set_(addFiles,  ());
+
+signals:
+  void sigReset(); // major change in data
+
+private:
+  Q_OBJECT
 dcl_end
 
 //------------------------------------------------------------------------------
