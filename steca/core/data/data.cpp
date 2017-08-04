@@ -117,7 +117,7 @@ void Set::collect(Session::rc s, Image const* corr,
     if (l::isnan(inten))
       continue;
 
-    inten_t ci = corr ? corr->inten(ind) : 1;
+    inten_t ci = corr ? corr->inten(ind) : inten_t(1);
     if (l::isnan(ci))
       continue;
 
@@ -301,7 +301,7 @@ inten_vec CombinedSet::collectIntens(
     numBins    = pixWidth; // simply match the number of pixels
   }
 
-  inten_vec intens(numBins, 0);
+  inten_vec intens(numBins, inten_t(0));
   uint_vec  counts(numBins, 0);
 
   auto minTth   = tth_t(tthRge.min);
@@ -316,7 +316,7 @@ inten_vec CombinedSet::collectIntens(
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
-        intens.refAt(i) *= scale/cnt;
+        intens.refAt(i) *= (scale / cnt);
     }
   }
 
@@ -339,7 +339,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
     numBins = pixWidth; // simply match the pixel resolution
   }
 
-  inten_vec intens(numBins, 0);
+  inten_vec intens(numBins, inten_t(0));
   uint_vec  counts(numBins, 0);
 
   auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);

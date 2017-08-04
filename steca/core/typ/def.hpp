@@ -18,6 +18,7 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
+#include <dev_lib/inc/flt.hpp>
 #include <dev_lib/typ/trg.hpp>
 #include <dev_lib/typ/vec.hpp>
 #include <dev_lib/typ/xy.hpp>
@@ -41,9 +42,9 @@ using tth_rge = Range;
 using gma_rge = Range;
 
 using peak_t = l::xy;
-using fwhm_t = flt32;
+using fwhm_t = l::Flt32;
 
-using inten_t   = flt32;
+using inten_t   = l::Flt32;
 using inten_vec = l::vec<inten_t>;
 using inten_rge = Range;
 

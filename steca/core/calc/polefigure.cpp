@@ -24,7 +24,7 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 itf_t::itf_t()
-: itf_t(inten_t(l::flt_inf), tth_t(l::flt_inf), fwhm_t(l::flt_inf)) {}
+: itf_t(inten_t(), tth_t(), fwhm_t()) {}
 
 itf_t::itf_t(inten_t inten_, tth_t tth_, fwhm_t fwhm_)
 : inten(inten_), tth(tth_), fwhm(fwhm_) {}
@@ -313,9 +313,9 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
             avg += itfs.at(i);
 
           interpolatedInfos.add(ReflectionInfo(alpha, beta, infos.first().rgeGma,
-              avg.inten / real(n), inten_t(l::flt_nan),
+              inten_t(avg.inten / real(n)), inten_t(),
               avg.tth   / real(n), tth_t(l::flt_nan),
-              avg.fwhm  / real(n), fwhm_t(l::flt_nan)));
+              fwhm_t(avg.fwhm  / real(n)), fwhm_t()));
           continue;
         }
 

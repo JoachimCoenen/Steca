@@ -39,13 +39,13 @@ dcl_(mat3)
        real, real, real,
        real, real, real);
 
-  mth_(mat3, transposed, ());
-  mth_(mat3, operator*,  (rc));
+  mth_(Self, transposed, ());
+  mth_(Self, operator*,  (rc));
   mth_(vec3, operator*,  (vec3::rc));
 
-  fry_(mat3, rotationCWx,  (l::rad));
-  fry_(mat3, rotationCWz,  (l::rad));
-  fry_(mat3, rotationCCWz, (l::rad));
+  fry_(Self, rotationCWx,  (l::rad));
+  fry_(Self, rotationCWz,  (l::rad));
+  fry_(Self, rotationCCWz, (l::rad));
 dcl_end
 
 }

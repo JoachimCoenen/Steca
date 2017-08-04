@@ -212,17 +212,17 @@ static void loadTiff(File& file, l_io::path::rc path,
     switch (sampleFormat) {
     case 1: {
       uint32 sample = fin.get32();
-      intens.setAt(i, sample);
+      intens.setAt(i, inten_t(sample));
       break;
     }
     case 2: {
-      int32 sample = (int32)fin.get32();
-      intens.setAt(i, sample);
+      int32 sample = l::to_i(fin.get32());
+      intens.setAt(i, inten_t(sample));
       break;
     }
     case 3: {
       flt32 sample = fin.getflt32();
-      intens.setAt(i, sample);
+      intens.setAt(i, inten_t(sample));
       break;
     }
     }

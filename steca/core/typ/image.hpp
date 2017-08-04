@@ -61,7 +61,7 @@ dcl_(count_arr2) SHARED
   using count_rge = Range;
   atr_(count_rge, rgeCount);
 
-  count_arr2(l::sz2, inten_t = 0);
+  count_arr2(l::sz2, inten_t = inten_t(0));
   count_arr2(rc);
 
   mth_(l::sz2, size, ()) RET_(cs.sz)
@@ -81,7 +81,7 @@ dcl_end
 
 dcl_(Image) SHARED
   Image();
-  Image(l::sz2::rc, inten_t = 0);
+  Image(l::sz2::rc, inten_t = inten_t(0));
   Image(count_arr2::rc);
 
   mth_(l::sz2, size, ());

@@ -107,12 +107,11 @@ dcl_base_(Json)
   set_(add, (strc key, rc that)) may_err;
   set_(add, (rc that))           may_err;
 
-  mth_(Json, operator+, (rc that)) may_err;
+  mth_(Self, operator+, (rc that)) may_err;
 
-  mth_(Json::rc, at, (strc)) may_err;
-
-  mth_(uint, size, ())       may_err;
-  mth_(Json::rc, at, (uint)) may_err;
+  mth_(uint, size, ())   may_err;
+  mth_(rc,   at, (uint)) may_err;
+  mth_(rc,   at, (strc)) may_err;
 
   mth_(int,     asInt,  ()) may_err;
   mth_(uint,    asUint, ()) may_err;
@@ -123,17 +122,17 @@ dcl_base_(Json)
 
   act_(saveTo,   (std::ostream&));
   act_(saveTo,   (std::ostream&, indent_t));
-  fry_(Json, loadFrom, (std::istream&)) may_err;
+  fry_(Self, loadFrom, (std::istream&)) may_err;
 
-  fry_(Json, loadNum, (std::istream&)) may_err;
-  fry_(Json, loadStr, (std::istream&)) may_err;
-  fry_(Json, loadVec, (std::istream&)) may_err;
-  fry_(Json, loadObj, (std::istream&)) may_err;
+  fry_(Self, loadNum, (std::istream&)) may_err;
+  fry_(Self, loadStr, (std::istream&)) may_err;
+  fry_(Self, loadVec, (std::istream&)) may_err;
+  fry_(Self, loadObj, (std::istream&)) may_err;
 
-  Json(l::ij const&);
+  explicit Json(l::ij const&);
   mth_(l::ij, asIJ, ()) may_err;
 
-  Json(l::xy const&);
+  explicit Json(l::xy const&);
   mth_(l::xy, asXY, ()) may_err;
 dcl_end
 

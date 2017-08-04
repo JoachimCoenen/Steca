@@ -176,12 +176,6 @@ Json Json::operator+(rc that) const may_err {
   return plus;
 }
 
-Json::rc Json::at(strc key) const may_err {
-  check_or_err_(OBJ == val->typ, "json: bad type");
-  auto& obj = (*static_cast<ValObj const*>(val.ptr())).val;
-  return obj.at(key);
-}
-
 uint Json::size() const may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
   auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
@@ -192,6 +186,12 @@ Json::rc Json::at(uint i) const may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
   auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.at(i);
+}
+
+Json::rc Json::at(strc key) const may_err {
+  check_or_err_(OBJ == val->typ, "json: bad type");
+  auto& obj = (*static_cast<ValObj const*>(val.ptr())).val;
+  return obj.at(key);
 }
 
 int Json::asInt() const may_err {

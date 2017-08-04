@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../defs.hpp"
+#include "../inc/num.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
@@ -12,7 +13,7 @@ struct rad;
 dcl_(deg)
   atr_(real, val);
 
-  explicit deg(real = 0);
+  explicit deg(real = l::flt_nan);
   explicit deg(rad const&);
 
   cop_(real) RET_(val)
@@ -34,7 +35,7 @@ dcl_end
 dcl_(rad)
   atr_(real, val);
 
-  explicit rad(real = 0);
+  explicit rad(real = l::flt_nan);
   explicit rad(deg const&);
 
   cop_(real) RET_(val)

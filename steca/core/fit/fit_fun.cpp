@@ -116,7 +116,7 @@ PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::flt_nan) {}
 PeakFun::ref PeakFun::reset() {
   base::reset();
   setGuessedPeak(peak_t(0, 0));
-  setGuessedFWHM(0);
+  setGuessedFWHM(fwhm_t(0));
   RTHIS
 }
 
@@ -146,7 +146,7 @@ void PeakFun::fit(Curve::rc curve, Range::rc range) {
     }
 
     mut(guessedPeak).set(peakTth, peakIntens);
-    mut(guessedFWHM) = c.xs.at(hmi2) - c.xs.at(hmi1);
+    mut(guessedFWHM) = fwhm_t(c.xs.at(hmi2) - c.xs.at(hmi1));
 //  }
 
   LevenbergMarquardt().fit(*this, c);
@@ -191,7 +191,7 @@ peak_t Raw::peakError() const {
 }
 
 fwhm_t Raw::fwhmError() const {
-  return 0;
+  return fwhm_t(0);
 }
 
 Raw::ref Raw::setRange(Range::rc r) {

@@ -133,10 +133,10 @@ void Session::calcIntensCorr() const {
 
   real avg = sum / (w * h);
 
-  intensCorrImage = l::share(new Image(corrImage->size(), 1));
+  intensCorrImage = l::share(new Image(corrImage->size(), inten_t(1)));
 
   for_ij_(w, h) {
-    auto  inten = corrImage->inten(i + di, j + dj);
+    auto inten = corrImage->inten(i + di, j + dj);
     real factor;
 
     if (inten > 0) {
