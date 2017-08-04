@@ -191,8 +191,16 @@ template <typename T> T const& min(T const& a, T const& b) {
   return (a < b) ? a : b;
 }
 
+template <typename T, typename... R> T const& min(T const& t, R const&... r) {
+  return min(t, min(r...));
+}
+
 template <typename T> T const& max(T const& a, T const& b) {
   return (a > b) ? a : b;
+}
+
+template <typename T, typename... R> T const& max(T const& t, R const&... r) {
+  return max(t, max(r...));
 }
 
 template <typename T> T const& bound(T const& minVal, T const& v, T const& maxVal) {

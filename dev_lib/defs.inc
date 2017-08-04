@@ -67,7 +67,7 @@ struct _DebugOut_ {
   _DebugOut_() { std::cout << "[";              }
  ~_DebugOut_() { std::cout << "]" << std::endl; }
 
-  template<typename T>
+  template <typename T>
   _DebugOut_& operator<<(T const& t) {
     if (!first)
       std::cout << " :";
@@ -134,7 +134,7 @@ private:
 // ad-hoc mutability
 
 #include <utility>
-template<typename T> void mut_swap(T& t1, T& t2) {
+template <typename T> void mut_swap(T& t1, T& t2) {
   std::swap(mut(t1), mut(t2));
 }
 

@@ -130,7 +130,8 @@ TEST_("num floor/ceil/...",
   CHECK_EQ(+1, ceil(0.1f));   CHECK_EQ(+1,  ceil(0.1));
   CHECK_EQ(0,  ceil(-0.1f));  CHECK_EQ(0,   ceil(-0.1));
 
-  CHECK_EQ(1, min(1,2)); CHECK_EQ(2, max(1,2));
+  CHECK_EQ(1, min(1,2)); CHECK_EQ(1, min(3,2,1,4));
+  CHECK_EQ(2, max(1,2));
 
   CHECK_EQ(1, bound(1,-3, 2)); CHECK_EQ(2, bound(1,+3, 2));
 

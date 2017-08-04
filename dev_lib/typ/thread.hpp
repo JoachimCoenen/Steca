@@ -17,7 +17,7 @@ dcl_(threads)
 
   threads();
 
-  template<typename L>
+  template <typename L>
   act_mut_(distribute, (L l, sz_t n)) {
     sz_t m = n / nc, mr = n % nc;
     for (sz_t i=0, from=0, to; i<nc; ++i, from=to)
