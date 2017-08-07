@@ -241,7 +241,7 @@ TEST_("loadTiff",
 
 //------------------------------------------------------------------------------
 
-File::sh loadTiffDat(Files& files, l_io::path::rc path) may_err {
+File::sh loadTiffDat(Files::rc files, l_io::path::rc path) may_err {
   File::sh file(new File(files, path.filename()));
 
   FileTiffDat fin(path);

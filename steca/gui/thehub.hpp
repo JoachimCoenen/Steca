@@ -35,6 +35,9 @@ struct Win;
 dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 #ifdef DEVELOPMENT
   using base::addFile;
+  void emitReset() {
+    emit sigReset();
+  }
 #endif
 
   ref_(Win,  win);

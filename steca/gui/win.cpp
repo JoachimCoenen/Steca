@@ -212,6 +212,7 @@ void Win::onFirstShow() {
 
 #ifdef DEVELOPMENT
   hub.addFile(l_io::path("/home/jan/C/+dev/fz/data/SS15/m280583.dat"));
+  hub.emitReset();
 #endif
 }
 

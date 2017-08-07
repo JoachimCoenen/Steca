@@ -23,18 +23,17 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress(l_io::path::rc);
-bool couldBeMar(l_io::path::rc);
+bool couldBeCaress (l_io::path::rc);
+bool couldBeMar    (l_io::path::rc);
 bool couldBeTiffDat(l_io::path::rc);
 
 // load a file; file type will be sensed
-data::File::sh load(data::Files&, l_io::path::rc) may_err;
+data::File::sh load(data::Files::rc, l_io::path::rc) may_err;
 
 // load a specific file type
-data::File::sh loadCaress(data::Files&,    l_io::path::rc) may_err;
-data::File::sh loadCaressNew(data::Files&, l_io::path::rc) may_err;
-data::File::sh loadMar(data::Files&,       l_io::path::rc) may_err;
-data::File::sh loadTiffDat(data::Files&,   l_io::path::rc) may_err;
+data::File::sh loadCaress (data::Files::rc, l_io::path::rc) may_err;
+data::File::sh loadMar    (data::Files::rc, l_io::path::rc) may_err;
+data::File::sh loadTiffDat(data::Files::rc, l_io::path::rc) may_err;
 
 str loadCaressComment(l_io::path::rc) may_err;
 

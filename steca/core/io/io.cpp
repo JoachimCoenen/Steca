@@ -70,7 +70,7 @@ bool couldBeTiffDat(l_io::path::rc path) {
 
 //------------------------------------------------------------------------------
 
-data::File::sh load(data::Files& files, l_io::path::rc path) may_err {
+data::File::sh load(data::Files::rc files, l_io::path::rc path) may_err {
   data::File::sh file;
 
   if (couldBeCaress(path))
