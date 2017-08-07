@@ -228,7 +228,6 @@ static File::sh loadOpenCaressFile(Files& files, strc name) may_err {
 
   endDataset();
 
-  files.addFile(file);
   return file;
 }
 

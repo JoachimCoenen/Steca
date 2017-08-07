@@ -207,9 +207,11 @@ Image::sh Session::intensCorr() const {
 }
 
 Session::ref Session::addFile(l_io::path::rc path) may_err {
-  EXPECT_(!path.isEmpty())
-  auto file = io::load(mut(files), path);
-  setImageSize(file->sets.imageSize());
+  if (!path.isEmpty()) {
+    auto file = io::load(mut(files), path);
+    setImageSize(file->sets.imageSize());
+    mut(files).addFile(file);
+  }
   RTHIS
 }
 
