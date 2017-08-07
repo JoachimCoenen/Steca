@@ -97,18 +97,26 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+dcl_sub_(Sets, l::vec<Set::sh>)  // a collection of sets
+  Sets();
+
+  mth_(l::sz2,    imageSize, ());
+  mth_(Image::sh, foldImage, ());
+
+private:
+  mut_(Image::sh, lazyFoldImage);
+dcl_end
+
+//------------------------------------------------------------------------------
+
 struct CombinedSets;
 
-dcl_(CombinedSet) SHARED   // one or more Set
-  atr_(l::vec<Set::sh>, sets);
+dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   ptr_(CombinedSets, parent);
 
   CombinedSet();
 
-  mth_(l::sz2, imageSize, ());
-
   mth_(Meta::sh,  meta,  ());
-  mth_(Image::sh, image, ());
 
   // no tth
   mth_(omg_t::rc, omg, ());
@@ -127,10 +135,8 @@ dcl_(CombinedSet) SHARED   // one or more Set
   mth_(inten_rge, rgeInten, ());
   mth_(inten_vec, collectIntens, (Session const&,
                                   Image const* intensCorr, gma_rge::rc));
-
 private:
   mut_(Meta::sh,  lazyMeta);
-  mut_(Image::sh, lazyImage);
 
   mut_(omg_t,     lazyOmg);
   mut_(phi_t,     lazyPhi);
@@ -146,8 +152,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(CombinedSets) SHARED
-  atr_(l::vec<CombinedSet::sh>, sets);
+dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
 
   CombinedSets();
 
@@ -177,7 +182,7 @@ dcl_(File) SHARED  // one file
   atr_(str, name);
   atr_(str, comment);
   atr_(l::vec<std::pair<str COMMA str>>, strs);
-  atr_(l::vec<Set::sh>, sets);
+  atr_(Sets, sets);
 
   File(Files const&, strc name);
 

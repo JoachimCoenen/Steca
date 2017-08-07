@@ -116,15 +116,40 @@ void Hub::sessionSave(l_io::path path) const may_err {
   base::save().saveTo(file.asStream());
 }
 
-Hub::ref Hub::addFiles() {
+Hub::ref Hub::filesAdd() {
   auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),
                 "Data files (*.dat *.mar*);;All files (*.*)",
                 new FileProxyModel);
 
   if (!names.isEmpty()) {
-    l_io::path(names.at(0)).absolute().cd();
-// session:    hub_.addFiles(fileNames);
+    l_io::path(names.at(0)).cd();
+
+    for (auto& name : names)
+      base::addFile(name);
+
+    emit sigReset();
   }
+  RTHIS
+}
+
+Hub::ref Hub::corrEnable(bool on) {
+  if (on && !corrFile) {
+    str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),
+                 "Data files (*.dat *.mar*);;All files (*.*)");
+    if (!name.isEmpty()) {
+      l_io::path(name).cd();
+        base::setCorrFile(name);
+    }
+  }
+
+  base::tryEnableCorr(on);
+  emit sigReset();
+  RTHIS
+}
+
+Hub::ref Hub::corrRem() {
+  base::remCorrFile();
+  emit sigReset();
   RTHIS
 }
 

@@ -25,13 +25,14 @@
 
 #include <dev_lib/inc/num.hpp>
 #include <dev_lib/typ/cache.hpp>
+#include <dev_lib/io/path.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_(Session)
-  atr_(str_vec, normStrLst);
+extern str_vec const normStrLst;
 
+dcl_(Session)
   Session();
 
   set_(clear, ());
@@ -51,8 +52,16 @@ dcl_(Session)
   atr_(bool,           corrEnabled);
   mth_(Image::sh,      intensCorr, ());
 
+  atr_(data::Files,    files);
   atr_(data::File::sh, corrFile);
   atr_(Image::sh,      corrImage);
+
+  set_(addFile,       (l_io::path::rc)) may_err;
+  set_(setCorrFile,   (l_io::path::rc)) may_err;
+  set_(remCorrFile,   ());
+  set_(tryEnableCorr, (bool on));
+
+  set_(setImageSize,  (l::sz2)) may_err;
 
   mth_(calc::ImageLens::sh, imageLens,
         (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
@@ -72,7 +81,8 @@ private:
   mutable Image::sh intensCorrImage;
   mutable bool corrHasNaNs;
 
-  void calcIntensCorr() const;
+  act_mut_(updateImageSize, ());
+  act_(calcIntensCorr, ());
 dcl_end
 
 //------------------------------------------------------------------------------

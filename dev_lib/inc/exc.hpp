@@ -13,12 +13,15 @@ dcl_sub_(exc, std::exception)
   atr_(str,  msg);
   atr_(bool, silent);
 
-  exc(strc) noexcept;
+  exc(strc, bool silent) noexcept;
 dcl_end
 
 // throw an exception
 [[noreturn]] void err()     will_err;
 [[noreturn]] void err(strc) will_err;
+
+[[noreturn]] void errSilent()     will_err;
+[[noreturn]] void errSilent(strc) will_err;
 
 // runtime check
 #define check_or_err_(cond, msg) \

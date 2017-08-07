@@ -19,13 +19,15 @@
 #include <dev_lib/defs.inc>
 #include <dev_lib/io/log.hpp>
 #include "fit/fit_methods.hpp"
+#include "io/io.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------
 
+str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
+
 Session::Session()
-: normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"})
-, angleMapKey0()
+: angleMapKey0()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
@@ -198,12 +200,59 @@ Image::sh Session::intensCorr() const {
   if (!corrEnabled)
     return Image::sh();
 
-  EXPECT_(intensCorrImage)
-  if (intensCorrImage->isEmpty())
+  if (!intensCorrImage)
     calcIntensCorr();
 
   return intensCorrImage;
 }
+
+Session::ref Session::addFile(l_io::path::rc path) may_err {
+  EXPECT_(!path.isEmpty())
+  auto file = io::load(mut(files), path);
+  setImageSize(file->sets.imageSize());
+  RTHIS
+}
+
+Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
+  if (path.isEmpty()) {
+    remCorrFile();
+  } else {
+    auto file = io::load(mut(files), path);
+    auto& sets = file->sets;
+
+    setImageSize(sets.imageSize());
+    mut(corrImage) = sets.foldImage();
+    intensCorrImage.drop();
+
+    // all ok
+    mut(corrFile)    = file;
+    mut(corrEnabled) = true;
+  }
+  RTHIS
+}
+
+Session::ref Session::remCorrFile() {
+  mut(corrFile).drop();
+  mut(corrImage).drop();
+  mut(intensCorrImage).drop();
+  mut(corrEnabled) = false;
+  updateImageSize();
+  RTHIS
+}
+
+Session::ref Session::tryEnableCorr(bool on) {
+  mut(corrEnabled) = on && corrFile;
+  RTHIS
+}
+
+Session::ref Session::setImageSize(l::sz2 size) may_err {
+  if (imageSize.isEmpty())
+    mut(imageSize) = size;  // the first one
+  else if (imageSize != size)
+    l::err("inconsistent image size");
+  RTHIS
+}
+
 
 calc::ImageLens::sh Session::imageLens(
   Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
@@ -235,17 +284,22 @@ real Session::calcAvgBackground(data::CombinedSet::rc dataset) const {
 }
 
 real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
-  if (datasets.sets.isEmpty())
+  if (datasets.isEmpty())
     return 0;
 
   l_io::busy __;
 
   real bg = 0;
 
-  for (auto& dataset : datasets.sets)
+  for (auto& dataset : datasets)
     bg += calcAvgBackground(*dataset);
 
-  return bg / datasets.sets.size();
+  return bg / datasets.size();
+}
+
+void Session::updateImageSize() {
+  if (0 == files.files.size() && !corrFile)
+    mut(imageSize) = l::sz2(0, 0);
 }
 
 void Session::calcIntensCorr() const {

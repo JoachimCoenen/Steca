@@ -32,7 +32,11 @@ namespace gui {
 
 struct Win;
 
-dcl_sub2_(Hub, l_qt::Hub, core::Session)
+dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
+#ifdef DEVELOPMENT
+  using base::addFile;
+#endif
+
   ref_(Win,  win);
   atr_(Acts, acts);
 
@@ -42,7 +46,9 @@ dcl_sub2_(Hub, l_qt::Hub, core::Session)
   set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
   mth_(void, sessionSave, (l_io::path))             may_err;
 
-  set_(addFiles,  ());
+  set_(filesAdd,   ());
+  set_(corrEnable, (bool));
+  set_(corrRem,    ());
 
 signals:
   void sigReset(); // major change in data

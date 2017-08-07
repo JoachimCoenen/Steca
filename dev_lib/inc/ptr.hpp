@@ -135,7 +135,7 @@ struct scoped : ptr_base {
   scoped(scoped const&) = delete;
 
  ~scoped() {
-    reset(nullptr);
+    drop();
   }
 
   template <typename O>
@@ -146,6 +146,10 @@ struct scoped : ptr_base {
   void reset(T* p_) {
     delete static_cast<T*>(mutp(p));
     mut(p) = mut(p_);
+  }
+
+  void drop() {
+    reset(nullptr);
   }
 
   own_ptr<T> take() {
@@ -189,10 +193,6 @@ struct shared : protected _shared_base_ {
   shared(shared const& that) : _shared_base_(that) {}
  ~shared() { _drop(); }
 
-  void drop() {
-    *this = shared();
-  }
-
   shared& operator=(shared<T> const& that) {
     if (ptr_base::p != that.ptr_base::p) {
       _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
@@ -202,6 +202,10 @@ struct shared : protected _shared_base_ {
 
   void reset(T* p) {
     *this = shared(p);
+  }
+
+  void drop() {
+    reset(nullptr);
   }
 
   T const* ptr()        const RET_(static_cast<T const*>(p()))

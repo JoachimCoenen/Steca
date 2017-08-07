@@ -209,6 +209,11 @@ void Win::onFirstShow() {
     checkUpdate(false);
   if (s.readBool(S::STARTUP_ABOUT, true))
     about();
+
+#ifdef DEVELOPMENT
+#error
+  hub.addFile("/home/jan/C/+dev/fz/data/SS15/m280583.dat");
+#endif
 }
 
 bool Win::onClose() {
