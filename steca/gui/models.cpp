@@ -27,8 +27,11 @@ using cl_n = ModelDatasets::cl_n;
 
 //------------------------------------------------------------------------------
 
-ModelFiles::ModelFiles(Hub& hub) : HubAccess(hub) {
+ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
   setCheckable(true);
+  hub.onSigReset([this]() {
+    signalReset();
+  });
 }
 
 cl_n ModelFiles::cols() const {
@@ -39,8 +42,8 @@ rw_n ModelFiles::rows() const {
   return rw_n(hub.numFiles());
 }
 
-l_qt::var ModelFiles::cell(rw_n, cl_n) const {
-  return l_qt::var();
+l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
+  return l_qt::var(hub.fileName(rw));
 }
 
 ModelFiles::ref ModelFiles::check(rw_n, bool) {

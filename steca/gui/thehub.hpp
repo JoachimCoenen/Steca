@@ -18,6 +18,7 @@
 #pragma once
 
 #include "acts.hpp"
+#include "refhub.hpp"
 #include <core/session.hpp>
 #include <dev_lib/defs.hpp>
 #include <dev_lib/io/path.hpp>
@@ -49,13 +50,30 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
   mth_(void, sessionSave, (l_io::path))             may_err;
 
-  mth_(uint, numFiles, ()) RET_(base::files.files.size())
-  set_(filesAdd,   ());
-  set_(corrEnable, (bool));
-  set_(corrRem,    ());
+  mth_(uint, numFiles, ())        RET_(base::files.size())
+  mth_(str,  fileName, (uint i))  RET_(base::files.at(i)->name)
+
+  set_(filesAdd,   ())            emits(sigReset);
+  set_(corrEnable, (bool))        emits(sigCorr);
+  set_(corrRem,    ())            emits(sigCorr);
 
 signals:
-  void sigReset(); // major change in data
+  void sigReset();  // major change in data
+  void sigCorr();   // changed correction - file, on/off
+
+public:
+  template <typename Signal, typename Lambda>
+  void onSignal(Signal signal, Lambda slot) {
+    QObject::connect(this, signal, slot);
+  }
+
+#define DCL_HUB_SIGNAL_HANDLER(name) \
+  template <typename Lambda> void onSig##name(Lambda slot) { \
+    onSignal(&Hub::sig##name, slot); \
+  }
+
+  DCL_HUB_SIGNAL_HANDLER(Reset)
+  DCL_HUB_SIGNAL_HANDLER(Corr)
 
 private:
   Q_OBJECT

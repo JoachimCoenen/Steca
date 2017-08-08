@@ -56,7 +56,10 @@ dcl_(Session)
   atr_(data::File::sh, corrFile);
   atr_(Image::sh,      corrImage);
 
+  bol_(hasFile,       (l_io::path::rc));
   set_(addFile,       (l_io::path::rc)) may_err;
+  set_(remFile,       (uint));
+
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));

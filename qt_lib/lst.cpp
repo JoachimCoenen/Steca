@@ -108,24 +108,5 @@ int lst_view::sizeHintForColumn(int) const {
 }
 
 //------------------------------------------------------------------------------
-
-multi_lst_view::multi_lst_view() {
-  base::setSelectionMode(ExtendedSelection);
-}
-
-multi_lst_view::ref multi_lst_view::selectRows(l::vec<lst_model::rw_n> rows) {
-  EXPECT_(model)
-  auto cols = model->base_rc().columnCount();
-
-  QItemSelection is;
-  for (uint row : rows)
-    is.append(QItemSelectionRange(model->index(l::to_i(row), 0),
-                                  model->index(l::to_i(row), cols - 1)));
-
-  selectionModel()->select(is, QItemSelectionModel::ClearAndSelect);
-  RTHIS
-}
-
-//------------------------------------------------------------------------------
 }
 // eof

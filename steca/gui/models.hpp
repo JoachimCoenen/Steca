@@ -17,13 +17,13 @@
 
 #pragma once
 
-#include "hubaccess.hpp"
+#include "refhub.hpp"
 #include <qt_lib/model.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ModelFiles, HubAccess, l_qt::lst_model)
+dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
   ModelFiles(Hub&);
 
   mth_(cl_n, cols, ());

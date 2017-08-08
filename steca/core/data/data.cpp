@@ -411,8 +411,9 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
 
 //------------------------------------------------------------------------------
 
-File::File(Files::rc files_, strc name_)
-: files(files_), idx(0), name(name_), comment(), strs(), sets() {}
+File::File(Files::rc files_, l_io::path::rc path_)
+: files(files_), idx(0), path(path_), name(path.filename()), comment()
+, strs(), sets() {}
 
 File::ref File::addSet(Set::sh set) {
   mut(sets).add(set);
@@ -421,32 +422,32 @@ File::ref File::addSet(Set::sh set) {
 
 //------------------------------------------------------------------------------
 
-Files::Files() : files(), dict(new Meta::Dict) {}
+Files::Files() : dict(new Meta::Dict) {}
 
 Files::ref Files::addFile(data::File::sh file) {
   EXPECT_(this == &file->files)
   EXPECT_(! // not there
     ([&]() {
-      for_i_(files.size())
-        if (file == files.at(i))
+      for_i_(size())
+        if (file == at(i))
           return true;
       return false;
      }())
   )
 
-  mut(files).add(file);
-  mut(file->idx) = files.size();
+  add(file);
+  mut(file->idx) = size();
   return *this;
 }
 
 Files::ref Files::remFile(uint i) {
-  File::sh file = files.at(i);
-  mut(files).rem(i);
+  File::sh file = at(i);
+  rem(i);
 
   // renumber
   mut(file->idx) = 0;
-  for_i_(files.size())
-    mut(files.at(i)->idx) = i + 1;
+  for_i_(size())
+    mut(at(i)->idx) = i + 1;
 
   return *this;
 }
@@ -455,14 +456,14 @@ Files::ref Files::remFile(uint i) {
 
 TEST_("data::sh",
   Files fs;
-  File::sh f1(new File(fs, "")), f2(new File(fs, ""));
+  File::sh f1(new File(fs, l_io::path(""))), f2(new File(fs, l_io::path("")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
   Files fs;
 
-  File *f1 = new File(fs, ""), *f2 = new File(fs, "");
+  File *f1 = new File(fs, l_io::path("")), *f2 = new File(fs, l_io::path(""));
   CHECK_EQ(0, f1->idx);
   CHECK_EQ(0, f2->idx);
 

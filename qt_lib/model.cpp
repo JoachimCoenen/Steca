@@ -30,7 +30,7 @@ bool lst_model::isChecked(rw_n) const {
   return false;
 }
 
-void lst_model::notify() const {
+void lst_model::signalReset() const {
   mutp(this)->beginResetModel();
   mutp(this)->endResetModel();
 }

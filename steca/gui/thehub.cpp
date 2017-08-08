@@ -23,6 +23,7 @@
 #include <dev_lib/defs.inc>
 #include <dev_lib/io/fio.hpp>
 #include <dev_lib/io/path.hpp>
+#include <dev_lib/io/log.hpp>
 #include <dev_lib/typ/hash.hpp>
 #include <qt_lib/dlg_file.hpp>
 #include <qt_lib/dlg_msg.hpp>
@@ -122,10 +123,12 @@ Hub::ref Hub::filesAdd() {
                 new FileProxyModel);
 
   if (!names.isEmpty()) {
-    l_io::path(names.at(0)).cd();
+    l_io::path(names.at(0)).dir().cd();
 
-    for (auto& name : names)
-      base::addFile(name);
+    l_io::busy __;
+    for (l_io::path path : names)
+      if (!base::hasFile(path))
+        base::addFile(path);
 
     emit sigReset();
   }
@@ -137,19 +140,19 @@ Hub::ref Hub::corrEnable(bool on) {
     str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),
                  "Data files (*.dat *.mar*);;All files (*.*)");
     if (!name.isEmpty()) {
-      l_io::path(name).cd();
+      l_io::path(name).dir().cd();
         base::setCorrFile(name);
     }
   }
 
   base::tryEnableCorr(on);
-  emit sigReset();
+  emit sigCorr();
   RTHIS
 }
 
 Hub::ref Hub::corrRem() {
   base::remCorrFile();
-  emit sigReset();
+  emit sigCorr();
   RTHIS
 }
 

@@ -12,6 +12,8 @@ namespace l_qt {
 
 dcl_sub_(var, QVariant)
   var();
+  var(pcstr);
+  var(strc);
   var(QVariant const&);
 
   bol_(isNum,  ());

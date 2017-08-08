@@ -57,8 +57,8 @@ using data::Meta;
 
 using data::flt_vec;
 
-static File::sh loadOpenCaressFile(Files::rc files, strc name) may_err {
-  File::sh file(new File(files, name));
+static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err {
+  File::sh file(new File(files, path));
 
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
@@ -236,7 +236,7 @@ File::sh loadCaress(Files::rc files, l_io::path::rc path) may_err {
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(files, path.filename());
+    return loadOpenCaressFile(files, path);
   } catch (l::exc& e) {
     mut(e.msg) = CAT(path, e.msg);
     throw;

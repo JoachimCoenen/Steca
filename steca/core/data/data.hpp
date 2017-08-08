@@ -20,6 +20,7 @@
 #include "../typ/def.hpp"
 #include "../typ/image.hpp"
 #include <dev_lib/typ/map.hpp>
+#include <dev_lib/io/path.hpp>
 
 namespace core {
 
@@ -177,22 +178,22 @@ dcl_end
 struct Files;
 
 dcl_(File) SHARED  // one file
-  ref_(Files, files);
-  atr_(uint, idx); // this order in Files, 1..; 0 = not in Files
-  atr_(str, name);
-  atr_(str, comment);
+  ref_(Files,      files);
+  atr_(uint,       idx); // this order in Files, 1..; 0 = not in Files
+  atr_(l_io::path, path);
+  atr_(str,        name);
+  atr_(str,        comment);
   atr_(l::vec<std::pair<str COMMA str>>, strs);
   atr_(Sets, sets);
 
-  File(Files const&, strc name);
+  File(Files const&, l_io::path::rc);
 
   set_(addSet, (Set::sh));
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(Files) SHARED // the whole file group
-  atr_(l::vec<File::sh>, files);
+dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
   atr_(Meta::Dict::sh,   dict);
 
   Files();

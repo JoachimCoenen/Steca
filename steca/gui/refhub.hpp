@@ -18,16 +18,17 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
+#include <QObject>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 struct Hub;
 
-dcl_(HubAccess)
+dcl_(RefHub)
   Hub& hub;
 
-  HubAccess(Hub& hub_) : hub(hub_) {}
+  RefHub(Hub& hub_) : hub(hub_) {}
 dcl_end
 
 //------------------------------------------------------------------------------

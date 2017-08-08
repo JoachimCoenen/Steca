@@ -206,6 +206,20 @@ Image::sh Session::intensCorr() const {
   return intensCorrImage;
 }
 
+bool Session::hasFile(l_io::path::rc path) const {
+  for (auto& file : files)
+    if (file->path == path)
+      return true;
+
+  return false;
+}
+
+Session::ref Session::remFile(uint i) {
+  mut(files).rem(i);
+  updateImageSize();
+  RTHIS
+}
+
 Session::ref Session::addFile(l_io::path::rc path) may_err {
   if (!path.isEmpty()) {
     auto file = io::load(files, path);
@@ -300,7 +314,7 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
 }
 
 void Session::updateImageSize() {
-  if (0 == files.files.size() && !corrFile)
+  if (0 == files.size() && !corrFile)
     mut(imageSize) = l::sz2(0, 0);
 }
 

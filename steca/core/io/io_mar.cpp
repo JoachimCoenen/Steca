@@ -36,7 +36,7 @@ using l_io::path;
 // Code taken from the original STeCa, only slightly modified.
 
 File::sh loadMar(Files::rc files, path::rc path) may_err {
-  File::sh file(new File(files, path.filename()));
+  File::sh file(new File(files, path));
 
   using WORD = short;
 

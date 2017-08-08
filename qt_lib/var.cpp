@@ -11,6 +11,9 @@ namespace l_qt {
 
 var::var() : Self(QVariant()) {}
 
+var::var(strc s) : Self(toQt(s)) {}
+var::var(pcstr p) : Self(QString(p)) {}
+
 var::var(QVariant const& v) {
   *static_cast<QVariant*>(this) = v;
 }

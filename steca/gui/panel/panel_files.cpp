@@ -23,7 +23,7 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(FilesView, HubAccess, l_qt::multi_lst_view)
+dcl_sub2_(FilesView, RefHub, l_qt::lst_view)
   FilesView(Hub&);
 
 //protected:
@@ -35,7 +35,7 @@ dcl_sub2_(FilesView, HubAccess, l_qt::multi_lst_view)
 //  void recollect();
 dcl_end
 
-FilesView::FilesView(Hub& hub) : HubAccess(hub) {
+FilesView::FilesView(Hub& hub) : RefHub(hub) {
 //  header()->hide();
 
 //  connect(hub_.actions.remFile, &QAction::triggered,

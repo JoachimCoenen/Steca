@@ -37,12 +37,6 @@ protected:
   QMetaObject::Connection con;
 dcl_end
 
-dcl_sub_(multi_lst_view, lst_view)
-  multi_lst_view();
-
-  set_(selectRows, (l::vec<lst_model::rw_n>));
-dcl_end
-
 //------------------------------------------------------------------------------
 }
 // eof
