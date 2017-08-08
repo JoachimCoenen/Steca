@@ -35,7 +35,7 @@ PanelDatasets::PanelDatasets(Hub& hub)
   h.add(new l_qt::spin());
 
   view->showHeader(true);
-  view->set((model = new core_qt::ModelDatasets));
+  view->set((model = new gui::ModelDatasets));
 }
 
 PanelDatasets::~PanelDatasets() {

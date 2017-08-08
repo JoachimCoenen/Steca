@@ -30,7 +30,7 @@ PanelMetadata::PanelMetadata(Hub& hub)
 
   tab->vb.add((view = new l_qt::lst_view));
   view->showHeader(true);
-  view->set((model = new core_qt::ModelMetadata));
+  view->set((model = new gui::ModelMetadata));
 }
 
 PanelMetadata::~PanelMetadata() {

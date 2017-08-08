@@ -17,37 +17,17 @@
 
 #pragma once
 
-#include "hubaccess.hpp"
-#include <qt_lib/model.hpp>
+#include <dev_lib/defs.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ModelFiles, HubAccess, l_qt::lst_model)
-  ModelFiles(Hub&);
+struct Hub;
 
-  mth_(cl_n, cols, ());
-  mth_(rw_n, rows, ());
-  mth_(l_qt::var, cell, (rw_n, cl_n));
+dcl_(HubAccess)
+  Hub& hub;
 
-  set_(check, (rw_n, bool));
-  bol_(isChecked, (rw_n));
-dcl_end
-
-dcl_sub_(ModelDatasets, l_qt::lst_model)
-  ModelDatasets();
-
-  mth_(cl_n, cols, ());
-  mth_(rw_n, rows, ());
-  mth_(l_qt::var, cell, (rw_n, cl_n));
-dcl_end
-
-dcl_sub_(ModelMetadata, l_qt::lst_model)
-  ModelMetadata();
-
-  mth_(cl_n, cols, ());
-  mth_(rw_n, rows, ());
-  mth_(l_qt::var, cell, (rw_n, cl_n));
+  HubAccess(Hub& hub_) : hub(hub_) {}
 dcl_end
 
 //------------------------------------------------------------------------------

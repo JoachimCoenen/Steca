@@ -210,7 +210,7 @@ void Win::onFirstShow() {
   if (s.readBool(S::STARTUP_ABOUT, true))
     about();
 
-#ifdef DEVELOPMENT
+#ifdef DEVELOPMENT_LOAD
   hub.addFile(l_io::path("/home/jan/C/+dev/fz/data/SS15/m280583.dat"));
   hub.emitReset();
 #endif

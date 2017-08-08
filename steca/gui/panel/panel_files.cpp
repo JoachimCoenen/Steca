@@ -16,11 +16,67 @@
  ******************************************************************************/
 
 #include "panel_files.hpp"
+#include "../models.hpp"
 #include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
-#include "../models.hpp"
 
 namespace gui {
+//------------------------------------------------------------------------------
+
+dcl_sub2_(FilesView, HubAccess, l_qt::multi_lst_view)
+  FilesView(Hub&);
+
+//protected:
+//  using Model = models::FilesModel;
+//  Model* model() const { return static_cast<Model*>(super::model()); }
+
+//  void selectionChanged(QItemSelection const&, QItemSelection const&);
+//  void removeSelected();
+//  void recollect();
+dcl_end
+
+FilesView::FilesView(Hub& hub) : HubAccess(hub) {
+//  header()->hide();
+
+//  connect(hub_.actions.remFile, &QAction::triggered,
+//          [this]() { removeSelected(); });
+
+//  onSigFilesChanged([this]() {
+//    selectRows({});
+//    recollect();
+//  });
+
+//  onSigFilesSelected([this]() {
+//    selectRows(hub_.collectedFromFiles());
+//  });
+}
+
+//void FilesView::selectionChanged(QItemSelection const& selected,
+//                                 QItemSelection const& deselected) {
+//  super::selectionChanged(selected, deselected);
+//  recollect();
+//}
+
+//void FilesView::removeSelected() {
+//  auto indexes = selectedIndexes();
+
+//  // backwards
+//  for (int i = indexes.count(); i-- > 0;)
+//    model()->remFile(to_u(indexes.at(i).row()));
+
+//  selectRows({});
+//  recollect();
+//}
+
+//void FilesView::recollect() {
+//  uint_vec rows;
+//  for (auto& index : selectionModel()->selectedRows())
+//    if (index.isValid())
+//      rows.append(to_u(index.row()));
+
+//  hub_.collectDatasetsFromFiles(rows);
+//}
+
 //------------------------------------------------------------------------------
 
 PanelFiles::PanelFiles(Hub& hub_)
@@ -39,9 +95,9 @@ PanelFiles::PanelFiles(Hub& hub_)
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab((tab = new Panel(hub)), "Files", p);
 
-  tab->vb.add((view = new l_qt::lst_view));
+  tab->vb.add((view = new FilesView(hub)));
   view->showHeader(true);
-  view->set((model = new core_qt::ModelFiles));
+  view->set((model = new gui::ModelFiles(hub)));
 
   tab->vb.add(new l_qt::lbl("Correction file"));
   auto &h = tab->vb.hb();

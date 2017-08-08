@@ -49,6 +49,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
   mth_(void, sessionSave, (l_io::path))             may_err;
 
+  mth_(uint, numFiles, ()) RET_(base::files.files.size())
   set_(filesAdd,   ());
   set_(corrEnable, (bool));
   set_(corrRem,    ());

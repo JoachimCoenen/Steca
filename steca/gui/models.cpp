@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 #include "models.hpp"
+#include "thehub.hpp"
 #include <dev_lib/defs.inc>
 
-namespace core_qt {
+namespace gui {
 //------------------------------------------------------------------------------
 
 using rw_n = ModelDatasets::rw_n;
@@ -26,7 +27,7 @@ using cl_n = ModelDatasets::cl_n;
 
 //------------------------------------------------------------------------------
 
-ModelFiles::ModelFiles() {
+ModelFiles::ModelFiles(Hub& hub) : HubAccess(hub) {
   setCheckable(true);
 }
 
@@ -35,7 +36,7 @@ cl_n ModelFiles::cols() const {
 }
 
 rw_n ModelFiles::rows() const {
-  return rw_n(0);
+  return rw_n(hub.numFiles());
 }
 
 l_qt::var ModelFiles::cell(rw_n, cl_n) const {

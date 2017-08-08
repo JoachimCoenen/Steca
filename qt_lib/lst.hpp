@@ -3,6 +3,7 @@
 #pragma once
 
 #include <dev_lib/defs.hpp>
+#include <dev_lib/typ/vec.hpp>
 #include "model.hpp"
 
 #include <QTreeView>
@@ -34,6 +35,12 @@ protected:
 
   int sizeHintForColumn(int) const; // make narrow columns
   QMetaObject::Connection con;
+dcl_end
+
+dcl_sub_(multi_lst_view, lst_view)
+  multi_lst_view();
+
+  set_(selectRows, (l::vec<lst_model::rw_n>));
 dcl_end
 
 //------------------------------------------------------------------------------

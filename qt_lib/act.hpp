@@ -49,6 +49,8 @@ struct win;
 
 dcl_(acts)
   acts(win&);
+ ~acts();
+
   set_(add, (strc hash, l::give_me<act>));
   mth_(act&, get, (strc hash)) may_err;
 

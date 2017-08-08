@@ -117,6 +117,11 @@ acts::acts(win& w_) : w(w_)  {
   });
 }
 
+acts::~acts() {
+  for (auto act : as)
+    delete act.second;
+}
+
 acts::ref acts::add(strc hashKey, l::give_me<act> a) {
   as.add(hashKey, a.ptr());
   RTHIS

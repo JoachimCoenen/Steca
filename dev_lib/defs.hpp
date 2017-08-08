@@ -48,23 +48,25 @@
 
 // begin declaration of sub-struct
 #define dcl_sub_(s, b) \
-  struct s : b { _self_types_(s) using base = b;
+  struct s : b { _self_types_(s) using base = b; \
+    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
 
 // begin a declaration of sub-struct from two bases
 #define dcl_sub2_(s, b1, b2) \
-  struct s : b1, b2 { _self_types_(s) using base = b2;
+  struct s : b1, b2 { _self_types_(s) using base = b2; \
+    base const& base_rc() const { return *this; }
 
 // begin declaration of a sub-struct that reimplements another:
 // the base structure is hidden (protected, so subclasses also can access it)
 // base_rc() allows deliberate access to base
 #define dcl_reimpl_(s, b) \
   struct s : protected b { _self_types_(s) using base = b; \
-    base const& base_rc() const { return *this; }
+    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
 
 // from two bases
 #define dcl_reimpl2_(s, b1, b2) \
   struct s : b1, protected b2 { _self_types_(s) using base = b2; \
-    base const& base_rc() const { return *this; }
+    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
 
 // end of declaration - either one of the above
 #define dcl_end \
