@@ -3,7 +3,7 @@ include (../../cmake.inc)
 
 get_filename_component (lib ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
-find_package(Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
+find_package(Qt5 5.4 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_AUTORCC ON)
 
