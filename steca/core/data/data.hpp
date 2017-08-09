@@ -179,7 +179,8 @@ struct Files;
 
 dcl_(File) SHARED  // one file
   ref_(Files,      files);
-  atr_(uint,       idx); // this order in Files, 1..; 0 = not in Files
+  atr_(bool,       isActive); // included in calculations
+  atr_(uint,       idx);      // this order in Files, 1..; 0 = not in Files
   atr_(l_io::path, path);
   atr_(str,        name);
   atr_(str,        comment);

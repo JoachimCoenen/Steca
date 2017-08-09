@@ -62,12 +62,16 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(addFiles, ())              emits(sigReset);
   set_(remFile,  (uint))          emits(sigReset);
 
+  set_(activateFile,(uint, bool)) emits(sigReset);
+  using base::isFileActive;
+
   set_(corrEnable, (bool))        emits(sigCorr);
   set_(corrRem,    ())            emits(sigCorr);
 
 signals:
-  void sigReset();  // major change in data
-  void sigCorr();   // changed correction - file, on/off
+  void sigReset();        // major change in data
+  void sigCorr();         // changed correction - file, on/off
+  void sigFilesActive();  // changed active files
 
 public:
   template <typename Signal, typename Lambda>
@@ -82,6 +86,7 @@ public:
 
   DCL_HUB_SIGNAL_HANDLER(Reset)
   DCL_HUB_SIGNAL_HANDLER(Corr)
+  DCL_HUB_SIGNAL_HANDLER(FilesActive)
 
 private:
   Q_OBJECT

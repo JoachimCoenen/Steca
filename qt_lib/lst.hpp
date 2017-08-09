@@ -17,14 +17,15 @@ dcl_sub_(lst_view, QTreeView)
   using cl_n = lst_model::cl_n;
   using rw_n = lst_model::rw_n;
 
+  atr_(bool, hasHeader);
+  set_(showHeader,   (bool = true));
+
   ptr_(lst_model, model);
   set_(setModel, (lst_model const*));
 
-  atr_(bool, isCheckable);
-  set_(setCheckable, (bool = true));
-
-  atr_(bool, hasHeader);
-  set_(showHeader,   (bool = true));
+  set_(checkRow,  (QModelIndex const&));
+  set_(checkRow,  (rw_n));
+  set_(checkRows, (l::vec<rw_n>));
 
   mth_(int, currentRow,  ()); // -1 if not
 
@@ -38,10 +39,7 @@ dcl_sub_(lst_view, QTreeView)
 
 protected:
   void keyPressEvent(QKeyEvent*);
-  void checkRow(QModelIndex const&);
-  void checkRow(int);
-
-  int sizeHintForColumn(int) const; // make narrow columns
+  int  sizeHintForColumn(int) const; // make narrow columns
   QMetaObject::Connection con;
 dcl_end
 

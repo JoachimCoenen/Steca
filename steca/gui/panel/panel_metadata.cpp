@@ -37,7 +37,6 @@ PanelMetadata::PanelMetadata(Hub& hub) : base("", hub), view(nullptr) {
   tabs->addTab((tab = new Panel(hub)), "Metadata");
 
   tab->vb.add((view = new ViewMetadata(hub)));
-  view->showHeader(true);
   view->setModel(hub.modelMetadata);
 }
 

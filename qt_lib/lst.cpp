@@ -9,13 +9,18 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-lst_view::lst_view() : model(nullptr), isCheckable(false), hasHeader(false) {
+lst_view::lst_view() : hasHeader(false), model(nullptr) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
 
   connect(this, &Self::clicked, [this](QModelIndex const& index) {
-    checkRow(index);
+    if (model && model->isCheckable && 1 == index.column())
+      checkRow(base::currentIndex());
   });
+}
+
+lst_view::ref lst_view::showHeader(bool on) {
+  mut(hasHeader) = on; RTHIS
 }
 
 lst_view::ref lst_view::setModel(lst_model const* model_) {
@@ -41,10 +46,27 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
   RTHIS
 }
 
-lst_view::ref lst_view::setCheckable(bool on) SET_(mut(isCheckable) = on)
+lst_view::ref lst_view::checkRow(QModelIndex const& index) {
+  auto row = index.row();
+  if (row >= 0)
+    checkRow(rw_n(l::to_uint(row)));
+  RTHIS
+}
 
-lst_view::ref lst_view::showHeader(bool on) {
-  mut(hasHeader) = on; RTHIS
+lst_view::ref lst_view::checkRow(rw_n rw) {
+  if (model) {
+    EXPECT_(model->rows())
+    mutp(model)->check(rw);
+    QModelIndex index = model->index(int(rw), 1);
+    emit dataChanged(index, index);
+  }
+  RTHIS
+}
+
+lst_view::ref lst_view::checkRows(l::vec<rw_n> rws) {
+  for (auto rw : rws)
+    checkRow(rw);
+  RTHIS
 }
 
 int lst_view::currentRow() const {
@@ -52,26 +74,26 @@ int lst_view::currentRow() const {
 }
 
 lst_view::ref lst_view::selectRow(rw_n rw) {
-  EXPECT_(base::model())
-  base::setCurrentIndex(base::model()->index(int(rw), 1));
+  if (model)
+    base::setCurrentIndex(model->index(int(rw), 1));
   RTHIS
 }
 
 int lst_view::selectedRow() const {
   auto rws = selectedRows();
-  return rws.isEmpty() ? -1 : rws.first();
+  return rws.isEmpty() ? -1 : int(rws.first());
 }
 
 lst_view::ref lst_view::selectRows(l::vec<rw_n> rws) {
-  EXPECT_(base::model())
-  auto m   = base::model();
-  int cols = m->columnCount();
+  if (model) {
+    int cols = model->columnCount();
 
-  QItemSelection is;
-  for (auto rw : rws)
-    is.append(QItemSelectionRange(m->index(int(rw), 0),
-                                  m->index(int(rw), cols - 1)));
-  selectionModel()->select(is, QItemSelectionModel::ClearAndSelect);
+    QItemSelection is;
+    for (auto rw : rws)
+      is.append(QItemSelectionRange(model->index(int(rw), 0),
+                                    model->index(int(rw), cols - 1)));
+    selectionModel()->select(is, QItemSelectionModel::ClearAndSelect);
+  }
   RTHIS
 }
 
@@ -102,29 +124,13 @@ lst_view::ref lst_view::sizeColumns() {
 }
 
 void lst_view::keyPressEvent(QKeyEvent* e) {
-  switch (e->nativeVirtualKey()) {
+  switch (e->key()) {
   case Qt::Key_Space:
-    checkRow(base::currentIndex());
+    if (model && model->isCheckable)
+      checkRow(base::currentIndex());
     return;
   default:
     base::keyPressEvent(e);
-  }
-}
-
-void lst_view::checkRow(QModelIndex const& index) {
-  auto rw = index.row();
-  if (rw >= 0 && 1==index.column())
-    checkRow(int(rw));
-}
-
-void lst_view::checkRow(int row) {
-  EXPECT_(model)
-  if (0 <= row) {
-    auto rw = rw_n(row);
-    EXPECT_(rw < model->rows())
-    mutp(model)->check(rw);
-    QModelIndex index = base::model()->index(int(rw), 1);
-    emit dataChanged(index, index);
   }
 }
 

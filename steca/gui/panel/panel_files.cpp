@@ -19,6 +19,7 @@
 #include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
 #include <dev_lib/defs.inc>
+#include <QKeyEvent>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -26,39 +27,32 @@ namespace gui {
 dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   ViewFiles(Hub&);
 
-//protected:
-//  using Model = models::FilesModel;
-//  Model* model() const { return static_cast<Model*>(super::model()); }
-
-//  void selectionChanged(QItemSelection const&, QItemSelection const&);
   void removeSelected();
   void recollect();
+
+protected:
+  void uiUpdate();
+  void selectionChanged(QItemSelection const&, QItemSelection const&);
+  void keyPressEvent(QKeyEvent*);
+  l_qt::act& actRem;
 dcl_end
 
-ViewFiles::ViewFiles(Hub& hub) : RefHub(hub) {
-  hub.acts.get(hub.acts.FILES_REM).onTrigger([this]() {
+ViewFiles::ViewFiles(Hub& hub) : RefHub(hub)
+, actRem(hub.acts.get(hub.acts.FILES_REM)) {
+  hub.onSigReset([this]() {
+    selectRows({});
+    uiUpdate();
+    recollect();
+  });
+
+  hub.onSigFilesActive([this]() {
+    recollect();
+  });
+
+  actRem.onTrigger([this]() {
     removeSelected();
   });
-//  header()->hide();
-
-//  connect(hub_.actions.remFile, &QAction::triggered,
-//          [this]() { removeSelected(); });
-
-//  onSigFilesChanged([this]() {
-//    selectRows({});
-//    recollect();
-//  });
-
-//  onSigFilesSelected([this]() {
-//    selectRows(hub_.collectedFromFiles());
-//  });
 }
-
-//void ViewFiles::selectionChanged(QItemSelection const& selected,
-//                                 QItemSelection const& deselected) {
-//  super::selectionChanged(selected, deselected);
-//  recollect();
-//}
 
 void ViewFiles::removeSelected() {
   auto row = selectedRow();
@@ -70,16 +64,38 @@ void ViewFiles::removeSelected() {
   auto num = hub.numFiles();
   if (num > 0)
     selectRow(rw_n(l::min(num-1, l::to_uint(row))));
-//  recollect();
+
+  recollect();
 }
 
 void ViewFiles::recollect() {
+//  selectedRows()
 //  uint_vec rows;
-//  for (auto& index : selectionModel()->selectedRows())
+//  for (auto& index : selectionModel()->selectedRows())FILES_REM
 //    if (index.isValid())
 //      rows.append(to_u(index.row()));
 
 //  hub_.collectDatasetsFromFiles(rows);
+}
+
+void ViewFiles::uiUpdate() {
+  actRem.setEnabled(!selectedRows().isEmpty());
+}
+
+void ViewFiles::selectionChanged(QItemSelection const& selected,
+                                 QItemSelection const& deselected) {
+  base::selectionChanged(selected, deselected);
+  uiUpdate();
+}
+
+void ViewFiles::keyPressEvent(QKeyEvent* e) {
+  switch (e->key()) {
+  case Qt::Key_Delete:
+    removeSelected();
+    return;
+  default:
+    base::keyPressEvent(e);
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -100,7 +116,6 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   tabs->addTab((tab = new Panel(hub)), "Files", p);
 
   tab->vb.add((view = new ViewFiles(hub)));
-  view->showHeader(true);
   view->setModel(hub.modelFiles);
 
   tab->vb.add(new l_qt::lbl("Correction file"));

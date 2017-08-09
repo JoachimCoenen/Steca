@@ -412,7 +412,7 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
 //------------------------------------------------------------------------------
 
 File::File(Files::rc files_, l_io::path::rc path_)
-: files(files_), idx(0), path(path_), name(path.filename()), comment()
+: files(files_), isActive(true), idx(0), path(path_), name(path.filename()), comment()
 , strs(), sets() {}
 
 File::ref File::addSet(Set::sh set) {

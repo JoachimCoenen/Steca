@@ -46,12 +46,12 @@ l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
   return l_qt::var(hub.fileName(rw));
 }
 
-ModelFiles::ref ModelFiles::check(rw_n, bool) {
-  return *this;
+ModelFiles::ref ModelFiles::check(rw_n row, bool on) {
+  hub.activateFile(row, on); RTHIS
 }
 
-bool ModelFiles::isChecked(rw_n) const {
-  return false;
+bool ModelFiles::isChecked(rw_n row) const {
+  return hub.isFileActive(row);
 }
 
 //------------------------------------------------------------------------------

@@ -148,6 +148,12 @@ Hub::ref Hub::remFile(uint i) {
   RTHIS
 }
 
+Hub::ref Hub::activateFile(uint i, bool on) {
+  base::activateFile(i, on);
+  emit sigFilesActive();
+  RTHIS
+}
+
 Hub::ref Hub::corrEnable(bool on) {
   if (on && !corrFile) {
     str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),

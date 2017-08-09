@@ -214,12 +214,6 @@ bool Session::hasFile(l_io::path::rc path) const {
   return false;
 }
 
-Session::ref Session::remFile(uint i) {
-  mut(files).rem(i);
-  updateImageSize();
-  RTHIS
-}
-
 Session::ref Session::addFile(l_io::path::rc path) may_err {
   if (!path.isEmpty()) {
     auto file = io::load(files, path);
@@ -227,6 +221,21 @@ Session::ref Session::addFile(l_io::path::rc path) may_err {
     mut(files).addFile(file);
   }
   RTHIS
+}
+
+Session::ref Session::remFile(uint i) {
+  mut(files).rem(i);
+  updateImageSize();
+  RTHIS
+}
+
+Session::ref Session::activateFile(uint i, bool on) {
+  mut(files.at(i)->isActive) = on;
+  RTHIS
+}
+
+bool Session::isFileActive(uint i) const {
+  return files.at(i)->isActive;
 }
 
 Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
