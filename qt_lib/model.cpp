@@ -2,17 +2,33 @@
 
 #include "model.hpp"
 #include <dev_lib/defs.inc>
-
 #include "str_inc.hpp"
-
 #include <QSize>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-lst_model::lst_model() : isCheckable(false) {}
+lst_model::lst_model() : isCheckable(false), isNumbered(false) {}
 
-lst_model::ref lst_model::setCheckable(bool on) SET_(mut(isCheckable) = on)
+lst_model::ref lst_model::setCheckable(bool on) {
+  mut(isCheckable) = on;
+  signalReset();
+  RTHIS
+}
+
+int lst_model::checkableCol() const {
+  return isCheckable ? 1 : -1;
+}
+
+lst_model::ref lst_model::setNumbered(bool on) {
+  mut(isNumbered) = on;
+  signalReset();
+  RTHIS
+}
+
+int lst_model::numberedCol() const {
+  return isNumbered ? (isCheckable ? 2 : 1) : -1;
+}
 
 str lst_model::head(cl_n) const {
   return str::null;
@@ -65,12 +81,21 @@ QVariant lst_model::data(rcIndex index, int role) const {
 
   auto rw = rw_n(l::to_u(row));
 
-  if (isCheckable && 1==col) {
+  if (col == checkableCol()) {
     switch (role) {
-    case Qt::SizeHintRole:
-      return QSize(4, 0);
     case Qt::CheckStateRole:
       return isChecked(rw) ? Qt::Checked : Qt::Unchecked;
+    default:
+      return QVariant();
+    }
+  }
+
+  if (col == numberedCol()) {
+    switch (role) {
+    case Qt::DisplayRole:
+      return row + 1;
+    case Qt::TextAlignmentRole:
+      return Qt::AlignRight;
     default:
       return QVariant();
     }
@@ -80,16 +105,15 @@ QVariant lst_model::data(rcIndex index, int role) const {
   auto cl = lst_model::cl_n(l::to_u(col) - colOff());
 
   switch (role) {
-  case Qt::DisplayRole: {
+  case Qt::DisplayRole:
     return cell(rw, cl);
-  }
   default:
     return QVariant();
   }
 }
 
 uint lst_model::colOff() const {
-  return isCheckable ? 2 : 1;
+  return 1 + (isCheckable ? 1 : 0) + (isNumbered ? 1 : 0);
 }
 
 //------------------------------------------------------------------------------

@@ -29,6 +29,8 @@ using cl_n = ModelDatasets::cl_n;
 
 ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
   setCheckable(true);
+  setNumbered(true);
+
   hub.onSigReset([this]() {
     signalReset();
   });

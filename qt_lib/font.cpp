@@ -1,0 +1,16 @@
+// (qt_lib)
+
+#include "font.hpp"
+#include <dev_lib/defs.inc>
+
+namespace l_qt {
+//------------------------------------------------------------------------------
+
+int mWidth(QWidget const* w, real n) {
+  EXPECT_(w)
+  return l::to_int(l::round(n * w->fontMetrics().width('m')));
+}
+
+//------------------------------------------------------------------------------
+}
+// eof

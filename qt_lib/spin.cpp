@@ -1,6 +1,7 @@
 // (qt_lib)
 
 #include "spin.hpp"
+#include "font.hpp"
 #include <dev_lib/defs.inc>
 
 namespace l_qt {
@@ -12,7 +13,7 @@ spin::spin() {
 
 spin::ref spin::decimals(uint n) SET_(base::setDecimals(int(n)))
 
-spin::ref spin::digitWidth(uint n) SET_(base::setMaximumWidth(int(n * fontMetrics().width('m'))))
+spin::ref spin::digitWidth(uint n) SET_(base::setMaximumWidth(mWidth(this, n)))
 
 spin::ref spin::min(real val) SET_(base::setMinimum(val))
 

@@ -37,8 +37,8 @@ protected:
   l_qt::act& actRem;
 dcl_end
 
-ViewFiles::ViewFiles(Hub& hub) : RefHub(hub)
-, actRem(hub.acts.get(hub.acts.FILES_REM)) {
+ViewFiles::ViewFiles(Hub& hub)
+: RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
   hub.onSigReset([this]() {
     selectRows({});
     uiUpdate();

@@ -17,7 +17,12 @@ dcl_sub_(lst_model, QAbstractTableModel)
   lst_model();
 
   atr_(bool, isCheckable);
-  set_(setCheckable, (bool));
+  set_(setCheckable, (bool = true));
+  mth_(int, checkableCol, ());
+
+  atr_(bool, isNumbered);
+  set_(setNumbered, (bool = true));
+  mth_(int, numberedCol, ());
 
   virtual mth_(cl_n, cols, ()) = 0;
   virtual mth_(rw_n, rows, ()) = 0;

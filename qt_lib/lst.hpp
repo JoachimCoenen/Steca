@@ -18,7 +18,7 @@ dcl_sub_(lst_view, QTreeView)
   using rw_n = lst_model::rw_n;
 
   atr_(bool, hasHeader);
-  set_(showHeader,   (bool = true));
+  set_(showHeader, (bool = true));
 
   ptr_(lst_model, model);
   set_(setModel, (lst_model const*));
