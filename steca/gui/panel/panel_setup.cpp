@@ -17,6 +17,7 @@
 
 #include "panel_setup.hpp"
 #include <qt_lib/tabs.hpp>
+#include <dev_lib/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------

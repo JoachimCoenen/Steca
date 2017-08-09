@@ -22,8 +22,8 @@
 #include <core/io/json.hpp>
 #include <dev_lib/defs.inc>
 #include <dev_lib/io/fio.hpp>
-#include <dev_lib/io/path.hpp>
 #include <dev_lib/io/log.hpp>
+#include <dev_lib/io/path.hpp>
 #include <dev_lib/typ/hash.hpp>
 #include <qt_lib/dlg_file.hpp>
 #include <qt_lib/dlg_msg.hpp>
@@ -89,7 +89,14 @@ QVariant FileProxyModel::data(rcidx idx, int role) const {
 
 //------------------------------------------------------------------------------
 
-Hub::Hub(Win& win_) : win(win_), acts(*this, win_) {}
+Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
+, modelFiles(new ModelFiles(*this))
+, modelDatasets(new ModelDatasets(*this))
+, modelMetadata(new ModelMetadata(*this)) {}
+
+Hub::~Hub() {
+  delete modelFiles;
+}
 
 Hub::ref Hub::sessionClear() {
   base::clear();
@@ -117,7 +124,7 @@ void Hub::sessionSave(l_io::path path) const may_err {
   base::save().saveTo(file.asStream());
 }
 
-Hub::ref Hub::filesAdd() {
+Hub::ref Hub::addFiles() {
   auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),
                 "Data files (*.dat *.mar*);;All files (*.*)",
                 new FileProxyModel);
@@ -132,6 +139,12 @@ Hub::ref Hub::filesAdd() {
 
     emit sigReset();
   }
+  RTHIS
+}
+
+Hub::ref Hub::remFile(uint i) {
+  base::remFile(i);
+  emit sigReset();
   RTHIS
 }
 

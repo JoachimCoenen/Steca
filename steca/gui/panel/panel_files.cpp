@@ -16,26 +16,29 @@
  ******************************************************************************/
 
 #include "panel_files.hpp"
-#include "../models.hpp"
 #include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
+#include <dev_lib/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(FilesView, RefHub, l_qt::lst_view)
-  FilesView(Hub&);
+dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
+  ViewFiles(Hub&);
 
 //protected:
 //  using Model = models::FilesModel;
 //  Model* model() const { return static_cast<Model*>(super::model()); }
 
 //  void selectionChanged(QItemSelection const&, QItemSelection const&);
-//  void removeSelected();
-//  void recollect();
+  void removeSelected();
+  void recollect();
 dcl_end
 
-FilesView::FilesView(Hub& hub) : RefHub(hub) {
+ViewFiles::ViewFiles(Hub& hub) : RefHub(hub) {
+  hub.acts.get(hub.acts.FILES_REM).onTrigger([this]() {
+    removeSelected();
+  });
 //  header()->hide();
 
 //  connect(hub_.actions.remFile, &QAction::triggered,
@@ -51,36 +54,37 @@ FilesView::FilesView(Hub& hub) : RefHub(hub) {
 //  });
 }
 
-//void FilesView::selectionChanged(QItemSelection const& selected,
+//void ViewFiles::selectionChanged(QItemSelection const& selected,
 //                                 QItemSelection const& deselected) {
 //  super::selectionChanged(selected, deselected);
 //  recollect();
 //}
 
-//void FilesView::removeSelected() {
-//  auto indexes = selectedIndexes();
+void ViewFiles::removeSelected() {
+  auto row = selectedRow();
+  if (row < 0)
+    return;
 
-//  // backwards
-//  for (int i = indexes.count(); i-- > 0;)
-//    model()->remFile(to_u(indexes.at(i).row()));
+  hub.remFile(l::to_u(row));
 
-//  selectRows({});
+  auto num = hub.numFiles();
+  if (num > 0)
+    selectRow(rw_n(l::min(num-1, l::to_uint(row))));
 //  recollect();
-//}
+}
 
-//void FilesView::recollect() {
+void ViewFiles::recollect() {
 //  uint_vec rows;
 //  for (auto& index : selectionModel()->selectedRows())
 //    if (index.isValid())
 //      rows.append(to_u(index.row()));
 
 //  hub_.collectDatasetsFromFiles(rows);
-//}
+}
 
 //------------------------------------------------------------------------------
 
-PanelFiles::PanelFiles(Hub& hub_)
-: base("", hub_), view(nullptr), model(nullptr) {
+PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
@@ -95,20 +99,15 @@ PanelFiles::PanelFiles(Hub& hub_)
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab((tab = new Panel(hub)), "Files", p);
 
-  tab->vb.add((view = new FilesView(hub)));
+  tab->vb.add((view = new ViewFiles(hub)));
   view->showHeader(true);
-  view->set((model = new gui::ModelFiles(hub)));
+  view->setModel(hub.modelFiles);
 
   tab->vb.add(new l_qt::lbl("Correction file"));
   auto &h = tab->vb.hb();
   h.add(new l_qt::edit());
   h.add(new l_qt::actbtn(a.get(a.CORR_ENABLE)));
   h.add(new l_qt::actbtn(a.get(a.CORR_REM)));
-}
-
-PanelFiles::~PanelFiles() {
-  delete view;
-  delete model;
 }
 
 //------------------------------------------------------------------------------

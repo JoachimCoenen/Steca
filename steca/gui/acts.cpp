@@ -51,11 +51,7 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(DIFF_FIX_INTEN, act::make("Fixed intensity scale",      ""));
 
   get(FILES_ADD).onTrigger([&hub]() {
-    hub.filesAdd();
-  });
-
-  get(FILES_REM).onTrigger([]() {
-
+    hub.addFiles();
   });
 
   get(CORR_ENABLE).onToggle([&hub](bool on) {

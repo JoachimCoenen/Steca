@@ -63,7 +63,7 @@ QVariant lst_model::data(rcIndex index, int role) const {
   if (row < 0 || rowCnt <= row || col < 1)
     return QVariant();
 
-  auto rw = lst_model::rw_n(l::to_u(row));
+  auto rw = rw_n(l::to_u(row));
 
   if (isCheckable && 1==col) {
     switch (role) {

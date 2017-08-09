@@ -19,6 +19,7 @@
 
 #include "acts.hpp"
 #include "refhub.hpp"
+#include "models.hpp"
 #include <core/session.hpp>
 #include <dev_lib/defs.hpp>
 #include <dev_lib/io/path.hpp>
@@ -44,7 +45,12 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
+  ptr_(ModelFiles,    modelFiles);
+  ptr_(ModelDatasets, modelDatasets);
+  ptr_(ModelMetadata, modelMetadata);
+
   Hub(Win&);
+ ~Hub();
 
   set_(sessionClear, ())          emits(sigReset);
   set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
@@ -53,7 +59,9 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(uint, numFiles, ())        RET_(base::files.size())
   mth_(str,  fileName, (uint i))  RET_(base::files.at(i)->name)
 
-  set_(filesAdd,   ())            emits(sigReset);
+  set_(addFiles, ())              emits(sigReset);
+  set_(remFile,  (uint))          emits(sigReset);
+
   set_(corrEnable, (bool))        emits(sigCorr);
   set_(corrRem,    ())            emits(sigCorr);
 

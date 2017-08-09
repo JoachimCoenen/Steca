@@ -56,7 +56,7 @@ bool ModelFiles::isChecked(rw_n) const {
 
 //------------------------------------------------------------------------------
 
-ModelDatasets::ModelDatasets() {
+ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
   setCheckable(true);
 }
 
@@ -74,7 +74,7 @@ l_qt::var ModelDatasets::cell(rw_n, cl_n) const {
 
 //------------------------------------------------------------------------------
 
-ModelMetadata::ModelMetadata() {
+ModelMetadata::ModelMetadata(Hub& hub) : RefHub(hub) {
   setCheckable(true);
 }
 

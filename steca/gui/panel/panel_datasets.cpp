@@ -16,31 +16,34 @@
  ******************************************************************************/
 
 #include "panel_datasets.hpp"
+#include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
-#include "../models.hpp"
+#include <dev_lib/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelDatasets::PanelDatasets(Hub& hub)
-: base("", hub), view(nullptr), model(nullptr) {
+dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
+  ViewDatasets(Hub&);
+dcl_end
+
+ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {}
+
+//------------------------------------------------------------------------------
+
+PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
   tabs->addTab((tab = new Panel(hub)), "Datasets");
 
-  tab->vb.add((view = new l_qt::lst_view));
+  tab->vb.add((view = new ViewDatasets(hub)));
+  view->showHeader(true);
+  view->setModel(hub.modelDatasets);
+
   auto &h = tab->vb.hb();
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
   h.add(new l_qt::spin());
-
-  view->showHeader(true);
-  view->set((model = new gui::ModelDatasets));
-}
-
-PanelDatasets::~PanelDatasets() {
-  delete view;
-  delete model;
 }
 
 //------------------------------------------------------------------------------

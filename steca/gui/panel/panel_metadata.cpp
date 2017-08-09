@@ -16,26 +16,29 @@
  ******************************************************************************/
 
 #include "panel_metadata.hpp"
+#include "../thehub.hpp"
 #include <qt_lib/tabs.hpp>
-#include "../models.hpp"
+#include <dev_lib/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelMetadata::PanelMetadata(Hub& hub)
-: base("", hub), view(nullptr), model(nullptr) {
+dcl_sub2_(ViewMetadata, RefHub, l_qt::lst_view)
+  ViewMetadata(Hub&);
+dcl_end
+
+ViewMetadata::ViewMetadata(Hub& hub) : RefHub(hub) {}
+
+//------------------------------------------------------------------------------
+
+PanelMetadata::PanelMetadata(Hub& hub) : base("", hub), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
   tabs->addTab((tab = new Panel(hub)), "Metadata");
 
-  tab->vb.add((view = new l_qt::lst_view));
+  tab->vb.add((view = new ViewMetadata(hub)));
   view->showHeader(true);
-  view->set((model = new gui::ModelMetadata));
-}
-
-PanelMetadata::~PanelMetadata() {
-  delete view;
-  delete model;
+  view->setModel(hub.modelMetadata);
 }
 
 //------------------------------------------------------------------------------

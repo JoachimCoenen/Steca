@@ -18,7 +18,7 @@ lst_view::lst_view() : model(nullptr), isCheckable(false), hasHeader(false) {
   });
 }
 
-lst_view::ref lst_view::set(lst_model* model_) {
+lst_view::ref lst_view::setModel(lst_model const* model_) {
   if (model) {
     disconnect(con);
     base::setModel(nullptr);
@@ -35,7 +35,7 @@ lst_view::ref lst_view::set(lst_model* model_) {
     });
 
     sizeColumns();
-    selectRow(lst_model::rw_n(0));
+    selectRow(rw_n(0));
   }
 
   RTHIS
@@ -47,14 +47,39 @@ lst_view::ref lst_view::showHeader(bool on) {
   mut(hasHeader) = on; RTHIS
 }
 
-lst_view::ref lst_view::selectRow(lst_model::rw_n rw) {
+int lst_view::currentRow() const {
+  return base::currentIndex().row();
+}
+
+lst_view::ref lst_view::selectRow(rw_n rw) {
   EXPECT_(base::model())
   base::setCurrentIndex(base::model()->index(int(rw), 1));
   RTHIS
 }
 
 int lst_view::selectedRow() const {
-  return base::currentIndex().row();
+  auto rws = selectedRows();
+  return rws.isEmpty() ? -1 : rws.first();
+}
+
+lst_view::ref lst_view::selectRows(l::vec<rw_n> rws) {
+  EXPECT_(base::model())
+  auto m   = base::model();
+  int cols = m->columnCount();
+
+  QItemSelection is;
+  for (auto rw : rws)
+    is.append(QItemSelectionRange(m->index(int(rw), 0),
+                                  m->index(int(rw), cols - 1)));
+  selectionModel()->select(is, QItemSelectionModel::ClearAndSelect);
+  RTHIS
+}
+
+l::vec<lst_view::rw_n> lst_view::selectedRows() const {
+  l::vec<lst_view::rw_n> rws;
+  for (auto& index : selectionModel()->selectedRows())
+    rws.add(rw_n(l::to_u(index.row())));
+  return rws;
 }
 
 lst_view::ref lst_view::sizeColumns() {
@@ -95,7 +120,7 @@ void lst_view::checkRow(QModelIndex const& index) {
 void lst_view::checkRow(int row) {
   EXPECT_(model)
   if (0 <= row) {
-    auto rw = lst_model::rw_n(row);
+    auto rw = rw_n(row);
     EXPECT_(rw < model->rows())
     mutp(model)->check(rw);
     QModelIndex index = base::model()->index(int(rw), 1);

@@ -34,16 +34,16 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
   bol_(isChecked, (rw_n));
 dcl_end
 
-dcl_sub_(ModelDatasets, l_qt::lst_model)
-  ModelDatasets();
+dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
+  ModelDatasets(Hub&);
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
   mth_(l_qt::var, cell, (rw_n, cl_n));
 dcl_end
 
-dcl_sub_(ModelMetadata, l_qt::lst_model)
-  ModelMetadata();
+dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
+  ModelMetadata(Hub&);
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());

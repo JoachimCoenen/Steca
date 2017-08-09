@@ -19,19 +19,16 @@
 
 #include "panel.hpp"
 #include <qt_lib/lst.hpp>
-#include <qt_lib/model.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_sub_(PanelDatasets, Panel)
   PanelDatasets(Hub&);
- ~PanelDatasets();
 
 private:
   Panel *tab;
   l_qt::lst_view  *view;
-  l_qt::lst_model *model; // TODO to hub
 dcl_end
 
 //------------------------------------------------------------------------------

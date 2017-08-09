@@ -18,6 +18,7 @@
 #include "panel_diffractogram.hpp"
 #include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
+#include <dev_lib/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
