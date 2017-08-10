@@ -113,7 +113,14 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
 
   tab->vb.add(new l_qt::lbl("Correction file"));
   auto &h = tab->vb.hb();
-  h.add(new l_qt::edit());
+
+  auto edit = new l_qt::edit(); edit->ro(true);
+  h.add(edit);
+
+  hub.onSigCorr([this, edit]() {
+    edit->text(hub.corrName());
+  });
+
   h.add(new l_qt::actbtn(a.get(a.CORR_ENABLE)));
   h.add(new l_qt::actbtn(a.get(a.CORR_REM)));
 }

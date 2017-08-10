@@ -243,6 +243,8 @@ Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
   if (path.isEmpty()) {
     remCorrFile();
   } else {
+    l_io::busy __;
+
     auto file = io::load(mut(files), path);
     auto& sets = file->sets;
 

@@ -55,7 +55,7 @@ bool ModelFiles::isChecked(rw_n row) const {
 //------------------------------------------------------------------------------
 
 ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
-  setNumbered(3);
+  setNumbered(4);
 }
 
 cl_n ModelDatasets::cols() const {

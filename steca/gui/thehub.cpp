@@ -165,18 +165,18 @@ Hub::ref Hub::corrEnable(bool on) {
                  "Data files (*.dat *.mar*);;All files (*.*)");
     if (!name.isEmpty()) {
       l_io::path(name).dir().cd();
-        base::setCorrFile(name);
+      base::setCorrFile(name);
     }
   }
 
   base::tryEnableCorr(on);
-  emit sigCorr();
+  emitCorr();
   RTHIS
 }
 
 Hub::ref Hub::corrRem() {
   base::remCorrFile();
-  emit sigCorr();
+  emitCorr();
   RTHIS
 }
 
@@ -199,6 +199,16 @@ Hub::ref Hub::groupDatasetsBy(l::pint by) {
 Hub::ref Hub::emitResetFiles() {
   modelFiles->signalReset();
   emit sigResetFiles();
+  RTHIS
+}
+
+Hub::ref Hub::emitCorr() {
+  emit sigCorr();
+  RTHIS
+}
+
+Hub::ref Hub::emitFilesActive() {
+  emit sigFilesActive();
   RTHIS
 }
 
