@@ -28,7 +28,7 @@ dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   ViewFiles(Hub&);
 
   void removeSelected();
-  void recollect();
+  void collectDatasets();
 
 protected:
   void uiUpdate();
@@ -42,11 +42,11 @@ ViewFiles::ViewFiles(Hub& hub)
   hub.onSigReset([this]() {
     selectRows({});
     uiUpdate();
-    recollect();
+    collectDatasets();
   });
 
   hub.onSigFilesActive([this]() {
-    recollect();
+    collectDatasets();
   });
 
   actRem.onTrigger([this]() {
@@ -65,10 +65,11 @@ void ViewFiles::removeSelected() {
   if (num > 0)
     selectRow(rw_n(l::min(num-1, l::to_uint(row))));
 
-  recollect();
+  collectDatasets();
 }
 
-void ViewFiles::recollect() {
+void ViewFiles::collectDatasets() {
+  TR("collectDatasets")
 //  selectedRows()
 //  uint_vec rows;
 //  for (auto& index : selectionModel()->selectedRows())FILES_REM

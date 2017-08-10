@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.1)
-include (../cmake.inc)
+include (../cmake.options)
 
 get_filename_component (app ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 

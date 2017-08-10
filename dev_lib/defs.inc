@@ -81,14 +81,14 @@ private:
 };
 
 // TRace
-#define TR_(what) { _DebugOut_() << what; }
+#define TR(what) { _DebugOut_() << what; }
 
 #define EXPECT_TR_(cond, what) { if (!(cond)) TR(what); EXPECT_(cond) }
 #define ENSURE_TR_(cond, what) { if (!(cond)) TR(what); ENSURE_(cond) }
 
 #else
 
-#define TR_(what) {}
+#define TR(what) {}
 
 #define EXPECT_TR_(cond, what) { EXPECT_(cond) }
 #define ENSURE_TR_(cond, what) { ENSURE_(cond) }
@@ -96,7 +96,7 @@ private:
 #endif
 
 // WaTch
-#define WT_(what) TR_(#what ">" << what)
+#define WT(what) TR(#what ">" << what)
 // do not go here
 #define NEVER    EXPECT_(false)
 

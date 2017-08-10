@@ -18,7 +18,7 @@
 #include "io.hpp"
 #include <dev_lib/defs.inc>
 
-#include "Mar/MarReader.h"
+#include <core_legacy/Mar/MarReader.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------

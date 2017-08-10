@@ -19,7 +19,7 @@
 #include <dev_lib/defs.inc>
 
 #undef CHECK
-#include "Caress/raw.h"
+#include <core_legacy/Caress/raw.h>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
