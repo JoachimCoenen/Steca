@@ -31,9 +31,9 @@ ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
   setCheckable(true);
   setNumbered(true);
 
-  hub.onSigReset([this]() {
-    signalReset();
-  });
+// TODO out hub.onSigReset([this]() {
+//    signalReset();
+//  });
 }
 
 cl_n ModelFiles::cols() const {

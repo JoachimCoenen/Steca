@@ -100,7 +100,7 @@ Hub::~Hub() {
 
 Hub::ref Hub::sessionClear() {
   base::clear();
-  emit sigReset();
+  emitResetFiles();
   RTHIS
 }
 
@@ -112,7 +112,7 @@ Hub::ref Hub::sessionLoad(l_io::path path) may_err {
   auto json = Json::asSelf(Json::loadFrom(file.asStream()));
 
   base::load(json);
-  emit sigReset();
+  emitResetFiles();
 
   RTHIS
 }
@@ -124,27 +124,32 @@ void Hub::sessionSave(l_io::path path) const may_err {
   base::save().saveTo(file.asStream());
 }
 
-Hub::ref Hub::addFiles() {
-  auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),
-                "Data files (*.dat *.mar*);;All files (*.*)",
-                new FileProxyModel);
-
+Hub::ref Hub::addFiles(str_vec::rc names) {
   if (!names.isEmpty()) {
-    l_io::path(names.at(0)).dir().cd();
-
     l_io::busy __;
     for (l_io::path path : names)
       if (!base::hasFile(path))
         base::addFile(path);
 
-    emit sigReset();
+    emitResetFiles();
   }
   RTHIS
 }
 
+Hub::ref Hub::addFiles() {
+  auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),
+                "Data files (*.dat *.mar*);;All files (*.*)",
+                new FileProxyModel);
+
+  if (!names.isEmpty())
+    l_io::path(names.at(0)).dir().cd();
+
+  return addFiles(names);
+}
+
 Hub::ref Hub::remFile(uint i) {
   base::remFile(i);
-  emit sigReset();
+  emitResetFiles();
   RTHIS
 }
 
@@ -172,6 +177,28 @@ Hub::ref Hub::corrEnable(bool on) {
 Hub::ref Hub::corrRem() {
   base::remCorrFile();
   emit sigCorr();
+  RTHIS
+}
+
+Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
+  base::collectDatasetsFromFiles(is, by);
+  emit sigResetDatasets();
+  RTHIS
+}
+
+Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is) {
+  collectDatasetsFromFiles(is, groupBy);
+  RTHIS
+}
+
+Hub::ref Hub::groupDatasetsBy(l::pint by) {
+  collectDatasetsFromFiles(collectedFromFiles, by);
+  RTHIS
+}
+
+Hub::ref Hub::emitResetFiles() {
+  modelFiles->signalReset();
+  emit sigResetFiles();
   RTHIS
 }
 

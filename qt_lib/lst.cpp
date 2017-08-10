@@ -63,10 +63,20 @@ lst_view::ref lst_view::checkRow(rw_n rw) {
   RTHIS
 }
 
-lst_view::ref lst_view::checkRows(l::vec<rw_n> rws) {
+lst_view::ref lst_view::checkRows(rw_n_vec::rc rws) {
   for (auto rw : rws)
     checkRow(rw);
   RTHIS
+}
+
+lst_view::rw_n_vec lst_view::checkedRows() const {
+  rw_n_vec rws;
+  if (model) {
+    for_i_(model->rows())
+      if (model->isChecked(i))
+        rws.add(i);
+  }
+  return rws;
 }
 
 int lst_view::currentRow() const {
@@ -84,7 +94,7 @@ int lst_view::selectedRow() const {
   return rws.isEmpty() ? -1 : int(rws.first());
 }
 
-lst_view::ref lst_view::selectRows(l::vec<rw_n> rws) {
+lst_view::ref lst_view::selectRows(rw_n_vec::rc rws) {
   if (model) {
     int cols = model->columnCount();
 
@@ -97,8 +107,8 @@ lst_view::ref lst_view::selectRows(l::vec<rw_n> rws) {
   RTHIS
 }
 
-l::vec<lst_view::rw_n> lst_view::selectedRows() const {
-  l::vec<lst_view::rw_n> rws;
+lst_view::rw_n_vec lst_view::selectedRows() const {
+  rw_n_vec rws;
   for (auto& index : selectionModel()->selectedRows())
     rws.add(rw_n(l::to_u(index.row())));
   return rws;

@@ -187,6 +187,10 @@ using real = flt64;
   #define _USE_MATH_DEFINES
 #endif
 
+struct int_vec;
+struct uint_vec;
+struct real_vec;
+
 //------------------------------------------------------------------------------
 // exception annotations
 

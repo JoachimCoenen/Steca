@@ -29,6 +29,7 @@ dcl_end
 
 using pcstr = char const*;
 using strc  = str const&;
+struct str_vec;
 
 namespace std {
 

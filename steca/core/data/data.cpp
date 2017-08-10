@@ -94,7 +94,7 @@ tth_rge Set::rgeTth(Session::rc s)const {
 }
 
 void Set::collect(Session::rc s, Image const* corr,
-                core::inten_vec& intens, core::uint_vec& counts,
+                core::inten_vec& intens, uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
   auto &map = *s.angleMap(*this);
 

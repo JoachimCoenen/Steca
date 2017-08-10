@@ -8,7 +8,7 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-use_num_(msec_t, int64, {})
+use_int_(msec_t, int64, {})
 
 dcl_(tim) COMPARABLE EQ_NE
   atr_(msec_t, msec); // msec since epoch

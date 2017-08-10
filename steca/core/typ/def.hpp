@@ -26,9 +26,6 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-using real_vec = l::vec<real>;
-using uint_vec = l::vec<uint>;
-
 using tth_t = l::deg;
 using omg_t = l::deg;
 using phi_t = l::deg;

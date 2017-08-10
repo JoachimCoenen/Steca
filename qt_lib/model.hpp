@@ -4,6 +4,7 @@
 
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/num.hpp>
+#include <dev_lib/typ/vec.hpp>
 #include "var.hpp"
 #include <QAbstractTableModel>
 
@@ -11,8 +12,11 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(lst_model, QAbstractTableModel)
-  use_num_(cl_n, uint, {}) // col number
-  use_num_(rw_n, uint, {}) // row number
+  use_int_(cl_n, uint, {}) // col number
+  use_int_(rw_n, uint, {}) // row number
+
+  use_vec_(cl_n, uint)
+  use_vec_(rw_n, uint)
 
   lst_model();
 

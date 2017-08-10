@@ -35,13 +35,6 @@ namespace gui {
 struct Win;
 
 dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
-#ifdef DEVELOPMENT
-  using base::addFile;
-  void emitReset() {
-    emit sigReset();
-  }
-#endif
-
   ref_(Win,  win);
   atr_(Acts, acts);
 
@@ -52,26 +45,37 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   Hub(Win&);
  ~Hub();
 
-  set_(sessionClear, ())          emits(sigReset);
-  set_(sessionLoad, (l_io::path)) emits(sigReset)   may_err;
-  mth_(void, sessionSave, (l_io::path))             may_err;
+  set_(sessionClear, ())          emits;
+  set_(sessionLoad, (l_io::path)) emits may_err;
+  mth_(void, sessionSave, (l_io::path)) may_err;
 
   mth_(uint, numFiles, ())        RET_(base::files.size())
   mth_(str,  fileName, (uint i))  RET_(base::files.at(i)->name)
 
-  set_(addFiles, ())              emits(sigReset);
-  set_(remFile,  (uint))          emits(sigReset);
+  set_(addFiles, (str_vec::rc))   emits;
+  set_(addFiles, ())              emits;
+  set_(remFile,  (uint))          emits;
 
-  set_(activateFile,(uint, bool)) emits(sigReset);
+  set_(activateFile,(uint, bool)) emits;
   using base::isFileActive;
 
-  set_(corrEnable, (bool))        emits(sigCorr);
-  set_(corrRem,    ())            emits(sigCorr);
+  set_(corrEnable, (bool))        emits;
+  set_(corrRem,    ())            emits;
+
+  set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint));
+  set_(collectDatasetsFromFiles, (uint_vec::rc));
+  set_(groupDatasetsBy,          (l::pint));
+
 
 signals:
-  void sigReset();        // major change in data
-  void sigCorr();         // changed correction - file, on/off
-  void sigFilesActive();  // changed active files
+  void sigResetFiles();     // a major change in files
+  void sigCorr();           // changed correction file, on/off
+  void sigFilesActive();    // changed active files
+  void sigResetDatasets();  // a major change in datasets
+
+private:
+  // emits and related actions
+  set_(emitResetFiles, ());
 
 public:
   template <typename Signal, typename Lambda>
@@ -84,9 +88,11 @@ public:
     onSignal(&Hub::sig##name, slot); \
   }
 
-  DCL_HUB_SIGNAL_HANDLER(Reset)
+// TODO  DCL_HUB_SIGNAL_HANDLER(Reset)
+  DCL_HUB_SIGNAL_HANDLER(ResetFiles)
   DCL_HUB_SIGNAL_HANDLER(Corr)
   DCL_HUB_SIGNAL_HANDLER(FilesActive)
+  DCL_HUB_SIGNAL_HANDLER(ResetDatasets)
 
 private:
   Q_OBJECT

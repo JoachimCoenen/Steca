@@ -67,6 +67,11 @@ dcl_(Session)
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
 
+  atr_(uint_vec, collectedFromFiles);
+  atr_(l::pint,  groupBy);
+
+  set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint by));
+
   set_(setImageSize,  (l::sz2)) may_err;
 
   mth_(calc::ImageLens::sh, imageLens,

@@ -39,7 +39,7 @@ dcl_end
 
 ViewFiles::ViewFiles(Hub& hub)
 : RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
-  hub.onSigReset([this]() {
+  hub.onSigResetFiles([this]() {
     selectRows({});
     uiUpdate();
     collectDatasets();
@@ -64,19 +64,10 @@ void ViewFiles::removeSelected() {
   auto num = hub.numFiles();
   if (num > 0)
     selectRow(rw_n(l::min(num-1, l::to_uint(row))));
-
-  collectDatasets();
 }
 
 void ViewFiles::collectDatasets() {
-  TR("collectDatasets")
-//  selectedRows()
-//  uint_vec rows;
-//  for (auto& index : selectionModel()->selectedRows())FILES_REM
-//    if (index.isValid())
-//      rows.append(to_u(index.row()));
-
-//  hub_.collectDatasetsFromFiles(rows);
+  hub.collectDatasetsFromFiles(checkedRows());
 }
 
 void ViewFiles::uiUpdate() {

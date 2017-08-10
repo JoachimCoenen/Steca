@@ -92,8 +92,8 @@ dcl_(Set) SHARED   // one dataset, as acquired
   mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
   act_(collect, (Session const&, Image const* corr,
-                       core::inten_vec&, core::uint_vec&, gma_rge::rc,
-                       tth_t minTth, tth_t deltaTth));
+                 core::inten_vec&, uint_vec&, gma_rge::rc,
+                 tth_t minTth, tth_t deltaTth));
 dcl_end
 
 //------------------------------------------------------------------------------

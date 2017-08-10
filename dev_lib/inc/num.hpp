@@ -7,21 +7,37 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-// a number type alias; checked in debug mode
+// number type aliases; string type in debug mode
 #ifndef NDEBUG
-  #define use_num_(T, Base, ...) struct T {       \
+  #define use_int_(T, Base, ...) struct T {       \
     explicit T(Base val_) : val(val_) __VA_ARGS__ \
     operator Base() const RET_(val)               \
+    T& operator++() SET_(++val)                   \
   protected:                                      \
     Base val;                                     \
   };
+
+  #define use_flt_(T, Base, ...) struct T {       \
+    explicit T(Base val_) : val(val_) __VA_ARGS__ \
+    operator Base() const RET_(val)               \
+    protected:                                    \
+    Base val;                                     \
+  };
+
+  #define use_vec_(T, Base)                       \
+  dcl_sub_(T##_vec, l::vec<T>)                    \
+    using base::base;                             \
+    operator Base##_vec&() RET_(reinterpret_cast<Base##_vec&>(*this)) \
+  dcl_end
 #else
-  #define use_num_(T, Base, ...) using T = Base;
+  #define use_int_(T, Base, ...) using T = Base;
+  #define use_flt_(T, Base, ...) using T = Base;
+  #define use_vec_(T, Base)      using T##_vec = Base##_vec;
 #endif
 
-use_num_(pint,  int,   { EXPECT_(0 <  val) }) // (p)ositive (int)eger
-use_num_(peal,  real,  { EXPECT_(0 <  val) }) // (p)ositive r(eal)
-use_num_(neal,  real,  { EXPECT_(0 <= val) }) // (n)on-negative r(eal)
+use_int_(pint,  int,   { EXPECT_(0 <  val) }) // (p)ositive (int)eger
+use_flt_(peal,  real,  { EXPECT_(0 <  val) }) // (p)ositive r(eal)
+use_flt_(neal,  real,  { EXPECT_(0 <= val) }) // (n)on-negative r(eal)
 
 //------------------------------------------------------------------------------
 // integral type traits

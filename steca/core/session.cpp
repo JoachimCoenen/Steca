@@ -31,6 +31,7 @@ Session::Session()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
+, collectedFromFiles(), groupBy(1)
 , bgPolyDegree(0), bgRanges()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
@@ -267,6 +268,53 @@ Session::ref Session::remCorrFile() {
 
 Session::ref Session::tryEnableCorr(bool on) {
   mut(corrEnabled) = on && corrFile;
+  RTHIS
+}
+
+Session::ref Session::collectDatasetsFromFiles(uint_vec::rc, l::pint by) {
+
+//  collectedFromFiles_ = fileNums;
+//  collectedDatasets_.clear();
+//  collectedDatasetsTags_.clear();
+
+//  vec<shp_OneDataset> datasetsFromFiles;
+//  for (uint i : collectedFromFiles_)
+//    for (auto& dataset : files_.at(i)->datasets())
+//      datasetsFromFiles.append(dataset);
+
+//  if (datasetsFromFiles.isEmpty())
+//    return;
+
+//  shp_Dataset cd(new Dataset);
+//  uint i = 0;
+
+//  auto appendCd = [this, &cd, &combineBy, &i]() {
+//    uint cnt = cd->count();
+//    if (cnt) {
+//      str tag = str::number(i + 1);
+//      i += cnt;
+
+//      if (combineBy > 1)
+//        tag += '-' + str::number(i);
+
+//      collectedDatasets_.appendHere(cd);
+//      collectedDatasetsTags_.append(tag);
+
+//      cd = shp_Dataset(new Dataset);
+//    }
+//  };
+
+//  uint by = combineBy;
+//  for (auto& dataset : datasetsFromFiles) {
+//    cd->append(shp_OneDataset(dataset));
+//    if (1 >= by--) {
+//      appendCd();
+//      by = combineBy;
+//    }
+//  }
+
+//  appendCd();  // the remaining ones
+
   RTHIS
 }
 

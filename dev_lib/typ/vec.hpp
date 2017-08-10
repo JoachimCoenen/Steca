@@ -58,5 +58,17 @@ dcl_sub_(str_vec, l::vec<str>)
   fry_(str_vec, split, (strc));
 dcl_end
 
+dcl_sub_(int_vec, l::vec<int>)
+  using base::base;
+dcl_end
+
+dcl_sub_(uint_vec, l::vec<uint>)
+  using base::base;
+dcl_end
+
+dcl_sub_(real_vec, l::vec<real>)
+  using base::base;
+dcl_end
+
 //------------------------------------------------------------------------------
 // eof

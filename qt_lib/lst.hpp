@@ -14,8 +14,10 @@ namespace l_qt {
 dcl_sub_(lst_view, QTreeView)
   lst_view();
 
-  using cl_n = lst_model::cl_n;
-  using rw_n = lst_model::rw_n;
+  using cl_n     = lst_model::cl_n;
+  using rw_n     = lst_model::rw_n;
+  using cl_n_vec = lst_model::cl_n_vec;
+  using rw_n_vec = lst_model::rw_n_vec;
 
   atr_(bool, hasHeader);
   set_(showHeader, (bool = true));
@@ -25,15 +27,16 @@ dcl_sub_(lst_view, QTreeView)
 
   set_(checkRow,  (QModelIndex const&));
   set_(checkRow,  (rw_n));
-  set_(checkRows, (l::vec<rw_n>));
+  set_(checkRows, (rw_n_vec::rc));
+  mth_(rw_n_vec,  checkedRows, ());
 
   mth_(int, currentRow,  ()); // -1 if not
 
   set_(selectRow, (rw_n));
   mth_(int, selectedRow, ()); // -1 if not
 
-  set_(selectRows, (l::vec<rw_n>));
-  mth_(l::vec<rw_n>, selectedRows, ());
+  set_(selectRows,(rw_n_vec::rc));
+  mth_(rw_n_vec,   selectedRows, ());
 
   set_(sizeColumns, ());
 
