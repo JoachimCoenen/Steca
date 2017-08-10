@@ -23,6 +23,9 @@ dcl_sub_(str, std::string)
 
   mth_(str, trimmed, ());
 
+  fry_(str, num, (int));
+  fry_(str, num, (uint));
+
 private:
   bool empty() const; // disallow
 dcl_end

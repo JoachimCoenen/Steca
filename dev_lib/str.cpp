@@ -23,6 +23,15 @@ str str::trimmed() const {
   return str(p1, p2-p1);                            // substring
 }
 
+str str::num(int val) {
+  return CAT(val);
+}
+
+str str::num(uint val) {
+  return CAT(val);
+}
+
+
 namespace std {
 
 size_t hash<::str>::operator()(::strc s) const {

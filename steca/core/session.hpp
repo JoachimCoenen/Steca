@@ -67,8 +67,11 @@ dcl_(Session)
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
 
-  atr_(uint_vec, collectedFromFiles);
-  atr_(l::pint,  groupBy);
+
+  atr_(data::CombinedSets, collectedDatasets);
+  atr_(str_vec,            collectedDatasetsTags);
+  atr_(uint_vec,           collectedFromFiles);
+  atr_(l::pint,            groupedBy);
 
   set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint by));
 

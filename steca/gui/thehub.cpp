@@ -182,12 +182,12 @@ Hub::ref Hub::corrRem() {
 
 Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
   base::collectDatasetsFromFiles(is, by);
-  emit sigResetDatasets();
+  emitResetDatasets();
   RTHIS
 }
 
 Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is) {
-  collectDatasetsFromFiles(is, groupBy);
+  collectDatasetsFromFiles(is, groupedBy);
   RTHIS
 }
 
@@ -199,6 +199,12 @@ Hub::ref Hub::groupDatasetsBy(l::pint by) {
 Hub::ref Hub::emitResetFiles() {
   modelFiles->signalReset();
   emit sigResetFiles();
+  RTHIS
+}
+
+Hub::ref Hub::emitResetDatasets() {
+  modelDatasets->signalReset();
+  emit sigResetDatasets();
   RTHIS
 }
 

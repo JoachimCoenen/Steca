@@ -215,7 +215,6 @@ void Win::onFirstShow() {
     "/home/jan/C/+dev/fz/data/SS15/m280580.dat"
   });
 //  hub.addFile(l_io::path("/home/jan/C/+dev/fz/data/SS15/m280581.dat"));
-//  hub.emitReset();
 #endif
 }
 

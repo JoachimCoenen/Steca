@@ -366,8 +366,17 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
 
 //------------------------------------------------------------------------------
 
-CombinedSets::CombinedSets()
-: lazyMon(l::flt_nan), lazyDTim(l::flt_nan), lazyDMon(l::flt_nan) {}
+CombinedSets::CombinedSets() {
+  resetLazies();
+}
+
+CombinedSets::ref CombinedSets::add(l::give_me<CombinedSet> set) {
+  EXPECT_(!set->parent)
+  mut(set->parent) = this;
+  base::add(l::share(set));
+  resetLazies();
+  RTHIS
+}
 
 l::sz2 CombinedSets::imageSize() const {
   if (isEmpty())
@@ -407,6 +416,11 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
   }
 
   return lazyRgeFixedInten;
+}
+
+void CombinedSets::resetLazies() {
+  lazyMon = lazyDTim = lazyDMon = l::flt_nan;
+  lazyRgeFixedInten = inten_rge();
 }
 
 //------------------------------------------------------------------------------

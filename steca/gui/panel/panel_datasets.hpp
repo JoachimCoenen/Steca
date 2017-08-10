@@ -28,7 +28,7 @@ dcl_sub_(PanelDatasets, Panel)
 
 private:
   Panel *tab;
-  l_qt::lst_view  *view;
+  l_qt::lst_view *view;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -20,8 +20,8 @@ int lst_model::checkableCol() const {
   return isCheckable ? 1 : -1;
 }
 
-lst_model::ref lst_model::setNumbered(bool on) {
-  mut(isNumbered) = on;
+lst_model::ref lst_model::setNumbered(uint n) {
+  mut(isNumbered) = n;
   signalReset();
   RTHIS
 }

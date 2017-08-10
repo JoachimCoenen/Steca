@@ -66,6 +66,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(collectDatasetsFromFiles, (uint_vec::rc));
   set_(groupDatasetsBy,          (l::pint));
 
+  mth_(uint, numdatasets, ())     RET_(base::collectedDatasets.size())
 
 signals:
   void sigResetFiles();     // a major change in files
@@ -75,7 +76,8 @@ signals:
 
 private:
   // emits and related actions
-  set_(emitResetFiles, ());
+  set_(emitResetFiles,    ());
+  set_(emitResetDatasets, ());
 
 public:
   template <typename Signal, typename Lambda>

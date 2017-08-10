@@ -39,6 +39,7 @@ dcl_end
 
 ViewFiles::ViewFiles(Hub& hub)
 : RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
+
   hub.onSigResetFiles([this]() {
     selectRows({});
     uiUpdate();

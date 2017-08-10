@@ -224,7 +224,7 @@ private:
 // a handy way to make a shared pointer
 template <typename T> shared<T> share(T* p)             RET_(shared<T>(p))
 template <typename T> shared<T const> share(T const* p) RET_(shared<T>(p))
-template <typename T> shared<T> share(own<T> p)         RET_(scope(p))
+template <typename T> shared<T> share(own<T> p)         RET_(shared<T>(p.ptr()))
 
 // declare struct as shared
 #define SHARED \

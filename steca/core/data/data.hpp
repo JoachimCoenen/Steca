@@ -157,6 +157,8 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
 
   CombinedSets();
 
+  set_(add, (l::give_me<CombinedSet>));
+
   mth_(l::sz2, imageSize, ());
 
   mth_(flt32,  mon, ());
@@ -171,6 +173,8 @@ private:
   mut_(flt32, lazyDMon);
 
   mutable inten_rge lazyRgeFixedInten;
+
+  void resetLazies();
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -29,11 +29,7 @@ using cl_n = ModelDatasets::cl_n;
 
 ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
   setCheckable(true);
-  setNumbered(true);
-
-// TODO out hub.onSigReset([this]() {
-//    signalReset();
-//  });
+  setNumbered(2);
 }
 
 cl_n ModelFiles::cols() const {
@@ -59,7 +55,7 @@ bool ModelFiles::isChecked(rw_n row) const {
 //------------------------------------------------------------------------------
 
 ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
-  setCheckable(true);
+  setNumbered(3);
 }
 
 cl_n ModelDatasets::cols() const {
@@ -67,11 +63,11 @@ cl_n ModelDatasets::cols() const {
 }
 
 rw_n ModelDatasets::rows() const {
-  return rw_n(0);
+  return rw_n(hub.numdatasets());
 }
 
 l_qt::var ModelDatasets::cell(rw_n, cl_n) const {
-  return l_qt::var("file");
+  return l_qt::var("TODO");
 }
 
 //------------------------------------------------------------------------------

@@ -12,7 +12,10 @@ namespace l {
   #define use_int_(T, Base, ...) struct T {       \
     explicit T(Base val_) : val(val_) __VA_ARGS__ \
     operator Base() const RET_(val)               \
-    T& operator++() SET_(++val)                   \
+    T& operator++()    SET_(++val)                \
+    T& operator--()    SET_(--val)                \
+    T& operator++(int) SET_(val++)                \
+    T& operator--(int) SET_(val--)                \
   protected:                                      \
     Base val;                                     \
   };

@@ -31,7 +31,7 @@ Session::Session()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
-, collectedFromFiles(), groupBy(1)
+, collectedDatasets(), collectedDatasetsTags(), collectedFromFiles(), groupedBy(1)
 , bgPolyDegree(0), bgRanges()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
@@ -271,49 +271,40 @@ Session::ref Session::tryEnableCorr(bool on) {
   RTHIS
 }
 
-Session::ref Session::collectDatasetsFromFiles(uint_vec::rc, l::pint by) {
+Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
+  mut(collectedFromFiles) = is;
+  mut(collectedDatasets).clear();
+  mut(collectedDatasetsTags).clear();
+  mut(groupedBy) = by;
 
-//  collectedFromFiles_ = fileNums;
-//  collectedDatasets_.clear();
-//  collectedDatasetsTags_.clear();
+  auto cs = l::scope(new data::CombinedSet);
+  uint i = 0;
 
-//  vec<shp_OneDataset> datasetsFromFiles;
-//  for (uint i : collectedFromFiles_)
-//    for (auto& dataset : files_.at(i)->datasets())
-//      datasetsFromFiles.append(dataset);
+  auto appendCs = [this, &cs, &i]() {
+    auto sz = cs->size();
+    if (!sz)
+      return;
 
-//  if (datasetsFromFiles.isEmpty())
-//    return;
+    str tag = str::num(i + 1); i += sz;
+    if (groupedBy > 1)
+      tag += '-' + str::num(i);
 
-//  shp_Dataset cd(new Dataset);
-//  uint i = 0;
+    mut(collectedDatasets).add(cs.takeOwn());
+    mut(collectedDatasetsTags).add(tag);
+    cs.reset(new data::CombinedSet);
+  };
 
-//  auto appendCd = [this, &cd, &combineBy, &i]() {
-//    uint cnt = cd->count();
-//    if (cnt) {
-//      str tag = str::number(i + 1);
-//      i += cnt;
+  auto gb = groupedBy;
+  for (uint i : collectedFromFiles)
+    for (auto& set : files.at(i)->sets) { // Set::sh
+      cs->add(set);
+      if (1 >= gb--) {
+        appendCs();
+        by = groupedBy;
+      }
+    }
 
-//      if (combineBy > 1)
-//        tag += '-' + str::number(i);
-
-//      collectedDatasets_.appendHere(cd);
-//      collectedDatasetsTags_.append(tag);
-
-//      cd = shp_Dataset(new Dataset);
-//    }
-//  };
-
-//  uint by = combineBy;
-//  for (auto& dataset : datasetsFromFiles) {
-//    cd->append(shp_OneDataset(dataset));
-//    if (1 >= by--) {
-//      appendCd();
-//      by = combineBy;
-//    }
-//  }
-
-//  appendCd();  // the remaining ones
+  appendCs();  // the potentially remaining ones
 
   RTHIS
 }
