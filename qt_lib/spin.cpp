@@ -7,21 +7,71 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-spin::spin() {
-  decimals(0);
+spin::spin() {}
+
+spin::ref spin::digitWidth(uint n)
+  SET_(base::setMaximumWidth(mWidth(this, n)))
+
+spin::ref spin::min(int val)
+  SET_(base::setMinimum(val))
+
+spin::ref spin::max(int val)
+  SET_(base::setMaximum(val))
+
+spin::ref spin::val(int val)
+  SET_(base::setValue(val))
+
+int spin::val() const
+  RET_(base::value())
+
+//------------------------------------------------------------------------------
+
+spinInt::spinInt() {
+  connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
+    emit valChg(val());
+  });
 }
 
-spin::ref spin::decimals(uint n) SET_(base::setDecimals(int(n)))
+spinUint::spinUint() {
+  min(0);
+  connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
+    emit valChg(l::to_uint(val()));
+  });
+}
 
-spin::ref spin::digitWidth(uint n) SET_(base::setMaximumWidth(mWidth(this, n)))
+spinPint::spinPint() {
+  min(1);
+  connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
+    emit valChg(l::pint(val()));
+  });
+}
 
-spin::ref spin::min(real val) SET_(base::setMinimum(val))
+//------------------------------------------------------------------------------
 
-spin::ref spin::max(real val) SET_(base::setMaximum(val))
+spinReal::spinReal() {
+  decimals(0);
+  connect(this, static_cast<void (Self::*)(double)>(&Self::valueChanged), [this](double) {
+    emit valChg(val());
+  });
+}
 
-spin::ref spin::val(real val) SET_(base::setValue(val))
+spinReal::ref spinReal::decimals(uint n)
+  SET_(base::setDecimals(int(n)))
 
-real spin::val() const RET_(base::value())
+spinReal::ref spinReal::digitWidth(uint n)
+  SET_(base::setMaximumWidth(mWidth(this, n)))
+
+spinReal::ref spinReal::min(real val)
+  SET_(base::setMinimum(val))
+
+spinReal::ref spinReal::max(real val)
+  SET_(base::setMaximum(val))
+
+spinReal::ref spinReal::val(real val)
+  SET_(base::setValue(val))
+
+real spinReal::val() const
+  RET_(base::value())
 
 //------------------------------------------------------------------------------
 }

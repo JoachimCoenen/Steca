@@ -41,13 +41,14 @@ dcl_(Meta) SHARED // metadata
   dcl_sub_(Dict, l::map<str COMMA uint>) SHARED
     mth_mut_(uint, add, (strc));
     mth_(uint, at,  (strc)) may_err;
+    atr_(str_vec, keys);
   };
 
   atr_(str, comment);
   atr_(str, date);
 
   atr_(Dict::sh, dict); // other than the values stored explicitly below
-  atr_(flt_vec,  vals);
+  atr_(flt_vec, vals);
 
   atr_(tth_t,  tth);    // *mid* tth
   atr_(omg_t,  omg);

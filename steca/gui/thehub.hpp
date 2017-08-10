@@ -69,7 +69,13 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(collectDatasetsFromFiles, (uint_vec::rc));
   set_(groupDatasetsBy,          (l::pint));
 
-  mth_(uint, numdatasets, ())     RET_(base::collectedDatasets.size())
+  mth_(uint,    numSets,   ())    RET_(base::collectedDatasets.size())
+  mth_(l::pint, groupedBy, ())    RET_(base::groupedBy)
+
+  mth_(core::data::CombinedSet::rc, setAt, (uint i)) RET_(*base::collectedDatasets.at(i))
+  mth_(strc,                        tagAt, (uint i)) RET_(base::collectedDatasetsTags.at(i))
+
+  mth_(core::data::Meta::sh, meta, ());
 
 signals:
   void sigResetFiles();     // a major change in files

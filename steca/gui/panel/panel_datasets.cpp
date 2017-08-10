@@ -28,8 +28,7 @@ dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
-  hub.onSigResetFiles([this]() {
-    TR(8)
+  hub.onSigResetDatasets([this]() {
   });
 }
 
@@ -47,7 +46,18 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   auto &h = tab->vb.hb();
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
-  h.add(new l_qt::spin());
+
+  auto spin = new l_qt::spinPint();
+  h.add(spin);
+
+  spin->min(1);
+  connect(spin, &l_qt::spinPint::valChg, [&hub](l::pint val) {
+    hub.groupDatasetsBy(val);
+  });
+
+  hub.onSigResetDatasets([spin, &hub]() {
+    spin->setValue(hub.groupedBy());
+  });
 }
 
 //------------------------------------------------------------------------------

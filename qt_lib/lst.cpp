@@ -73,8 +73,8 @@ lst_view::rw_n_vec lst_view::checkedRows() const {
   rw_n_vec rws;
   if (model) {
     for_i_(model->rows())
-      if (model->isChecked(i))
-        rws.add(i);
+      if (model->isChecked(rw_n(i)))
+        rws.add(rw_n(i));
   }
   return rws;
 }

@@ -28,7 +28,14 @@ namespace core { namespace data {
 
 uint Meta::Dict::add(strc key) {
   auto it = base::find(key);
-  return (base::end() == it) ? base::add(key, size()) : it->second;
+  if (base::end() != it)
+    return it->second;
+
+  uint val = size();
+  EXPECT_(keys.size() == val)
+  mut(keys).add(key);
+
+  return base::add(key, val);
 }
 
 uint Meta::Dict::at(strc key) const may_err {

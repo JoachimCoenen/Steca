@@ -35,7 +35,7 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub_) : base("", hub_) {
   hb.add(new l_qt::lbl(" inten:"));
   hb.add(new l_qt::rio("sum"));
   hb.add(new l_qt::rio("avg ×"));
-  hb.add(new l_qt::spin()); // em4_2, 0.001 setDecimals(3);
+  hb.add(new l_qt::spinReal()); // em4_2, 0.001 setDecimals(3);
 
   hb.addStretch();
   hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.DIFF_ZOOM)));

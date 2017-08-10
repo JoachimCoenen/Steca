@@ -39,7 +39,12 @@ dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
+
+  mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
+
+private:
+  uint_vec metaCols;  // shown metadata
 dcl_end
 
 dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)

@@ -59,15 +59,30 @@ ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelDatasets::cols() const {
-  return cl_n(1);
+  return cl_n(1 + metaCols.size());
 }
 
 rw_n ModelDatasets::rows() const {
-  return rw_n(hub.numdatasets());
+  return rw_n(hub.numSets());
 }
 
-l_qt::var ModelDatasets::cell(rw_n, cl_n) const {
-  return l_qt::var("TODO");
+str ModelDatasets::head(cl_n cl) const {
+  if (0 == cl)
+    return base::head(cl);
+
+  auto meta = hub.meta();
+  if (meta)
+    return meta->dict->keys.at(metaCols.at(cl));
+
+  return str::null;
+}
+
+l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
+  if (0 == cl)
+    return hub.tagAt(rw);
+
+  uint mi = metaCols.at(cl);
+  return l_qt::var(hub.setAt(rw).meta()->vals.at(mi));
 }
 
 //------------------------------------------------------------------------------

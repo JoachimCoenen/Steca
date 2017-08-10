@@ -60,9 +60,21 @@ int lst_model::rowCount(rcIndex) const {
 }
 
 QVariant lst_model::headerData(int col, Qt::Orientation, int role) const {
-  if (col < int(colOff()))
+  if (col == checkableCol())
     return QVariant();
 
+  if (col == numberedCol()) {
+    switch (role) {
+    case Qt::DisplayRole:
+      return "#";
+    case Qt::TextAlignmentRole:
+      return Qt::AlignRight;
+    default:
+      return QVariant();
+    }
+  }
+
+  EXPECT_(col >= int(colOff()))
   auto cl = lst_model::cl_n(l::to_u(col) - colOff());
 
   switch (role) {

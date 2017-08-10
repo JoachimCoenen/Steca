@@ -187,13 +187,17 @@ Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
 }
 
 Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is) {
-  collectDatasetsFromFiles(is, groupedBy);
+  collectDatasetsFromFiles(is, groupedBy());
   RTHIS
 }
 
 Hub::ref Hub::groupDatasetsBy(l::pint by) {
   collectDatasetsFromFiles(collectedFromFiles, by);
   RTHIS
+}
+
+core::data::Meta::sh Hub::meta() const {
+  return numSets() ? setAt(0).meta() : core::data::Meta::sh();
 }
 
 Hub::ref Hub::emitResetFiles() {

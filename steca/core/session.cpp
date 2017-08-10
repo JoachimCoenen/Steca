@@ -300,9 +300,9 @@ Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
   for (uint i : collectedFromFiles)
     for (auto& set : files.at(i)->sets) { // Set::sh
       cs->add(set);
-      if (1 >= gb--) {
+      if (0 == --gb) {
         appendCs();
-        by = groupedBy;
+        gb = groupedBy;
       }
     }
 
