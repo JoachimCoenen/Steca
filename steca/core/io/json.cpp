@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "json.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include "../typ/fun.hpp"
 #include "../fit/fit_fun.hpp"
 #include "../calc/reflection.hpp"

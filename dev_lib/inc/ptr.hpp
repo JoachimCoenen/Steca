@@ -1,7 +1,6 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 
 typedef void*       pvoid;

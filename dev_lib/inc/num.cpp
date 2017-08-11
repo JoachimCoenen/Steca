@@ -1,9 +1,7 @@
 // (dev_lib)
 
 #include "num.hpp"
-#include "../defs.inc"
-
-#include <cmath>
+#include "defs.inc"
 #include <limits>
 
 namespace l {

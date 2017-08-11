@@ -16,13 +16,11 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "calc/lens.hpp"
 #include "data/data.hpp"
 #include "io/json.hpp"
 #include "typ/angles.hpp"
 #include "typ/curve.hpp"
-
 #include <dev_lib/inc/num.hpp>
 #include <dev_lib/typ/cache.hpp>
 #include <dev_lib/io/path.hpp>

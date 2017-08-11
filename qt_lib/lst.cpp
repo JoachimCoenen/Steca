@@ -2,8 +2,7 @@
 
 #include "lst.hpp"
 #include "font.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include <QHeaderView>
 #include <QKeyEvent>
 

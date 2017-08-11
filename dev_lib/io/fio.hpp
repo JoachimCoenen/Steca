@@ -1,7 +1,6 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 #include "../typ/buf.hpp"
 #include "endian.hpp"

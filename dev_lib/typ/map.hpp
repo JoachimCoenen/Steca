@@ -1,10 +1,8 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 #include "../inc/ptr.hpp"
-
 #include <map>
 
 namespace l {

@@ -16,9 +16,8 @@
  ******************************************************************************/
 
 #include "angles.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include <algorithm>
-#include <cmath>
 
 namespace core {
 //------------------------------------------------------------------------------

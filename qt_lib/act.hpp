@@ -1,11 +1,10 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/ptr.hpp>
+#include <dev_lib/inc/str.hpp>
 #include <dev_lib/typ/hash.hpp>
-
 #include <QAction>
 #include <QToolButton>
 

@@ -1,8 +1,7 @@
 // (qt_lib)
 
 #include "tim.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include <QDateTime>
 
 namespace l_qt {
@@ -14,7 +13,7 @@ static msec_t now_msec() {
 
 //------------------------------------------------------------------------------
 
-tim::tim() : Self(now_msec())  {}
+tim::tim() : Self(now_msec()) {}
 
 tim::tim(msec_t msec_) : msec(msec_) {}
 

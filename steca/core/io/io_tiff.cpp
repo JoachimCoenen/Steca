@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 #include "io_tiff.hpp"
+#include <dev_lib/inc/defs.inc>
 #include "io.hpp"
-#include <dev_lib/defs.inc>
 
 // The dat file looks like so:
 /*

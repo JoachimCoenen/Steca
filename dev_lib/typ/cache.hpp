@@ -1,10 +1,8 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 #include "../inc/num.hpp"
-#include "../inc/ptr.hpp"
 #include "map.hpp"
 
 namespace l {
@@ -13,7 +11,7 @@ namespace l {
 dcl_base_(cache_base)
   using mru_t = uint32;
 
-  atr_(sz_t,  maxItems);
+  atr_(pint,  maxItems);
   mut_(mru_t, nextMru);
   mut_(bool,  rollOver = false);  // L.van
 

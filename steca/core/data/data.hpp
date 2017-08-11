@@ -16,11 +16,11 @@
  ******************************************************************************/
 
 #pragma once
-
-#include "../typ/def.hpp"
-#include "../typ/image.hpp"
+#include <dev_lib/inc/vecs.hpp>
 #include <dev_lib/typ/map.hpp>
 #include <dev_lib/io/path.hpp>
+#include "../typ/def.hpp"
+#include "../typ/image.hpp"
 
 namespace core {
 

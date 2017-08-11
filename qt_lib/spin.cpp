@@ -1,8 +1,8 @@
 // (qt_lib)
 
 #include "spin.hpp"
+#include "inc/defs.inc"
 #include "font.hpp"
-#include <dev_lib/defs.inc>
 
 namespace l_qt {
 //------------------------------------------------------------------------------

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fit_fun.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include "fit_methods.hpp"
 
 namespace core {

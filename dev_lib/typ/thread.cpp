@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "thread.hpp"
-#include "../defs.inc"
+#include "../inc/defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

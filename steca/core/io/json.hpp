@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <dev_lib/io/json.hpp>
 #include <dev_lib/typ/factory.hpp>
 

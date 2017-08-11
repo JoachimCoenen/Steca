@@ -1,7 +1,6 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/num.hpp>
 #include <dev_lib/typ/vec.hpp>

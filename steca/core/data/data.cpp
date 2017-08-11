@@ -16,11 +16,9 @@
  ******************************************************************************/
 
 #include "data.hpp"
-#include "../session.hpp"
-
-#include <dev_lib/defs.inc>
-#include <dev_lib/inc/exc.hpp>
+#include <dev_lib/inc/defs.inc>
 #include <dev_lib/io/log.hpp>
+#include "../session.hpp"
 #include "../typ/range.hpp"
 
 namespace core { namespace data {

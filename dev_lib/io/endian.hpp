@@ -1,8 +1,7 @@
 // (dev_lib)
 
 #pragma once
-
-#include <dev_lib/defs.hpp>
+#include "../defs.hpp"
 
 namespace l_io { namespace endian {
 //------------------------------------------------------------------------------

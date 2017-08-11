@@ -16,12 +16,12 @@
  ******************************************************************************/
 
 #pragma once
-
-#include "geometry.hpp"
-#include "range.hpp"
 #include <dev_lib/inc/ptr.hpp>
+#include <dev_lib/inc/vecs.hpp>
 #include <dev_lib/typ/arr2.hpp>
 #include <dev_lib/typ/sz2.hpp>
+#include "geometry.hpp"
+#include "range.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------

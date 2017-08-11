@@ -16,9 +16,8 @@
  ******************************************************************************/
 
 #include "lens.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include <dev_lib/io/log.hpp>
-
 #include "../session.hpp"
 
 namespace core { namespace calc {

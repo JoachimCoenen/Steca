@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <qt_lib/win.hpp>
 #include "thehub.hpp"
 #include <QNetworkAccessManager>

@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #pragma once
-
+#include "../defs.hpp"
 #include "vec.hpp"
 
 namespace l {

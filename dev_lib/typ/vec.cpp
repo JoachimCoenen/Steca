@@ -1,8 +1,7 @@
 // (dev_lib)
 
 #include "vec.hpp"
-#include "../defs.inc"
-#include <sstream>
+#include "../inc/defs.inc"
 
 //------------------------------------------------------------------------------
 

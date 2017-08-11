@@ -1,9 +1,7 @@
 // (qt_lib)
 
 #include "var.hpp"
-#include <dev_lib/defs.inc>
-
-#include "str_inc.hpp"
+#include "inc/defs.inc"
 #include <QDateTime>
 
 namespace l_qt {

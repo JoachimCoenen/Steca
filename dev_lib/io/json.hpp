@@ -24,12 +24,10 @@
  */
 
 #pragma once
-
 #include "../defs.hpp"
-#include "../inc/ptr.hpp"
+#include "../inc/str.hpp"
 #include "../typ/vec.hpp"
 #include "../typ/map.hpp"
-
 #include <iostream>
 
 namespace l {

@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "def.hpp"
 #include "range.hpp"
 #include <dev_lib/inc/ptr.hpp>

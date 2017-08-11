@@ -18,7 +18,7 @@
 #include "panel_datasets.hpp"
 #include "../thehub.hpp"
 #include <qt_lib/wgt_inc.hpp>
-#include <dev_lib/defs.inc>
+#include <qt_lib/inc/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------

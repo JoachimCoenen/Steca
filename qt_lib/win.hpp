@@ -1,7 +1,6 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <QMainWindow>
 
@@ -27,7 +26,7 @@ dcl_sub_(win, QMainWindow)
   virtual act_mut_(quit,  ());
 
   virtual act_mut_(onFirstShow, ()) {}
-  virtual bol_mut_(onClose, ())     RET_(true)
+  virtual bol_mut_(onClose,     ()) RET_(true)
 
 protected:
   void closeEvent(QCloseEvent*);

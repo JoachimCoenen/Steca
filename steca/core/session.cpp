@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "session.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include <dev_lib/io/log.hpp>
 #include "fit/fit_methods.hpp"
 #include "io/io.hpp"

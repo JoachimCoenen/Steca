@@ -1,18 +1,15 @@
 // (qt_lib)
 
 #include "hub.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include <QApplication>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-Task::Task() : base(base::User), hub(nullptr) {
-}
+Task::Task() : base(base::User), hub(nullptr) {}
 
-Task::~Task() {
-}
+Task::~Task() {}
 
 void Task::set(Hub& hub_) {
   hub = &hub_;

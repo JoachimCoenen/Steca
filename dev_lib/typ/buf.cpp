@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "buf.hpp"
-#include "../defs.inc"
+#include "../inc/defs.inc"
 #include <string.h>
 
 namespace l {

@@ -1,8 +1,7 @@
 // (qt_lib)
 
 #include "layout.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include "split.hpp"
 
 namespace l_qt {
@@ -26,13 +25,14 @@ grid& grid::gr(uint row, uint col) {
   return *gr;
 }
 
-grid::ref grid::add(QWidget* wgt, uint row, uint col) SET_(
-  addWidget(NEEDED_(wgt), int(row), int(col))
-)
+grid::ref grid::add(QWidget* wgt, uint row, uint col)
+  SET_(addWidget(NEEDED_(wgt), int(row), int(col)))
 
-grid::ref grid::addRowStretch() SET_(setRowStretch(rowCount(), 0))
+grid::ref grid::addRowStretch()
+  SET_(setRowStretch(rowCount(), 0))
 
-grid::ref grid::addColStretch() SET_(setColumnStretch(columnCount(), 0))
+grid::ref grid::addColStretch()
+  SET_(setColumnStretch(columnCount(), 0))
 
 grid::grid() {
   base::setSpacing(2);
@@ -84,7 +84,8 @@ box::ref box::add(QWidget* wgt) {
   addWidget(wgt); RTHIS
 }
 
-box::ref box::addStretch() SET_(base::addStretch(0))
+box::ref box::addStretch()
+  SET_(base::addStretch(0))
 
 box::box() : base(QBoxLayout::LeftToRight) {
   base::setSpacing(2);

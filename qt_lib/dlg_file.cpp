@@ -1,8 +1,7 @@
 // (qt_lib)
 
 #include "dlg_file.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include <QFileDialog>
 #include <QStyle>
 

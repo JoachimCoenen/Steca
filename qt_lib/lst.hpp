@@ -1,11 +1,8 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
-#include <dev_lib/typ/vec.hpp>
 #include "model.hpp"
-
 #include <QTreeView>
 
 namespace l_qt {
@@ -23,7 +20,7 @@ dcl_sub_(lst_view, QTreeView)
   set_(showHeader, (bool = true));
 
   ptr_(lst_model, model);
-  set_(setModel, (lst_model const*));
+  set_(setModel,  (lst_model const*));
 
   set_(checkRow,  (QModelIndex const&));
   set_(checkRow,  (rw_n));

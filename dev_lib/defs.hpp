@@ -200,7 +200,11 @@ struct real_vec;
 //------------------------------------------------------------------------------
 // strings
 
-#include "str.hpp"
+struct str;
+struct str_vec;
+
+using pcstr = char const*;
+using strc  = str const&;
 
 //------------------------------------------------------------------------------
 // debug support

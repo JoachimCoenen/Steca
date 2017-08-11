@@ -1,9 +1,7 @@
 // (qt_lib)
 
 #include "model.hpp"
-#include <dev_lib/defs.inc>
-#include "str_inc.hpp"
-#include <QSize>
+#include "inc/defs.inc"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -38,9 +36,11 @@ var lst_model::cell(rw_n, cl_n) const {
   return var();
 }
 
-lst_model::ref lst_model::check(rw_n rw) SET_(check(rw, !isChecked(rw)))
+lst_model::ref lst_model::check(rw_n rw)
+  SET_(check(rw, !isChecked(rw)))
 
-lst_model::ref lst_model::check(rw_n, bool) SET_()
+lst_model::ref lst_model::check(rw_n, bool)
+  SET_()
 
 bool lst_model::isChecked(rw_n) const {
   return false;

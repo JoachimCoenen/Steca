@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "io.hpp"
-#include "io_tiff.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 #include <dev_lib/io/fio.hpp>
+#include "io_tiff.hpp"
 #include <algorithm>
 
 namespace core { namespace io {

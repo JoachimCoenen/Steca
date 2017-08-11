@@ -1,8 +1,8 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
+#include "str.hpp" // who needs str_fmt, needs str also
 #include <sstream>
 
 namespace l {

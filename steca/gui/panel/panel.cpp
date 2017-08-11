@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 #include "panel.hpp"
-#include <dev_lib/defs.inc>
-
-#include "../thehub.hpp"
+#include <qt_lib/inc/defs.inc>
 #include <qt_lib/lbl.hpp>
+#include "../thehub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

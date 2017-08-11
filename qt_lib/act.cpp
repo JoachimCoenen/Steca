@@ -1,9 +1,7 @@
 // (qt_lib)
 
 #include "act.hpp"
-#include <dev_lib/defs.inc>
-
-#include "str_inc.hpp"
+#include "inc/defs.inc"
 #include "win.hpp"
 #include <QMenuBar>
 

@@ -16,11 +16,9 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/typ/trg.hpp>
 #include <dev_lib/typ/vec.hpp>
-
 #include "../data/data.hpp"
 #include "../typ/def.hpp"
 #include "../typ/range.hpp"

@@ -1,10 +1,8 @@
 // (qt_lib)
 
 #include "chk.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include "act.hpp"
-#include "str_inc.hpp"
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -17,7 +15,8 @@ chk::chk(act& act) {
   action(&act);
 }
 
-chk::ref chk::text(strc t) SET_(base::setText(toQt(t)))
+chk::ref chk::text(strc t)
+  SET_(base::setText(toQt(t)))
 
 chk::ref chk::action(act* a) {
   base::setText(a ? toQt(a->text()).toLower() : QString::null);
@@ -41,7 +40,8 @@ chk::ref chk::action(act* a) {
   RTHIS
 }
 
-chk::ref chk::check(bool on) SET_(base::setChecked(on))
+chk::ref chk::check(bool on)
+  SET_(base::setChecked(on))
 
 //------------------------------------------------------------------------------
 }

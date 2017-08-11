@@ -2,7 +2,6 @@
 
 #include "str.hpp"
 #include "defs.inc"
-#include <cctype>
 
 //------------------------------------------------------------------------------
 
@@ -20,7 +19,7 @@ str str::trimmed() const {
     ++p1;
   while (p1 < p2 && std::isspace(*(p2-1)))          // trim right
     --p2;
-  return str(p1, p2-p1);                            // substring
+  return str(p1, l::to_u(p2-p1));                   // substring
 }
 
 str str::num(int val) {

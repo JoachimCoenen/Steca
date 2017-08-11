@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "refhub.hpp"
+#include <dev_lib/inc/vecs.hpp>
 #include <qt_lib/model.hpp>
 
 namespace gui {

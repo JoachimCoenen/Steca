@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <qt_lib/settings.hpp>
 

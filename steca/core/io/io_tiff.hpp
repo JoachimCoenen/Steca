@@ -16,9 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
-#include <core/data/data.hpp>
-#include <dev_lib/io/path.hpp>
 #include <dev_lib/io/fio.hpp>
 
 namespace core { namespace io {

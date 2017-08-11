@@ -1,10 +1,7 @@
 // (dev_lib)
 
 #include "log.hpp"
-#include "../defs.inc"
-
-#include "../typ/vec.hpp"
-#include <iostream>
+#include "../inc/defs.inc"
 
 namespace l_io {
 //------------------------------------------------------------------------------

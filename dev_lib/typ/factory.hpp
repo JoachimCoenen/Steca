@@ -1,7 +1,6 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 #include "../inc/exc.hpp"
 #include "../inc/ptr.hpp"

@@ -1,10 +1,8 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/ptr.hpp>
-
 #include <QEvent>
 #include <QObject>
 #include <QThread>

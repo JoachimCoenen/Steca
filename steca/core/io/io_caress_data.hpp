@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/typ/buf.hpp>
 

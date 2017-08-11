@@ -1,8 +1,7 @@
 // (dev_lib)
 
 #include "flt.hpp"
-#include "../defs.inc"
-#include <cmath>
+#include "defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

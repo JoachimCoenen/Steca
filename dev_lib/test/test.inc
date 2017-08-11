@@ -1,6 +1,9 @@
 // (dev_lib)
 
-#pragma once
+#ifdef DEV_LIB_TEST_INC
+  #error inlude only once
+#endif
+#define DEV_LIB_TEST_INC
 
 #ifdef WITH_TESTS
 //------------------------------------------------------------------------------

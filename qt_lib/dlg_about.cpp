@@ -1,11 +1,8 @@
 // (qt_lib)
 
 #include "dlg_about.hpp"
-#include <dev_lib/defs.inc>
+#include "inc/defs.inc"
 #include <qt_lib/wgt_inc.hpp>
-
-#include "str_inc.hpp"
-
 #include <QApplication>
 #include <QDialogButtonBox>
 #ifdef Q_OS_MAC

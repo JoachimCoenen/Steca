@@ -1,13 +1,12 @@
 // (dev_lib)
 
 #include "endian.hpp"
-#include "../defs.inc"
 
 namespace l_io { namespace endian {
 //------------------------------------------------------------------------------
 
 uint16 from_be(uint16 v) {
-  return v; // be16toh(v);
+  return v; // be16toh(v); TODO
 }
 
 uint16 from_le(uint16 v) {

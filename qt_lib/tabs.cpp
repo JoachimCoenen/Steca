@@ -1,11 +1,8 @@
 // (qt_lib)
 
 #include "tabs.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include "layout.hpp"
-#include "str_inc.hpp"
-
 #include <QTabBar>
 
 namespace l_qt {

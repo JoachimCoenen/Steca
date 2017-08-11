@@ -1,8 +1,7 @@
 // (qt_lib)
 
 #include "split.hpp"
-#include <dev_lib/defs.inc>
-
+#include "inc/defs.inc"
 #include "layout.hpp"
 
 namespace l_qt {
@@ -22,7 +21,8 @@ split& split::vs() {
   return _hvs(new vSplit, this);
 }
 
-split& split::add(QWidget* wgt) SET_(addWidget(NEEDED_(wgt)))
+split& split::add(QWidget* wgt)
+  SET_(addWidget(NEEDED_(wgt)))
 
 panel& split::addPanel() {
   auto p = new panel;

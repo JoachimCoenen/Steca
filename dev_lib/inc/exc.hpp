@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../defs.hpp"
-#include "str_fmt.hpp"  // typically, who uses err(...), needs CAT
+#include "str_fmt.hpp"  // who needs err(), needs CAT alse
 #include <exception>
 
 namespace l {

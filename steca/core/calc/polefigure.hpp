@@ -16,13 +16,10 @@
  ******************************************************************************/
 
 #pragma once
-
-
 #include <dev_lib/defs.hpp>
 #include <dev_lib/typ/vec.hpp>
-
-#include "reflection_info.hpp"
 #include "../typ/def.hpp"
+#include "reflection_info.hpp"
 
 namespace core { namespace calc {
 //------------------------------------------------------------------------------

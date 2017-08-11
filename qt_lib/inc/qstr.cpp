@@ -1,7 +1,6 @@
 // (qt_lib)
 
-#include "str_inc.hpp"
-#include <dev_lib/defs.inc>
+#include "defs.inc"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

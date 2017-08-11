@@ -1,10 +1,7 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
-#include <dev_lib/inc/ptr.hpp>
-#include "str_inc.hpp"
 
 class QAbstractProxyModel;
 class QWidget;

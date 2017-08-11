@@ -1,15 +1,12 @@
 // (qt_lib)
 
 #include "app.hpp"
-#include <dev_lib/defs.inc>
+#include "inc/defs.inc"
 #include <dev_lib/io/log.hpp>
-
 #include "dlg_msg.hpp"
-#include "str_inc.hpp"
-
+#include "win.hpp"
 #include <QStatusBar>
 #include <QStyleFactory>
-#include <iostream>
 
 namespace l_qt {
 //------------------------------------------------------------------------------

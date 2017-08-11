@@ -16,11 +16,9 @@
  ******************************************************************************/
 
 #include "io.hpp"
+#include <dev_lib/inc/defs.inc>
 #include "io_caress_data.hpp"
-#include <dev_lib/defs.inc>
-
 #include <functional>
-#include <cmath>
 /*
  * This is our best attempt at wrapping nicely the "raw" Caress data handling
  * routines. jb.

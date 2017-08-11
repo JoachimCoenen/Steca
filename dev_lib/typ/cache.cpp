@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "cache.hpp"
-#include "../defs.inc"
+#include "../inc/defs.inc"
 
 namespace l {
 //------------------------------------------------------------------------------

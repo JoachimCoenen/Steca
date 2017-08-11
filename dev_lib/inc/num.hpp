@@ -1,7 +1,6 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
 
 namespace l {
@@ -38,7 +37,7 @@ namespace l {
   #define use_vec_(T, Base)      using T##_vec = Base##_vec;
 #endif
 
-use_int_(pint,  int,   { EXPECT_(0 <  val) }) // (p)ositive (int)eger
+use_int_(pint,  uint,  { EXPECT_(0 <  val) }) // (p)ositive (int)eger
 use_flt_(peal,  real,  { EXPECT_(0 <  val) }) // (p)ositive r(eal)
 use_flt_(neal,  real,  { EXPECT_(0 <= val) }) // (n)on-negative r(eal)
 

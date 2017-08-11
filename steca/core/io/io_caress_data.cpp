@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "io_caress_data.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 
 #undef CHECK
 #include <core_legacy/Caress/raw.h>

@@ -27,7 +27,7 @@
 #include <QStatusBar>
 #include <QtMultimedia/QSound>
 
-#include <dev_lib/defs.inc>
+#include <qt_lib/inc/defs.inc>
 #include <qt_lib/dlg_about.hpp>
 #include <qt_lib/dlg_msg.hpp>
 #include <qt_lib/wgt_inc.hpp>

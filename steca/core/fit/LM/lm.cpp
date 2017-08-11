@@ -24,6 +24,7 @@
  ********************************************************************************/
 
 #include <dev_lib/io/log.hpp>
+#include <dev_lib/inc/str.hpp>
 
 #include <stdlib.h>
 #include <math.h>

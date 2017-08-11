@@ -1,9 +1,9 @@
 // (qt_lib)
 
-#pragma once
-
-#include <dev_lib/defs.hpp>
-#include <dev_lib/typ/vec.hpp>
+#ifdef QT_LIB_STR_INC
+  #error inlude only once
+#endif
+#define QT_LIB_STR_INC
 
 #include <QString>
 #include <QStringList>
@@ -11,11 +11,10 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-QString toQt(strc);
-str     fromQt(QString const&);
-
-QStringList toQt(str_vec::rc);
-str_vec     fromQt(QStringList const&);
+QString     toQt(strc s);
+str         fromQt(QString const& s);
+QStringList toQt(str_vec::rc sv);
+str_vec     fromQt(QStringList const& sl);
 
 //------------------------------------------------------------------------------
 }

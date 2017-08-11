@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-
+#include <dev_lib/inc/vecs.hpp>
 #include "def.hpp"
 #include "fun.hpp"
 #include "range.hpp"

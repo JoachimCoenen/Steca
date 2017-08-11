@@ -1,12 +1,10 @@
+// (qt_lib)
 // common definitions, include in a *source* file
 
-#ifdef DEFS_INC
+#ifdef DEV_LIB_DEFS_INC
   #error inlude only once
 #endif
-#define DEFS_INC
-
-#include "inc/num.hpp"
-#include <cmath>
+#define DEV_LIB_DEFS_INC
 
 //------------------------------------------------------------------------------
 // struct implementation helpers
@@ -59,9 +57,9 @@ bool T::operator>=(rc that) const RET_(isDef() && that.isDef() && 0 <= compare(t
 //------------------------------------------------------------------------------
 // debug support
 
-#ifndef NDEBUG
-
 #include <iostream>
+
+#ifndef NDEBUG
 
 struct _DebugOut_ {
   _DebugOut_() { std::cout << "[";              }
@@ -139,14 +137,22 @@ template <typename T> void mut_swap(T& t1, T& t2) {
 }
 
 //------------------------------------------------------------------------------
-// exceptions
+// includes
 
-#include "inc/exc.hpp"
+#include "exc.hpp"
+#include "flt.hpp"
+#include "num.hpp"
+#include "ptr.hpp"
+#include "str.hpp"
+#include "str_fmt.hpp"
+#include "vecs.hpp"
+#include <cmath>
+#include <cctype>
 
 //------------------------------------------------------------------------------
 // testing
 
-#include "test/test.hpp"
+#include "../test/test.inc"
 
 //------------------------------------------------------------------------------
 // eof

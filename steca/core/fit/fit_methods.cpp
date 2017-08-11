@@ -16,10 +16,8 @@
  ******************************************************************************/
 
 #include "fit_methods.hpp"
-#include <dev_lib/defs.inc>
-
+#include <dev_lib/inc/defs.inc>
 #include "LM/levmar.h"
-#include <cmath>
 
 namespace core { namespace fit {
 //------------------------------------------------------------------------------

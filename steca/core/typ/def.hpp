@@ -21,6 +21,7 @@
 #include <dev_lib/inc/flt.hpp>
 #include <dev_lib/typ/trg.hpp>
 #include <dev_lib/typ/vec.hpp>
+#include <dev_lib/typ/ij.hpp>
 #include <dev_lib/typ/xy.hpp>
 
 namespace core {

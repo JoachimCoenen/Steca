@@ -1,10 +1,9 @@
 // (qt_lib)
 
 #include "json.hpp"
-#include <dev_lib/defs.inc>
-#include <dev_lib/typ/ij.hpp>
-#include <dev_lib/typ/xy.hpp>
-#include <cctype>
+#include "../inc/defs.inc"
+#include "../typ/ij.hpp"
+#include "../typ/xy.hpp"
 
 namespace l_io {
 //------------------------------------------------------------------------------

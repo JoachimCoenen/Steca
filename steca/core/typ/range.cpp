@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 #include "range.hpp"
-#include <dev_lib/defs.inc>
-
+#include <dev_lib/inc/defs.inc>
 #include <dev_lib/inc/num.hpp>
 #include <algorithm>
 

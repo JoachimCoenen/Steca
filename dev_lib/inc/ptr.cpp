@@ -1,8 +1,7 @@
 // (dev_lib)
 
 #include "ptr.hpp"
-#include "../defs.inc"
-
+#include "defs.inc"
 #include <atomic>
 
 namespace l {
@@ -10,7 +9,8 @@ namespace l {
 
 ptr_base::ptr_base(pcvoid p_) : p(p_) {}
 
-ptr_base::ref ptr_base::set(pcvoid p_) SET_(mut(p) = p_)
+ptr_base::ref ptr_base::set(pcvoid p_)
+  SET_(mut(p) = p_)
 
 TEST_("jp",
   int i = 0;

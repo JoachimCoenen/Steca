@@ -17,7 +17,7 @@
 
 #include "models.hpp"
 #include "thehub.hpp"
-#include <dev_lib/defs.inc>
+#include <qt_lib/inc/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------

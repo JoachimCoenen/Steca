@@ -1,9 +1,7 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
-
 #include <QBoxLayout>
 #include <QGridLayout>
 #include <QWidget>

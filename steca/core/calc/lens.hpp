@@ -16,9 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
-
 #include "../data/data.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"

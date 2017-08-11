@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "fun.hpp"
-#include <dev_lib/defs.inc>
+#include <dev_lib/inc/defs.inc>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -29,7 +29,8 @@ Par::ref Par::set(real val_, real err_) {
   RTHIS
 }
 
-Par::ref Par::setVal(real val_) SET_(mut(val) = val_)
+Par::ref Par::setVal(real val_)
+  SET_(mut(val) = val_)
 
 Par::ref Par::operator=(rc that) {
   mut(val) = that.val;
@@ -59,7 +60,8 @@ SimpleFun::ref SimpleFun::setParCount(uint cnt) {
   RTHIS
 }
 
-SimpleFun::ref SimpleFun::add(Par::rc par) SET_(mut(pars).add(par))
+SimpleFun::ref SimpleFun::add(Par::rc par)
+  SET_(mut(pars).add(par))
 
 sz_t SimpleFun::parCount() const {
   return pars.size();
@@ -79,7 +81,8 @@ real SimpleFun::parVal(sz_t i, real const* parVals) const {
   return parVals ? parVals[i] : pars.at(i).val;
 }
 
-SimpleFun::ref SimpleFun::setParVal(sz_t i, real val) SET_(mut(pars.at(i)).setVal(val))
+SimpleFun::ref SimpleFun::setParVal(sz_t i, real val)
+  SET_(mut(pars.at(i)).setVal(val))
 
 real SimpleFun::parErr(sz_t i) const {
   return pars.at(i).err;

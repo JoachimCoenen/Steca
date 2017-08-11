@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "fit_fun.hpp"
 
 namespace core { namespace fit {

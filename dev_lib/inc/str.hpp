@@ -1,8 +1,7 @@
 // (dev_lib)
 
 #pragma once
-
-#include "defs.hpp"
+#include "../defs.hpp"
 #include <string>
 
 //------------------------------------------------------------------------------
@@ -29,10 +28,6 @@ dcl_sub_(str, std::string)
 private:
   bool empty() const; // disallow
 dcl_end
-
-using pcstr = char const*;
-using strc  = str const&;
-struct str_vec;
 
 namespace std {
 

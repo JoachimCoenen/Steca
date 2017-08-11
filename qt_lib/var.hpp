@@ -1,10 +1,8 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
 #include "tim.hpp"
-
 #include <QVariant>
 
 namespace l_qt {

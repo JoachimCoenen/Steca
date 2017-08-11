@@ -1,8 +1,8 @@
 // (dev_lib)
 
 #pragma once
-
 #include "../defs.hpp"
+#include "../inc/str.hpp"
 
 namespace l_io {
 //------------------------------------------------------------------------------

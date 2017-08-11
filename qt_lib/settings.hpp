@@ -1,8 +1,8 @@
 // (qt_lib)
 
 #pragma once
-
 #include <dev_lib/defs.hpp>
+#include <dev_lib/inc/str.hpp>
 #include <QSettings>
 #include "var.hpp"
 

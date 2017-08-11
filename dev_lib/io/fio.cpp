@@ -1,7 +1,7 @@
 // (dev_lib)
 
 #include "fio.hpp"
-#include <dev_lib/defs.inc>
+#include "../inc/defs.inc"
 
 namespace l_io {
 //------------------------------------------------------------------------------

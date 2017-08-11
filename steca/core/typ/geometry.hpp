@@ -16,9 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "def.hpp"
-#include <dev_lib/typ/ij.hpp>
 #include <dev_lib/typ/sz2.hpp>
 
 namespace core {

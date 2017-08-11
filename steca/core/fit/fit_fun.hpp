@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-
 #include "../typ/fun.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/range.hpp"
