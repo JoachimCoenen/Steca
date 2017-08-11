@@ -8,6 +8,9 @@
 
 #include <QApplication>
 #include <QDialogButtonBox>
+#ifdef Q_OS_MAC
+  #include <QToolTip>
+#endif
 
 namespace l_qt {
 //------------------------------------------------------------------------------

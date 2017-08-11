@@ -3,7 +3,7 @@ include (../../cmake.options)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
   # suppress warnings for legacy code
-  add_compile_options(-Wno-all)
+  add_compile_options(-Wno-all -Wno-deprecated-declarations)
 endif ()
 
 get_filename_component (lib ${CMAKE_CURRENT_SOURCE_DIR} NAME)
