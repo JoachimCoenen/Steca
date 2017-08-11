@@ -92,15 +92,39 @@ ModelMetadata::ModelMetadata(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelMetadata::cols() const {
-  return cl_n(1);
+  return cl_n(2);
 }
 
 rw_n ModelMetadata::rows() const {
-  return rw_n(0);
+  auto meta = hub.meta();
+  if (!meta)
+    return rw_n(0);
+  return rw_n(meta->dict->keys.size());
 }
 
-l_qt::var ModelMetadata::cell(rw_n, cl_n) const {
-  return l_qt::var();
+l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
+  EXPECT_(hub.meta())
+  auto& dict = *hub.meta()->dict;
+
+  switch (cl) {
+  case clTAG:
+    return l_qt::var(dict.keys.at(rw));
+  case clVAL:
+    return l_qt::var(1);
+  default:
+    return l_qt::var();
+  }
+}
+
+ModelMetadata::ref ModelMetadata::check(rw_n row, bool on) {
+  EXPECT_(hub.meta())
+  mut(hub.meta()->dict->checked).setAt(row, on);
+  RTHIS
+}
+
+bool ModelMetadata::isChecked(rw_n row) const {
+  EXPECT_(hub.meta())
+  return hub.meta()->dict->checked.at(row);
 }
 
 //------------------------------------------------------------------------------

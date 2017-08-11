@@ -3,7 +3,7 @@
 #pragma once
 #include <dev_lib/defs.hpp>
 #include <dev_lib/inc/num.hpp>
-#include <dev_lib/typ/vec.hpp>
+#include <dev_lib/inc/vecs.hpp>
 #include "var.hpp"
 #include <QAbstractTableModel>
 

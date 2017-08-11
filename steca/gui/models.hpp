@@ -17,7 +17,6 @@
 
 #pragma once
 #include "refhub.hpp"
-#include <dev_lib/inc/vecs.hpp>
 #include <qt_lib/model.hpp>
 
 namespace gui {
@@ -50,9 +49,14 @@ dcl_end
 dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
   ModelMetadata(Hub&);
 
+  enum { clTAG, clVAL };
+
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
   mth_(l_qt::var, cell, (rw_n, cl_n));
+
+  set_(check, (rw_n, bool));
+  bol_(isChecked, (rw_n));
 dcl_end
 
 //------------------------------------------------------------------------------

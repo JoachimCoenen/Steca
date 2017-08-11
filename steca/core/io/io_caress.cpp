@@ -84,10 +84,18 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
   };
 
   auto addValTo = [&](flt_vec& vs, strc ns, flt32 val) -> uint {
-    auto idx = mut(*files.dict).add(ns);
+    auto idx = mut(*files.dict).enter(ns);
     setVal(vs, idx, val);
     return idx;
   };
+
+  // prepare
+  addValTo(readVals, "TTH", 0);
+  addValTo(readVals, "OMG", 0);
+  addValTo(readVals, "CHI", 0);
+  addValTo(readVals, "PHI", 0);
+  addValTo(readVals, "TIM1", 0);
+  addValTo(readVals, "MON", 0);
 
   auto addVal = [&](flt_vec& vs) -> uint {
     return addValTo(vs, node, getAsFloat(dt, n));
@@ -104,6 +112,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
       return false;
     check();
     val = getAsFloat(dt, n);
+    addValTo(readVals, str(ns).substr(0,3), val);
     return true;
   };
 
@@ -123,6 +132,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
     if (node != ns)
       return false;
     val = getAsFloat(dt, n);
+    addValTo(readVals, ns, val);
     return true;
   };
 
@@ -169,13 +179,13 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
 
   while (nextDataUnit(elem, node, dt, n)) {
     if (elem == "READ") {
-
       // instrument state - global metadata
       check_or_err_(block <= eBlock::READ, "unexpect READ block");
       block = eBlock::READ;
       check_or_err_(!node.isEmpty(), "empty READ node");
-      if (!doAxes() && !doTimMon())
-        addVal(readVals);
+
+      doAxes() || doTimMon();
+      addVal(readVals);
 
     } else if (elem == "SETVALUE") {
 

@@ -39,9 +39,10 @@ using flt_vec = l::vec<flt32>;
 dcl_(Meta) SHARED // metadata
   // attribute dictionary
   dcl_sub_(Dict, l::map<str COMMA uint>) SHARED
-    mth_mut_(uint, add, (strc));
-    mth_(uint, at,  (strc)) may_err;
-    atr_(str_vec, keys);
+    mth_mut_(uint, enter, (strc));
+    mth_(uint, at, (strc)) may_err;
+    atr_(str_vec,  keys);
+    atr_(bol_vec,  checked);
   };
 
   atr_(str, comment);

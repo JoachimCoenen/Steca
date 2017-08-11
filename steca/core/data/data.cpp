@@ -24,14 +24,18 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-uint Meta::Dict::add(strc key) {
+uint Meta::Dict::enter(strc key) {
   auto it = base::find(key);
   if (base::end() != it)
     return it->second;
 
   uint val = size();
+
   EXPECT_(keys.size() == val)
   mut(keys).add(key);
+
+  EXPECT_(checked.size() == val)
+  mut(checked).add(false);
 
   return base::add(key, val);
 }
@@ -61,10 +65,10 @@ TEST_("dict",
   Meta::Dict dict;
   CHECK_EQ(0, dict.size());
 
-  CHECK_EQ(0, dict.add("0"));
-  CHECK_EQ(1, dict.add("1"));
-  CHECK_EQ(0, dict.add("0"));
-  CHECK_EQ(2, dict.add("2"));
+  CHECK_EQ(0, dict.enter("0"));
+  CHECK_EQ(1, dict.enter("1"));
+  CHECK_EQ(0, dict.enter("0"));
+  CHECK_EQ(2, dict.enter("2"));
 
   CHECK_EQ(3, dict.size());
 )

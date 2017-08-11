@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "panel_files.hpp"
-#include "../thehub.hpp"
-#include <qt_lib/wgt_inc.hpp>
 #include <qt_lib/inc/defs.inc>
+#include <qt_lib/wgt_inc.hpp>
+#include "../thehub.hpp"
 #include <QKeyEvent>
 
 namespace gui {

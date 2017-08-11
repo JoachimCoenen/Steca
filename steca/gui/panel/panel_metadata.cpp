@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "panel_metadata.hpp"
-#include "../thehub.hpp"
-#include <qt_lib/tabs.hpp>
 #include <qt_lib/inc/defs.inc>
+#include <qt_lib/tabs.hpp>
+#include "../thehub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------

@@ -15,6 +15,11 @@ dcl_sub_(str_vec, l::vec<str>)
   fry_(str_vec, split, (strc));
 dcl_end
 
+dcl_sub_(bol_vec, l::vec<bool>)
+  using base::base;
+  bol_vec() {} // for Mac
+dcl_end
+
 dcl_sub_(int_vec, l::vec<int>)
   using base::base;
   int_vec() {} // for Mac
