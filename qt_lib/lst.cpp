@@ -5,13 +5,39 @@
 #include "inc/defs.inc"
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QStyledItemDelegate>
+#include <QPainter>
+#include <QPalette>
 
 namespace l_qt {
+//------------------------------------------------------------------------------
+
+namespace {
+
+dcl_sub_(GridDelegate, QStyledItemDelegate)
+  using base::base;
+
+  void paint(QPainter* painter, QStyleOptionViewItem const& option, QModelIndex const& index ) const {
+    painter->save();
+
+    auto clr = option.widget->palette().color(QPalette::Midlight);
+    painter->setPen(clr);
+    auto& r = option.rect;
+    painter->drawLine(r.right(), r.top(), r.right(), r.bottom());
+
+    painter->restore();
+    base::paint(painter, option, index);
+  }
+dcl_end
+
+}
+
 //------------------------------------------------------------------------------
 
 lst_view::lst_view() : hasHeader(false), model(nullptr) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
+  setItemDelegate(new GridDelegate);
   showHeader(hasHeader);
 
   connect(this, &Self::clicked, [this](QModelIndex const& index) {
