@@ -1,0 +1,3 @@
+[submodule "docs/CM"]
+	path = docs/CM
+	url = git@github.com:CompactMarkup/CM.git
