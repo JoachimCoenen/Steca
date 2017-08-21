@@ -44,6 +44,9 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   view->setModel(hub.modelDatasets);
 
   auto &h = tab->vb.hb();
+  auto chk = new l_qt::chk(""); chk->setTristate(true); // TODO add to model
+
+  h.add(chk);
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
 

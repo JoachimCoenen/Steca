@@ -12,9 +12,7 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-namespace {
-
-dcl_sub_(GridDelegate, QStyledItemDelegate)
+dcl_sub_(lst_view_itemDelegate, QStyledItemDelegate)
   using base::base;
 
   void paint(QPainter* painter, QStyleOptionViewItem const& option, QModelIndex const& index ) const {
@@ -30,14 +28,12 @@ dcl_sub_(GridDelegate, QStyledItemDelegate)
   }
 dcl_end
 
-}
-
 //------------------------------------------------------------------------------
 
 lst_view::lst_view() : hasHeader(false), model(nullptr) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
-  setItemDelegate(new GridDelegate);
+  setItemDelegate(new lst_view_itemDelegate);
   showHeader(hasHeader);
 
   connect(this, &Self::clicked, [this](QModelIndex const& index) {
