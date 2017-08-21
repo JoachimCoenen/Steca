@@ -16,6 +16,8 @@
 
   <main>
     <nav id="nav">
+      <div><a href="http://www.fz-juelich.de/jcns/EN" target ="cm_book_extern"><img src="assets/fzj_logo.png" width="130px"/></a></div>
+      <hr/>
       <menu></menu>
     </nav>
     <article></article>
@@ -34,6 +36,7 @@ try {
 book.pageRoot = 'pg/';
 book.pagePath = '';
 book.pageFile = '';
+book.navWdt   = '140px';
 
 var article = document.querySelector('article');
   var iframe = document.createElement('iframe'); iframe.id = 'article';

@@ -4,7 +4,6 @@ var book = {
   conf: {
     title:  'Steca2',
     banner: 'Steca2 - docs',
-    navWdt: '16em',
   },
 
   goto: function (ln, anchor, target) {
@@ -56,6 +55,7 @@ var book = {
 };
 
 book.toc = {
+  simple: true,
   lst: [
     ['about', 'about.html', 'About Steca'],
     ['get',   'get.html',   'Get Steca'],
