@@ -27,6 +27,9 @@
  *
  *********************************************************************/
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
