@@ -1,0 +1,42 @@
+cmake_minimum_required (VERSION 3.1)
+include (../../cmake.options)
+
+set (app tests_steca)
+
+find_package (Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
+set (CMAKE_AUTOMOC ON)
+
+add_definitions (-DWITH_TESTS)
+if (WITH_COVERAGE)
+  add_compile_options(--coverage)
+endif ()
+
+include_directories (${CMAKE_HOME_DIRECTORY}/src)
+
+set (srcdirs src lib/qt lib/dev)
+foreach (dir ${srcdirs})
+  set (d ${CMAKE_HOME_DIRECTORY}/${dir})
+  file (GLOB_RECURSE fs ${d}/*.cpp)
+  set (files ${files} ${fs})
+endforeach (dir)
+
+list(REMOVE_ITEM files ${CMAKE_HOME_DIRECTORY}/src/main.cpp)
+
+add_executable (${app} ${files} ${files})
+
+target_link_libraries (${app}
+  Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Multimedia Qt5::Network
+)
+
+file (GLOB testdata testdata.*)
+file (COPY ${testdata} DESTINATION .)
+
+if (UNIX)
+  target_link_libraries (${app} pthread)
+endif ()
+
+if (WITH_COVERAGE)
+  target_link_libraries (${app} gcov)
+endif ()
+
+# eof

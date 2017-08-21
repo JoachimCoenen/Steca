@@ -1,4 +1,4 @@
-cd build/tests_steca
+cd build/tests/steca
 xvfb-run ./tests_steca
 
 if [ $CXX == 'g++' ]; then
