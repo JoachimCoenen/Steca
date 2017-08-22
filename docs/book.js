@@ -7,8 +7,6 @@ try {
 }
 
 var book = {
-  isDebug: 'true',
-
   conf: {
     title:  'Steca2',
     banner: 'Steca2 - docs',
