@@ -22,7 +22,12 @@ dcl_reimpl_(vec, std::vector<T>)
   using base::erase;
   using base::clear;
   using base::at;
+#ifdef _WIN32
+  mth_(T const*, data, ())    RET_(&(base::operator[](0)))
+  mth_mut_(T*, data, ())      RET_(&(base::operator[](0)))
+#else
   using base::data;
+#endif
 
   bol_(isEmpty, ())           RET_(base::empty())
   mth_(sz_t,     size, ())    RET_(to_sz(base::size()))
