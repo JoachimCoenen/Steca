@@ -1,10 +1,20 @@
+try {
+  eval('let arrow = () => 1');
+} catch (err) {
+  document.querySelector('article').innerHTML =
+    '<br/><h2>These pages require a newer version of JavaScript. ' +
+    'Please use a modern web browser.</h2>';
+}
+
 var book = {
-  timestamp: '2017.08.21',
   isDebug: 'true',
+
   conf: {
     title:  'Steca2',
     banner: 'Steca2 - docs',
   },
+
+  pagePath: '', pageFile: '',
 
   goto: function (ln, anchor, target) {
     const ev = window.event;
@@ -54,25 +64,7 @@ var book = {
   }
 };
 
-book.toc = {
-  simple: true,
-  lst: [
-    ['about', 'about.html', 'About Steca'],
-    ['get',   'get.html',   'Get Steca'],
-  ],
-  ids: {
-    'about': 0, 'get': 1,
-  },
-  sec: {
-    0: 0, 1: 0,
-  },
-  pnt: {
-    0: null, 1: 0,
-  },
-  fil: {
-    'about.html': 0,
-    'get.html'  : 1,
-  }
-};
+if (cm_file.endsWith('.html')) // static
+  book.pageFile = cm_file;
 
 // eof

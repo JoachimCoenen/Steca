@@ -1,34 +1,27 @@
 <!DOCTYPE html><html lang="en">
 <head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../cm/main.css">
-<script src='../conf.js'></script>
+  <meta charset="utf-8">
+  <script src ="../CM/common.js"></script>
 </head>
 <body><pre>
-
-~~~
-void main() {
-
-}
-~~~
 
 = Get and build Steca
 
 Steca is an open-source software (GPLv3). The source code is available from its
-public {a https://github.com/scgmlz/Steca2|GitHub} repository:
-~~~ .nohighlight
+public {:GitHub|https://github.com/scgmlz/Steca2} repository:
+~~~
 git clone https://github.com/scgmlz/STeCa2.git
 ~~~
 
 == Prerequisites
-Steca is written using the {a http://qt.io/|Qt} framework. The only prerequisites
+Steca is written using the {:Qt|http://qt.io/} framework. The only prerequisites
 for building Steca from source code are: Qt5.4+, a current C++ compiler that
 supports C++11, and a current version of {`cmake}. Thanks to Qt, Steca is a
 cross-platform software that can be built and run on Linux(es), Mac OSX, and Windows.
 
 == Building Steca
 To build Steca with {`cmake}, the usual process applies, e.g.:
-~~~ .nohighlight
+~~~
 git clone https://github.com/scgmlz/STeCa2.git
 cd STeCa2
 mkdir build
@@ -38,21 +31,21 @@ make
 ~~~
 Alternatively, Steca can be built using {`qmake}. The source contains a shell
 script that creates the qmake project (.pro) file:
-~~~ .nohighlight
+~~~
 cd STeCa2
 ./make_pro.sh
 ~~~
 and then:
-~~~ .nohighlight
+~~~
 mkdir build
 cd build
 qmake ..
 make
 ~~~
-== Releases & Windows
+== Releases &amp; Windows
 
 Released versions of Steca are also available on
-{a https://github.com/scgmlz/STeCa2/releases|GitHub (releases)}.
+{:GitHub (releases)|https://github.com/scgmlz/STeCa2/releases}.
 
 . Each release contains archives of a source code snapshot and also a Windows
 build of Steca. (It is quite straightforward for users to build Steca on a Linux
@@ -61,8 +54,6 @@ or Mac OSX.)
 . The Windows build of Steca is a single executable file, staticaly linked with
 all required libraries. It does not need any installation {---} simply put the
 file into a Windows folder of your choice (or on the desktop) and run it.
-----
-{next}
 
 </pre></body>
 </html>

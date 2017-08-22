@@ -2,45 +2,25 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="assets/icon.ico">
-  <link rel="stylesheet" href="CM/assets/main.css?v=2017.08.21">
   <meta charset="utf-8">
-  <script charset="utf-8" src="book.js?v=2017.08.21"></script>
-  <script charset="utf-8" src ="CM/js/common.js?v=2017.08.21"></script>
+  <script src ="CM/common.js?index&amp;123"></script>
 </head>
 <body>
   <header>
-    <span id="header-left"></span>
+    <span></span>
     <span id="banner"></span>
-    <span id="nav"><a id="nav"></a></span>
+    <span><a id="nav_switch"></a></span>
   </header>
 
   <main>
     <nav id="nav">
-      <div><a href="http://www.fz-juelich.de/jcns/EN" target ="cm_book_extern"><img src="assets/fzj_logo.png" width="130px"/></a></div>
+      <div id="logo"><a href="http://www.fz-juelich.de/jcns/EN" target ="cm_book_extern">
+        <img src="assets/jcns_logo.jpg"/>
+      </a></div>
       <hr/>
       <menu></menu>
     </nav>
     <article></article>
   </main>
-
 </body>
-<script charset="utf-8">
-try {
-  eval('let arrow = () => 1');
-} catch (err) {
-  document.querySelector('article').innerHTML =
-    '<br/><h2>These pages require a newer version of JavaScript. ' +
-    'Please use a modern web browser.</h2>';
-}
-
-book.pageRoot = 'pg/';
-book.pagePath = '';
-book.pageFile = '';
-book.navWdt   = '140px';
-
-var article = document.querySelector('article');
-  var iframe = document.createElement('iframe'); iframe.id = 'article';
-  article.parentElement.replaceChild(iframe, article);
-  loadScript('CM/js/cm_index.js');
-</script>
 </html>
