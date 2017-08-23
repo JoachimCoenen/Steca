@@ -6,7 +6,20 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-lst_model::lst_model() : isCheckable(false), isNumbered(false) {}
+lst_model::triChk::triChk(strc s, lst_model& model_) : base(s), model(model_) {
+  connect(this, &Self::stateChanged, [this](int state) {
+    model.changeState(state_t(state));
+  });
+
+  connect(&model, &lst_model::stateChanged, [this](state_t state) {
+    set(state);
+  });
+}
+
+//------------------------------------------------------------------------------
+
+lst_model::lst_model()
+: isCheckable(false), isNumbered(false), state(triChk::state_t::off) {}
 
 lst_model::ref lst_model::setCheckable(bool on) {
   mut(isCheckable) = on;
@@ -16,6 +29,22 @@ lst_model::ref lst_model::setCheckable(bool on) {
 
 int lst_model::checkableCol() const {
   return isCheckable ? 1 : -1;
+}
+
+lst_model::triChk* lst_model::makeTriChk(strc s) {
+  return new triChk(s, *this);
+}
+
+lst_model::ref lst_model::changeState(triChk::state_t state) {
+  if (triChk::part == state)
+    RTHIS;
+
+  bool on = triChk::on == state;
+  for_i_(rows())
+    check(i, on);
+
+  signalReset();
+  RTHIS
 }
 
 lst_model::ref lst_model::setNumbered(uint n) {
@@ -49,6 +78,26 @@ bool lst_model::isChecked(rw_n) const {
 void lst_model::signalReset() const {
   mutp(this)->beginResetModel();
   mutp(this)->endResetModel();
+  updateState();
+}
+
+void lst_model::updateState() const {
+  triChk::state_t newState = triChk::off;
+
+  auto rs = rows();
+  if (!rs)
+    return;
+
+  bool all = true, none = true;
+  for_i_(rows())
+    if (isChecked(i))
+      none = false;
+    else
+      all = false;
+
+  newState = none ? triChk::off : all ? triChk::on : triChk::part;
+  if (state != newState)
+    emit stateChanged((state = newState));
 }
 
 int lst_model::columnCount(rcIndex) const {

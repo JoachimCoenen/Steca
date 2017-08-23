@@ -1,10 +1,12 @@
 // (qt_lib)
 
 #pragma once
+#include "var.hpp"
+#include "chk.hpp"
 #include <lib/dev/defs.hpp>
 #include <lib/dev/inc/num.hpp>
+#include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/inc/vecs.hpp>
-#include "var.hpp"
 #include <QAbstractTableModel>
 
 namespace l_qt {
@@ -23,6 +25,15 @@ dcl_sub_(lst_model, QAbstractTableModel)
   set_(setCheckable, (bool = true));
   mth_(int, checkableCol, ());
 
+  dcl_sub_(triChk, l_qt::triChk)
+    triChk(strc, lst_model&);
+  private:
+    lst_model& model;
+  dcl_end
+
+  mth_mut_(triChk*, makeTriChk, (strc));
+  set_(changeState, (triChk::state_t));
+
   atr_(uint, isNumbered);
   set_(setNumbered, (uint));
   mth_(int, numberedCol, ());
@@ -37,7 +48,13 @@ dcl_sub_(lst_model, QAbstractTableModel)
   virtual set_(check, (rw_n, bool));
   virtual bol_(isChecked, (rw_n));
 
-  act_(signalReset, ());
+  act_(signalReset, ()) emits;
+  act_(updateState, ()) emits;
+
+signals:
+  void stateChanged(triChk::state_t) const;
+private:
+  mutable triChk::state_t state;
 
 protected:
   using Index   = QModelIndex;
@@ -51,6 +68,7 @@ protected:
 
   uint colOff() const;
   friend struct lst_view;
+  Q_OBJECT
 dcl_end
 
 //------------------------------------------------------------------------------

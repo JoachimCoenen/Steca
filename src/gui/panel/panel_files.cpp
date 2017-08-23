@@ -111,9 +111,10 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   tab->vb.add((view = new ViewFiles(hub)));
   view->setModel(hub.modelFiles);
 
+  tab->vb.add(mutp(hub.modelFiles)->makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));
-  auto &h = tab->vb.hb();
 
+  auto &h = tab->vb.hb();
   auto edit = new l_qt::edit(); edit->ro(true);
   h.add(edit);
 

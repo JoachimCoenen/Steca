@@ -45,7 +45,9 @@ l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
 }
 
 ModelFiles::ref ModelFiles::check(rw_n row, bool on) {
-  hub.activateFile(row, on); RTHIS
+  hub.activateFile(row, on);
+  base::updateState();
+  RTHIS
 }
 
 bool ModelFiles::isChecked(rw_n row) const {
@@ -119,6 +121,7 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 ModelMetadata::ref ModelMetadata::check(rw_n row, bool on) {
   EXPECT_(hub.meta())
   mut(hub.meta()->dict->checked).setAt(row, on);
+  base::updateState();
   RTHIS
 }
 

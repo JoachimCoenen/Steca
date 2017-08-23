@@ -7,16 +7,18 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-chk::chk(strc t) {
+chk_base::chk_base(strc t) {
   text(t);
 }
 
-chk::chk(act& act) {
+chk_base::ref chk_base::text(strc t)
+  SET_(base::setText(toQt(t)))
+
+//------------------------------------------------------------------------------
+
+chk::chk(act& act) : base(str::null) {
   action(&act);
 }
-
-chk::ref chk::text(strc t)
-  SET_(base::setText(toQt(t)))
 
 chk::ref chk::action(act* a) {
   base::setText(a ? toQt(a->text()).toLower() : QString::null);
@@ -42,6 +44,24 @@ chk::ref chk::action(act* a) {
 
 chk::ref chk::check(bool on)
   SET_(base::setChecked(on))
+
+//------------------------------------------------------------------------------
+
+triChk::triChk(strc s) : base (s) {
+  setTristate(true);
+}
+
+TEST_("triState",
+  CHECK_EQ(triChk::off,  triChk::state_t(Qt::Unchecked));
+  CHECK_EQ(triChk::part, triChk::state_t(Qt::PartiallyChecked));
+  CHECK_EQ(triChk::on,   triChk::state_t(Qt::Checked));
+)
+
+triChk::ref triChk::set(state_t st)
+  SET_(setCheckState(Qt::CheckState(st)))
+
+triChk::state_t triChk::get() const
+  RET_(state_t(checkState()))
 
 //------------------------------------------------------------------------------
 }

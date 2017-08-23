@@ -11,10 +11,6 @@ namespace l {
 dcl_base_(cache_base)
   using mru_t = uint32;
 
-  atr_(pint,  maxItems);
-  mut_(mru_t, nextMru);
-  mut_(bool,  rollOver = false);  // L.van
-
   cache_base(pint maxItems);
 
   virtual act_mut_(trim, (sz_t))  = 0;
@@ -23,6 +19,11 @@ dcl_base_(cache_base)
   act_mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
   act_mut_(touch, (mru_t&));
+
+protected:
+  atr_(pint,  maxItems);
+  mru_t nextMru;
+  bool  rollOver = false;  // L.van
 dcl_end
 
 template <typename Key, typename T>

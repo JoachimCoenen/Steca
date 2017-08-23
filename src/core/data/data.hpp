@@ -107,7 +107,7 @@ dcl_sub_(Sets, l::vec<Set::sh>)  // a collection of sets
   mth_(Image::sh, foldImage, ());
 
 private:
-  mut_(Image::sh, lazyFoldImage);
+  mutable Image::sh lazyFoldImage;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -139,16 +139,16 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(inten_vec, collectIntens, (Session const&,
                                   Image const* intensCorr, gma_rge::rc));
 private:
-  mut_(Meta::sh,  lazyMeta);
+  mutable Meta::sh lazyMeta;
 
-  mut_(omg_t,     lazyOmg);
-  mut_(phi_t,     lazyPhi);
-  mut_(chi_t,     lazyChi);
+  mutable omg_t    lazyOmg;
+  mutable phi_t    lazyPhi;
+  mutable chi_t    lazyChi;
 
-  mut_(flt32,     lazyTim);
-  mut_(flt32,     lazyMon);
-  mut_(flt32,     lazyDTim);
-  mut_(flt32,     lazyDMon);
+  mutable flt32    lazyTim;
+  mutable flt32    lazyMon;
+  mutable flt32    lazyDTim;
+  mutable flt32    lazyDMon;
 
   mth_(inten_vec, collect, (Session const&, Image const* corr, gma_rge::rc));
 dcl_end
@@ -170,9 +170,9 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   mth_(inten_rge::rc, rgeFixedInten, (Session const&, bool trans, bool cut));
 
 private:
-  mut_(flt32, lazyMon);
-  mut_(flt32, lazyDTim);
-  mut_(flt32, lazyDMon);
+  mutable flt32 lazyMon;
+  mutable flt32 lazyDTim;
+  mutable flt32 lazyDMon;
 
   mutable inten_rge lazyRgeFixedInten;
 

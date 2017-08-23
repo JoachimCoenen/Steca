@@ -17,7 +17,7 @@
 
 #include "panel_metadata.hpp"
 #include <lib/qt/inc/defs.inc>
-#include <lib/qt/tabs.hpp>
+#include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
 
 namespace gui {
@@ -38,6 +38,8 @@ PanelMetadata::PanelMetadata(Hub& hub) : base("", hub), view(nullptr) {
 
   tab->vb.add((view = new ViewMetadata(hub)));
   view->setModel(hub.modelMetadata);
+
+  tab->vb.add(mutp(hub.modelMetadata)->makeTriChk(str::null));
 }
 
 //------------------------------------------------------------------------------

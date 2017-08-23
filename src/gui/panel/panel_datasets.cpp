@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "panel_datasets.hpp"
-#include "../thehub.hpp"
-#include <lib/qt/wgt_inc.hpp>
 #include <lib/qt/inc/defs.inc>
+#include <lib/qt/wgt_inc.hpp>
+#include "../thehub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -44,9 +44,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   view->setModel(hub.modelDatasets);
 
   auto &h = tab->vb.hb();
-  auto chk = new l_qt::chk(""); chk->setTristate(true); // TODO add to model
-
-  h.add(chk);
+  h.add(mutp(hub.modelDatasets)->makeTriChk(str::null));
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
 
@@ -59,7 +57,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   });
 
   hub.onSigResetDatasets([spin, &hub]() {
-    spin->setValue(hub.groupedBy());
+    spin->setValue(l::to_int(hub.groupedBy()));
   });
 }
 

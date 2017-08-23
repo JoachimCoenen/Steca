@@ -161,7 +161,7 @@ Image::sh Sets::foldImage() const {
   uint n = size();
   EXPECT_(0 < n)
 
-  mut(lazyFoldImage).reset(new Image(first()->image->size()));
+  lazyFoldImage.reset(new Image(first()->image->size()));
 
   Image::ref d = mut(*lazyFoldImage);
   for_i_(n)

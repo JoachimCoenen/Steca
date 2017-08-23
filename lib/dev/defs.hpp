@@ -74,7 +74,6 @@
 
 // structure attributes (data members)
 #define atr_(typ, name) typ const name          // immutable attribute
-#define mut_(typ, name) typ name                // mutable attribute
 #define ptr_(typ, name) typ const * const name  // imm. pointer to imm. attr.
 #define ref_(typ, name) typ const &       name  // immutable reference
 
@@ -197,6 +196,11 @@ struct real_vec;
 
 #define may_err  noexcept(false)
 #define will_err noexcept(false)
+
+//------------------------------------------------------------------------------
+// signalling annotation
+
+#define emits
 
 //------------------------------------------------------------------------------
 // strings
