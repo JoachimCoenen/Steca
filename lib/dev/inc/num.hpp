@@ -182,8 +182,14 @@ inline sz_t to_sz(N n) {
 
 //------------------------------------------------------------------------------
 
-extern real const flt_nan; // quiet nan
-extern real const flt_inf;
+extern flt32 const flt32_nan; // quiet nan
+extern flt32 const flt32_inf;
+
+extern flt64 const flt64_nan; // quiet nan
+extern flt64 const flt64_inf;
+
+extern real  const flt_nan;   // quiet nan
+extern real  const flt_inf;
 
 bool isnan(flt32);
 bool isfin(flt32);

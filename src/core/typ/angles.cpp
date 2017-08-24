@@ -22,7 +22,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-Angles::Angles() : Angles(tth_t(0), gma_t(0)) {}
+Angles::Angles() : Angles(tth_t(0.), gma_t(0.)) {}
 
 Angles::Angles(tth_t tth_, gma_t gma_) : tth(tth_), gma(gma_) {}
 

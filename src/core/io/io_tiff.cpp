@@ -66,8 +66,6 @@ using data::File;
 using data::Set;
 using data::Meta;
 
-using data::flt_vec;
-
 //------------------------------------------------------------------------------
 
 #define IS_ASCII \
@@ -236,7 +234,7 @@ static void loadTiff(File& file, l_io::path::rc path,
 TEST_("loadTiff",
   Files files;
   File::sh file(new File(files, l_io::path("")));
-  loadTiff(mut(*file), l_io::path("testdata.tif"), phi_t(0), 0, 0);
+  loadTiff(mut(*file), l_io::path("testdata.tif"), phi_t(0.), 0, 0);
 )
 
 //------------------------------------------------------------------------------

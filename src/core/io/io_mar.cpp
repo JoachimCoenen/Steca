@@ -27,8 +27,6 @@ using data::File;
 using data::Set;
 using data::Meta;
 
-using data::flt_vec;
-
 using l_io::path;
 
 //------------------------------------------------------------------------------

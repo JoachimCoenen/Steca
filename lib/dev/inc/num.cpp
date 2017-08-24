@@ -33,6 +33,12 @@ static_assert(
 
 //------------------------------------------------------------------------------
 
+flt32 const flt32_nan = std::numeric_limits<flt32>::quiet_NaN();
+flt32 const flt32_inf = std::numeric_limits<flt32>::infinity();
+
+flt64 const flt64_nan = std::numeric_limits<flt64>::quiet_NaN();
+flt64 const flt64_inf = std::numeric_limits<flt64>::infinity();
+
 real const flt_nan = std::numeric_limits<real>::quiet_NaN();
 real const flt_inf = std::numeric_limits<real>::infinity();
 

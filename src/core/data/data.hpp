@@ -16,11 +16,12 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/inc/vecs.hpp>
-#include <lib/dev/typ/map.hpp>
-#include <lib/dev/io/path.hpp>
 #include "../typ/def.hpp"
 #include "../typ/image.hpp"
+#include <lib/dev/inc/vecs.hpp>
+#include <lib/dev/io/path.hpp>
+#include <lib/dev/typ/hash.hpp>
+#include <lib/dev/typ/map.hpp>
 
 namespace core {
 
@@ -34,8 +35,6 @@ enum class eNorm {
 namespace data {
 //------------------------------------------------------------------------------
 
-using flt_vec = l::vec<flt32>;
-
 dcl_(Meta) SHARED // metadata
   // attribute dictionary
   dcl_sub_(Dict, l::map<str COMMA uint>) SHARED
@@ -43,13 +42,20 @@ dcl_(Meta) SHARED // metadata
     mth_(uint, at, (strc)) may_err;
     atr_(str_vec,  keys);
     atr_(bol_vec,  checked);
-  };
+  dcl_end
+
+  // attribute values
+  dcl_sub_(Vals, l::hash<uint COMMA flt32>)
+    mth_(flt32, valAt, (uint)) may_err;
+    set_(setAt, (uint, flt32));
+    set_(addAt, (uint, flt32));
+  dcl_end
 
   atr_(str, comment);
   atr_(str, date);
 
   atr_(Dict::sh, dict); // other than the values stored explicitly below
-  atr_(flt_vec, vals);
+  atr_(Vals,     vals); // their values
 
   atr_(tth_t,  tth);    // *mid* tth
   atr_(omg_t,  omg);
@@ -62,8 +68,8 @@ dcl_(Meta) SHARED // metadata
   atr_(flt32, dMon);   // delta mon. count, may be nan
 
   Meta(Dict::shrc);
-  Meta(Dict::shrc, flt_vec const&, flt32, flt32, flt32, flt32,
-                                   flt32, flt32, flt32, flt32);
+  Meta(Dict::shrc, Vals::rc, flt32, flt32, flt32, flt32,
+                             flt32, flt32, flt32, flt32);
 dcl_end
 
 //------------------------------------------------------------------------------

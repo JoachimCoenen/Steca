@@ -12,7 +12,8 @@ struct rad;
 dcl_(deg)
   atr_(real, val);
 
-  explicit deg(real = l::flt_nan);
+  explicit deg(flt32);
+  explicit deg(flt64 = l::flt64_nan);
   explicit deg(rad const&);
 
   cop_(real) RET_(val)
@@ -34,7 +35,8 @@ dcl_end
 dcl_(rad)
   atr_(real, val);
 
-  explicit rad(real = l::flt_nan);
+  explicit rad(flt32);
+  explicit rad(flt64 = l::flt64_nan);
   explicit rad(deg const&);
 
   cop_(real) RET_(val)

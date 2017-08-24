@@ -6,8 +6,9 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-deg::deg(real val_) : val(val_) {}
-deg::deg(rad::rc r) : deg(r.toDeg()) {}
+deg::deg(flt32 val_) : val(flt64(val_)) {}
+deg::deg(flt64 val_) : val(val_)        {}
+deg::deg(rad::rc r) : deg(r.toDeg())    {}
 
 TEST_("deg",
   CHECK_EQ(real(deg(rad(M_PI_2))), 90);
@@ -57,11 +58,12 @@ real deg::cos() const {
 
 //------------------------------------------------------------------------------
 
-rad::rad(real val_) : val(val_) {}
-rad::rad(deg::rc d) : rad(d.toRad()) {}
+rad::rad(flt32 val_) : val(flt64(val_)) {}
+rad::rad(flt64 val_) : val(val_)        {}
+rad::rad(deg::rc r) : rad(r.toRad())    {}
 
 TEST_("rad",
-  CHECK_EQ(real(rad(deg(90))), M_PI_2);
+  CHECK_EQ(real(rad(deg(90.))), M_PI_2);
 )
 
 rad::ref rad::operator=(rc that)

@@ -302,7 +302,7 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
             return i1.inten < i2.inten;
           });
 
-          itf_t avg(inten_t(0), tth_t(0), fwhm_t(0));
+          itf_t avg(inten_t(0), tth_t(0.), fwhm_t(0));
 
           uint iEnd   = itfs.size();
           uint iBegin = l::min(l::to_uint(l::round(itfs.size() * (1. - inclusionTreshold))), iEnd-1);
@@ -313,9 +313,9 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
             avg += itfs.at(i);
 
           interpolatedInfos.add(ReflectionInfo(alpha, beta, infos.first().rgeGma,
-              inten_t(avg.inten / real(n)), inten_t(),
+              inten_t(avg.inten / flt32(n)), inten_t(),
               avg.tth   / real(n), tth_t(l::flt_nan),
-              fwhm_t(avg.fwhm  / real(n)), fwhm_t()));
+              fwhm_t(avg.fwhm  / flt32(n)), fwhm_t()));
           continue;
         }
 

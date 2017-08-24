@@ -53,8 +53,6 @@ using data::File;
 using data::Set;
 using data::Meta;
 
-using data::flt_vec;
-
 static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err {
   File::sh file(new File(files, path));
 
@@ -75,15 +73,13 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
 
   str elem, node; dtype dt; uint n;
 
-  flt_vec readVals, vals;
+  Meta::Vals readVals, vals;
 
-  auto setVal = [&](flt_vec& vs, uint idx, flt32 val) {
-    if (idx+1 > vs.size())
-      vs.resize(idx+1, 0);
+  auto setVal = [&](Meta::Vals& vs, uint idx, flt32 val) {
     vs.setAt(idx, val);
   };
 
-  auto addValTo = [&](flt_vec& vs, strc ns, flt32 val) -> uint {
+  auto addValTo = [&](Meta::Vals& vs, strc ns, flt32 val) -> uint {
     auto idx = mut(*files.dict).enter(ns);
     setVal(vs, idx, val);
     return idx;
@@ -97,13 +93,13 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
   addValTo(readVals, "TIM1", 0);
   addValTo(readVals, "MON", 0);
 
-  auto addVal = [&](flt_vec& vs) -> uint {
+  auto addVal = [&](Meta::Vals& vs) -> uint {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
   // TODO make nanable flt32/64
-  flt32 tth = l::flt_nan, omg = l::flt_nan, chi = l::flt_nan, phi = l::flt_nan,
-        tim = l::flt_nan, mon = l::flt_nan;
+  flt32 tth = l::flt32_nan, omg = l::flt32_nan, chi = l::flt32_nan, phi = l::flt32_nan,
+        tim = l::flt32_nan, mon = l::flt32_nan;
 
   l::scoped<Image> image;
 
@@ -147,7 +143,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
     vals = readVals;
   };
 
-  flt32 lastTim = l::flt_nan, lastMon = l::flt_nan;
+  flt32 lastTim = l::flt32_nan, lastMon = l::flt32_nan;
 
   auto endDataset = [&]() {
     if (vals.isEmpty())

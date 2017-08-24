@@ -49,16 +49,15 @@ uint Meta::Dict::at(strc key) const may_err {
 
 Meta::Meta(Dict::shrc dict_)
 : comment()
-, dict(dict_), vals(dict->size(), 0), tth(0), omg(0), chi(0), phi(0)
+, dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(Dict::shrc dict_, flt_vec const& vals_,
+Meta::Meta(Dict::shrc dict_, Vals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
 , dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
 , tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_) {
-  EXPECT_(dict->size() == vals.size())
 }
 
 TEST_("dict",
@@ -79,6 +78,27 @@ TEST_("dict-throw",
   CHECK_THROWS_AS(dict.at(""), l::exc::rc);
 )
 #endif
+
+//------------------------------------------------------------------------------
+
+flt32 Meta::Vals::valAt(uint i) const may_err {
+  return at(i);
+}
+
+Meta::Vals::ref Meta::Vals::setAt(uint i, flt32 val) {
+  if (contains(i))
+    at(i) = val;
+  else
+    add(i, val);
+  RTHIS
+}
+
+Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
+  if (contains(i))
+    val += at(i);
+  setAt(i, val);
+  RTHIS
+}
 
 //------------------------------------------------------------------------------
 
@@ -174,8 +194,8 @@ Image::sh Sets::foldImage() const {
 
 CombinedSet::CombinedSet() : parent(nullptr)
 , lazyMeta()
-, lazyOmg(l::flt_nan), lazyPhi(l::flt_nan), lazyChi(l::flt_nan)
-, lazyTim(l::flt_nan), lazyMon(l::flt_nan), lazyDTim(l::flt_nan), lazyDMon(l::flt_nan) {}
+, lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
+, lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
 
 Meta::sh CombinedSet::meta() const {
   if (lazyMeta)
@@ -194,9 +214,8 @@ Meta::sh CombinedSet::meta() const {
   for_i_(n) {
     Meta::rc s = *(at(i)->meta);
 
-    EXPECT_(d.vals.size() == s.vals.size())
-    for_i_(d.vals.size())
-      mut(d.vals).refAt(i) += s.vals.at(i);
+    for (auto& sv : s.vals)
+      mut(d.vals).addAt(sv.first, sv.second);
 
     mut(d.tth) = d.tth + s.tth;
     mut(d.omg) = d.omg + s.omg;
@@ -212,8 +231,8 @@ Meta::sh CombinedSet::meta() const {
 
   real fac = 1.0 / n;
 
-  for_i_(d.vals.size())
-    mut(d.vals).setAt(i, inten_t(d.vals.at(i) * fac));
+  for (auto& dv : mut(d.vals))
+    dv.second *= fac;
 
   mut(d.tth) = d.tth * fac;
   mut(d.omg) = d.omg * fac;
@@ -495,7 +514,7 @@ TEST_("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(l::share(new Set(l::share(new Meta(fs.dict, flt_vec(), 0, 0, 0, 0, 0, 0, 0, 0)),
+  f1->addSet(l::share(new Set(l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
                               l::share(new Image))));
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);

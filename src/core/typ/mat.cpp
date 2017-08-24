@@ -121,7 +121,7 @@ TEST_("mat3",
 )
 
 TEST_("mat3::rotation",
-  l::rad angle(1);
+  l::rad angle(1.);
   auto cwx  = mat3::rotationCWx(angle);
   auto cwz  = mat3::rotationCWz(angle);
   auto ccwz = mat3::rotationCCWz(angle);
