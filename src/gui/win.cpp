@@ -212,9 +212,9 @@ void Win::onFirstShow() {
 
 #ifdef DEVELOPMENT
   hub.addFiles({
-    "/home/jan/C/+dev/fz/data/SS15/m280580.dat"
+    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
+    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat"
   });
-//  hub.addFile(l_io::path("/home/jan/C/+dev/fz/data/SS15/m280581.dat"));
 #endif
 }
 

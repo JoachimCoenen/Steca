@@ -22,9 +22,9 @@
 namespace core { namespace io {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress (l_io::path::rc);
-bool couldBeMar    (l_io::path::rc);
-bool couldBeTiffDat(l_io::path::rc);
+bool couldBeCaress (l_io::path::rc) may_err;
+bool couldBeMar    (l_io::path::rc) may_err;
+bool couldBeTiffDat(l_io::path::rc) may_err;
 
 // load a file; file type will be sensed
 data::File::sh load(data::Files::rc, l_io::path::rc) may_err;

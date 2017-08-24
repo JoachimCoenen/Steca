@@ -25,44 +25,32 @@ namespace core { namespace io {
 //------------------------------------------------------------------------------
 
 // Caress format
-bool couldBeCaress(l_io::path::rc path) {
-  try {
-    l::buf header("\020\012DEFCMD DAT", false);
-    return header == l_io::fbin(path).read(header.size());
-  } catch(l::exc::rc) {
-    return false;
-  }
+bool couldBeCaress(l_io::path::rc path) may_err {
+  l::buf header("\020\012DEFCMD DAT", false);
+  return header == l_io::fbin(path).read(header.size());
 }
 
 // Mar format
-bool couldBeMar(l_io::path::rc path) {
-  try {
-    l::buf header("mar research", false);
-    return header == l_io::fbin(path).seek(0x80).read(header.size());
-  } catch(l::exc::rc) {
-    return false;
-  }
+bool couldBeMar(l_io::path::rc path) may_err {
+  l::buf header("mar research", false);
+  return header == l_io::fbin(path).seek(0x80).read(header.size());
 }
 
 // Text .dat file with metadata for tiff files
-bool couldBeTiffDat(l_io::path::rc path) {
+bool couldBeTiffDat(l_io::path::rc path) may_err {
   bool couldBe = false;
 
-  try {
-    FileTiffDat fin(path);
-    while (!couldBe && fin.hasMore()) {
-      auto row = fin.getRow();
-      EXPECT_(row.size() > 0)
-      str fileName = row.at(0);
+  FileTiffDat fin(path);
+  while (!couldBe && fin.hasMore()) {
+    auto row = fin.getRow();
+    EXPECT_(row.size() > 0)
+    str fileName = row.at(0);
 
-      // naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
-      std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
-      auto pos = fileName.find_first_of(".tif");
-      if (str::npos != pos)
-        couldBe = true;
-    }
-  } catch(l::exc::rc) {
-    return false;
+    // naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
+    std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
+    auto pos = fileName.find_first_of(".tif");
+    if (str::npos != pos)
+      couldBe = true;
   }
 
   return couldBe;

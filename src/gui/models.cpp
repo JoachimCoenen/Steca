@@ -57,6 +57,7 @@ bool ModelFiles::isChecked(rw_n row) const {
 //------------------------------------------------------------------------------
 
 ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
+  setCheckable(true);
   setNumbered(4);
 }
 

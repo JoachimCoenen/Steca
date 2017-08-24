@@ -97,10 +97,12 @@ int app::exec(win* w) {
 int app::safeExec(win* w) {
   try {
     return exec(w);
+  } catch (l::exc::rc e) {
+    qWarning("Fatal error: %s (%s)", e.msg.c_str(), e.what());
   } catch (std::exception const& e) {
     qWarning("Fatal error: %s", e.what());
-    return -1;
   }
+  return -1;
 }
 
 // Exceptions caught here; displayed in a dialog.
