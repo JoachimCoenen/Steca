@@ -8,10 +8,10 @@ namespace l_qt {
 
 lst_model::triChk::triChk(strc s, lst_model& model_) : base(s), model(model_) {
   connect(this, &Self::stateChanged, [this](int state) {
-    model.changeState(state_t(state));
+    model.changeState(eState(state));
   });
 
-  connect(&model, &lst_model::stateChanged, [this](state_t state) {
+  connect(&model, &lst_model::stateChanged, [this](eState state) {
     set(state);
   });
 }
@@ -19,7 +19,7 @@ lst_model::triChk::triChk(strc s, lst_model& model_) : base(s), model(model_) {
 //------------------------------------------------------------------------------
 
 lst_model::lst_model()
-: isCheckable(false), isNumbered(false), state(triChk::state_t::off) {}
+: isCheckable(false), isNumbered(false), state(triChk::eState::off) {}
 
 lst_model::ref lst_model::setCheckable(bool on) {
   mut(isCheckable) = on;
@@ -35,11 +35,11 @@ lst_model::triChk* lst_model::makeTriChk(strc s) {
   return new triChk(s, *this);
 }
 
-lst_model::ref lst_model::changeState(triChk::state_t state) {
-  if (triChk::part == state)
+lst_model::ref lst_model::changeState(triChk::eState state) {
+  if (triChk::eState::part == state)
     RTHIS;
 
-  bool on = triChk::on == state;
+  bool on = triChk::eState::on == state;
   for_i_(rows())
     check(i, on);
 
@@ -82,7 +82,8 @@ void lst_model::signalReset() const {
 }
 
 void lst_model::updateState() const {
-  triChk::state_t newState = triChk::off;
+  using eState = triChk::eState;
+  eState newState = eState::off;
 
   auto rs = rows();
   if (!rs)
@@ -95,7 +96,7 @@ void lst_model::updateState() const {
     else
       all = false;
 
-  newState = none ? triChk::off : all ? triChk::on : triChk::part;
+  newState = none ? eState::off : all ? eState::on : eState::part;
   if (state != newState)
     emit stateChanged((state = newState));
 }

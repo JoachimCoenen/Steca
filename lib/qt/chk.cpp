@@ -49,19 +49,23 @@ chk::ref chk::check(bool on)
 
 triChk::triChk(strc s) : base (s) {
   setTristate(true);
+  connect(this, &Self::clicked, [this]() {
+    if (eState::part == get())
+      set(eState::on); // clicking on 'off' -> 'on'
+  });
 }
 
 TEST_("triState",
-  CHECK_EQ(triChk::off,  triChk::state_t(Qt::Unchecked));
-  CHECK_EQ(triChk::part, triChk::state_t(Qt::PartiallyChecked));
-  CHECK_EQ(triChk::on,   triChk::state_t(Qt::Checked));
+  CHECK_EQ(triChk::eState::off,  triChk::eState(Qt::Unchecked));
+  CHECK_EQ(triChk::eState::part, triChk::eState(Qt::PartiallyChecked));
+  CHECK_EQ(triChk::eState::on,   triChk::eState(Qt::Checked));
 )
 
-triChk::ref triChk::set(state_t st)
+triChk::ref triChk::set(eState st)
   SET_(setCheckState(Qt::CheckState(st)))
 
-triChk::state_t triChk::get() const
-  RET_(state_t(checkState()))
+triChk::eState triChk::get() const
+  RET_(eState(checkState()))
 
 //------------------------------------------------------------------------------
 }

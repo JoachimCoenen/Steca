@@ -6,7 +6,7 @@ book.toc = {
     ['get',       'get.html',       'Get Steca'],
     ['gui',       'gui.html',       'GUI overview'],
     ['session',   'session.html',   'Sessions'],
-    ['workflow',  'workflow.html',  'Worklflow'],
+    ['workflow',  'workflow.html',  'Workflow'],
     ['output',    'output.html',    'Output'],
   ],
   ids: {

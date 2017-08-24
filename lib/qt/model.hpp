@@ -32,7 +32,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   dcl_end
 
   mth_mut_(triChk*, makeTriChk, (strc));
-  set_(changeState, (triChk::state_t));
+  set_(changeState, (triChk::eState));
 
   atr_(uint, isNumbered);
   set_(setNumbered, (uint));
@@ -52,9 +52,9 @@ dcl_sub_(lst_model, QAbstractTableModel)
   act_(updateState, ()) emits;
 
 signals:
-  void stateChanged(triChk::state_t) const;
+  void stateChanged(triChk::eState) const;
 private:
-  mutable triChk::state_t state;
+  mutable triChk::eState state;
 
 protected:
   using Index   = QModelIndex;

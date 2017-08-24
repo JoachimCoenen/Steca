@@ -29,10 +29,9 @@ dcl_end
 dcl_sub_(triChk, chk_base)
   triChk(strc);
 
-  enum state_t {off, part, on};
-  set_(set, (state_t));
-  mth_(state_t, get, ());
-
+  enum class eState {off, part, on};
+  set_(set, (eState));
+  mth_(eState, get, ());
 dcl_end
 
 //------------------------------------------------------------------------------
