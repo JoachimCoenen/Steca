@@ -94,6 +94,7 @@ private:
   mutable bool corrHasNaNs;
 
   act_mut_(updateImageSize, ());
+  act_mut_(updateMetaDict,  ());
   act_(calcIntensCorr, ());
 dcl_end
 

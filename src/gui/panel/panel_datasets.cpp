@@ -29,6 +29,8 @@ dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
   hub.onSigResetDatasets([this]() {
+    // TODO akin selectRows -> broadcasts Dataset::sh
+    // ViewMetadata and others do update
   });
 }
 

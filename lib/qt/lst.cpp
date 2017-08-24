@@ -150,7 +150,7 @@ lst_view::ref lst_view::sizeColumns() {
 
     if (model->isNumbered) {
       int col = model->numberedCol();
-      base::setColumnWidth(col, mWidth(this, model->isNumbered));
+      base::setColumnWidth(col, oWidth(this, 1 + model->isNumbered));
       base::header()->setSectionResizeMode(col, QHeaderView::Fixed);
     }
   }

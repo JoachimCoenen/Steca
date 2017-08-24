@@ -113,7 +113,7 @@ private:
 #define for_var_(i, n)   \
   for (mut_typ<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
 #define for_var_down_(i, n) \
-  for (mut_typ<decltype(n)>::typ i = (num); i-- > decltype(n)(0); )
+  for (mut_typ<decltype(n)>::typ i = (n); i-- > decltype(n)(0); )
 
 #endif
 

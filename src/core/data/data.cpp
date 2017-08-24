@@ -47,6 +47,21 @@ uint Meta::Dict::at(strc key) const may_err {
   return it->second;
 }
 
+Meta::Dict::ref Meta::Dict::shrinkTo(l::set<uint>::rc is) {
+  for (auto& d : *this)
+    if (!is.contains(d.second))
+      erase(d.first);
+
+  for_i_down_(keys.size())
+    if (!contains(keys.at(i))) {
+      mut(keys).rem(i);
+      mut(checked).rem(i);
+    }
+
+  ENSURE_(size() == keys.size() && size() == checked.size())
+  RTHIS
+}
+
 Meta::Meta(Dict::shrc dict_)
 : comment()
 , dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)

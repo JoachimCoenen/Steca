@@ -70,9 +70,11 @@ NUM_TYP_STRUCT_( int64, true,  int64, uint64)
 NUM_TYP_STRUCT_( flt32, true,  flt32, flt32)
 NUM_TYP_STRUCT_( flt64, true,  flt64, neal)
 
+#ifndef NDEBUG
 NUM_TYP_STRUCT_( pint, false,  int,   pint)
 NUM_TYP_STRUCT_( peal, false,  real,  peal)
 NUM_TYP_STRUCT_( neal, false,  real,  neal)
+#endif
 
 #undef NUM_TYP_STRUCT_
 

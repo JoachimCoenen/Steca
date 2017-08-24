@@ -12,6 +12,11 @@ int mWidth(QWidget const* w, real n) {
   return l::to_int(l::round(n * w->fontMetrics().width('m')));
 }
 
+int oWidth(QWidget const* w, uint n) {
+  EXPECT_(w)
+  return int(n) * w->fontMetrics().width('0');
+}
+
 //------------------------------------------------------------------------------
 }
 // eof

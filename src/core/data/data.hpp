@@ -22,6 +22,7 @@
 #include <lib/dev/io/path.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
+#include <lib/dev/typ/set.hpp>
 
 namespace core {
 
@@ -42,6 +43,8 @@ dcl_(Meta) SHARED // metadata
     mth_(uint, at, (strc)) may_err;
     atr_(str_vec,  keys);
     atr_(bol_vec,  checked);
+
+    set_(shrinkTo, (l::set<uint>::rc));
   dcl_end
 
   // attribute values
@@ -76,7 +79,7 @@ dcl_end
 
 dcl_(Set) SHARED   // one dataset, as acquired
   atr_(uint,      idx);  // this order in File, 1..; 0 = not in File
-  atr_(Meta::sh,  meta);
+  atr_(Meta::sh,  meta); // TODO Meta::sh shared? If no, make unique<>(?)
   atr_(Image::sh, image);
 
   Set(Meta::sh, Image::sh);
