@@ -59,6 +59,43 @@ var book = {
     const fil = book.toc.lst[idx][1];
     const dir = fil.substr(0, fil.lastIndexOf('/'));
     return book.pageRoot + dir + '/' + tail; // TODO PAGES
+  },
+
+  compileToc () {
+    const toc = this.toc;
+    if (!toc.src)
+      return;
+
+    toc.ids = {}; toc.sec = {}, toc.pnt = {}; toc.fil = {}; toc.lst = [];
+    let i = 0; const index = toc.static ? '_index.html' : '_index.cm';
+    const level = function (pnt, path, src) {
+      let first = true, pth, sec;
+      for (const s of src) {
+        if (first) {
+          const [id, p, t] = s; pth = path + p; sec = i;
+          toc.ids[id] = i;
+          toc.sec[i]  = sec;
+          toc.pnt[i]  = pnt;
+          toc.fil[pth + index] = i;
+          toc.lst.push([id, pth + index, t]);
+          ++i; first = false;
+          continue;
+        }
+        if (Array.isArray(s[0])) {
+          level(i-1, pth, s);
+          continue;
+        }
+        const [id, fil, t] = s;
+        toc.ids[id] = i;
+        toc.sec[i]  = sec;
+        toc.pnt[i]  = sec;
+        toc.fil[pth + fil] = i;
+        toc.lst.push([id, pth + fil, t]);
+        ++i;
+      }
+    };
+
+    level(null, '', toc.src);
   }
 };
 
