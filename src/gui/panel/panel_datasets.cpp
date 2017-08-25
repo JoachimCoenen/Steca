@@ -25,6 +25,7 @@ namespace gui {
 
 dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
   ViewDatasets(Hub&);
+  set_(sizeColumns, ());
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
@@ -32,6 +33,11 @@ ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
     // TODO akin selectRows -> broadcasts Dataset::sh
     // ViewMetadata and others do update
   });
+}
+
+ViewDatasets::ref ViewDatasets::sizeColumns() {
+  base::sizeColumns();
+  RTHIS
 }
 
 //------------------------------------------------------------------------------

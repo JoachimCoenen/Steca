@@ -110,7 +110,7 @@ int lst_model::rowCount(rcIndex) const {
 }
 
 QVariant lst_model::headerData(int col, Qt::Orientation, int role) const {
-  if (col == checkableCol())
+  if (col <= 0 || col == checkableCol())
     return QVariant();
 
   if (col == numberedCol()) {

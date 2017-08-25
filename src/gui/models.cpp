@@ -62,7 +62,7 @@ ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelDatasets::cols() const {
-  return cl_n(1 + metaCols.size());
+  return cl_n(numFixedCols() + metaCols.size());
 }
 
 rw_n ModelDatasets::rows() const {
@@ -71,7 +71,11 @@ rw_n ModelDatasets::rows() const {
 
 str ModelDatasets::head(cl_n cl) const {
   if (0 == cl)
-    return base::head(cl);
+    return "File";
+  if (1 == cl && grouped())
+    return "#-#";
+
+  cl = cl_n(cl - numFixedCols());
 
   auto meta = hub.meta();
   if (meta)
@@ -82,10 +86,22 @@ str ModelDatasets::head(cl_n cl) const {
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (0 == cl)
+    return "1";
+  if (1 == cl && grouped())
     return hub.tagAt(rw);
+
+  cl = cl_n(cl - numFixedCols());
 
   uint mi = metaCols.at(cl);
   return l_qt::var(hub.setAt(rw).meta()->vals.at(mi));
+}
+
+bool ModelDatasets::grouped() const {
+  return 1 < hub.groupedBy();
+}
+
+uint ModelDatasets::numFixedCols() const {
+  return grouped() ? 2 : 1;
 }
 
 //------------------------------------------------------------------------------

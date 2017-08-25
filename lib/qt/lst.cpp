@@ -136,9 +136,9 @@ lst_view::rw_n_vec lst_view::selectedRows() const {
 }
 
 lst_view::ref lst_view::sizeColumns() {
-  if (model) {
-    base::hideColumn(0);  // should look like a list; 0th column is tree-like
+  base::hideColumn(0);  // should look like a list; 0th column is tree-like
 
+  if (model) {
     for_i_(int(model->cols() + model->colOff()))
       base::header()->setSectionResizeMode(i, QHeaderView::Interactive);
 

@@ -33,9 +33,9 @@ dcl_sub_(lst_view, QTreeView)
   mth_(int, selectedRow, ()); // -1 if not
 
   set_(selectRows,(rw_n_vec::rc));
-  mth_(rw_n_vec,   selectedRows, ());
+  mth_(rw_n_vec, selectedRows, ());
 
-  set_(sizeColumns, ());
+  virtual set_(sizeColumns, ());
 
 protected:
   void keyPressEvent(QKeyEvent*);
