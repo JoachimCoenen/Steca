@@ -10,7 +10,7 @@ namespace l_qt {
 spin::spin() {}
 
 spin::ref spin::digitWidth(uint n)
-  SET_(base::setMaximumWidth(mWidth(this, n)))
+  SET_(base::setMaximumWidth(mWidth(*this, n)))
 
 spin::ref spin::min(int val)
   SET_(base::setMinimum(val))
@@ -42,7 +42,7 @@ spinUint::spinUint() {
 spinPint::spinPint() {
   min(1);
   connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
-    emit valChg(l::pint(val()));
+    emit valChg(l::pint(l::to_uint(val())));
   });
 }
 
@@ -59,7 +59,7 @@ spinReal::ref spinReal::decimals(uint n)
   SET_(base::setDecimals(int(n)))
 
 spinReal::ref spinReal::digitWidth(uint n)
-  SET_(base::setMaximumWidth(mWidth(this, n)))
+  SET_(base::setMaximumWidth(mWidth(*this, n)))
 
 spinReal::ref spinReal::min(real val)
   SET_(base::setMinimum(val))

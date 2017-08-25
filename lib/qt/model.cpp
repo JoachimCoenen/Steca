@@ -2,6 +2,9 @@
 
 #include "model.hpp"
 #include "inc/defs.inc"
+#include "font.hpp"
+#include "lst.hpp"
+#include <QHeaderView>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -101,6 +104,26 @@ void lst_model::updateState() const {
     emit stateChanged((state = newState));
 }
 
+void lst_model::sizeColumns(lst_view& view) const {
+  for_i_(int(cols() + colOff()))
+    view.header()->setSectionResizeMode(i, QHeaderView::Interactive);
+
+  if (isCheckable) {
+    int col = checkableCol();
+    view.setColumnWidth(col, mWidth(view, 1.6));
+    view.header()->setSectionResizeMode(col, QHeaderView::Fixed);
+  }
+
+  if (isNumbered) {
+    int col = numberedCol();
+    view.setColumnWidth(col, int(oWidth(view, 1 + isNumbered)));
+    view.header()->setSectionResizeMode(col, QHeaderView::Fixed);
+  }
+
+  for_i_(int(cols()))
+    view.resizeColumnToContents(i + int(colOff()));
+}
+
 int lst_model::columnCount(rcIndex) const {
   return int(cols() + colOff());
 }
@@ -130,6 +153,8 @@ QVariant lst_model::headerData(int col, Qt::Orientation, int role) const {
   switch (role) {
   case Qt::DisplayRole:
     return toQt(head(cl));
+  case Qt::TextAlignmentRole:
+    return rightAlign(cl) ? Qt::AlignRight : Qt::AlignLeft;
   default:
     return QVariant();
   }
@@ -169,6 +194,8 @@ QVariant lst_model::data(rcIndex index, int role) const {
   switch (role) {
   case Qt::DisplayRole:
     return cell(rw, cl);
+  case Qt::TextAlignmentRole:
+    return rightAlign(cl) ? Qt::AlignRight : Qt::AlignLeft;
   default:
     return QVariant();
   }

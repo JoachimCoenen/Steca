@@ -18,6 +18,8 @@
 #include "models.hpp"
 #include "thehub.hpp"
 #include <lib/qt/inc/defs.inc>
+#include <lib/qt/lst.hpp>
+#include <lib/qt/font.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -62,7 +64,8 @@ ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelDatasets::cols() const {
-  return cl_n(numFixedCols() + metaCols.size());
+  // allow an empty column if there are no metacols (looks better)
+  return cl_n(numFixedCols() + l::max(1u, metaCols.size()));
 }
 
 rw_n ModelDatasets::rows() const {
@@ -71,14 +74,14 @@ rw_n ModelDatasets::rows() const {
 
 str ModelDatasets::head(cl_n cl) const {
   if (0 == cl)
-    return "File";
+    return "F#";
   if (1 == cl && grouped())
     return "#-#";
 
   cl = cl_n(cl - numFixedCols());
 
   auto meta = hub.meta();
-  if (meta)
+  if (meta && cl < metaCols.size())
     return meta->dict->keys.at(metaCols.at(cl));
 
   return str::null;
@@ -86,14 +89,16 @@ str ModelDatasets::head(cl_n cl) const {
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (0 == cl)
-    return "1";
+    return l_qt::var(hub.setAt(rw).first()->file.idx);
   if (1 == cl && grouped())
     return hub.tagAt(rw);
 
   cl = cl_n(cl - numFixedCols());
 
-  uint mi = metaCols.at(cl);
-  return l_qt::var(hub.setAt(rw).meta()->vals.at(mi));
+  if (cl < metaCols.size())
+    return l_qt::var(hub.setAt(rw).meta()->vals.at(metaCols.at(cl)));
+
+  return l_qt::var();
 }
 
 bool ModelDatasets::grouped() const {
@@ -102,6 +107,15 @@ bool ModelDatasets::grouped() const {
 
 uint ModelDatasets::numFixedCols() const {
   return grouped() ? 2 : 1;
+}
+
+void ModelDatasets::sizeColumns(l_qt::lst_view& view) const {
+  base::sizeColumns(view);
+  view.fixColWidth(cl_n(0), oWidth(view, 3));
+}
+
+bool ModelDatasets::rightAlign(cl_n cl) const {
+  return 0 == cl;
 }
 
 //------------------------------------------------------------------------------

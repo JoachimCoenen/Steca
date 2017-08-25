@@ -226,7 +226,7 @@ static void loadTiff(File& file, l_io::path::rc path,
     }
 
   file.addSet(
-    l::share(new Set(
+    l::share(new Set(file,
       l::share(md.take().ptr()),
       l::share(new Image(intens)))));
 }

@@ -117,8 +117,8 @@ Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
 
 //------------------------------------------------------------------------------
 
-Set::Set(Meta::sh meta_, Image::sh image_)
-: idx(0), meta(meta_), image(image_) {}
+Set::Set(File const& file_, Meta::sh meta_, Image::sh image_)
+: file(file_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
   EXPECT_(image)
@@ -529,8 +529,10 @@ TEST_("data",
   CHECK_EQ(1, f1->idx);
   CHECK_EQ(2, f2->idx);
 
-  f1->addSet(l::share(new Set(l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
-                              l::share(new Image))));
+  f1->addSet(l::share(new Set(*f1,
+    l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::share(new Image))));
+
   fs.remFile(0);
   CHECK_EQ(1, f2->idx);
 )

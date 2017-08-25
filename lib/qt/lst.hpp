@@ -36,6 +36,8 @@ dcl_sub_(lst_view, QTreeView)
   mth_(rw_n_vec, selectedRows, ());
 
   virtual set_(sizeColumns, ());
+  set_(setColWidth, (cl_n, int));
+  set_(fixColWidth, (cl_n, int));
 
 protected:
   void keyPressEvent(QKeyEvent*);

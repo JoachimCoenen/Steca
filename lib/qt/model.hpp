@@ -12,6 +12,8 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
+struct lst_view;
+
 dcl_sub_(lst_model, QAbstractTableModel)
   use_int_(cl_n, uint, {}) // col number
   use_int_(rw_n, uint, {}) // row number
@@ -50,6 +52,9 @@ dcl_sub_(lst_model, QAbstractTableModel)
 
   act_(signalReset, ()) emits;
   act_(updateState, ()) emits;
+
+  virtual act_(sizeColumns, (lst_view&));
+  virtual bol_(rightAlign, (cl_n)) RET_(false)
 
 signals:
   void stateChanged(triChk::eState) const;

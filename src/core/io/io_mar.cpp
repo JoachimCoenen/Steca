@@ -231,7 +231,7 @@ File::sh loadMar(Files::rc files, path::rc path) may_err {
   // REVIEW ?? pictureOverflow
 
   mut(*file).addSet(
-    l::share(new Set(
+    l::share(new Set(*file,
       l::share(md.take().ptr()),
       l::share(new Image(convertedIntens)))));
 

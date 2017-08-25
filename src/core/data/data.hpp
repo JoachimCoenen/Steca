@@ -77,12 +77,14 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+struct File;
+
 dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(uint,      idx);  // this order in File, 1..; 0 = not in File
-  atr_(Meta::sh,  meta); // TODO Meta::sh shared? If no, make unique<>(?)
+  ref_(File,      file);
+  atr_(Meta::sh,  meta);  // TODO Meta::sh shared? If no, make unique<>(?)
   atr_(Image::sh, image);
 
-  Set(Meta::sh, Image::sh);
+  Set(File const&, Meta::sh, Image::sh);
 
   mth_(l::sz2, imageSize, ());
 

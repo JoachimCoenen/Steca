@@ -137,23 +137,21 @@ lst_view::rw_n_vec lst_view::selectedRows() const {
 
 lst_view::ref lst_view::sizeColumns() {
   base::hideColumn(0);  // should look like a list; 0th column is tree-like
+  if (model)
+    model->sizeColumns(*this);
+  RTHIS
+}
 
-  if (model) {
-    for_i_(int(model->cols() + model->colOff()))
-      base::header()->setSectionResizeMode(i, QHeaderView::Interactive);
+lst_view::ref lst_view::setColWidth(cl_n cl, int w) {
+  if (model)
+    setColumnWidth(int(model->colOff()) + int(cl), w);
+  RTHIS
+}
 
-    if (model->isCheckable) {
-      int col = model->checkableCol();
-      base::setColumnWidth(col, mWidth(this, 1.6));
-      base::header()->setSectionResizeMode(col, QHeaderView::Fixed);
-    }
-
-    if (model->isNumbered) {
-      int col = model->numberedCol();
-      base::setColumnWidth(col, oWidth(this, 1 + model->isNumbered));
-      base::header()->setSectionResizeMode(col, QHeaderView::Fixed);
-    }
-  }
+lst_view::ref lst_view::fixColWidth(cl_n cl, int w) {
+  setColWidth(cl, w);
+  if (model)
+    header()->setSectionResizeMode(int(model->colOff()) + int(cl), QHeaderView::Fixed);
   RTHIS
 }
 
@@ -169,7 +167,7 @@ void lst_view::keyPressEvent(QKeyEvent* e) {
 }
 
 int lst_view::sizeHintForColumn(int) const {
-  return mWidth(this, 1.6);
+  return mWidth(*this, 1.6);
 }
 
 //------------------------------------------------------------------------------
