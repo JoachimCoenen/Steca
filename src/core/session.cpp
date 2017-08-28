@@ -231,13 +231,22 @@ Session::ref Session::remFile(uint i) {
   RTHIS
 }
 
-Session::ref Session::activateFile(uint i, bool on) {
+Session::ref Session::activateFileAt(uint i, bool on) {
   mut(files.at(i)->isActive) = on;
   RTHIS
 }
 
-bool Session::isFileActive(uint i) const {
+bool Session::isActiveFileAt(uint i) const {
   return files.at(i)->isActive;
+}
+
+Session::ref Session::activateDatasetAt(uint i, bool on) {
+  mut(collectedDatasets.at(i)->isActive) = on;
+  RTHIS
+}
+
+bool Session::isActiveDatasetAt(uint i) const {
+  return collectedDatasets.at(i)->isActive;
 }
 
 Session::ref Session::setCorrFile(l_io::path::rc path) may_err {

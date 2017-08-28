@@ -207,7 +207,8 @@ Image::sh Sets::foldImage() const {
 
 //------------------------------------------------------------------------------
 
-CombinedSet::CombinedSet() : parent(nullptr)
+CombinedSet::CombinedSet()
+: parent(nullptr), isActive(true)
 , lazyMeta()
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
@@ -462,7 +463,7 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
 }
 
 void CombinedSets::resetLazies() {
-  lazyMon = lazyDTim = lazyDMon = l::flt_nan;
+  lazyMon = lazyDTim = lazyDMon = l::flt32_nan;
   lazyRgeFixedInten = inten_rge();
 }
 

@@ -46,14 +46,14 @@ l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
   return l_qt::var(hub.fileName(rw));
 }
 
-ModelFiles::ref ModelFiles::check(rw_n row, bool on) {
-  hub.activateFile(row, on);
+ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
+  hub.activateFileAt(rw, on);
   base::updateState();
   RTHIS
 }
 
-bool ModelFiles::isChecked(rw_n row) const {
-  return hub.isFileActive(row);
+bool ModelFiles::isChecked(rw_n rw) const {
+  return hub.isActiveFileAt(rw);
 }
 
 //------------------------------------------------------------------------------
@@ -116,6 +116,16 @@ void ModelDatasets::sizeColumns(l_qt::lst_view& view) const {
 
 bool ModelDatasets::rightAlign(cl_n cl) const {
   return 0 == cl;
+}
+
+ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on) {
+  hub.activateDatasetAt(rw, on);
+  base::updateState();
+  RTHIS
+}
+
+bool ModelDatasets::isChecked(rw_n rw) const {
+  return hub.isActiveDatasetAt(rw);
 }
 
 //------------------------------------------------------------------------------

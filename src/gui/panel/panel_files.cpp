@@ -46,7 +46,7 @@ ViewFiles::ViewFiles(Hub& hub)
     collectDatasets();
   });
 
-  hub.onSigFilesActive([this]() {
+  hub.onSigActiveFiles([this]() {
     collectDatasets();
   });
 

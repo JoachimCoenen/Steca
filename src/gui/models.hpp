@@ -45,6 +45,9 @@ dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
   act_(sizeColumns, (l_qt::lst_view&));
   bol_(rightAlign, (cl_n));
 
+  set_(check, (rw_n, bool));
+  bol_(isChecked, (rw_n));
+
 private:
   uint_vec metaCols;  // shown metadata
   bol_(grouped, ());

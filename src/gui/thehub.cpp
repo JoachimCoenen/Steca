@@ -153,9 +153,15 @@ Hub::ref Hub::remFile(uint i) {
   RTHIS
 }
 
-Hub::ref Hub::activateFile(uint i, bool on) {
-  base::activateFile(i, on);
-  emit sigFilesActive();
+Hub::ref Hub::activateFileAt(uint i, bool on) {
+  base::activateFileAt(i, on);
+  emit sigActiveFiles();
+  RTHIS
+}
+
+Hub::ref Hub::activateDatasetAt(uint i, bool on) {
+  base::activateDatasetAt(i, on);
+  emit sigActiveDatasets();
   RTHIS
 }
 
@@ -211,8 +217,8 @@ Hub::ref Hub::emitCorr() {
   RTHIS
 }
 
-Hub::ref Hub::emitFilesActive() {
-  emit sigFilesActive();
+Hub::ref Hub::emitActiveFiles() {
+  emit sigActiveFiles();
   RTHIS
 }
 

@@ -127,6 +127,7 @@ struct CombinedSets;
 
 dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   ptr_(CombinedSets, parent);
+  atr_(bool,         isActive); // included in calculations
 
   CombinedSet();
 
@@ -195,7 +196,7 @@ dcl_end
 struct Files;
 
 dcl_(File) SHARED  // one file
-  ref_(Files,      files);
+  ref_(Files,      files);    // parent
   atr_(bool,       isActive); // included in calculations
   atr_(uint,       idx);      // this order in Files, 1..; 0 = not in Files
   atr_(l_io::path, path);

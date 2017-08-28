@@ -58,8 +58,11 @@ dcl_(Session)
   set_(addFile,       (l_io::path::rc)) may_err;
   set_(remFile,       (uint));
 
-  set_(activateFile,  (uint, bool));
-  bol_(isFileActive,  (uint));
+  set_(activateFileAt, (uint, bool));
+  bol_(isActiveFileAt, (uint));
+
+  set_(activateDatasetAt, (uint, bool));
+  bol_(isActiveDatasetAt, (uint));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
