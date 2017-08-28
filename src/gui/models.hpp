@@ -31,7 +31,11 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
 
   set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
-dcl_end
+
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole)
+    RET_("")
+
+  dcl_end
 
 dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
   ModelDatasets(Hub&);

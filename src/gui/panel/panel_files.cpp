@@ -24,6 +24,23 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+dcl_sub_(ViewFile, Panel)
+  ViewFile(Hub&);
+dcl_end
+
+ViewFile::ViewFile(Hub& hub): base(hub) {
+  auto lbl = new l_qt::lbl();
+  vb.add(lbl);
+
+  hub.onSigFileSelected([this, lbl](core::data::File::sh file) {
+    lbl->text(file ? file->comment : str::null);
+  });
+}
+
+
+
+//------------------------------------------------------------------------------
+
 dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   ViewFiles(Hub&);
 
@@ -32,7 +49,9 @@ dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
 
 protected:
   void uiUpdate();
+
   void selectionChanged(QItemSelection const&, QItemSelection const&);
+
   void keyPressEvent(QKeyEvent*);
   l_qt::act& actRem;
 dcl_end
@@ -40,13 +59,13 @@ dcl_end
 ViewFiles::ViewFiles(Hub& hub)
 : RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
 
-  hub.onSigResetFiles([this]() {
+  hub.onSigFilesReset([this]() {
     selectRows({});
     uiUpdate();
     collectDatasets();
   });
 
-  hub.onSigActiveFiles([this]() {
+  hub.onSigFilesActive([this]() {
     collectDatasets();
   });
 
@@ -72,7 +91,9 @@ void ViewFiles::collectDatasets() {
 }
 
 void ViewFiles::uiUpdate() {
-  actRem.setEnabled(!selectedRows().isEmpty());
+  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
+  actRem.setEnabled(!isEmpty);
+  hub.selectFileAt(isEmpty ? -1 : int(sel.first()));
 }
 
 void ViewFiles::selectionChanged(QItemSelection const& selected,
@@ -108,6 +129,7 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab((tab = new Panel(hub)), "Files", p);
 
+  tab->vb.add((new ViewFile(hub)));
   tab->vb.add((view = new ViewFiles(hub)));
   view->setModel(hub.modelFiles);
 

@@ -58,6 +58,8 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(activateFileAt, (uint, bool)) emits;
   using base::isActiveFileAt;
 
+  set_(selectFileAt,  (int))      emits;
+
   set_(activateDatasetAt, (uint, bool)) emits;
   using base::isActiveDatasetAt;
 
@@ -80,12 +82,17 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(core::data::Meta::sh, meta, ());
 
 signals:
-  void sigResetFiles();     // a major change in files
-  void sigCorr();           // changed correction file, on/off
-  void sigResetDatasets();  // a major change in datasets
+  void sigFilesReset();     // a major change in files
+  void sigFilesActive();    // changed active files
 
-  void sigActiveFiles();    // changed active files
-  void sigActiveDatasets(); // changed active datasets
+  void sigFileSelected(core::data::File::sh); // file selected (or not)
+
+  void sigCorr();           // add/rem/on/off correction file
+
+  void sigDatasetsReset();  // a major change in datasets
+  void sigDatasetsActive(); // changed active datasets
+
+  void sigDatasetSelected(); // changed active datasets
 
 public:
   template <typename Signal, typename Lambda>
@@ -101,10 +108,23 @@ public:                               \
     onSignal(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIGNAL_ETC(ResetFiles)
+#define DCL_HUB_SIGNAL_ETC2(name, par)  \
+private:                                \
+  set_(emit##name, (par p));            \
+public:                                 \
+  template <typename Lambda> void onSig##name(Lambda slot) { \
+    onSignal(&Hub::sig##name, slot);  \
+  }
+
+  DCL_HUB_SIGNAL_ETC(FilesReset)
+  DCL_HUB_SIGNAL_ETC(FilesActive)
+
+  DCL_HUB_SIGNAL_ETC2(FileSelected, core::data::File::sh)
+
   DCL_HUB_SIGNAL_ETC(Corr)
-  DCL_HUB_SIGNAL_ETC(ActiveFiles)
-  DCL_HUB_SIGNAL_ETC(ResetDatasets)
+
+  DCL_HUB_SIGNAL_ETC(DatasetsReset)
+  DCL_HUB_SIGNAL_ETC(DatasetsActive)
 
 private:
   Q_OBJECT

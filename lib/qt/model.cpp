@@ -120,7 +120,6 @@ void lst_model::sizeColumns(lst_view& view) const {
     view.header()->setSectionResizeMode(col, QHeaderView::Fixed);
   }
 
-  TR(rows())
   for_i_(int(cols()))
     view.resizeColumnToContents(i + int(colOff()));
 }

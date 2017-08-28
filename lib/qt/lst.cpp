@@ -36,8 +36,8 @@ lst_view::lst_view() : hasHeader(false), model(nullptr) {
   setItemDelegate(new lst_view_itemDelegate);
   showHeader(hasHeader);
 
-  connect(this, &Self::clicked, [this](QModelIndex const& index) {
-    if (model && model->isCheckable && 1 == index.column())
+  connect(this, &Self::clicked, [this](idx_rc idx) {
+    if (model && model->isCheckable && 1 == idx.column())
       checkRow(base::currentIndex());
   });
 }
@@ -48,7 +48,7 @@ lst_view::ref lst_view::showHeader(bool on) {
 
 lst_view::ref lst_view::setModel(lst_model const* model_) {
   if (model) {
-    disconnect(con);
+    disconnect(modelConn);
     base::setModel(nullptr);
     mut(model) = nullptr;
     base::header()->setVisible(false);
@@ -59,7 +59,7 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
     sizeColumns();
     selectRow(rw_n(0));
 
-    con = connect(model, &QAbstractTableModel::modelReset, [this]() {
+    modelConn = connect(model, &QAbstractTableModel::modelReset, [this]() {
       sizeColumns();
     });
   }
@@ -67,7 +67,7 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
   RTHIS
 }
 
-lst_view::ref lst_view::checkRow(QModelIndex const& index) {
+lst_view::ref lst_view::checkRow(idx_rc index) {
   auto row = index.row();
   if (row >= 0)
     checkRow(rw_n(l::to_uint(row)));

@@ -34,7 +34,7 @@ void DlgAbout::construct() {
 
   auto& vbLogo = hbLogoInfo.vb();
 
-  auto logo = new l_qt::lbl(str::null);
+  auto logo = new l_qt::lbl();
   vbLogo.addWidget(logo);
   vbLogo.addStretch();
   logo->setPixmap(QPixmap(":/icon/logo"));

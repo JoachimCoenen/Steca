@@ -34,18 +34,18 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-using rcidx = QModelIndex const&;
+using idx_rc = QModelIndex const&;
 
 dcl_sub_(FileProxyModel, QSortFilterProxyModel)
-  int columnCount(rcidx) const;
+  int columnCount(idx_rc) const;
   QVariant headerData(int, Qt::Orientation, int = Qt::DisplayRole) const;
-  QVariant data(rcidx, int = Qt::DisplayRole) const;
+  QVariant data(idx_rc, int = Qt::DisplayRole) const;
 
 private:
   mutable l::hash<str,str> memInfo;
 dcl_end
 
-int FileProxyModel::columnCount(rcidx) const {
+int FileProxyModel::columnCount(idx_rc) const {
   return 2;
 }
 
@@ -55,7 +55,7 @@ QVariant FileProxyModel::headerData(int section, Qt::Orientation o, int role) co
   return base::headerData(section, o, role);
 }
 
-QVariant FileProxyModel::data(rcidx idx, int role) const {
+QVariant FileProxyModel::data(idx_rc idx, int role) const {
   if (idx.isValid() && 1 == idx.column()) {
     switch (role) {
     case Qt::TextAlignmentRole:
@@ -100,7 +100,7 @@ Hub::~Hub() {
 
 Hub::ref Hub::sessionClear() {
   base::clear();
-  emitResetFiles();
+  emitFilesReset();
   RTHIS
 }
 
@@ -112,7 +112,7 @@ Hub::ref Hub::sessionLoad(l_io::path path) may_err {
   auto json = Json::asSelf(Json::loadFrom(file.asStream()));
 
   base::load(json);
-  emitResetFiles();
+  emitFilesReset();
 
   RTHIS
 }
@@ -131,7 +131,7 @@ Hub::ref Hub::addFiles(str_vec::rc names) {
       if (!base::hasFile(path))
         base::addFile(path);
 
-    emitResetFiles();
+    emitFilesReset();
   }
   RTHIS
 }
@@ -149,19 +149,26 @@ Hub::ref Hub::addFiles() {
 
 Hub::ref Hub::remFile(uint i) {
   base::remFile(i);
-  emitResetFiles();
+  emitFilesReset();
   RTHIS
 }
 
 Hub::ref Hub::activateFileAt(uint i, bool on) {
   base::activateFileAt(i, on);
-  emit sigActiveFiles();
+  emitFilesActive();
+  RTHIS
+}
+
+Hub::ref Hub::selectFileAt(int i) {
+  emitFileSelected(i < 0
+    ? core::data::File::sh()
+    : files.at(l::to_u(i)));
   RTHIS
 }
 
 Hub::ref Hub::activateDatasetAt(uint i, bool on) {
   base::activateDatasetAt(i, on);
-  emit sigActiveDatasets();
+  emitDatasetsActive();
   RTHIS
 }
 
@@ -188,7 +195,7 @@ Hub::ref Hub::corrRem() {
 
 Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
   base::collectDatasetsFromFiles(is, by);
-  emitResetDatasets();
+  emitDatasetsReset();
   RTHIS
 }
 
@@ -206,9 +213,19 @@ core::data::Meta::sh Hub::meta() const {
   return numSets() ? setAt(0).meta() : core::data::Meta::sh();
 }
 
-Hub::ref Hub::emitResetFiles() {
+Hub::ref Hub::emitFilesReset() {
   modelFiles->signalReset();
-  emit sigResetFiles();
+  emit sigFilesReset();
+  RTHIS
+}
+
+Hub::ref Hub::emitFilesActive() {
+  emit sigFilesActive();
+  RTHIS
+}
+
+Hub::ref Hub::emitFileSelected(core::data::File::sh sh) {
+  emit sigFileSelected(sh);
   RTHIS
 }
 
@@ -217,14 +234,14 @@ Hub::ref Hub::emitCorr() {
   RTHIS
 }
 
-Hub::ref Hub::emitActiveFiles() {
-  emit sigActiveFiles();
+Hub::ref Hub::emitDatasetsReset() {
+  modelDatasets->signalReset();
+  emit sigDatasetsReset();
   RTHIS
 }
 
-Hub::ref Hub::emitResetDatasets() {
-  modelDatasets->signalReset();
-  emit sigResetDatasets();
+Hub::ref Hub::emitDatasetsActive() {
+  emit sigDatasetsActive();
   RTHIS
 }
 

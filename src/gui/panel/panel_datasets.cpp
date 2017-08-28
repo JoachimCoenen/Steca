@@ -29,7 +29,7 @@ dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
-  hub.onSigResetDatasets([this]() {
+  hub.onSigDatasetsReset([this]() {
     // TODO akin selectRows -> broadcasts Dataset::sh
     // ViewMetadata and others do update
   });
@@ -64,7 +64,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
     hub.groupDatasetsBy(val);
   });
 
-  hub.onSigResetDatasets([spin, &hub]() {
+  hub.onSigDatasetsReset([spin, &hub]() {
     spin->setValue(l::to_int(hub.groupedBy()));
   });
 }
