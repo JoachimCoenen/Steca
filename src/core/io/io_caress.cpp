@@ -223,8 +223,8 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
         str s(getAsString(dt, n));
         if (elem == "COM")
           mut(file->comment) = s;
-        else
-          mut(file->strs).add(std::make_pair(elem, s));
+//        else // ignore other strings
+//          mut(file->strs).add(std::make_pair(elem, s));
       }
       // anything else is ignored
     }

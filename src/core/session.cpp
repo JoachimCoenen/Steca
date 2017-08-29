@@ -227,7 +227,8 @@ Session::ref Session::addFile(l_io::path::rc path) may_err {
 Session::ref Session::remFile(uint i) {
   mut(files).rem(i);
   updateImageSize();
-  updateMetaDict();
+  if (files.isEmpty())
+    mut(files.dict).reset(new data::Meta::Dict());
   RTHIS
 }
 
@@ -376,25 +377,6 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
 void Session::updateImageSize() {
   if (0 == files.size() && !corrFile)
     mut(imageSize) = l::sz2(0, 0);
-}
-
-void Session::updateMetaDict() {
-  if (files.isEmpty()) {
-    mut(files.dict).reset(new data::Meta::Dict());
-  } else {
-    // TODO fast enough? Alt. reference count dict entries
-    // collect i's in use
-    l::set<uint> is;
-    for (auto& f : files) {
-      EXPECT_(!f->sets.isEmpty()) // TODO ensured in loading ? Enforce at File level
-      for (auto &v : f->sets.first()->meta->vals)
-        is.add(v.first);
-    }
-
-    for (auto i : is)
-      TR(i)
-    mut(*files.dict).shrinkTo(is);
-  }
 }
 
 void Session::calcIntensCorr() const {

@@ -150,12 +150,7 @@ cl_n ModelMetadata::cols() const {
 }
 
 rw_n ModelMetadata::rows() const {
-  if (!dataset)
-    return rw_n(0);
-
-  auto meta = dataset->meta();
-  EXPECT_(meta)
-  return rw_n(meta->vals.size());
+  return dataset ? rw_n(dataset->meta()->dict->size()) : rw_n(0);
 }
 
 str ModelMetadata::head(cl_n cl) const {

@@ -43,8 +43,6 @@ dcl_(Meta) SHARED // metadata
     mth_(uint, at, (strc)) may_err;
     atr_(str_vec,  keys);
     atr_(bol_vec,  checked);
-
-    set_(shrinkTo, (l::set<uint>::rc));
   dcl_end
 
   // attribute values
@@ -202,7 +200,6 @@ dcl_(File) SHARED  // one file
   atr_(l_io::path, path);
   atr_(str,        name);
   atr_(str,        comment);
-  atr_(l::vec<std::pair<str COMMA str>>, strs);
   atr_(Sets, sets);
 
   File(Files const&, l_io::path::rc);
