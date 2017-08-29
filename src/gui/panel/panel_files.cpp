@@ -37,8 +37,6 @@ ViewFile::ViewFile(Hub& hub): base(hub) {
   });
 }
 
-
-
 //------------------------------------------------------------------------------
 
 dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
@@ -47,13 +45,11 @@ dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   void removeSelected();
   void collectDatasets();
 
-protected:
-  void uiUpdate();
-
-  void selectionChanged(QItemSelection const&, QItemSelection const&);
-
-  void keyPressEvent(QKeyEvent*);
+private:
   l_qt::act& actRem;
+  void keyPressEvent(QKeyEvent*);
+  void selectionChanged(QItemSelection const&, QItemSelection const&);
+  void selUpdate();
 dcl_end
 
 ViewFiles::ViewFiles(Hub& hub)
@@ -61,8 +57,8 @@ ViewFiles::ViewFiles(Hub& hub)
 
   hub.onSigFilesReset([this]() {
     selectRows({});
-    uiUpdate();
     collectDatasets();
+    selUpdate();
   });
 
   hub.onSigFilesActive([this]() {
@@ -90,18 +86,6 @@ void ViewFiles::collectDatasets() {
   hub.collectDatasetsFromFiles(checkedRows());
 }
 
-void ViewFiles::uiUpdate() {
-  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
-  actRem.setEnabled(!isEmpty);
-  hub.selectFileAt(isEmpty ? -1 : int(sel.first()));
-}
-
-void ViewFiles::selectionChanged(QItemSelection const& selected,
-                                 QItemSelection const& deselected) {
-  base::selectionChanged(selected, deselected);
-  uiUpdate();
-}
-
 void ViewFiles::keyPressEvent(QKeyEvent* e) {
   switch (e->key()) {
   case Qt::Key_Delete:
@@ -110,6 +94,18 @@ void ViewFiles::keyPressEvent(QKeyEvent* e) {
   default:
     base::keyPressEvent(e);
   }
+}
+
+void ViewFiles::selectionChanged(QItemSelection const& selected,
+                                 QItemSelection const& deselected) {
+  base::selectionChanged(selected, deselected);
+  selUpdate();
+}
+
+void ViewFiles::selUpdate() {
+  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
+  actRem.setEnabled(!isEmpty);
+  hub.selectFileAt(isEmpty ? -1 : int(sel.first()));
 }
 
 //------------------------------------------------------------------------------

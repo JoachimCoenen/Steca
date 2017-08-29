@@ -172,6 +172,13 @@ Hub::ref Hub::activateDatasetAt(uint i, bool on) {
   RTHIS
 }
 
+Hub::ref Hub::selectDatasetAt(int i) {
+  emitDatasetSelected(i < 0
+    ? core::data::CombinedSet::sh()
+    : collectedDatasets.at(l::to_u(i)));
+  RTHIS
+}
+
 Hub::ref Hub::corrEnable(bool on) {
   if (on && !corrFile) {
     str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),
@@ -242,6 +249,11 @@ Hub::ref Hub::emitDatasetsReset() {
 
 Hub::ref Hub::emitDatasetsActive() {
   emit sigDatasetsActive();
+  RTHIS
+}
+
+Hub::ref Hub::emitDatasetSelected(core::data::CombinedSet::sh sh) {
+  emit sigDatasetSelected(sh);
   RTHIS
 }
 

@@ -104,24 +104,24 @@ void lst_model::updateState() const {
     emit stateChanged((state = newState));
 }
 
-void lst_model::sizeColumns(lst_view& view) const {
-  for_i_(int(cols() + colOff()))
-    view.header()->setSectionResizeMode(i, QHeaderView::Interactive);
+void lst_model::fixColumns(lst_view& view) const {
+  auto h = view.header();
+  h->setMinimumSectionSize(oWidth(view, 1));
 
   if (isCheckable) {
     int col = checkableCol();
     view.setColumnWidth(col, mWidth(view, 1.6));
-    view.header()->setSectionResizeMode(col, QHeaderView::Fixed);
+    h->setSectionResizeMode(col, QHeaderView::Fixed);
   }
 
   if (isNumbered) {
     int col = numberedCol();
-    view.setColumnWidth(col, int(oWidth(view, 1 + isNumbered)));
-    view.header()->setSectionResizeMode(col, QHeaderView::Fixed);
+    view.setColumnWidth(col, oWidth(view, 1 + isNumbered));
+    h->setSectionResizeMode(col, QHeaderView::Fixed);
   }
 
-  for_i_(int(cols()))
-    view.resizeColumnToContents(i + int(colOff()));
+  for_i_(cols())
+    h->setSectionResizeMode(int(i + colOff()), QHeaderView::Interactive);
 }
 
 int lst_model::columnCount(rcIndex) const {

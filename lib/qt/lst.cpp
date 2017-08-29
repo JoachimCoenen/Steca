@@ -30,7 +30,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-lst_view::lst_view() : hasHeader(false), model(nullptr) {
+lst_view::lst_view(bool hasHeader_) : hasHeader(hasHeader_), model(nullptr) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
   setItemDelegate(new lst_view_itemDelegate);
@@ -56,12 +56,8 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
 
   if (model_) {
     base::setModel(mutp(mut(model) = model_));
-    sizeColumns();
+    fixColumns();
     selectRow(rw_n(0));
-
-    modelConn = connect(model, &QAbstractTableModel::modelReset, [this]() {
-      sizeColumns();
-    });
   }
 
   RTHIS
@@ -135,23 +131,24 @@ lst_view::rw_n_vec lst_view::selectedRows() const {
   return rws;
 }
 
-lst_view::ref lst_view::sizeColumns() {
+lst_view::ref lst_view::fixColumns() {
   base::hideColumn(0);  // should look like a list; 0th column is tree-like
+  header()->setSectionsMovable(false);
   if (model)
-    model->sizeColumns(*this);
-  RTHIS
-}
-
-lst_view::ref lst_view::setColWidth(cl_n cl, int w) {
-  if (model)
-    setColumnWidth(int(model->colOff()) + int(cl), w);
+    model->fixColumns(*this);
   RTHIS
 }
 
 lst_view::ref lst_view::fixColWidth(cl_n cl, int w) {
   setColWidth(cl, w);
   if (model)
-    header()->setSectionResizeMode(int(model->colOff()) + int(cl), QHeaderView::Fixed);
+    header()->setSectionResizeMode(int(model->colOff() + cl), QHeaderView::Fixed);
+  RTHIS
+}
+
+lst_view::ref lst_view::setColWidth(cl_n cl, int w) {
+  if (model)
+    setColumnWidth(int(model->colOff() + cl), w);
   RTHIS
 }
 

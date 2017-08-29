@@ -42,6 +42,13 @@ rw_n ModelFiles::rows() const {
   return rw_n(hub.numFiles());
 }
 
+str ModelFiles::head(cl_n cl) const {
+  if (0 == cl)
+    return "File";
+
+  return str::null;
+}
+
 l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
   return l_qt::var(hub.fileName(rw));
 }
@@ -109,8 +116,8 @@ uint ModelDatasets::numFixedCols() const {
   return grouped() ? 2 : 1;
 }
 
-void ModelDatasets::sizeColumns(l_qt::lst_view& view) const {
-  base::sizeColumns(view);
+void ModelDatasets::fixColumns(l_qt::lst_view& view) const {
+  base::fixColumns(view);
   view.fixColWidth(cl_n(0), oWidth(view, 3));
 }
 
@@ -132,6 +139,10 @@ bool ModelDatasets::isChecked(rw_n rw) const {
 
 ModelMetadata::ModelMetadata(Hub& hub) : RefHub(hub) {
   setCheckable(true);
+  hub.onSigDatasetSelected([this](core::data::CombinedSet::sh sh) {
+    dataset = sh;
+    signalReset();
+  });
 }
 
 cl_n ModelMetadata::cols() const {
@@ -139,21 +150,35 @@ cl_n ModelMetadata::cols() const {
 }
 
 rw_n ModelMetadata::rows() const {
-  auto meta = hub.meta();
-  if (!meta)
+  if (!dataset)
     return rw_n(0);
-  return rw_n(meta->dict->keys.size());
+
+  auto meta = dataset->meta();
+  EXPECT_(meta)
+  return rw_n(meta->vals.size());
+}
+
+str ModelMetadata::head(cl_n cl) const {
+  if (0 == cl)
+    return "Tag";
+  if (0 == cl)
+    return "Value";
+
+  return str::null;
 }
 
 l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
-  EXPECT_(hub.meta())
-  auto& dict = *hub.meta()->dict;
+  if (!dataset)
+    return l_qt::var();
+
+  auto meta = dataset->meta();
+  EXPECT_(meta)
 
   switch (cl) {
   case clTAG:
-    return l_qt::var(dict.keys.at(rw));
+    return l_qt::var(meta->dict->keys.at(rw));
   case clVAL:
-    return l_qt::var(1);
+    return l_qt::var(meta->vals.at(rw));
   default:
     return l_qt::var();
   }

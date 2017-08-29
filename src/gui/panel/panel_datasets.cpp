@@ -25,19 +25,28 @@ namespace gui {
 
 dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
   ViewDatasets(Hub&);
-  set_(sizeColumns, ());
+
+protected:
+  void selectionChanged(QItemSelection const&, QItemSelection const&);
+  void selUpdate();
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
   hub.onSigDatasetsReset([this]() {
-    // TODO akin selectRows -> broadcasts Dataset::sh
-    // ViewMetadata and others do update
+    selectRows({});
+    selUpdate();
   });
 }
 
-ViewDatasets::ref ViewDatasets::sizeColumns() {
-  base::sizeColumns();
-  RTHIS
+void ViewDatasets::selectionChanged(QItemSelection const& selected,
+                                    QItemSelection const& deselected) {
+  base::selectionChanged(selected, deselected);
+  selUpdate();
+}
+
+void ViewDatasets::selUpdate() {
+  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
+  hub.selectDatasetAt(isEmpty ? -1 : int(sel.first()));
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +57,6 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   tabs->addTab((tab = new Panel(hub)), "Datasets");
 
   tab->vb.add((view = new ViewDatasets(hub)));
-  view->showHeader(true);
   view->setModel(hub.modelDatasets);
 
   auto &h = tab->vb.hb();

@@ -53,7 +53,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   act_(signalReset, ()) emits;
   act_(updateState, ()) emits;
 
-  virtual act_(sizeColumns, (lst_view&));
+  virtual act_(fixColumns,  (lst_view&));
   virtual bol_(rightAlign, (cl_n)) RET_(false)
 
 signals:

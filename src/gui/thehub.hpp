@@ -57,11 +57,11 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   set_(activateFileAt, (uint, bool)) emits;
   using base::isActiveFileAt;
-
-  set_(selectFileAt,  (int))      emits;
+  set_(selectFileAt, (int))       emits;
 
   set_(activateDatasetAt, (uint, bool)) emits;
   using base::isActiveDatasetAt;
+  set_(selectDatasetAt, (int))    emits;
 
   set_(corrEnable, (bool))        emits;
   set_(corrRem,    ())            emits;
@@ -92,7 +92,7 @@ signals:
   void sigDatasetsReset();  // a major change in datasets
   void sigDatasetsActive(); // changed active datasets
 
-  void sigDatasetSelected(); // changed active datasets
+  void sigDatasetSelected(core::data::CombinedSet::sh); // dataset selected (or not)
 
 public:
   template <typename Signal, typename Lambda>
@@ -118,13 +118,13 @@ public:                                 \
 
   DCL_HUB_SIGNAL_ETC(FilesReset)
   DCL_HUB_SIGNAL_ETC(FilesActive)
-
   DCL_HUB_SIGNAL_ETC2(FileSelected, core::data::File::sh)
 
   DCL_HUB_SIGNAL_ETC(Corr)
 
   DCL_HUB_SIGNAL_ETC(DatasetsReset)
   DCL_HUB_SIGNAL_ETC(DatasetsActive)
+  DCL_HUB_SIGNAL_ETC2(DatasetSelected, core::data::CombinedSet::sh)
 
 private:
   Q_OBJECT

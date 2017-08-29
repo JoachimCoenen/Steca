@@ -18,6 +18,7 @@
 #pragma once
 #include "refhub.hpp"
 #include <lib/qt/model.hpp>
+#include <core/data/data.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -27,13 +28,12 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
+
+  mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
   set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
-
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole)
-    RET_("")
 
   dcl_end
 
@@ -46,8 +46,8 @@ dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  act_(sizeColumns, (l_qt::lst_view&));
-  bol_(rightAlign, (cl_n));
+  act_(fixColumns,  (l_qt::lst_view&));
+  bol_(rightAlign,  (cl_n));
 
   set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
@@ -65,10 +65,15 @@ dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
+
+  mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
   set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
+
+private:
+  core::data::CombinedSet::sh dataset;
 dcl_end
 
 //------------------------------------------------------------------------------

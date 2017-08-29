@@ -9,7 +9,7 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(lst_view, QTreeView)
-  lst_view();
+  lst_view(bool hasHeader = true);
 
   using cl_n     = lst_model::cl_n;
   using rw_n     = lst_model::rw_n;
@@ -37,9 +37,10 @@ dcl_sub_(lst_view, QTreeView)
   set_(selectRows,(rw_n_vec::rc));
   mth_(rw_n_vec, selectedRows, ());
 
-  virtual set_(sizeColumns, ());
-  set_(setColWidth, (cl_n, int));
+  virtual set_(fixColumns,  ());
+
   set_(fixColWidth, (cl_n, int));
+  set_(setColWidth, (cl_n, int));
 
 protected:
   void keyPressEvent(QKeyEvent*);
