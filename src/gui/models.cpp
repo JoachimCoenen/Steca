@@ -173,12 +173,18 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 
   auto meta = dataset->meta();
   EXPECT_(meta)
+  auto& keys = meta->dict->keys;
+  EXPECT_(rw < keys.size());
+  auto& key = keys.at(rw);
 
   switch (cl) {
   case clTAG:
-    return l_qt::var(meta->dict->keys.at(rw));
-  case clVAL:
-    return l_qt::var(meta->vals.at(rw));
+    return l_qt::var(key);
+  case clVAL: {
+    auto idx = meta->dict->at(key);
+    auto& vals = meta->vals;
+    return vals.contains(idx) ? l_qt::var(meta->vals.at(idx)) : l_qt::var();
+  }
   default:
     return l_qt::var();
   }

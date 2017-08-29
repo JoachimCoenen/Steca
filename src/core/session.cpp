@@ -379,20 +379,22 @@ void Session::updateImageSize() {
 }
 
 void Session::updateMetaDict() {
-  if (files.isEmpty())
-    return;
+  if (files.isEmpty()) {
+    mut(files.dict).reset(new data::Meta::Dict());
+  } else {
+    // TODO fast enough? Alt. reference count dict entries
+    // collect i's in use
+    l::set<uint> is;
+    for (auto& f : files) {
+      EXPECT_(!f->sets.isEmpty()) // TODO ensured in loading ? Enforce at File level
+      for (auto &v : f->sets.first()->meta->vals)
+        is.add(v.first);
+    }
 
-  // TODO fast enough? Alt. reference count dict entries
-
-  // collect i's in use
-  l::set<uint> is;
-  for (auto& f : files) {
-    EXPECT_(!f->sets.isEmpty()) // TODO ensured in loading ? Enforce at File level
-    for (auto &v : f->sets.first()->meta->vals)
-      is.add(v.first);
+    for (auto i : is)
+      TR(i)
+    mut(*files.dict).shrinkTo(is);
   }
-
-  mut(*files.first()->sets.first()->meta->dict).shrinkTo(is);
 }
 
 void Session::calcIntensCorr() const {

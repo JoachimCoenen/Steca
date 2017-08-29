@@ -213,7 +213,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
-  atr_(Meta::Dict::sh,   dict);
+  atr_(Meta::Dict::sh, dict);
 
   Files();
 

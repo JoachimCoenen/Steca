@@ -29,15 +29,15 @@ uint Meta::Dict::enter(strc key) {
   if (base::end() != it)
     return it->second;
 
-  uint val = size();
+  uint idx = size();
 
-  EXPECT_(keys.size() == val)
+  EXPECT_(keys.size() == idx)
   mut(keys).add(key);
 
-  EXPECT_(checked.size() == val)
+  EXPECT_(checked.size() == idx)
   mut(checked).add(false);
 
-  return base::add(key, val);
+  return base::add(key, idx);
 }
 
 uint Meta::Dict::at(strc key) const may_err {
@@ -61,6 +61,29 @@ Meta::Dict::ref Meta::Dict::shrinkTo(l::set<uint>::rc is) {
   ENSURE_(size() == keys.size() && size() == checked.size())
   RTHIS
 }
+
+//------------------------------------------------------------------------------
+
+flt32 Meta::Vals::valAt(uint i) const may_err {
+  return at(i);
+}
+
+Meta::Vals::ref Meta::Vals::setAt(uint i, flt32 val) {
+  if (contains(i))
+    at(i) = val;
+  else
+    add(i, val);
+  RTHIS
+}
+
+Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
+  if (contains(i))
+    val += at(i);
+  setAt(i, val);
+  RTHIS
+}
+
+//------------------------------------------------------------------------------
 
 Meta::Meta(Dict::shrc dict_)
 : comment()
@@ -93,27 +116,6 @@ TEST_("dict-throw",
   CHECK_THROWS_AS(dict.at(""), l::exc::rc);
 )
 #endif
-
-//------------------------------------------------------------------------------
-
-flt32 Meta::Vals::valAt(uint i) const may_err {
-  return at(i);
-}
-
-Meta::Vals::ref Meta::Vals::setAt(uint i, flt32 val) {
-  if (contains(i))
-    at(i) = val;
-  else
-    add(i, val);
-  RTHIS
-}
-
-Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
-  if (contains(i))
-    val += at(i);
-  setAt(i, val);
-  RTHIS
-}
 
 //------------------------------------------------------------------------------
 
