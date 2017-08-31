@@ -17,14 +17,18 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
-#include "../data/data.hpp"
+#include "../data/sets.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"
 #include "../typ/image.hpp"
 
 namespace core {
 
-struct Session;
+//struct Session;
+enum class eNorm {
+  NONE,
+  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
+};
 
 namespace calc {
 //------------------------------------------------------------------------------

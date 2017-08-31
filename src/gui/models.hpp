@@ -18,7 +18,7 @@
 #pragma once
 #include "refhub.hpp"
 #include <lib/qt/model.hpp>
-#include <core/data/data.hpp>
+#include <core/data/sets.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

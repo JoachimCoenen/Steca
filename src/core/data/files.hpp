@@ -16,25 +16,39 @@
  ******************************************************************************/
 
 #pragma once
+#include "../typ/def.hpp"
+#include "sets.hpp"
 #include <lib/dev/io/path.hpp>
-#include "../data/files.hpp"
 
-namespace core { namespace io {
+namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-bool couldBeCaress (l_io::path::rc) may_err;
-bool couldBeMar    (l_io::path::rc) may_err;
-bool couldBeTiffDat(l_io::path::rc) may_err;
+struct Files;
 
-// load a file; file type will be sensed
-data::File::sh load(data::Files::rc, l_io::path::rc) may_err;
+dcl_(File) SHARED  // one file
+  ref_(Files,      files);    // parent
+  atr_(Idx::sh,    idx);      // the number within files, 0 = not
+  atr_(bool,       isActive); // included in calculations
+  atr_(l_io::path, path);
+  atr_(str,        name);
+  atr_(str,        comment);
+  atr_(Sets, sets);
 
-// load a specific file type
-data::File::sh loadCaress (data::Files::rc, l_io::path::rc) may_err;
-data::File::sh loadMar    (data::Files::rc, l_io::path::rc) may_err;
-data::File::sh loadTiffDat(data::Files::rc, l_io::path::rc) may_err;
+  File(Files const&, l_io::path::rc);
 
-str loadCaressComment(l_io::path::rc) may_err;
+  set_(addSet, (Set::sh));
+dcl_end
+
+//------------------------------------------------------------------------------
+
+dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
+  atr_(Meta::Dict::sh, dict);
+
+  Files();
+
+  set_(addFile, (data::File::sh));
+  set_(remFile, (uint));
+dcl_end
 
 //------------------------------------------------------------------------------
 }}

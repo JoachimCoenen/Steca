@@ -51,6 +51,7 @@ str loadCaressComment(l_io::path::rc path) {
 using data::Files;
 using data::File;
 using data::Set;
+using data::Idx;
 using data::Meta;
 
 static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err {
@@ -163,7 +164,8 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
 
     flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
-      l::share(new Set(*file,
+      l::share(new Set(
+        file->idx,
         l::share(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
         l::share(image.take().ptr()))));
 

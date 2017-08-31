@@ -15,11 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "data.hpp"
+#include "sets.hpp"
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
 #include "../session.hpp"
-#include "../typ/range.hpp"
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -104,8 +103,12 @@ TEST_("dict-throw",
 
 //------------------------------------------------------------------------------
 
-Set::Set(File const& file_, Meta::sh meta_, Image::sh image_)
-: file(file_), meta(meta_), image(image_) {}
+Idx::Idx(uint val_) : val(val_) {}
+
+//------------------------------------------------------------------------------
+
+Set::Set(Idx::sh idx_, Meta::sh meta_, Image::sh image_)
+: idx(idx_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
   EXPECT_(image)
@@ -456,49 +459,6 @@ void CombinedSets::resetLazies() {
 
 //------------------------------------------------------------------------------
 
-File::File(Files::rc files_, l_io::path::rc path_)
-: files(files_), isActive(true), idx(0)
-, path(path_), name(path.filename()), comment(), sets() {}
-
-File::ref File::addSet(Set::sh set) {
-  mut(sets).add(set);
-  return *this;
-}
-
-//------------------------------------------------------------------------------
-
-Files::Files() : dict(new Meta::Dict) {}
-
-Files::ref Files::addFile(data::File::sh file) {
-  EXPECT_(this == &file->files)
-  EXPECT_(! // not there
-    ([&]() {
-      for_i_(size())
-        if (file == at(i))
-          return true;
-      return false;
-     }())
-  )
-
-  add(file);
-  mut(file->idx) = size();
-  return *this;
-}
-
-Files::ref Files::remFile(uint i) {
-  File::sh file = at(i);
-  rem(i);
-
-  // renumber
-  mut(file->idx) = 0;
-  for_i_(size())
-    mut(at(i)->idx) = i + 1;
-
-  return *this;
-}
-
-//------------------------------------------------------------------------------
-
 TEST_("data::sh",
   Files fs;
   File::sh f1(new File(fs, l_io::path(""))), f2(new File(fs, l_io::path("")));
@@ -509,20 +469,21 @@ TEST_("data",
   Files fs;
 
   File *f1 = new File(fs, l_io::path("")), *f2 = new File(fs, l_io::path(""));
-  CHECK_EQ(0, f1->idx);
-  CHECK_EQ(0, f2->idx);
+  CHECK_EQ(0, f1->idx->val);
+  CHECK_EQ(0, f2->idx->val);
 
   fs.addFile(l::share(f1));
   fs.addFile(l::share(f2));
-  CHECK_EQ(1, f1->idx);
-  CHECK_EQ(2, f2->idx);
+  CHECK_EQ(1, f1->idx->val);
+  CHECK_EQ(2, f2->idx->val);
 
-  f1->addSet(l::share(new Set(*f1,
+  f1->addSet(l::share(new Set(
+    l::share(new Idx()),
     l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::share(new Image))));
 
   fs.remFile(0);
-  CHECK_EQ(1, f2->idx);
+  CHECK_EQ(1, f2->idx->val);
 )
 
 //------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ namespace core { namespace io {
 using data::Files;
 using data::File;
 using data::Set;
+using data::Idx;
 using data::Meta;
 
 using l_io::path;
@@ -231,7 +232,8 @@ File::sh loadMar(Files::rc files, path::rc path) may_err {
   // REVIEW ?? pictureOverflow
 
   mut(*file).addSet(
-    l::share(new Set(*file,
+    l::share(new Set(
+      file->idx,
       l::share(md.take().ptr()),
       l::share(new Image(convertedIntens)))));
 

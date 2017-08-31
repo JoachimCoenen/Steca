@@ -19,19 +19,12 @@
 #include "../typ/def.hpp"
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
-#include <lib/dev/io/path.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
-#include <lib/dev/typ/set.hpp>
 
 namespace core {
 
 struct Session;
-
-enum class eNorm {
-  NONE,
-  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
-};
 
 namespace data {
 //------------------------------------------------------------------------------
@@ -75,14 +68,20 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-struct File;
+dcl_(Idx) SHARED
+  atr_(uint, val);
+  Idx(uint = 0);
+dcl_end
+
+//------------------------------------------------------------------------------
+
 
 dcl_(Set) SHARED   // one dataset, as acquired
-  ref_(File,      file);
+  atr_(Idx::sh,   idx);
   atr_(Meta::sh,  meta);  // TODO Meta::sh shared? If no, make unique<>(?)
   atr_(Image::sh, image);
 
-  Set(File const&, Meta::sh, Image::sh);
+  Set(Idx::sh, Meta::sh, Image::sh);
 
   mth_(l::sz2, imageSize, ());
 
@@ -187,35 +186,6 @@ private:
   mutable inten_rge lazyRgeFixedInten;
 
   void resetLazies();
-dcl_end
-
-//------------------------------------------------------------------------------
-
-struct Files;
-
-dcl_(File) SHARED  // one file
-  ref_(Files,      files);    // parent
-  atr_(bool,       isActive); // included in calculations
-  atr_(uint,       idx);      // this order in Files, 1..; 0 = not in Files
-  atr_(l_io::path, path);
-  atr_(str,        name);
-  atr_(str,        comment);
-  atr_(Sets, sets);
-
-  File(Files const&, l_io::path::rc);
-
-  set_(addSet, (Set::sh));
-dcl_end
-
-//------------------------------------------------------------------------------
-
-dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
-  atr_(Meta::Dict::sh, dict);
-
-  Files();
-
-  set_(addFile, (data::File::sh));
-  set_(remFile, (uint));
 dcl_end
 
 //------------------------------------------------------------------------------

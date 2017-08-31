@@ -96,7 +96,7 @@ str ModelDatasets::head(cl_n cl) const {
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (0 == cl)
-    return l_qt::var(hub.setAt(rw).first()->file.idx);
+    return l_qt::var(hub.setAt(rw).first()->idx->val);
   if (1 == cl && grouped())
     return hub.tagAt(rw);
 
