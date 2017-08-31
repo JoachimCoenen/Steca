@@ -32,7 +32,7 @@ dcl_(File) SHARED  // one file
   atr_(l_io::path, path);
   atr_(str,        name);
   atr_(str,        comment);
-  atr_(Sets, sets);
+  atr_(Sets,       sets);
 
   File(Files const&, l_io::path::rc);
 

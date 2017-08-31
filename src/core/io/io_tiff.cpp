@@ -227,10 +227,10 @@ static void loadTiff(File& file, l_io::path::rc path,
     }
 
   file.addSet(
-    l::share(new Set(
+    l::sh(new Set(
       file.idx,
-      l::share(md.take().ptr()),
-      l::share(new Image(intens)))));
+      l::sh(md.take().ptr()),
+      l::sh(new Image(intens)))));
 }
 
 TEST_("loadTiff",

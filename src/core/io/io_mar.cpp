@@ -232,10 +232,10 @@ File::sh loadMar(Files::rc files, path::rc path) may_err {
   // REVIEW ?? pictureOverflow
 
   mut(*file).addSet(
-    l::share(new Set(
+    l::sh(new Set(
       file->idx,
-      l::share(md.take().ptr()),
-      l::share(new Image(convertedIntens)))));
+      l::sh(md.take().ptr()),
+      l::sh(new Image(convertedIntens)))));
 
   delete[] i2_image;
   delete[] i4_image;

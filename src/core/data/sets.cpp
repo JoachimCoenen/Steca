@@ -407,7 +407,7 @@ CombinedSets::CombinedSets() {
 CombinedSets::ref CombinedSets::add(l::give_me<CombinedSet> set) {
   EXPECT_(!set->parent)
   mut(set->parent) = this;
-  base::add(l::share(set));
+  base::add(l::sh(set));
   resetLazies();
   RTHIS
 }
@@ -472,15 +472,15 @@ TEST_("data",
   CHECK_EQ(0, f1->idx->val);
   CHECK_EQ(0, f2->idx->val);
 
-  fs.addFile(l::share(f1));
-  fs.addFile(l::share(f2));
+  fs.addFile(l::sh(f1));
+  fs.addFile(l::sh(f2));
   CHECK_EQ(1, f1->idx->val);
   CHECK_EQ(2, f2->idx->val);
 
-  f1->addSet(l::share(new Set(
-    l::share(new Idx),
-    l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
-    l::share(new Image))));
+  f1->addSet(l::sh(new Set(
+    l::sh(new Idx),
+    l::sh(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::sh(new Image))));
 
   fs.remFile(0);
   CHECK_EQ(1, f2->idx->val);

@@ -334,7 +334,7 @@ Session::ref Session::setImageSize(l::sz2 size) may_err {
 calc::ImageLens::sh Session::imageLens(
   Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
 {
-  return l::share(new calc::ImageLens(*this, image, datasets, trans, cut));
+  return l::sh(new calc::ImageLens(*this, image, datasets, trans, cut));
 }
 
 Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
@@ -347,7 +347,7 @@ Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
 calc::DatasetLens::sh Session::datasetLens(
     data::CombinedSet::rc dataset, data::CombinedSets::rc datasets,
     eNorm norm, bool trans, bool cut) const {
-  return l::share(new calc::DatasetLens(*this, dataset, datasets, norm,
+  return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
                          trans, cut, imageTransform, imageCut));
 }
 
@@ -395,7 +395,7 @@ void Session::calcIntensCorr() const {
 
   real avg = sum / (w * h);
 
-  intensCorrImage = l::share(new Image(corrImage->size(), inten_t(1)));
+  intensCorrImage = l::sh(new Image(corrImage->size(), inten_t(1)));
 
   for_ij_(w, h) {
     auto inten = corrImage->inten(i + di, j + dj);

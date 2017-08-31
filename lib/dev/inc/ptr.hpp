@@ -199,8 +199,8 @@ struct shared : protected _shared_base_ {
   T const* operator->() const RET_(ptr())
 
   shared& operator=(shared const& that) {
-    if (ptr() != that.ptr()) {
-      _drop(); mut(ptr_base::p) = that.ptr(); inc();
+    if (ptr_base::p != that.ptr_base::p) {
+      _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
     }
     RTHIS
   }
@@ -223,9 +223,9 @@ private:
 };
 
 // a handy way to make a shared pointer
-template <typename T> shared<T> share(T* p)             RET_(shared<T>(p))
-template <typename T> shared<T const> share(T const* p) RET_(shared<T>(p))
-template <typename T> shared<T> share(own<T> p)         RET_(shared<T>(p.ptr()))
+template <typename T> shared<T> sh(T* p)             RET_(shared<T>(p))
+template <typename T> shared<T const> sh(T const* p) RET_(shared<T>(p))
+template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
 
 // declare struct as shared
 #define SHARED \
