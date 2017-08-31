@@ -61,9 +61,9 @@ dcl_(Meta) SHARED // metadata
   atr_(flt32, dTim);   // delta time, may be nan
   atr_(flt32, dMon);   // delta mon. count, may be nan
 
-  Meta(Dict::shrc);
-  Meta(Dict::shrc, Vals::rc, flt32, flt32, flt32, flt32,
-                             flt32, flt32, flt32, flt32);
+  Meta(Dict::sh);
+  Meta(Dict::sh, Vals::rc, flt32, flt32, flt32, flt32,
+                            flt32, flt32, flt32, flt32);
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ dcl_end
 dcl_sub_(Sets, l::vec<Set::sh>)  // a collection of sets
   Sets();
 
-  mth_(l::sz2,    imageSize, ());
+  mth_(l::sz2,     imageSize, ());
   mth_(Image::sh, foldImage, ());
 
 private:
@@ -128,7 +128,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   CombinedSet();
 
-  mth_(Meta::sh,  meta,  ());
+  mth_(Meta::sh, meta,  ());
 
   // no tth
   mth_(omg_t::rc, omg, ());

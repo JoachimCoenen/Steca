@@ -83,7 +83,7 @@ TEST_("data",
   CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::share(new Set(
-    l::share(new Idx()),
+    l::share(new Idx),
     l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::share(new Image))));
 

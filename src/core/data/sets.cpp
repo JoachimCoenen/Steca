@@ -69,12 +69,12 @@ Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
 
 //------------------------------------------------------------------------------
 
-Meta::Meta(Dict::shrc dict_)
+Meta::Meta(Dict::sh dict_)
 : comment()
 , dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(Dict::shrc dict_, Vals::rc vals_,
+Meta::Meta(Dict::sh dict_, Vals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
@@ -478,7 +478,7 @@ TEST_("data",
   CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::share(new Set(
-    l::share(new Idx()),
+    l::share(new Idx),
     l::share(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::share(new Image))));
 

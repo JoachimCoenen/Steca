@@ -172,7 +172,8 @@ template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
 template <typename T> scoped<T> scope(own<T> p)         RET_(scope(p))
 
 //------------------------------------------------------------------------------
-// shared - the main way to handle large immutable data
+// shared - for reference-counted data
+
 struct _shared_base_ : ptr_base {
 protected:
   _shared_base_(pcvoid);
@@ -186,30 +187,31 @@ protected:
   void cleanup();
 };
 
+// non-mutable
 template <typename T>
 struct shared : protected _shared_base_ {
-  explicit shared(T const* p = nullptr) : _shared_base_(p) {}
+  explicit shared(T const* p = nullptr) : _shared_base_(p)    {}
   shared(shared const& that) : _shared_base_(that) {}
  ~shared() { _drop(); }
 
-  shared& operator=(shared<T> const& that) {
-    if (ptr_base::p != that.ptr_base::p) {
-      _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
+  T const* ptr()        const RET_(static_cast<T const*>(p()))
+  operator T const*()   const RET_(ptr())
+  T const* operator->() const RET_(ptr())
+
+  shared& operator=(shared const& that) {
+    if (ptr() != that.ptr()) {
+      _drop(); mut(ptr_base::p) = that.ptr(); inc();
     }
     RTHIS
   }
 
-  void reset(T* p) {
+  act_mut_(reset, (T* p)) {
     *this = shared(p);
   }
 
   void drop() {
     reset(nullptr);
   }
-
-  T const* ptr()        const RET_(static_cast<T const*>(p()))
-  operator T const*()   const RET_(ptr())
-  T const* operator->() const RET_(ptr())
 
 private:
   void _drop() {
@@ -227,8 +229,7 @@ template <typename T> shared<T> share(own<T> p)         RET_(shared<T>(p.ptr()))
 
 // declare struct as shared
 #define SHARED \
-  using sh   = l::shared<Self>; \
-  using shrc = sh const&;
+  using sh     = l::shared<Self>;
 
 //------------------------------------------------------------------------------
 }
