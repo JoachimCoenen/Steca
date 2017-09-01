@@ -23,29 +23,38 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-MetaDict::MetaDict() : hash() {}
+MetaDict::MetaDict() : idxs() {}
 
 uint MetaDict::enter(strc key) {
-  auto it = hash.find(key);
-  if (hash.end() != it)
+  auto it = idxs.find(key);
+  if (idxs.end() != it)
     return it->second;
 
-  uint idx = hash.size();
-  mut(hash).add(key, idx);
+  uint idx = idxs.size();
+  mut(idxs).add(key, idx);
   mut(keys).add(key);
-  ENSURE_(hash.size() == keys.size())
+  ENSURE_(idxs.size() == keys.size())
 
   return idx;
 }
 
 //------------------------------------------------------------------------------
 
-FilesMetaDict::FilesMetaDict() : hash() {}
+FilesMetaDict::FilesMetaDict() : checks() {}
+
+uint FilesMetaDict::enter(strc key) {
+  if (!checks.contains(key))
+    mut(checks).add(key, false);
+
+  uint idx = base::enter(key);
+  ENSURE_(checks.size() == base::size())
+  return idx;
+}
 
 FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
-  for (auto it = hash.begin(); it != hash.end(); ++it)
+  for (auto it = checks.begin(); it != checks.end(); ++it)
     if (!keys.contains(it->first))
-      mut(hash).erase(it);
+      mut(checks).erase(it);
 
   for (auto&& key : keys)
     enter(key);
@@ -54,11 +63,11 @@ FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
 }
 
 bool FilesMetaDict::checked(strc key) const may_err {
-  return hash.at(key);
+  return checks.at(key);
 }
 
 FilesMetaDict::ref FilesMetaDict::check(strc key, bool on) may_err {
-  mut(hash).at(key) = on;
+  mut(checks).at(key) = on;
   RTHIS
 }
 

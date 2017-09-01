@@ -33,23 +33,26 @@ namespace data {
 
 dcl_(MetaDict) SHARED
   MetaDict();
+  virtual ~MetaDict() {}
 
-  mth_mut_(uint, enter, (strc));  // adds if necessary
+  virtual mth_mut_(uint, enter, (strc));  // adds if necessary
 
-  mth_(uint, index, (strc key)) RET_(hash.at(key))
-  mth_(uint, size,  ())         RET_(hash.size())
+  mth_(uint, index, (strc key)) RET_(idxs.at(key))
+  mth_(uint, size,  ())         RET_(idxs.size())
   mth_(strc, key,   (uint i))   RET_(keys.at(i))
 
   atr_(str_vec, keys);
 
 private:
   // key->index
-  atr_(l::hash<str COMMA uint>, hash);
+  atr_(l::hash<str COMMA uint>, idxs);
 dcl_end
 
 // attribute dictionary
 dcl_sub_(FilesMetaDict, MetaDict) SHARED
   FilesMetaDict();
+
+  mth_mut_(uint, enter, (strc));
 
   set_(update, (l::set<str>::rc));
 
@@ -58,7 +61,7 @@ dcl_sub_(FilesMetaDict, MetaDict) SHARED
 
 private:
   // key->checked
-  atr_(l::hash<str COMMA bool>, hash);
+  atr_(l::hash<str COMMA bool>, checks);
 dcl_end
 
 // attribute values
