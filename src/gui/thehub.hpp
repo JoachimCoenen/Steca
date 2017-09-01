@@ -79,7 +79,9 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(core::data::CombinedSet::rc, setAt, (uint i)) RET_(*base::collectedDatasets.at(i))
   mth_(strc,                        tagAt, (uint i)) RET_(base::collectedDatasetsTags.at(i))
 
-  mth_(core::data::Meta::sh, meta, ());
+  mth_(str,  safeDictKey,     (uint));
+  mth_(bool, safeDictChecked, (uint));
+  set_(safeDictCheck, (uint, bool));
 
 signals:
   void sigFilesReset();     // a major change in files

@@ -81,7 +81,7 @@ using data::Meta;
 
 static void loadTiff(File& file, l_io::path::rc path,
                      phi_t phi, flt32 mon, flt32 tim) may_err {
-  auto md = l::scope(new Meta(file.files.dict));
+  auto md = l::scope(new Meta(file.dict));
 
   mut(md->phi) = phi;
   mut(md->mon) = mon;

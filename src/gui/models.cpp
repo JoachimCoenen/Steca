@@ -87,11 +87,7 @@ str ModelDatasets::head(cl_n cl) const {
 
   cl = cl_n(cl - numFixedCols());
 
-  auto meta = hub.meta();
-  if (meta && cl < metaCols.size())
-    return meta->dict->at(metaCols.at(cl));
-
-  return str::null;
+  return hub.safeDictKey(cl - numFixedCols());
 }
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
@@ -169,7 +165,7 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   auto meta = dataset->meta();
   EXPECT_(meta)
   EXPECT_(rw < meta->dict->size());
-  auto& key = meta->dict->at(rw);
+  auto&& key = meta->dict->key(rw);
 
   switch (cl) {
   case clTAG:
@@ -184,16 +180,14 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   }
 }
 
-ModelMetadata::ref ModelMetadata::check(rw_n row, bool on) {
-  EXPECT_(hub.meta())
-  mutp(hub.meta()->dict)->check(row, on);
+ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on) {
+  hub.safeDictCheck(rw, on);
   base::updateState();
   RTHIS
 }
 
-bool ModelMetadata::isChecked(rw_n row) const {
-  EXPECT_(hub.meta())
-  return hub.meta()->dict->checked(row);
+bool ModelMetadata::isChecked(rw_n rw) const {
+  return hub.safeDictChecked(rw);
 }
 
 //------------------------------------------------------------------------------

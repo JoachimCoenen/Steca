@@ -23,7 +23,7 @@ namespace core { namespace data {
 
 File::File(Files::rc files_, l_io::path::rc path_)
 : files(files_), idx(new FileIdx()), isActive(true)
-, path(path_), name(path.filename()), comment(), sets() {}
+, path(path_), name(path.filename()), comment(), sets(), dict(new MetaDict) {}
 
 File::ref File::addSet(Set::sh set) may_err {
   mut(sets).add(set);
@@ -37,7 +37,17 @@ l::sz2 File::imageSize() const {
 
 //------------------------------------------------------------------------------
 
-Files::Files() : dict(new MetaDict) {}
+Files::Files() : dict(new FilesMetaDict) {}
+
+static l::set<str> metaKeys(Files::rc files) {
+  l::set<str> keys;
+
+  for (auto&& f : files)
+    for (auto&& k : f->dict->keys)
+      keys.add(k);
+
+  return keys;
+}
 
 Files::ref Files::addFile(data::File::sh file) {
   EXPECT_(this == &file->files)
@@ -52,6 +62,9 @@ Files::ref Files::addFile(data::File::sh file) {
 
   add(file);
   mut(file->idx->val) = size();
+
+  mutp(dict)->update(metaKeys(*this));
+
   return *this;
 }
 
@@ -63,6 +76,8 @@ Files::ref Files::remFile(uint i) {
   mut(file->idx->val) = 0;
   for_i_(size())
     mut(at(i)->idx->val) = i + 1;
+
+  mutp(dict)->update(metaKeys(*this));
 
   return *this;
 }
@@ -89,7 +104,7 @@ TEST_("data",
 
   f1->addSet(l::sh(new Set(
     l::sh(new FileIdx),
-    l::sh(new Meta(fs.dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
   fs.remFile(0);

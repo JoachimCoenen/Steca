@@ -227,8 +227,6 @@ Session::ref Session::addFile(l_io::path::rc path) may_err {
 Session::ref Session::remFile(uint i) {
   mut(files).remFile(i);
   updateImageSize();
-  if (files.isEmpty())
-    mut(files.dict).reset(new data::MetaDict());
   RTHIS
 }
 

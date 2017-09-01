@@ -33,6 +33,7 @@ dcl_(File) SHARED  // one file
   atr_(str,        name);
   atr_(str,        comment);
   atr_(Sets,       sets);
+  atr_(MetaDict::sh, dict); // for all sets
 
   File(Files const&, l_io::path::rc);
 
@@ -43,7 +44,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
-  atr_(MetaDict::sh, dict);
+  atr_(FilesMetaDict::sh, dict);
 
   Files();
 

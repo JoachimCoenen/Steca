@@ -82,7 +82,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
   };
 
   auto addValTo = [&](MetaVals& vs, strc ns, flt32 val) -> uint {
-    auto idx = mut(*files.dict).enter(ns);
+    auto idx = mut(*file->dict).enter(ns);
     setVal(vs, idx, val);
     return idx;
   };
@@ -167,7 +167,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
     mut(*file).addSet(
       l::sh(new Set(
         file->idx,
-        l::sh(new Meta(files.dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
+        l::sh(new Meta(file->dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
         l::sh(image.take().ptr()))));
 
     vals.clear();

@@ -216,8 +216,21 @@ Hub::ref Hub::groupDatasetsBy(l::pint by) {
   RTHIS
 }
 
-core::data::Meta::sh Hub::meta() const {
-  return numSets() ? setAt(0).meta() : core::data::Meta::sh();
+str Hub::safeDictKey(uint i) const {
+  auto&& dict = *files.dict;
+  return i < dict.size() ? dict.key(i): str::null;
+}
+
+bool Hub::safeDictChecked(uint i) const {
+  auto&& dict = *files.dict;
+  return i < dict.size() ? dict.checked(dict.key(i)): false;
+}
+
+Hub::ref Hub::safeDictCheck(uint i, bool on) {
+  auto&& dict = *files.dict;
+  if (i < dict.size())
+    mut(dict).check(dict.key(i), on);
+  RTHIS
 }
 
 Hub::ref Hub::emitFilesReset() {

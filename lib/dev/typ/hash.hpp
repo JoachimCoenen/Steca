@@ -12,13 +12,14 @@ template <typename K, typename T>
 dcl_reimpl_(hash, std::unordered_map<K COMMA T>)
   using base::begin;
   using base::end;
+  using base::empty;
   using base::erase;
   using base::clear;
   using base::at;
   using base::find;
 
   bol_(isEmpty, ())     RET_(base::empty())
-  mth_(sz_t, size, ())  RET_(to_sz(base::size()))
+  mth_(uint, size, ())  RET_(base::size())
 
   mth_mut_(T const&, add, (K const& k, T const& t)) {
     base::insert(std::make_pair(k, t));

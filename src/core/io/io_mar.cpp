@@ -218,7 +218,7 @@ File::sh loadMar(Files::rc files, path::rc path) may_err {
   for_i_(pixelSize)
     convertedIntens.setAt(i, inten_t(i4_image[i]));
 
-  auto md = l::scope(new Meta(files.dict));
+  auto md = l::scope(new Meta(file->dict));
 
   mut(md->omg)  = omg_t(omega);
   mut(md->tth)  = tth_t(twoTheta);

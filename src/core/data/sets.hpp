@@ -21,6 +21,7 @@
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
+#include <lib/dev/typ/set.hpp>
 
 namespace core {
 
@@ -28,23 +29,36 @@ struct Session;
 
 namespace data {
 //------------------------------------------------------------------------------
+// attribute dictionaries
 
-// attribute dictionary
-dcl_reimpl_(MetaDict, str_vec) SHARED USING_BASE_VEC
+dcl_(MetaDict) SHARED
   MetaDict();
 
   mth_mut_(uint, enter, (strc));  // adds if necessary
 
-  mth_(uint, index, (strc)) may_err;
-  bol_(checked,     (strc)) may_err;
-  bol_(checked,     (uint));
+  mth_(uint, index, (strc key)) RET_(hash.at(key))
+  mth_(uint, size,  ())         RET_(hash.size())
+  mth_(strc, key,   (uint i))   RET_(keys.at(i))
 
-  set_(check, (strc, bool)) may_err;
-  set_(check, (uint, bool));
+  atr_(str_vec, keys);
 
 private:
-  // key->(index, checked)
-  atr_(l::hash<str COMMA std::pair<uint COMMA bool>>, map);
+  // key->index
+  atr_(l::hash<str COMMA uint>, hash);
+dcl_end
+
+// attribute dictionary
+dcl_sub_(FilesMetaDict, MetaDict) SHARED
+  FilesMetaDict();
+
+  set_(update, (l::set<str>::rc));
+
+  bol_(checked, (strc))       may_err;
+  set_(check,   (strc, bool)) may_err;
+
+private:
+  // key->checked
+  atr_(l::hash<str COMMA bool>, hash);
 dcl_end
 
 // attribute values

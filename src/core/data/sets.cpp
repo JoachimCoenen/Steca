@@ -23,42 +23,42 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-MetaDict::MetaDict() : map() {}
+MetaDict::MetaDict() : hash() {}
 
 uint MetaDict::enter(strc key) {
-  auto it = map.find(key);
-  if (map.end() != it)
-    return it->second.first;
+  auto it = hash.find(key);
+  if (hash.end() != it)
+    return it->second;
 
-  uint idx = map.size();
-
-  EXPECT_(size() == idx)
-  base::add(key);
-
-  mut(map).add(key, std::pair<uint,bool>(idx, false));
+  uint idx = hash.size();
+  mut(hash).add(key, idx);
+  mut(keys).add(key);
+  ENSURE_(hash.size() == keys.size())
 
   return idx;
 }
 
-uint MetaDict::index(strc key) const may_err {
-  return map.at(key).first;
-}
+//------------------------------------------------------------------------------
 
-bool MetaDict::checked(strc key) const may_err {
-  return map.at(key).second;
-}
+FilesMetaDict::FilesMetaDict() : hash() {}
 
-bool MetaDict::checked(uint idx) const {
-  return checked(at(idx));
-}
+FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
+  for (auto it = hash.begin(); it != hash.end(); ++it)
+    if (!keys.contains(it->first))
+      mut(hash).erase(it);
 
-MetaDict::ref MetaDict::check(strc key, bool on) may_err {
-  mut(map).at(key).second = on;
+  for (auto&& key : keys)
+    enter(key);
+
   RTHIS
 }
 
-MetaDict::ref MetaDict::check(uint idx, bool on) {
-  check(at(idx), on);
+bool FilesMetaDict::checked(strc key) const may_err {
+  return hash.at(key);
+}
+
+FilesMetaDict::ref FilesMetaDict::check(strc key, bool on) may_err {
+  mut(hash).at(key) = on;
   RTHIS
 }
 
@@ -100,14 +100,10 @@ Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
 
 TEST_("dict",
   MetaDict dict;
-  CHECK_EQ(0, dict.size());
-
   CHECK_EQ(0, dict.enter("0"));
   CHECK_EQ(1, dict.enter("1"));
   CHECK_EQ(0, dict.enter("0"));
   CHECK_EQ(2, dict.enter("2"));
-
-  CHECK_EQ(3, dict.size());
 )
 
 #ifndef _WIN32 // CDB has some trouble with this
@@ -502,7 +498,7 @@ TEST_("data",
 
   f1->addSet(l::sh(new Set(
     l::sh(new FileIdx),
-    l::sh(new Meta(fs.dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
   fs.remFile(0);
