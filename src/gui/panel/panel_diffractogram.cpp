@@ -28,7 +28,7 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub_) : base("", hub_) {
   vb.add(tabs);
   tabs->addTab((tab = new Panel(hub)), "Diffractogram");
 
-  auto &hb = tab->vb.hb();
+  auto&& hb = tab->vb.hb();
 
   hb.add(new l_qt::lbl("norm:"));
   hb.add(new l_qt::cbo(core::normStrLst));

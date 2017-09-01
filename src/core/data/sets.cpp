@@ -38,6 +38,10 @@ uint MetaDict::enter(strc key) {
   return idx;
 }
 
+int MetaDict::safeIndex(strc key) const {
+  return idxs.contains(key) ? int(idxs.at(key)) : -1;
+}
+
 //------------------------------------------------------------------------------
 
 FilesMetaDict::FilesMetaDict() : checks() {}
@@ -151,7 +155,7 @@ tth_rge Set::rgeTth(Session::rc s)const {
 void Set::collect(Session::rc s, Image const* corr,
                 core::inten_vec& intens, uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
-  auto &map = *s.angleMap(*this);
+  auto&& map = *s.angleMap(*this);
 
   uint_vec const* gmaIndexes = nullptr;
   uint gmaIndexMin = 0, gmaIndexMax = 0;
@@ -231,47 +235,56 @@ CombinedSet::CombinedSet()
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
 
-Meta::sh CombinedSet::meta() const {
+Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
   if (lazyMeta)
     return lazyMeta;
+
+  uint n = size();
+  EXPECT_(0 < n)
+
+  if (1==n)
+    return (lazyMeta = first()->meta);
+
+  lazyMeta.reset(new Meta(*reinterpret_cast<core::data::MetaDict::sh*>(&fullDict)));
+
+  Meta::ref lm = mut(*lazyMeta);
+  MetaDict::rc ld = *lm.dict;
+  MetaVals::rc lv = lm.vals;
 
   // max tim, mon
   // sum dTim, dMon
   // avg all else
 
-  uint n = size();
-  EXPECT_(0 < n)
-
-  mut(lazyMeta).reset(new Meta(first()->meta->dict));
-
-  Meta::ref d = mut(*lazyMeta);
   for_i_(n) {
-    Meta::rc s = *(at(i)->meta);
+    Meta::rc im = *(at(i)->meta);
 
-    for (auto&& sv : s.vals)
-      mut(d.vals).addAt(sv.first, sv.second);
+    mut(lm.tth) = lm.tth + im.tth;
+    mut(lm.omg) = lm.omg + im.omg;
+    mut(lm.chi) = lm.chi + im.chi;
+    mut(lm.phi) = lm.phi + im.phi;
 
-    mut(d.tth) = d.tth + s.tth;
-    mut(d.omg) = d.omg + s.omg;
-    mut(d.chi) = d.chi + s.chi;
-    mut(d.phi) = d.phi + s.phi;
+    mut(lm.tim) = l::max(lm.tim, im.tim);
+    mut(lm.mon) = l::max(lm.mon, im.mon);
 
-    mut(d.tim) = l::max(d.tim, s.tim);
-    mut(d.mon) = l::max(d.mon, s.mon);
+    mut(lm.dTim) += l::isnan(im.dTim) ? 0.f : im.dTim; // TODO handle nans properly
+    mut(lm.dMon) += l::isnan(im.dMon) ? 0.f : im.dMon;
 
-    mut(d.dTim) += l::isnan(s.dTim) ? 0.f : s.dTim;
-    mut(d.dMon) += l::isnan(s.dMon) ? 0.f : s.dMon;
+    MetaDict::rc id = *im.dict;
+    MetaVals::rc iv = im.vals;
+
+    for (auto&& k : id.keys)
+      mut(lv).addAt(ld.index(k), iv.valAt(id.index(k)));
   }
 
   real fac = 1.0 / n;
 
-  for (auto&& dv : mut(d.vals))
-    dv.second *= fac;
+  mut(lm.tth) = lm.tth * fac;
+  mut(lm.omg) = lm.omg * fac;
+  mut(lm.chi) = lm.chi * fac;
+  mut(lm.phi) = lm.phi * fac;
 
-  mut(d.tth) = d.tth * fac;
-  mut(d.omg) = d.omg * fac;
-  mut(d.chi) = d.chi * fac;
-  mut(d.phi) = d.phi * fac;
+  for (auto&& v : lv)
+    mut(v.second) *= fac;
 
   return lazyMeta;
 }

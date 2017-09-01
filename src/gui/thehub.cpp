@@ -216,20 +216,22 @@ Hub::ref Hub::groupDatasetsBy(l::pint by) {
   RTHIS
 }
 
-str Hub::safeDictKey(uint i) const {
-  auto&& dict = *files.dict;
-  return i < dict.size() ? dict.key(i): str::null;
+uint Hub::dictSize() const {
+  return files.dict->size();
 }
 
-bool Hub::safeDictChecked(uint i) const {
-  auto&& dict = *files.dict;
-  return i < dict.size() ? dict.checked(dict.key(i)): false;
+str Hub::dictKey(uint i) const {
+  return files.dict->key(i);
 }
 
-Hub::ref Hub::safeDictCheck(uint i, bool on) {
+bool Hub::dictChecked(uint i) const {
   auto&& dict = *files.dict;
-  if (i < dict.size())
-    mut(dict).check(dict.key(i), on);
+  return dict.checked(dict.key(i));
+}
+
+Hub::ref Hub::dictCheck(uint i, bool on) {
+  auto&& dict = *files.dict;
+  mut(dict).check(dict.key(i), on);
   RTHIS
 }
 

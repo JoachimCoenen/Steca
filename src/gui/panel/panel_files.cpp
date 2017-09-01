@@ -114,13 +114,13 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
-  auto &a = hub.acts;
+  auto& a = hub.acts;
 
-  auto p = new l_qt::panel;
-  auto &hb = p->hb();
+  auto&& p = new l_qt::panel;
+  auto&& hb = p->hb();
 
-  auto btnAdd = new l_qt::actbtn(a.get(a.FILES_ADD));
-  auto btnRem = new l_qt::actbtn(a.get(a.FILES_REM));
+  auto&& btnAdd = new l_qt::actbtn(a.get(a.FILES_ADD));
+  auto&& btnRem = new l_qt::actbtn(a.get(a.FILES_REM));
 
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab((tab = new Panel(hub)), "Files", p);
@@ -132,8 +132,8 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   tab->vb.add(mutp(hub.modelFiles)->makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));
 
-  auto &h = tab->vb.hb();
-  auto edit = new l_qt::edit(); edit->ro(true);
+  auto&& h = tab->vb.hb();
+  auto&& edit = new l_qt::edit(); edit->ro(true);
   h.add(edit);
 
   hub.onSigCorr([this, edit]() {

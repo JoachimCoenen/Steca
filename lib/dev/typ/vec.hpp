@@ -53,16 +53,6 @@ dcl_reimpl_(vec, std::vector<T>)
   bol_(operator!=, (rc that)) RET_(base_rc() != that.base_rc())
 dcl_end
 
-// begin/end instead of cbegin/cend required for range-based for pre-C++17
-#define USING_BASE_VEC  \
-  using base::begin;    \
-  using base::end;      \
-  using base::first;    \
-  using base::last;     \
-  using base::at;       \
-  using base::isEmpty;  \
-  using base::size;
-
 //------------------------------------------------------------------------------
 }
 // eof

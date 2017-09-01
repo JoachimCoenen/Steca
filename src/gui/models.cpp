@@ -71,7 +71,7 @@ ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelDatasets::cols() const {
-  // allow an empty column if there are no metacols (looks better)
+  // allow 1 empty column if there are no metacols (looks better)
   return cl_n(numFixedCols() + l::max(1u, metaCols.size()));
 }
 
@@ -85,9 +85,11 @@ str ModelDatasets::head(cl_n cl) const {
   if (1 == cl && grouped())
     return "#-#";
 
-  cl = cl_n(cl - numFixedCols());
+  uint i = cl - numFixedCols();
+  if (i < metaCols.size())
+    return hub.dictKey(i);
 
-  return hub.safeDictKey(cl - numFixedCols());
+  return str::null;
 }
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
@@ -96,10 +98,9 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (1 == cl && grouped())
     return hub.tagAt(rw);
 
-  cl = cl_n(cl - numFixedCols());
-
-  if (cl < metaCols.size())
-    return l_qt::var(hub.setAt(rw).meta()->vals.at(metaCols.at(cl)));
+  uint i = cl - numFixedCols();
+  if (i < metaCols.size())
+    return l_qt::var(hub.setAt(rw).meta(hub.dict())->vals.valAt(metaCols.at(i))); //TODO
 
   return l_qt::var();
 }
@@ -146,7 +147,7 @@ cl_n ModelMetadata::cols() const {
 }
 
 rw_n ModelMetadata::rows() const {
-  return dataset ? rw_n(dataset->meta()->dict->size()) : rw_n(0);
+  return dataset ? rw_n(hub.dictSize()) : rw_n(0);
 }
 
 str ModelMetadata::head(cl_n cl) const {
@@ -162,18 +163,18 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   if (!dataset)
     return l_qt::var();
 
-  auto meta = dataset->meta();
-  EXPECT_(meta)
-  EXPECT_(rw < meta->dict->size());
-  auto&& key = meta->dict->key(rw);
+  EXPECT_(rw < hub.dictSize());
+  auto&& key = hub.dictKey(rw);
 
   switch (cl) {
   case clTAG:
     return l_qt::var(key);
   case clVAL: {
-    auto idx = meta->dict->index(key);
-    auto&& vals = meta->vals;
-    return vals.contains(idx) ? l_qt::var(meta->vals.at(idx)) : l_qt::var();
+    auto&& meta = dataset->meta(hub.dict());
+    auto&& idx = meta->dict->safeIndex(key);
+    if (idx < 0)
+      return l_qt::var();
+    return l_qt::var(meta->vals.valAt(uint(idx)));
   }
   default:
     return l_qt::var();
@@ -181,13 +182,13 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 }
 
 ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on) {
-  hub.safeDictCheck(rw, on);
+  hub.dictCheck(rw, on);
   base::updateState();
   RTHIS
 }
 
 bool ModelMetadata::isChecked(rw_n rw) const {
-  return hub.safeDictChecked(rw);
+  return hub.dictChecked(rw);
 }
 
 //------------------------------------------------------------------------------

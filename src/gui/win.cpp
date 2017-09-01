@@ -43,25 +43,25 @@ Win::Win() : hub(*this) {
   panelDiffractogram = new PanelDiffractogram(hub);
   panelMetadata      = new PanelMetadata(hub);
 
-  auto &hb = makePanel().hb(); // main: horizontal layout
+  auto&& hb = makePanel().hb(); // main: horizontal layout
 
-  auto &sp = hb.hs();
+  auto&& sp = hb.hs();
 
-  auto &ls  = sp.vs();  // left
+  auto&& ls  = sp.vs();  // left
   ls.add(panelFiles);
   ls.add(panelDatasets);
 
-  auto &cs  = sp.vs();  // center
-  auto &ts  = cs.hs();
+  auto&& cs  = sp.vs();  // center
+  auto&& ts  = cs.hs();
 
   ts.add(panelSetup);
   ts.add(panelImage);
   cs.add(panelDiffractogram);
 
-  auto &rs  = sp.vs();  // right
+  auto&& rs  = sp.vs();  // right
   rs.add(panelMetadata);
 
-  auto &a = hub.acts;
+  auto&& a = hub.acts;
 
   // status & tool bars
   auto bar = statusBar(); // make one
@@ -212,8 +212,8 @@ void Win::onFirstShow() {
 
 #ifdef DEVELOPMENT
   hub.addFiles({
+    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
     "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
-//    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat"
   });
 #endif
 }
@@ -254,7 +254,7 @@ void Win::checkUpdate(bool completeReport) const {
 }
 
 void Win::checkActions() {
-  auto &a = hub.acts;
+  auto&& a = hub.acts;
 #ifndef Q_OS_OSX
   a.get(a.FULL_SCREEN).check(isFullScreen());
 #endif

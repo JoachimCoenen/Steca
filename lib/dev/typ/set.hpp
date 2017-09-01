@@ -21,7 +21,7 @@ dcl_reimpl_(set, std::set<T>)
   using typename base::const_iterator;
 
   bol_(isEmpty, ())     RET_(base::empty())
-  mth_(uint, size, ())  RET_(to_sz(base::size()))
+  mth_(uint, size, ())  RET_(base::size())
 
   mth_mut_(T const&, add, (T const& t)) {
     base::insert(t);

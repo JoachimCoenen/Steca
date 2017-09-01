@@ -78,7 +78,7 @@ public:
     if (rollOver)
       return add(key, take(key));
 
-    auto &tm = it->second;
+    auto&& tm = it->second;
     touch(tm.second);
     return tm.first;
   }

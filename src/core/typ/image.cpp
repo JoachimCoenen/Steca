@@ -87,7 +87,7 @@ Image::ref Image::setInten(uint i, uint j, inten_t val) {
 }
 
 Image::ref Image::addInten(uint i, uint j, inten_t val) {
-  auto &is = mut(*intens);
+  auto&& is = mut(*intens);
   is.addAt(i, j, val);
   return *this;
 }

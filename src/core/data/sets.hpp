@@ -32,6 +32,8 @@ namespace data {
 // attribute dictionaries
 
 dcl_(MetaDict) SHARED
+  atr_(str_vec, keys);
+
   MetaDict();
   virtual ~MetaDict() {}
 
@@ -41,7 +43,7 @@ dcl_(MetaDict) SHARED
   mth_(uint, size,  ())         RET_(idxs.size())
   mth_(strc, key,   (uint i))   RET_(keys.at(i))
 
-  atr_(str_vec, keys);
+  mth_(int,  safeIndex, (strc key));
 
 private:
   // key->index
@@ -65,7 +67,12 @@ private:
 dcl_end
 
 // attribute values
-dcl_sub_(MetaVals, l::hash<uint COMMA flt32>)
+dcl_reimpl_(MetaVals, l::hash<uint COMMA flt32>)
+  using base::begin;
+  using base::end;
+  using base::clear;
+  using base::isEmpty;
+
   mth_(flt32, valAt, (uint)) may_err;
   set_(setAt, (uint, flt32));
   set_(addAt, (uint, flt32));
@@ -136,7 +143,13 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Sets, l::vec<Set::sh>) USING_BASE_VEC
+dcl_reimpl_(Sets, l::vec<Set::sh>)
+  using base::first;
+  using base::begin;
+  using base::end;
+  using base::isEmpty;
+  using base::size;
+
   Sets();
 
   mth_(l::sz2,    imageSize, ());
@@ -156,7 +169,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   CombinedSet();
 
-  mth_(Meta::sh,  meta,  ());
+  mth_(Meta::sh,  meta, (core::data::FilesMetaDict::sh));
 
   // no tth
   mth_(omg_t::rc, omg, ());
@@ -176,7 +189,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(inten_vec, collectIntens, (Session const&,
                                   Image const* intensCorr, gma_rge::rc));
 private:
-  mutable Meta::sh  lazyMeta;
+  mutable Meta::sh lazyMeta;
 
   mutable omg_t    lazyOmg;
   mutable phi_t    lazyPhi;

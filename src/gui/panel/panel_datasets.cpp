@@ -59,7 +59,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   tab->vb.add((view = new ViewDatasets(hub)));
   view->setModel(hub.modelDatasets);
 
-  auto &h = tab->vb.hb();
+  auto&& h = tab->vb.hb();
   h.add(mutp(hub.modelDatasets)->makeTriChk(str::null));
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
