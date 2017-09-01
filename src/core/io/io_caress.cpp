@@ -55,8 +55,8 @@ using data::FileIdx;
 using data::Meta;
 using data::MetaVals;
 
-static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err {
-  File::sh file(new File(files, path));
+static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
+  File::sh file(new File(path));
 
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
@@ -238,12 +238,12 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
   return file;
 }
 
-File::sh loadCaress(Files::rc files, l_io::path::rc path) may_err {
+File::sh loadCaress(l_io::path::rc path) may_err {
   check_or_err_(openFile(path), CAT("Cannot open ", path));
   struct __ { ~__() { closeFile(); } } autoClose;
 
   try {
-    return loadOpenCaressFile(files, path);
+    return loadOpenCaressFile(path);
   } catch (l::exc& e) {
     mut(e.msg) = CAT(path, e.msg);
     throw;
@@ -251,8 +251,7 @@ File::sh loadCaress(Files::rc files, l_io::path::rc path) may_err {
 }
 
 TEST_("loadCaress",
-  Files files;
-  loadCaress(files, l_io::path("testdata.caress"));
+  loadCaress(l_io::path("testdata.caress"));
 )
 
 //------------------------------------------------------------------------------

@@ -217,7 +217,7 @@ bool Session::hasFile(l_io::path::rc path) const {
 
 Session::ref Session::addFile(l_io::path::rc path) may_err {
   if (!path.isEmpty()) {
-    auto file = io::load(files, path);
+    auto file = io::load(path);
     setImageSize(file->imageSize());
     mut(files).addFile(file);
   }
@@ -254,7 +254,7 @@ Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
   } else {
     l_io::busy __;
 
-    auto file = io::load(mut(files), path);
+    auto file = io::load(path);
     auto& sets = file->sets;
 
     setImageSize(sets.imageSize());

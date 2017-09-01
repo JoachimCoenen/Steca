@@ -26,7 +26,6 @@ namespace core { namespace data {
 struct Files;
 
 dcl_(File) SHARED  // one file
-  ref_(Files,      files);    // parent
   atr_(FileIdx::sh,idx);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
   atr_(l_io::path, path);
@@ -35,7 +34,7 @@ dcl_(File) SHARED  // one file
   atr_(Sets,       sets);
   atr_(MetaDict::sh, dict); // for all sets
 
-  File(Files const&, l_io::path::rc);
+  File(l_io::path::rc);
 
   set_(addSet, (Set::sh)) may_err;
   mth_(l::sz2, imageSize, ());

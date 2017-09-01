@@ -488,18 +488,16 @@ void CombinedSets::resetLazies() {
 //------------------------------------------------------------------------------
 
 TEST_("data::sh",
-  Files fs;
-  File::sh f1(new File(fs, l_io::path(""))), f2(new File(fs, l_io::path("")));
+  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  Files fs;
-
-  File *f1 = new File(fs, l_io::path("")), *f2 = new File(fs, l_io::path(""));
+  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
   CHECK_EQ(0, f1->idx->val);
   CHECK_EQ(0, f2->idx->val);
 
+  Files fs;
   fs.addFile(l::sh(f1));
   fs.addFile(l::sh(f2));
   CHECK_EQ(1, f1->idx->val);

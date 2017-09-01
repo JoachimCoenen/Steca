@@ -58,15 +58,15 @@ bool couldBeTiffDat(l_io::path::rc path) may_err {
 
 //------------------------------------------------------------------------------
 
-data::File::sh load(data::Files::rc files, l_io::path::rc path) may_err {
+data::File::sh load(l_io::path::rc path) may_err {
   data::File::sh file;
 
   if (couldBeCaress(path))
-    file = loadCaress(files, path);
+    file = loadCaress(path);
   else if (couldBeMar(path))
-    file = loadMar(files, path);
+    file = loadMar(path);
   else if (couldBeTiffDat(path))
-    file = loadTiffDat(files, path);
+    file = loadTiffDat(path);
   else
     l::err(CAT("unknown file type: ", path));
 

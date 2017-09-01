@@ -21,8 +21,8 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-File::File(Files::rc files_, l_io::path::rc path_)
-: files(files_), idx(new FileIdx()), isActive(true)
+File::File(l_io::path::rc path_)
+: idx(new FileIdx()), isActive(true)
 , path(path_), name(path.filename()), comment(), sets(), dict(new MetaDict) {}
 
 File::ref File::addSet(Set::sh set) may_err {
@@ -50,7 +50,6 @@ static l::set<str> metaKeys(Files::rc files) {
 }
 
 Files::ref Files::addFile(data::File::sh file) {
-  EXPECT_(this == &file->files)
   EXPECT_(! // not there
     ([&]() {
       for_i_(size())
@@ -85,18 +84,16 @@ Files::ref Files::remFile(uint i) {
 //------------------------------------------------------------------------------
 
 TEST_("data::sh",
-  Files fs;
-  File::sh f1(new File(fs, l_io::path(""))), f2(new File(fs, l_io::path("")));
+  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  Files fs;
-
-  File *f1 = new File(fs, l_io::path("")), *f2 = new File(fs, l_io::path(""));
+  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
   CHECK_EQ(0, f1->idx->val);
   CHECK_EQ(0, f2->idx->val);
 
+  Files fs;
   fs.addFile(l::sh(f1));
   fs.addFile(l::sh(f2));
   CHECK_EQ(1, f1->idx->val);

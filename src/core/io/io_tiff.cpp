@@ -234,15 +234,14 @@ static void loadTiff(File& file, l_io::path::rc path,
 }
 
 TEST_("loadTiff",
-  Files files;
-  File::sh file(new File(files, l_io::path("")));
+  File::sh file(new File(l_io::path("")));
   loadTiff(mut(*file), l_io::path("testdata.tif"), phi_t(0.), 0, 0);
 )
 
 //------------------------------------------------------------------------------
 
-File::sh loadTiffDat(Files::rc files, l_io::path::rc path) may_err {
-  File::sh file(new File(files, path));
+File::sh loadTiffDat(l_io::path::rc path) may_err {
+  File::sh file(new File(path));
 
   FileTiffDat fin(path);
 
@@ -282,8 +281,7 @@ File::sh loadTiffDat(Files::rc files, l_io::path::rc path) may_err {
 }
 
 TEST_("loadTiffDat",
-  Files files;
-  loadTiffDat(files, l_io::path("testdata.tifdat"));
+  loadTiffDat(l_io::path("testdata.tifdat"));
 )
 
 //------------------------------------------------------------------------------
