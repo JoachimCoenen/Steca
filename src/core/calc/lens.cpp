@@ -188,7 +188,7 @@ void DatasetLens::setNorm(eNorm norm) {
     break;
   case eNorm::BACKGROUND:
     num = session.calcAvgBackground(datasets);
-    den = session.calcAvgBackground(dataset);
+    den = session.calcAvgBackground(datasets, dataset);
     break;
   case eNorm::NONE:
     break;

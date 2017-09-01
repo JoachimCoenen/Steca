@@ -81,14 +81,14 @@ dcl_(Session)
   mth_(calc::ImageLens::sh, imageLens,
         (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
   mth_(calc::DatasetLens::sh, datasetLens,
-        (data::CombinedSet::rc, data::CombinedSets::rc,
+        (data::CombinedSets::rc, data::CombinedSet::rc,
          eNorm, bool trans, bool cut));
   mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
 
   atr_(uint,   bgPolyDegree);
   atr_(Ranges, bgRanges);
 
-  mth_(real, calcAvgBackground, (data::CombinedSet::rc));
+  mth_(real, calcAvgBackground, (data::CombinedSets::rc, data::CombinedSet::rc));
   mth_(real, calcAvgBackground, (data::CombinedSets::rc));
 
 private:

@@ -226,7 +226,7 @@ Sets::ref Sets::add(Set::sh set) may_err {
 //------------------------------------------------------------------------------
 
 CombinedSet::CombinedSet()
-: parent(nullptr), isActive(true)
+: isActive(true)
 , lazyMeta()
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
@@ -433,8 +433,6 @@ CombinedSets::CombinedSets() {
 }
 
 CombinedSets::ref CombinedSets::add(l::give_me<CombinedSet> set) {
-  EXPECT_(!set->parent)
-  mut(set->parent) = this;
   base::add(l::sh(set));
   resetLazies();
   RTHIS

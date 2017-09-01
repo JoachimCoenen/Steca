@@ -343,15 +343,14 @@ Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
 }
 
 calc::DatasetLens::sh Session::datasetLens(
-    data::CombinedSet::rc dataset, data::CombinedSets::rc datasets,
+    data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
     eNorm norm, bool trans, bool cut) const {
   return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
                          trans, cut, imageTransform, imageCut));
 }
 
-real Session::calcAvgBackground(data::CombinedSet::rc dataset) const {
-  EXPECT_(dataset.parent)
-  auto lens = datasetLens(dataset, *dataset.parent, eNorm::NONE, true, true);
+real Session::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
+  auto lens = datasetLens(datasets, dataset, eNorm::NONE, true, true);
 
   Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
   auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);
@@ -367,7 +366,7 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
   real bg = 0;
 
   for (auto& dataset : datasets)
-    bg += calcAvgBackground(*dataset);
+    bg += calcAvgBackground(datasets, *dataset);
 
   return bg / datasets.size();
 }
