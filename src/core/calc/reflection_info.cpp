@@ -155,7 +155,7 @@ ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
 //    avgInten_ = 0;
 //    uint cnt  = 0;
 
-//    for (auto& info : *this) {
+//    for (auto&& info : *this) {
 //      qreal inten = info.inten();
 //      if (qIsFinite(inten)) {
 //        avgInten_ += inten;

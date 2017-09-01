@@ -58,7 +58,7 @@ void Json::ValStr::saveTo(std::ostream& os, indent_t indent) const {
    */
   os << '"';
   for_i_(val.size()) {
-    auto& c = val.at(i);
+    auto&& c = val.at(i);
     switch (c) {
     case '\\':
       os << "\\\\";
@@ -81,7 +81,7 @@ void Json::ValVec::saveTo(std::ostream& os, indent_t indent) const {
   os << "[";
 
   uint i = 0;
-  for (auto& v : val) {
+  for (auto&& v : val) {
     if (0 < i++)
       os << ",";
     v.val->saveTo(os, indent.next(true));
@@ -96,7 +96,7 @@ void Json::ValObj::saveTo(std::ostream& os, indent_t indent) const {
   os << "{";
 
   uint i = 0;
-  for (auto& v : val) {
+  for (auto&& v : val) {
     if (0 < i++)
       os << ",";
 
@@ -146,7 +146,7 @@ Json::Json(strc key, Json::rc val_) : val() {
 
 Json::ref Json::add(strc key, rc that) {
   check_or_err_(OBJ == val->typ, "json: bad type");
-  auto& thisObj = (*static_cast<ValObj const*>(val.ptr())).val;
+  auto&& thisObj = (*static_cast<ValObj const*>(val.ptr())).val;
   mut(thisObj).add(key, that);
 
   RTHIS
@@ -154,8 +154,7 @@ Json::ref Json::add(strc key, rc that) {
 
 Json::ref Json::add(rc that) may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
-  auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
-
+  auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   mut(vec).add(that);
   RTHIS
 }
@@ -166,7 +165,7 @@ Json Json::operator+(rc that) const may_err {
   check_or_err_(OBJ == plus.val->typ, "json: bad type");
 
   check_or_err_(OBJ == that.val->typ, "json: bad type");
-  auto& thatObj = (*static_cast<ValObj const*>(that.val.ptr())).val;
+  auto&& thatObj = (*static_cast<ValObj const*>(that.val.ptr())).val;
 
   for (auto it = thatObj.begin(); it != thatObj.end(); ++it)
     plus.add(it->first, it->second);
@@ -176,19 +175,19 @@ Json Json::operator+(rc that) const may_err {
 
 uint Json::size() const may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
-  auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
+  auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.size();
 }
 
 Json::rc Json::at(uint i) const may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
-  auto& vec = (*static_cast<ValVec const*>(val.ptr())).val;
+  auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.at(i);
 }
 
 Json::rc Json::at(strc key) const may_err {
   check_or_err_(OBJ == val->typ, "json: bad type");
-  auto& obj = (*static_cast<ValObj const*>(val.ptr())).val;
+  auto&& obj = (*static_cast<ValObj const*>(val.ptr())).val;
   return obj.at(key);
 }
 

@@ -138,7 +138,7 @@ str DlgAbout::infoText() const {
 
 QLayout* DlgAbout::extra() const {
   auto vb = new l_qt::vbox;
-  auto& hb = vb->hb();
+  auto&& hb = vb->hb();
 
   hb.addWidget(new l_qt::lbl("at startup: "));
   hb.addWidget((chkAbout  = new l_qt::chk("&show this dialog")));
@@ -152,7 +152,7 @@ QLayout* DlgAbout::extra() const {
   chkUpdate->check(s.readBool(S::STARTUP_UPDATE, true));
 
   //// TODO put back
-  // auto& gr = vb->gr();
+  // auto&& gr = vb->gr();
   ////  g->addWidget(label("default det. distance"), 0, 0, Qt::AlignRight);
   //  g->addWidget((detDistance_ = spinDoubleCell(gui_cfg::em4_2, typ::Geometry::MIN_DETECTOR_DISTANCE)), 0, 1);
   ////  g->addWidget(label("default pixel size"), 1, 0, Qt::AlignRight);

@@ -54,7 +54,7 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
     hub.addFiles();
   });
 
-  auto& actCE = get(CORR_ENABLE);
+  auto&& actCE = get(CORR_ENABLE);
   actCE.onToggle([&hub](bool on) {
     hub.corrEnable(on);
   });

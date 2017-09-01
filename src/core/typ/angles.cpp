@@ -111,11 +111,11 @@ void AngleMap::getGmaIndexes(gma_rge::rc rgeGma,
 }
 
 void AngleMap::calculate() {
-  auto& geometry = key.geometry;
-  auto& size     = key.size;
-  auto& cut      = key.cut;
-  auto& midPix   = key.midPix;
-  auto& midTth   = key.midTth;
+  auto&& geometry = key.geometry;
+  auto&& size     = key.size;
+  auto&& cut      = key.cut;
+  auto&& midPix   = key.midPix;
+  auto&& midTth   = key.midTth;
 
   real pixSize = geometry.pixSize,
        detDist = geometry.detectorDistance;
@@ -166,7 +166,7 @@ void AngleMap::calculate() {
 
   for (uint i = cut.left, iEnd = l::to_uint(size.i - cut.right); i < iEnd; ++i) {
     for (uint j = cut.top, jEnd = l::to_uint(size.j - cut.bottom); j < jEnd; ++j) {
-      auto& as = angles->at(i, j);
+      auto&& as = angles->at(i, j);
 
       gmas.setAt(gi, as.gma);
       gmaIndexes.setAt(gi,i + j * l::to_uint(size.i));

@@ -29,10 +29,10 @@ void DlgAbout::construct() {
   vbLayout->setSpacing(PAD);
   vbLayout->setSizeConstraint(QLayout::SetFixedSize);
 
-  auto& hbLogoInfo = vbLayout->hb();
+  auto&& hbLogoInfo = vbLayout->hb();
   hbLogoInfo.setSpacing(PAD);
 
-  auto& vbLogo = hbLogoInfo.vb();
+  auto&& vbLogo = hbLogoInfo.vb();
 
   auto logo = new l_qt::lbl();
   vbLogo.addWidget(logo);

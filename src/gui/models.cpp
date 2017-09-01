@@ -172,7 +172,7 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
     return l_qt::var(key);
   case clVAL: {
     auto idx = meta->dict->index(key);
-    auto& vals = meta->vals;
+    auto&& vals = meta->vals;
     return vals.contains(idx) ? l_qt::var(meta->vals.at(idx)) : l_qt::var();
   }
   default:

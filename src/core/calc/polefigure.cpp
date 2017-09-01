@@ -135,7 +135,7 @@ static bool inRadius(l::deg alpha, l::deg beta,
 static void searchPoints(l::deg alpha, l::deg beta, l::deg radius,
                          ReflectionInfos::rc infos, itfs_t& itfs) {
   // REVIEW Use value trees to improve performance.
-  for (auto& info : infos) {
+  for (auto&& info : infos) {
     if (inRadius(info.alpha, info.beta, alpha, beta, radius))
       itfs.add(itf_t(info.inten, info.tth, info.fwhm));
   }
@@ -152,7 +152,7 @@ static void searchInQuadrants(Quadrants::rc quadrants,
   distances  = real_vec(quadrants.size(), l::flt_inf);
   foundInfos = info_vec(quadrants.size(), nullptr);
   // Find infos closest to given alpha and beta in each quadrant.
-  for (auto& info : infos) {
+  for (auto&& info : infos) {
     // REVIEW We could do better with value trees than looping over all infos.
     auto deltaBeta = calculateDeltaBeta(info.beta, beta);
     if (l::abs(deltaBeta) > BETA_LIMIT) continue;
@@ -183,7 +183,7 @@ itf_t inverseDistanceWeighing(real_vec::rc distances, info_vec::rc infos) {
   for_i_(NUM_QUADRANTS) {
     if (distances.at(i) == .0) {
       // Points coincide; no need to interpolate.
-      auto& in  = infos.at(i);
+      auto&& in  = infos.at(i);
       mut(itf.inten) = inten_t(in->inten);
       mut(itf.tth)   = in->tth;
       mut(itf.fwhm)  = in->fwhm;
@@ -197,8 +197,8 @@ itf_t inverseDistanceWeighing(real_vec::rc distances, info_vec::rc infos) {
   real height = 0;
   real fwhm   = 0;
   for_i_(N) {
-    auto& in = infos.at(i);
-    auto& d  = inverseDistances.at(i);
+    auto&& in = infos.at(i);
+    auto&& d  = inverseDistances.at(i);
     offset += in->tth   * d;
     height += in->inten * d;
     fwhm   += in->fwhm  * d;

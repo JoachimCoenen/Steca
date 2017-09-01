@@ -20,7 +20,7 @@ dcl_sub_(lst_view_itemDelegate, QStyledItemDelegate)
 
     auto clr = option.widget->palette().color(QPalette::Midlight);
     painter->setPen(clr);
-    auto& r = option.rect;
+    auto&& r = option.rect;
     painter->drawLine(r.right(), r.top(), r.right(), r.bottom());
 
     painter->restore();
@@ -126,7 +126,7 @@ lst_view::ref lst_view::selectRows(rw_n_vec::rc rws) {
 
 lst_view::rw_n_vec lst_view::selectedRows() const {
   rw_n_vec rws;
-  for (auto& index : selectionModel()->selectedRows())
+  for (auto&& index : selectionModel()->selectedRows())
     rws.add(rw_n(l::to_u(index.row())));
   return rws;
 }

@@ -136,20 +136,20 @@ io::Json Session::save() const {
 
 //  JsonObj top;
 
-//  auto& geo = session_->geometry();
+//  auto&& geo = session_->geometry();
 //  top.saveObj(config_key::DETECTOR, JsonObj()
 //      .savePreal(config_key::DET_DISTANCE, geo.detectorDistance)
 //      .savePreal(config_key::DET_PIX_SIZE, geo.pixSize)
 //      .saveObj(config_key::BEAM_OFFSET, geo.midPixOffset.saveJson()));
 
-//  auto& cut = session_->imageCut();
+//  auto&& cut = session_->imageCut();
 //  top.saveObj(config_key::CUT, JsonObj()
 //      .saveUint(config_key::LEFT, cut.left)
 //      .saveUint(config_key::TOP, cut.top)
 //      .saveUint(config_key::RIGHT, cut.right)
 //      .saveUint(config_key::BOTTOM, cut.bottom));
 
-//  auto& trn = session_->imageTransform();
+//  auto&& trn = session_->imageTransform();
 //  top.saveUint(config_key::TRANSFORM, trn.val);
 
 //  JsonArr arrFiles;
@@ -181,7 +181,7 @@ io::Json Session::save() const {
 //  top.savePreal(config_key::INTEN_SCALE, intenScale());
 
 //  JsonArr arrReflections;
-//  for (auto& reflection : reflections())
+//  for (auto&& reflection : reflections())
 //    arrReflections.append(reflection->saveJson());
 
 //  top.saveArr(config_key::REFLECTIONS, arrReflections);
@@ -208,7 +208,7 @@ Image::sh Session::intensCorr() const {
 }
 
 bool Session::hasFile(l_io::path::rc path) const {
-  for (auto& file : files)
+  for (auto&& file : files)
     if (file->path == path)
       return true;
 
@@ -255,7 +255,7 @@ Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
     l_io::busy __;
 
     auto file = io::load(path);
-    auto& sets = file->sets;
+    auto&& sets = file->sets;
 
     setImageSize(sets.imageSize());
     mut(corrImage) = sets.foldImage();
@@ -307,7 +307,7 @@ Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
 
   auto gb = groupedBy;
   for (uint i : collectedFromFiles)
-    for (auto& set : files.at(i)->sets) { // Set::sh
+    for (auto&& set : files.at(i)->sets) { // Set::sh
       cs->add(set);
       if (0 == --gb) {
         appendCs();
@@ -365,7 +365,7 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
 
   real bg = 0;
 
-  for (auto& dataset : datasets)
+  for (auto&& dataset : datasets)
     bg += calcAvgBackground(datasets, *dataset);
 
   return bg / datasets.size();

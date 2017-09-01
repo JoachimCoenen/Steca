@@ -102,7 +102,7 @@ l::own<PeakFun> PeakFun::factory(ePeakType type) {
 
 l::own<PeakFun> PeakFun::clone() const {
   auto  f = factory(type());
-  auto& r = mut(*f);
+  auto&& r = mut(*f);
 
   // do not copy guessed values
   mut(r.pars)  = pars;
@@ -222,9 +222,9 @@ void Raw::prepareY() {
 Gaussian::Gaussian(real ampl, real xShift, real sigma) {
   setParCount(3);
 
-  auto& parAmpl   = pars.at(parAMPL);
-  auto& parXShift = pars.at(parXSHIFT);
-  auto& parSigma  = pars.at(parSIGMA);
+  auto&& parAmpl   = pars.at(parAMPL);
+  auto&& parXShift = pars.at(parXSHIFT);
+  auto&& parSigma  = pars.at(parSIGMA);
 
   mut(parAmpl).set(ampl, 0);
   mut(parXShift).set(xShift, 0);
@@ -298,9 +298,9 @@ fwhm_t Gaussian::fwhmError() const {
 Lorentzian::Lorentzian(real ampl, real xShift, real gamma) {
   setParCount(3);
 
-  auto& parAmpl   = pars.at(parAMPL);
-  auto& parXShift = pars.at(parXSHIFT);
-  auto& parGamma  = pars.at(parGAMMA);
+  auto&& parAmpl   = pars.at(parAMPL);
+  auto&& parXShift = pars.at(parXSHIFT);
+  auto&& parGamma  = pars.at(parGAMMA);
 
   mut(parAmpl).set(ampl, 0);
   mut(parXShift).set(xShift, 0);
@@ -374,10 +374,10 @@ PseudoVoigt1::PseudoVoigt1(real ampl, real xShift, real sigmaGamma,
                            real eta) {
   setParCount(4);
 
-  auto& parAmpl       = pars.at(parAMPL);
-  auto& parXShift     = pars.at(parXSHIFT);
-  auto& parSigmaGamma = pars.at(parSIGMAGAMMA);
-  auto& parEta        = pars.at(parETA);
+  auto&& parAmpl       = pars.at(parAMPL);
+  auto&& parXShift     = pars.at(parXSHIFT);
+  auto&& parSigmaGamma = pars.at(parSIGMAGAMMA);
+  auto&& parEta        = pars.at(parETA);
 
   mut(parAmpl).set(ampl, 0);
   mut(parXShift).set(xShift, 0);
@@ -465,11 +465,11 @@ PseudoVoigt2::PseudoVoigt2(real ampl, real mu, real hwhmG, real hwhmL,
                            real eta) {
   setParCount(5);
 
-  auto& parAmpl  = pars.at(parAMPL);
-  auto& parMu    = pars.at(parXSHIFT);
-  auto& parHwhmG = pars.at(parSIGMA);
-  auto& parHwhmL = pars.at(parGAMMA);
-  auto& parEta   = pars.at(parETA);
+  auto&& parAmpl  = pars.at(parAMPL);
+  auto&& parMu    = pars.at(parXSHIFT);
+  auto&& parHwhmG = pars.at(parSIGMA);
+  auto&& parHwhmL = pars.at(parGAMMA);
+  auto&& parEta   = pars.at(parETA);
 
   mut(parAmpl).set(ampl, 0);
   mut(parMu).set(mu, 0);

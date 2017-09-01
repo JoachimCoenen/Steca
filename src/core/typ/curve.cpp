@@ -90,7 +90,7 @@ Curve Curve::intersect(Ranges::rc ranges) const {
 
   uint xi = 0; auto sz = size();
   for_i_(ranges.size()) {
-    auto& range = ranges.at(i);
+    auto&& range = ranges.at(i);
     auto  minX = range.min, maxX = range.max;
     while (xi < sz && xs.at(xi) < minX)
       ++xi;

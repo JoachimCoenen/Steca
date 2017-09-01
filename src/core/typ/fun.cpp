@@ -48,7 +48,7 @@ Fun::~Fun() {}
 SimpleFun::SimpleFun() : pars() {}
 
 SimpleFun::ref SimpleFun::reset() {
-  for (auto& par : pars)
+  for (auto&& par : pars)
     mut(par) = Par(0, 0);
   RTHIS
 }
@@ -116,7 +116,7 @@ Par::rc SumFuns::parAt(sz_t i) const {
 real SumFuns::y(real x, real const* parVals) const {
   real sum = 0;
 
-  for (auto& f : funs) {
+  for (auto&& f : funs) {
     sum += f->y(x, parVals);
 
     if (parVals)
@@ -127,7 +127,7 @@ real SumFuns::y(real x, real const* parVals) const {
 }
 
 real SumFuns::dy(real x, sz_t i, real const* parVals) const {
-  auto& f = fun4parIdx.at(i);  // aggregate parIdx refers to fun f
+  auto&& f = fun4parIdx.at(i);  // aggregate parIdx refers to fun f
 
   // offset par index
   sz_t firstIndex = firstParIdx4parIdx.at(i);

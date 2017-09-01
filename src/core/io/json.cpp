@@ -89,7 +89,7 @@ template <typename T, typename O> T const& asType(O const& o) {
 Json::Json(Fun const& fun) may_err : base(OBJ) {
   if (isType<SumFuns>(&fun)) {
 
-    auto& f = asType<SumFuns>(fun);
+    auto&& f = asType<SumFuns>(fun);
 
     add(key::TYPE, Json(key::SUM));
 
@@ -101,7 +101,7 @@ Json::Json(Fun const& fun) may_err : base(OBJ) {
 
   } else if (isType<SimpleFun>(&fun)) {
 
-    auto& f = asType<SimpleFun>(fun);
+    auto&& f = asType<SimpleFun>(fun);
 
     if (isType<fit::Polynom>(&fun)) {
 
@@ -109,7 +109,7 @@ Json::Json(Fun const& fun) may_err : base(OBJ) {
 
     } else if (isType<fit::PeakFun>(&fun)) {
 
-      auto& f = asType<fit::PeakFun>(fun);
+      auto&& f = asType<fit::PeakFun>(fun);
 
       if (isType<fit::Raw>(&f))
         add(key::TYPE, Json(key::RAW));
@@ -132,7 +132,7 @@ Json::Json(Fun const& fun) may_err : base(OBJ) {
       l::err("bad SimpleFun");
 
     Json::Vec ps;
-    for (auto& par : f.pars)
+    for (auto&& par : f.pars)
       ps.add(jsonObj(par));
 
     add(key::PARAMS, Json(ps));
