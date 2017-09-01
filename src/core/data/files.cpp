@@ -22,17 +22,22 @@ namespace core { namespace data {
 //------------------------------------------------------------------------------
 
 File::File(Files::rc files_, l_io::path::rc path_)
-: files(files_), idx(new Idx()), isActive(true)
+: files(files_), idx(new FileIdx()), isActive(true)
 , path(path_), name(path.filename()), comment(), sets() {}
 
-File::ref File::addSet(Set::sh set) {
+File::ref File::addSet(Set::sh set) may_err {
   mut(sets).add(set);
   return *this;
 }
 
+l::sz2 File::imageSize() const {
+  EXPECT_(!sets.isEmpty())
+  return sets.imageSize();
+}
+
 //------------------------------------------------------------------------------
 
-Files::Files() : dict(new Meta::Dict) {}
+Files::Files() : dict(new MetaDict) {}
 
 Files::ref Files::addFile(data::File::sh file) {
   EXPECT_(this == &file->files)
@@ -83,8 +88,8 @@ TEST_("data",
   CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::sh(new Set(
-    l::sh(new Idx),
-    l::sh(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::sh(new FileIdx),
+    l::sh(new Meta(fs.dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
   fs.remFile(0);

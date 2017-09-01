@@ -23,36 +23,52 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-uint Meta::Dict::enter(strc key) {
-  auto it = base::find(key);
-  if (base::end() != it)
-    return it->second;
+MetaDict::MetaDict() : map() {}
 
-  uint idx = size();
+uint MetaDict::enter(strc key) {
+  auto it = map.find(key);
+  if (map.end() != it)
+    return it->second.first;
 
-  EXPECT_(keys.size() == idx)
-  mut(keys).add(key);
+  uint idx = map.size();
 
-  EXPECT_(checked.size() == idx)
-  mut(checked).add(false);
+  EXPECT_(size() == idx)
+  base::add(key);
 
-  return base::add(key, idx);
+  mut(map).add(key, std::pair<uint,bool>(idx, false));
+
+  return idx;
 }
 
-uint Meta::Dict::at(strc key) const may_err {
-  auto it = base::find(key);
-  if (base::end() == it)
-    l::err(str("Dict has no key: ") + key);
-  return it->second;
+uint MetaDict::index(strc key) const may_err {
+  return map.at(key).first;
+}
+
+bool MetaDict::checked(strc key) const may_err {
+  return map.at(key).second;
+}
+
+bool MetaDict::checked(uint idx) const {
+  return checked(at(idx));
+}
+
+MetaDict::ref MetaDict::check(strc key, bool on) may_err {
+  mut(map).at(key).second = on;
+  RTHIS
+}
+
+MetaDict::ref MetaDict::check(uint idx, bool on) {
+  check(at(idx), on);
+  RTHIS
 }
 
 //------------------------------------------------------------------------------
 
-flt32 Meta::Vals::valAt(uint i) const may_err {
+flt32 MetaVals::valAt(uint i) const may_err {
   return at(i);
 }
 
-Meta::Vals::ref Meta::Vals::setAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::setAt(uint i, flt32 val) {
   if (contains(i))
     at(i) = val;
   else
@@ -60,7 +76,7 @@ Meta::Vals::ref Meta::Vals::setAt(uint i, flt32 val) {
   RTHIS
 }
 
-Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::addAt(uint i, flt32 val) {
   if (contains(i))
     val += at(i);
   setAt(i, val);
@@ -69,12 +85,12 @@ Meta::Vals::ref Meta::Vals::addAt(uint i, flt32 val) {
 
 //------------------------------------------------------------------------------
 
-Meta::Meta(Dict::sh dict_)
+Meta::Meta(MetaDict::sh dict_)
 : comment()
 , dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(Dict::sh dict_, Vals::rc vals_,
+Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
@@ -83,7 +99,7 @@ Meta::Meta(Dict::sh dict_, Vals::rc vals_,
 }
 
 TEST_("dict",
-  Meta::Dict dict;
+  MetaDict dict;
   CHECK_EQ(0, dict.size());
 
   CHECK_EQ(0, dict.enter("0"));
@@ -96,18 +112,18 @@ TEST_("dict",
 
 #ifndef _WIN32 // CDB has some trouble with this
 TEST_("dict-throw",
-  Meta::Dict dict;
-  CHECK_THROWS_AS(dict.at(""), l::exc::rc);
+  MetaDict dict;
+  CHECK_THROWS_AS(dict.index(""), l::exc::rc);
 )
 #endif
 
 //------------------------------------------------------------------------------
 
-Idx::Idx(uint val_) : val(val_) {}
+FileIdx::FileIdx(uint val_) : val(val_) {}
 
 //------------------------------------------------------------------------------
 
-Set::Set(Idx::sh idx_, Meta::sh meta_, Image::sh image_)
+Set::Set(FileIdx::sh idx_, Meta::sh meta_, Image::sh image_)
 : idx(idx_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
@@ -186,13 +202,20 @@ Image::sh Sets::foldImage() const {
   uint n = size();
   EXPECT_(0 < n)
 
-  lazyFoldImage.reset(new Image(first()->image->size()));
+  lazyFoldImage.reset(new Image(imageSize()));
 
   Image::ref d = mut(*lazyFoldImage);
   for_i_(n)
     d.addIntens(*(at(i)->image));
 
   return lazyFoldImage;
+}
+
+Sets::ref Sets::add(Set::sh set) may_err {
+  check_or_err_(isEmpty() || first()->imageSize() == set->imageSize(),
+                "Inconsistent image size");
+  base::add(set);
+  RTHIS;
 }
 
 //------------------------------------------------------------------------------
@@ -478,8 +501,8 @@ TEST_("data",
   CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::sh(new Set(
-    l::sh(new Idx),
-    l::sh(new Meta(fs.dict, Meta::Vals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+    l::sh(new FileIdx),
+    l::sh(new Meta(fs.dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
   fs.remFile(0);

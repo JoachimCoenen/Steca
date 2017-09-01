@@ -27,7 +27,7 @@ struct Files;
 
 dcl_(File) SHARED  // one file
   ref_(Files,      files);    // parent
-  atr_(Idx::sh,    idx);      // the number within files, 0 = not
+  atr_(FileIdx::sh,idx);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
   atr_(l_io::path, path);
   atr_(str,        name);
@@ -36,13 +36,14 @@ dcl_(File) SHARED  // one file
 
   File(Files const&, l_io::path::rc);
 
-  set_(addSet, (Set::sh));
+  set_(addSet, (Set::sh)) may_err;
+  mth_(l::sz2, imageSize, ());
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
-  atr_(Meta::Dict::sh, dict);
+  atr_(MetaDict::sh, dict);
 
   Files();
 

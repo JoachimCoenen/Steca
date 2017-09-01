@@ -89,7 +89,7 @@ str ModelDatasets::head(cl_n cl) const {
 
   auto meta = hub.meta();
   if (meta && cl < metaCols.size())
-    return meta->dict->keys.at(metaCols.at(cl));
+    return meta->dict->at(metaCols.at(cl));
 
   return str::null;
 }
@@ -168,15 +168,14 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 
   auto meta = dataset->meta();
   EXPECT_(meta)
-  auto& keys = meta->dict->keys;
-  EXPECT_(rw < keys.size());
-  auto& key = keys.at(rw);
+  EXPECT_(rw < meta->dict->size());
+  auto& key = meta->dict->at(rw);
 
   switch (cl) {
   case clTAG:
     return l_qt::var(key);
   case clVAL: {
-    auto idx = meta->dict->at(key);
+    auto idx = meta->dict->index(key);
     auto& vals = meta->vals;
     return vals.contains(idx) ? l_qt::var(meta->vals.at(idx)) : l_qt::var();
   }
@@ -187,14 +186,14 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 
 ModelMetadata::ref ModelMetadata::check(rw_n row, bool on) {
   EXPECT_(hub.meta())
-  mut(hub.meta()->dict->checked).setAt(row, on);
+  mutp(hub.meta()->dict)->check(row, on);
   base::updateState();
   RTHIS
 }
 
 bool ModelMetadata::isChecked(rw_n row) const {
   EXPECT_(hub.meta())
-  return hub.meta()->dict->checked.at(row);
+  return hub.meta()->dict->checked(row);
 }
 
 //------------------------------------------------------------------------------

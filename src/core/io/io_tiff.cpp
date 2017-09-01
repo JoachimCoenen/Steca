@@ -64,7 +64,7 @@ str_vec FileTiffDat::FileTiffDat::getRow() may_err {
 using data::Files;
 using data::File;
 using data::Set;
-using data::Idx;
+using data::FileIdx;
 using data::Meta;
 
 //------------------------------------------------------------------------------

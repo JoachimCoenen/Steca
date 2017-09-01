@@ -29,27 +29,39 @@ struct Session;
 namespace data {
 //------------------------------------------------------------------------------
 
+// attribute dictionary
+dcl_reimpl_(MetaDict, str_vec) SHARED USING_BASE_VEC
+  MetaDict();
+
+  mth_mut_(uint, enter, (strc));  // adds if necessary
+
+  mth_(uint, index, (strc)) may_err;
+  bol_(checked,     (strc)) may_err;
+  bol_(checked,     (uint));
+
+  set_(check, (strc, bool)) may_err;
+  set_(check, (uint, bool));
+
+private:
+  // key->(index, checked)
+  atr_(l::hash<str COMMA std::pair<uint COMMA bool>>, map);
+dcl_end
+
+// attribute values
+dcl_sub_(MetaVals, l::hash<uint COMMA flt32>)
+  mth_(flt32, valAt, (uint)) may_err;
+  set_(setAt, (uint, flt32));
+  set_(addAt, (uint, flt32));
+dcl_end
+
+//------------------------------------------------------------------------------
+
 dcl_(Meta) SHARED // metadata
-  // attribute dictionary
-  dcl_sub_(Dict, l::map<str COMMA uint>) SHARED
-    mth_mut_(uint, enter, (strc));
-    mth_(uint, at, (strc)) may_err;
-    atr_(str_vec,  keys);
-    atr_(bol_vec,  checked);
-  dcl_end
-
-  // attribute values
-  dcl_sub_(Vals, l::hash<uint COMMA flt32>)
-    mth_(flt32, valAt, (uint)) may_err;
-    set_(setAt, (uint, flt32));
-    set_(addAt, (uint, flt32));
-  dcl_end
-
   atr_(str, comment);
   atr_(str, date);
 
-  atr_(Dict::sh, dict); // other than the values stored explicitly below
-  atr_(Vals,     vals); // their values
+  atr_(MetaDict::sh, dict); // other than the values stored explicitly below
+  atr_(MetaVals,     vals); // their values
 
   atr_(tth_t,  tth);    // *mid* tth
   atr_(omg_t,  omg);
@@ -61,27 +73,26 @@ dcl_(Meta) SHARED // metadata
   atr_(flt32, dTim);   // delta time, may be nan
   atr_(flt32, dMon);   // delta mon. count, may be nan
 
-  Meta(Dict::sh);
-  Meta(Dict::sh, Vals::rc, flt32, flt32, flt32, flt32,
-                            flt32, flt32, flt32, flt32);
+  Meta(MetaDict::sh);
+  Meta(MetaDict::sh, MetaVals::rc, flt32, flt32, flt32, flt32,
+                                   flt32, flt32, flt32, flt32);
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(Idx) SHARED
+dcl_(FileIdx) SHARED
   atr_(uint, val);
-  Idx(uint = 0);
+  FileIdx(uint = 0);
 dcl_end
 
 //------------------------------------------------------------------------------
-
 
 dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(Idx::sh,   idx);
-  atr_(Meta::sh,  meta);  // TODO Meta::sh shared? If no, make unique<>(?)
-  atr_(Image::sh, image);
+  atr_(FileIdx::sh, idx);
+  atr_(Meta::sh,    meta);
+  atr_(Image::sh,   image);
 
-  Set(Idx::sh, Meta::sh, Image::sh);
+  Set(FileIdx::sh, Meta::sh, Image::sh);
 
   mth_(l::sz2, imageSize, ());
 
@@ -108,11 +119,12 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(Sets, l::vec<Set::sh>)  // a collection of sets
+dcl_reimpl_(Sets, l::vec<Set::sh>) USING_BASE_VEC
   Sets();
 
-  mth_(l::sz2,     imageSize, ());
+  mth_(l::sz2,    imageSize, ());
   mth_(Image::sh, foldImage, ());
+  set_(add, (Set::sh)) may_err;
 
 private:
   mutable Image::sh lazyFoldImage;
@@ -128,7 +140,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   CombinedSet();
 
-  mth_(Meta::sh, meta,  ());
+  mth_(Meta::sh,  meta,  ());
 
   // no tth
   mth_(omg_t::rc, omg, ());
@@ -148,7 +160,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(inten_vec, collectIntens, (Session const&,
                                   Image const* intensCorr, gma_rge::rc));
 private:
-  mutable Meta::sh lazyMeta;
+  mutable Meta::sh  lazyMeta;
 
   mutable omg_t    lazyOmg;
   mutable phi_t    lazyPhi;
@@ -165,7 +177,6 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
-
   CombinedSets();
 
   set_(add, (l::give_me<CombinedSet>));

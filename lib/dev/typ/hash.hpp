@@ -15,6 +15,7 @@ dcl_reimpl_(hash, std::unordered_map<K COMMA T>)
   using base::erase;
   using base::clear;
   using base::at;
+  using base::find;
 
   bol_(isEmpty, ())     RET_(base::empty())
   mth_(sz_t, size, ())  RET_(to_sz(base::size()))

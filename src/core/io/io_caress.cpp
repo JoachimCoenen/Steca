@@ -51,8 +51,9 @@ str loadCaressComment(l_io::path::rc path) {
 using data::Files;
 using data::File;
 using data::Set;
-using data::Idx;
+using data::FileIdx;
 using data::Meta;
+using data::MetaVals;
 
 static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err {
   File::sh file(new File(files, path));
@@ -74,13 +75,13 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
 
   str elem, node; dtype dt; uint n;
 
-  Meta::Vals readVals, vals;
+  MetaVals readVals, vals;
 
-  auto setVal = [&](Meta::Vals& vs, uint idx, flt32 val) {
+  auto setVal = [&](MetaVals& vs, uint idx, flt32 val) {
     vs.setAt(idx, val);
   };
 
-  auto addValTo = [&](Meta::Vals& vs, strc ns, flt32 val) -> uint {
+  auto addValTo = [&](MetaVals& vs, strc ns, flt32 val) -> uint {
     auto idx = mut(*files.dict).enter(ns);
     setVal(vs, idx, val);
     return idx;
@@ -94,7 +95,7 @@ static File::sh loadOpenCaressFile(Files::rc files, l_io::path::rc path) may_err
   addValTo(readVals, "TIM1", 0);
   addValTo(readVals, "MON", 0);
 
-  auto addVal = [&](Meta::Vals& vs) -> uint {
+  auto addVal = [&](MetaVals& vs) -> uint {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 

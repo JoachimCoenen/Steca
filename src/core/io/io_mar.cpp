@@ -25,7 +25,7 @@ namespace core { namespace io {
 using data::Files;
 using data::File;
 using data::Set;
-using data::Idx;
+using data::FileIdx;
 using data::Meta;
 
 using l_io::path;
