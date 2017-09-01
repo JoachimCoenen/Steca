@@ -181,9 +181,9 @@ void Set::collect(Session::rc s, Image const* corr,
     tth_t tth  = map.at(ind).tth;
 
     // bin index
-    auto ti = l::floor((tth - minTth) / deltaTth);
+    auto ti = l::to_uint(l::floor((tth - minTth) / deltaTth));
     EXPECT_(ti <= size)
-    ti = l::min(l::to_sz(ti), l::to_sz(size-1)); // it can overshoot due to floating point calculation
+    ti = l::min(ti, size-1); // it can overshoot due to floating point calculation
 
     intens.refAt(ti) += inten;
     counts.refAt(ti) += 1;

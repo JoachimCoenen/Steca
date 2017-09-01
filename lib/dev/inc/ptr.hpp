@@ -58,10 +58,10 @@ private:
   jp<T>& operator--()     = delete;
   jp<T>  operator++(int)  = delete;
   jp<T>  operator--(int)  = delete;
-  jp<T>& operator+ (sz_t) = delete;
-  jp<T>& operator+=(sz_t) = delete;
-  jp<T>& operator- (sz_t) = delete;
-  jp<T>& operator-=(sz_t) = delete;
+  jp<T>& operator+ (uint) = delete;
+  jp<T>& operator+=(uint) = delete;
+  jp<T>& operator- (uint) = delete;
+  jp<T>& operator-=(uint) = delete;
 };
 
 //------------------------------------------------------------------------------

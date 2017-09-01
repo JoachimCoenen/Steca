@@ -60,9 +60,9 @@ dcl_(Ranges) EQ_NE
 
   void clear()         { rs.clear();          }
   bool isEmpty() const RET_(rs.isEmpty())
-  sz_t size()    const RET_(rs.size())
+  uint size()    const RET_(rs.size())
 
-  Range::rc at(sz_t i) const RET_(rs.at(i))
+  Range::rc at(uint i) const RET_(rs.at(i))
 
   // collapses overlapping ranges into one; true if there was a change
   bool add(Range::rc);

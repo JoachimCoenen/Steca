@@ -171,9 +171,6 @@ typedef   signed int    int32;
   typedef   signed long   int64;
 #endif
 
-// our own (small) size type
-typedef uint32 sz_t;
-
 // explicitely stated sizes of floats
 typedef float  flt32;
 typedef double flt64;

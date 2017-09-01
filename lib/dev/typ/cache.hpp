@@ -13,8 +13,8 @@ dcl_base_(cache_base)
 
   cache_base(pint maxItems);
 
-  virtual act_mut_(trim, (sz_t))  = 0;
-  virtual mth_(sz_t, size, ())          = 0;
+  virtual act_mut_(trim, (uint))  = 0;
+  virtual mth_(uint, size, ())          = 0;
 
   act_mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
@@ -41,11 +41,11 @@ private:
 public:
   cache(pint n) : base(n) {}
 
-  mth_(sz_t, size, ())      RET_(cash.size())
+  mth_(uint, size, ())      RET_(cash.size())
   bol_(isEmpty,    ())      RET_(cash.isEmpty())
   act_mut_(clear, ()) { trim(0); }
 
-  void trim(sz_t n) { // TODO to cache_base (with adapter)
+  void trim(uint n) { // TODO to cache_base (with adapter)
     if (size() > n) {
       map<mru_t, cash_it> mit;
       for (auto it = cash.begin(), itEnd = cash.end(); it != itEnd; ++it)
@@ -53,7 +53,7 @@ public:
 
       ENSURE_(mit.size() == size()) // no duplicate mrus
 
-      sz_t cnt = size() - n;
+      uint cnt = size() - n;
       for (auto it = mit.begin(); cnt-- > 0; ++it)
         cash.erase(it->second);
     }

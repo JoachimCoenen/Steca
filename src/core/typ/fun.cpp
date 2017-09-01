@@ -63,11 +63,11 @@ SimpleFun::ref SimpleFun::setParCount(uint cnt) {
 SimpleFun::ref SimpleFun::add(Par::rc par)
   SET_(mut(pars).add(par))
 
-sz_t SimpleFun::parCount() const {
+uint SimpleFun::parCount() const {
   return pars.size();
 }
 
-Par::rc SimpleFun::parAt(sz_t i) const {
+Par::rc SimpleFun::parAt(uint i) const {
   return pars.at(i);
 }
 
@@ -77,21 +77,21 @@ SimpleFun::ref SimpleFun::resetPars() {
   RTHIS
 }
 
-real SimpleFun::parVal(sz_t i, real const* parVals) const {
+real SimpleFun::parVal(uint i, real const* parVals) const {
   return parVals ? parVals[i] : pars.at(i).val;
 }
 
-SimpleFun::ref SimpleFun::setParVal(sz_t i, real val)
+SimpleFun::ref SimpleFun::setParVal(uint i, real val)
   SET_(mut(pars.at(i)).setVal(val))
 
-real SimpleFun::parErr(sz_t i) const {
+real SimpleFun::parErr(uint i) const {
   return pars.at(i).err;
 }
 
 //------------------------------------------------------------------------------
 
 SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
-  sz_t parIdx = parCount();
+  uint parIdx = parCount();
   funs.add(Fun::sh(fun.ptr()));
 
   for_i_(fun->parCount()) {
@@ -105,11 +105,11 @@ SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
   RTHIS
 }
 
-sz_t SumFuns::parCount() const {
+uint SumFuns::parCount() const {
   return allPars.size();
 }
 
-Par::rc SumFuns::parAt(sz_t i) const {
+Par::rc SumFuns::parAt(uint i) const {
   return *allPars.at(i);
 }
 
@@ -126,11 +126,11 @@ real SumFuns::y(real x, real const* parVals) const {
   return sum;
 }
 
-real SumFuns::dy(real x, sz_t i, real const* parVals) const {
+real SumFuns::dy(real x, uint i, real const* parVals) const {
   auto&& f = fun4parIdx.at(i);  // aggregate parIdx refers to fun f
 
   // offset par index
-  sz_t firstIndex = firstParIdx4parIdx.at(i);
+  uint firstIndex = firstParIdx4parIdx.at(i);
   if (parVals) parVals += firstIndex;
 
   ENSURE_(firstIndex <= i)

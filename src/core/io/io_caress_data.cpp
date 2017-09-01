@@ -76,14 +76,14 @@ static dtype to_dtype(int32 t) {
 }
 
 
-static buf getUnit(uint n, sz_t sz) {
+static buf getUnit(uint n, uint sz) {
   buf data(n * sz);
   if (n > 0)
     check_or_err_(0 == get_data_unit(data.data()), "bad data unit");
   return data;
 }
 
-static buf getPartition(uint n, sz_t sz, int32 d_type) {
+static buf getPartition(uint n, uint sz, int32 d_type) {
   buf data(n * sz);
 
   int32 start = 1, ni = int32(n), section = 1;    // Is there ever section other than 1 ?

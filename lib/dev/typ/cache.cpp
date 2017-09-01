@@ -14,7 +14,7 @@ void cache_base::prepAdd() {
   if (rollOver)
     trim(0);
   else if (size() >= maxItems)
-    trim(to_sz(maxItems * .7));
+    trim(to_uint(maxItems * .7));
 }
 
 cache_base::mru_t cache_base::next() {

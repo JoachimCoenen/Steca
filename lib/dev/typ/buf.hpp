@@ -8,7 +8,7 @@ namespace l {
 //------------------------------------------------------------------------------
 
 dcl_sub_(buf, vec<char>)
-  buf(sz_t);
+  buf(uint);
   buf(pcstr, bool zeroByte = true);
 
   mth_(str, asStr, ());

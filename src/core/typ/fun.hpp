@@ -37,15 +37,15 @@ dcl_end
 dcl_base_(Fun) SHARED
   Fun();
 
-  virtual mth_(sz_t, parCount, ())     = 0;
-  virtual mth_(Par::rc, parAt, (sz_t)) = 0;
+  virtual mth_(uint, parCount, ())     = 0;
+  virtual mth_(Par::rc, parAt, (uint)) = 0;
   virtual set_(resetPars, ())  SET_()
 
   // evaluate the fun y = f(x), with given (parVals) or own pars
   virtual mth_(real, y, (real x, real const* parVals = nullptr)) = 0;
 
   // partial derivative / par, with given (parVals) or own pars
-  virtual mth_(real, dy, (real x, sz_t parIdx, real const* parVals = nullptr)) = 0;
+  virtual mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr)) = 0;
 dcl_end
 
 dcl_sub_(SimpleFun, Fun)
@@ -58,14 +58,14 @@ dcl_sub_(SimpleFun, Fun)
   set_(setParCount, (uint));
   set_(add, (Par::rc));
 
-  mth_(sz_t,    parCount, ());
-  mth_(Par::rc, parAt, (sz_t));
+  mth_(uint,    parCount, ());
+  mth_(Par::rc, parAt, (uint));
   set_(resetPars, ());
 
-  mth_(real, parVal, (sz_t parIdx, real const* parVals = nullptr));
-  set_(setParVal, (sz_t parIdx, real val));
+  mth_(real, parVal, (uint parIdx, real const* parVals = nullptr));
+  set_(setParVal, (uint parIdx, real val));
 
-  mth_(real, parErr, (sz_t parIdx));
+  mth_(real, parErr, (uint parIdx));
 dcl_end
 
 // a fun that is a sum of other funs
@@ -74,11 +74,11 @@ dcl_sub_(SumFuns, Fun)
   set_(add, (l::give_me<Fun>));
 
   // aggregate par list for all added funs
-  mth_(sz_t,    parCount, ());
-  mth_(Par::rc, parAt, (sz_t));
+  mth_(uint,    parCount, ());
+  mth_(Par::rc, parAt, (uint));
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
-  mth_(real, dy, (real x, sz_t parIdx, real const* parVals = nullptr));
+  mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
   // summed funs
   l::vec<Fun::sh> funs;
@@ -89,7 +89,7 @@ protected:
   // look up the original fun for a given aggregate par index
   l::vec<Fun const*> fun4parIdx;
   // the starting index of pars of a summed fun, given the aggregate par index
-  l::vec<sz_t> firstParIdx4parIdx;
+  l::vec<uint> firstParIdx4parIdx;
 dcl_end
 
 //------------------------------------------------------------------------------

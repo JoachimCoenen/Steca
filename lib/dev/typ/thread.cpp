@@ -22,7 +22,7 @@ TEST_("thread",
   uint dst[n], src[n];
   for_i_(n) src[i] = i;
 
-  auto l = [&dst, &src](sz_t from, sz_t to) {
+  auto l = [&dst, &src](uint from, uint to) {
     for (auto i=from; i<to; ++i)
       dst[i] = src[i]*src[i];
   };

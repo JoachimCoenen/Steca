@@ -176,12 +176,6 @@ inline uint to_uint(N n) {
   return to_num<uint>(n);
 }
 
-// cast to sz_t
-template <typename N>
-inline sz_t to_sz(N n) {
-  return to_uint(n);
-}
-
 //------------------------------------------------------------------------------
 
 extern flt32 const flt32_nan; // quiet nan

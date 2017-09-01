@@ -17,16 +17,16 @@ dcl_(arr2)
 
   bol_(isEmpty, ()) RET_(sz.isEmpty())
 
-  mth_(T const&, at, (sz_t i, sz_t j))  RET_(ts.at(i).at(j))
-  mth_(T const&, at, (sz_t i))          RET_(at(i%sz.i, i/sz.j))
+  mth_(T const&, at, (uint i, uint j))  RET_(ts.at(i).at(j))
+  mth_(T const&, at, (uint i))          RET_(at(i%sz.i, i/sz.j))
 
-  mth_mut_(T&, refAt, (sz_t i, sz_t j)) RET_(mut(at(i,j)))
-  mth_mut_(T&, refAt, (sz_t i))         RET_(mut(at(i)))
+  mth_mut_(T&, refAt, (uint i, uint j)) RET_(mut(at(i,j)))
+  mth_mut_(T&, refAt, (uint i))         RET_(mut(at(i)))
 
-  set_(setAt, (sz_t i, sz_t j, T&& t))      SET_(refAt(i, j) = t)
-  set_(setAt, (sz_t i, sz_t j, T const& t)) SET_(refAt(i, j) = t)
-  set_(setAt, (sz_t i,         T&& t))      SET_(refAt(i)    = t)
-  set_(setAt, (sz_t i,         T const& t)) SET_(refAt(i)    = t)
+  set_(setAt, (uint i, uint j, T&& t))      SET_(refAt(i, j) = t)
+  set_(setAt, (uint i, uint j, T const& t)) SET_(refAt(i, j) = t)
+  set_(setAt, (uint i,         T&& t))      SET_(refAt(i)    = t)
+  set_(setAt, (uint i,         T const& t)) SET_(refAt(i)    = t)
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ dcl_(sz2) COMPARABLE EQ_NE
 
   bol_(isEmpty, ());
 
-  mth_(sz_t, size,       ());
+  mth_(uint, size,       ());
   mth_(Self, transposed, ());
 dcl_end
 

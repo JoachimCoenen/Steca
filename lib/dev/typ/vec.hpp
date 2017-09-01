@@ -29,7 +29,7 @@ dcl_reimpl_(vec, std::vector<T>)
 #endif
 
   bol_(isEmpty, ())           RET_(base::empty())
-  mth_(sz_t,     size, ())    RET_(to_sz(base::size()))
+  mth_(uint,     size, ())    RET_(base::size())
   mth_(T const&, first, ())   RET_(base::front())
   mth_(T const&, last,  ())   RET_(base::back())
 

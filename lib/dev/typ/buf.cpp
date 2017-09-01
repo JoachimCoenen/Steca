@@ -7,7 +7,7 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-buf::buf(sz_t sz) : base(sz, '\0') {}
+buf::buf(uint sz) : base(sz, '\0') {}
 
 buf::buf(pcstr p, bool zeroByte) : base() {
   if (!p)
