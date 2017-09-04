@@ -2,6 +2,7 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
+#include <lib/dev/io/path.hpp>
 
 class QAbstractProxyModel;
 class QWidget;
@@ -9,10 +10,10 @@ class QWidget;
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-str     dlgOpenFile(QWidget*,  strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
-str_vec dlgOpenFiles(QWidget*, strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
-str     dlgSaveFile(QWidget*,  strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
-str     dlgSaveDir(QWidget*,  strc caption, strc dir);
+l_io::path     dlgOpenFile(QWidget*,  strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
+l_io::path_vec dlgOpenFiles(QWidget*, strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
+l_io::path     dlgSaveFile(QWidget*,  strc caption, strc dir, strc filter, QAbstractProxyModel* = nullptr);
+l_io::path     dlgSaveDir(QWidget*,  strc caption, strc dir);
 
 //------------------------------------------------------------------------------
 }

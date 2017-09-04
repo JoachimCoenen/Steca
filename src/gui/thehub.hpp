@@ -44,16 +44,16 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   Hub(Win&);
  ~Hub();
 
-  set_(sessionClear, ())          emits;
+  voi_mut_(sessionClear, ())          emits;
   set_(sessionLoad, (l_io::path)) emits may_err;
   mth_(void, sessionSave, (l_io::path)) may_err;
 
-  mth_(uint, numFiles, ())        RET_(base::files.size())
-  mth_(str,  fileName, (uint i))  RET_(base::files.at(i)->name)
+  mth_(uint, numFiles, ())        RET_(base::files->size())
+  mth_(str,  fileName, (uint i))  RET_(base::files->at(i)->name)
 
-  set_(addFiles, (str_vec::rc))   emits;
-  set_(addFiles, ())              emits;
-  set_(remFile,  (uint))          emits;
+  voi_mut_(addFiles,   (l_io::path_vec::rc))  emits;
+  voi_mut_(addFiles,   ())                    emits;
+  voi_mut_(remFilesAt, (uint_vec::rc))        emits;
 
   set_(activateFileAt, (uint, bool)) emits;
   using base::isActiveFileAt;
@@ -79,24 +79,24 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(core::data::CombinedSet::rc, setAt, (uint i)) RET_(*base::collectedDatasets.at(i))
   mth_(strc,                        tagAt, (uint i)) RET_(base::collectedDatasetsTags.at(i))
 
-  mth_(core::data::FilesMetaDict::sh, dict, ()) RET_(files.dict)
+  mth_(core::data::FilesMetaDict::sh, dict, ()) RET_(files->dict)
   mth_(uint, dictSize, ());
   mth_(str,  dictKey,     (uint));
   mth_(bool, dictChecked, (uint));
   set_(dictCheck, (uint, bool));
 
 signals:
-  void sigFilesReset();     // a major change in files
-  void sigFilesActive();    // changed active files
+  void sigFiles(core::data::Files::sh) const; // a new set of files <<<<< TODO here I am
+  void sigFilesActive() const;    // changed active files
 
-  void sigFileSelected(core::data::File::sh); // file selected (or not)
+  void sigFileSelected(core::data::File::sh) const; // file selected (or not)
 
-  void sigCorr();           // add/rem/on/off correction file
+  void sigCorr() const;           // add/rem/on/off correction file
 
-  void sigDatasetsReset();  // a major change in datasets
-  void sigDatasetsActive(); // changed active datasets
+  void sigDatasetsReset() const;  // a major change in datasets
+  void sigDatasetsActive() const; // changed active datasets
 
-  void sigDatasetSelected(core::data::CombinedSet::sh); // dataset selected (or not)
+  void sigDatasetSelected(core::data::CombinedSet::sh) const; // dataset selected (or not)
 
 public:
   template <typename Signal, typename Lambda>
@@ -106,7 +106,7 @@ public:
 
 #define DCL_HUB_SIGNAL_ETC(name)      \
 private:                              \
-  set_(emit##name, ());               \
+  voi_(emit##name, ());               \
 public:                               \
   template <typename Lambda> void onSig##name(Lambda slot) { \
     onSignal(&Hub::sig##name, slot);  \
@@ -114,13 +114,13 @@ public:                               \
 
 #define DCL_HUB_SIGNAL_ETC2(name, par)  \
 private:                                \
-  set_(emit##name, (par p));            \
+  voi_(emit##name, (par p));            \
 public:                                 \
   template <typename Lambda> void onSig##name(Lambda slot) { \
     onSignal(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIGNAL_ETC(FilesReset)
+  DCL_HUB_SIGNAL_ETC2(Files, core::data::Files::sh)
   DCL_HUB_SIGNAL_ETC(FilesActive)
   DCL_HUB_SIGNAL_ETC2(FileSelected, core::data::File::sh)
 

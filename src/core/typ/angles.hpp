@@ -68,10 +68,10 @@ dcl_(AngleMap) SHARED
   mth_(Angles::rc, at, (uint i, uint j));
   mth_(Angles::rc, at, (uint i));
 
-  act_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
+  voi_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
 
 private:
-  act_mut_(calculate, ());
+  voi_mut_(calculate, ());
   angle_arr::sh angles;
 
   // sorted

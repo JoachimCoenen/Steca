@@ -96,9 +96,9 @@
 // conversion operator
 #define cop_(op)                          operator op() const
 
-// actions: void methods
-#define act_(mth, args)                   mth_(void, mth, args)
-#define act_mut_(mth, args)               mth_mut_(void, mth, args)
+// void methods
+#define voi_(mth, args)                   mth_(void, mth, args)
+#define voi_mut_(mth, args)               mth_mut_(void, mth, args)
 
 // setters: allow chaining; useful for reimplementation
 #define set_(mth, args)                   mth_mut_(ref, mth, args)

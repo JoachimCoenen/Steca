@@ -13,12 +13,12 @@ dcl_base_(cache_base)
 
   cache_base(pint maxItems);
 
-  virtual act_mut_(trim, (uint))  = 0;
+  virtual voi_mut_(trim, (uint))  = 0;
   virtual mth_(uint, size, ())          = 0;
 
-  act_mut_(prepAdd, ());
+  voi_mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
-  act_mut_(touch, (mru_t&));
+  voi_mut_(touch, (mru_t&));
 
 protected:
   atr_(pint,  maxItems);
@@ -43,7 +43,7 @@ public:
 
   mth_(uint, size, ())      RET_(cash.size())
   bol_(isEmpty,    ())      RET_(cash.isEmpty())
-  act_mut_(clear, ()) { trim(0); }
+  voi_mut_(clear, ()) { trim(0); }
 
   void trim(uint n) { // TODO to cache_base (with adapter)
     if (size() > n) {

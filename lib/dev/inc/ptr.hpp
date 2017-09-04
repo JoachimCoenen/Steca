@@ -205,7 +205,7 @@ struct shared : protected _shared_base_ {
     RTHIS
   }
 
-  act_mut_(reset, (T* p)) {
+  void reset(T* p) {
     *this = shared(p);
   }
 
@@ -230,6 +230,10 @@ template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
 // declare struct as shared
 #define SHARED \
   using sh     = l::shared<Self>;
+
+// clone it
+#define CLONED \
+  mth_(Self*, clone, ()) RET_(new Self(*this))
 
 //------------------------------------------------------------------------------
 }

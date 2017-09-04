@@ -55,7 +55,7 @@ dcl_end
 ViewFiles::ViewFiles(Hub& hub)
 : RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
 
-  hub.onSigFilesReset([this]() {
+  hub.onSigFiles([this](core::data::Files::sh) {
     selectRows({});
     collectDatasets();
     selUpdate();
@@ -75,7 +75,7 @@ void ViewFiles::removeSelected() {
   if (row < 0)
     return;
 
-  hub.remFile(l::to_u(row));
+  hub.remFilesAt({l::to_u(row)});
 
   auto num = hub.numFiles();
   if (num > 0)

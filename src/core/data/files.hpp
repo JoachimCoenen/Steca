@@ -42,13 +42,23 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
+// the whole file group
+dcl_reimpl_(Files, l::vec<File::sh>) SHARED CLONED
+  using base::begin;
+  using base::end;
+  using base::size;
+  using base::at;
+
   atr_(FilesMetaDict::sh, dict);
 
   Files();
 
-  set_(addFile, (data::File::sh));
-  set_(remFile, (uint));
+  bol_(hasPath, (l_io::path::rc));
+  voi_mut_(addFile, (data::File::sh));
+  voi_mut_(remFileAt, (uint));
+
+private:
+  Files(rc);
 dcl_end
 
 //------------------------------------------------------------------------------

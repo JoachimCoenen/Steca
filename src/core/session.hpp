@@ -33,9 +33,11 @@ extern str_vec const normStrLst;
 dcl_(Session)
   Session();
 
-  set_(clear, ());
-  set_(load, (io::Json::rc)) may_err;
+  voi_mut_(clear, ());
+  voi_mut_(load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
+
+  atr_(data::Files::sh,files);
 
   mth_(AngleMap::sh,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current
@@ -50,13 +52,11 @@ dcl_(Session)
   atr_(bool,           corrEnabled);
   mth_(Image::sh,      intensCorr, ());
 
-  atr_(data::Files,    files);
   atr_(data::File::sh, corrFile);
   atr_(Image::sh,      corrImage);
 
-  bol_(hasFile,       (l_io::path::rc));
-  set_(addFile,       (l_io::path::rc)) may_err;
-  set_(remFile,       (uint));
+  bol_mut_(addFiles,   (l_io::path_vec::rc)) may_err;
+  bol_mut_(remFilesAt, (uint_vec::rc));
 
   set_(activateFileAt, (uint, bool));
   bol_(isActiveFileAt, (uint));
@@ -96,8 +96,8 @@ private:
   mutable Image::sh intensCorrImage;
   mutable bool corrHasNaNs;
 
-  act_mut_(updateImageSize, ());
-  act_(calcIntensCorr, ());
+  voi_mut_(updateImageSize, ());
+  voi_(calcIntensCorr, ());
 dcl_end
 
 //------------------------------------------------------------------------------

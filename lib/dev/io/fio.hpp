@@ -14,7 +14,7 @@ dcl_base_(fio)
   atr_(str, basename);
 
   virtual void open2(path::rc, bool binary) may_err = 0;
-  [[noreturn]] act_(err, (strc msg)) will_err;
+  [[noreturn]] voi_(err, (strc msg)) will_err;
 
 protected:
   fio();

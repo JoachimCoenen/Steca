@@ -98,10 +98,9 @@ Hub::~Hub() {
   delete modelFiles;
 }
 
-Hub::ref Hub::sessionClear() {
+void Hub::sessionClear() {
   base::clear();
-  emitFilesReset();
-  RTHIS
+  emitFiles(files);
 }
 
 Hub::ref Hub::sessionLoad(l_io::path path) may_err {
@@ -112,7 +111,7 @@ Hub::ref Hub::sessionLoad(l_io::path path) may_err {
   auto json = Json::asSelf(Json::loadFrom(file.asStream()));
 
   base::load(json);
-  emitFilesReset();
+  emitFiles(files);
 
   RTHIS
 }
@@ -124,19 +123,12 @@ void Hub::sessionSave(l_io::path path) const may_err {
   base::save().saveTo(file.asStream());
 }
 
-Hub::ref Hub::addFiles(str_vec::rc names) {
-  if (!names.isEmpty()) {
-    l_io::busy __;
-    for (l_io::path path : names)
-      if (!base::hasFile(path))
-        base::addFile(path);
-
-    emitFilesReset();
-  }
-  RTHIS
+void Hub::addFiles(l_io::path_vec::rc ps) emits {
+  if (base::addFiles(ps))
+    emitFiles(files);
 }
 
-Hub::ref Hub::addFiles() {
+void Hub::addFiles() emits {
   auto names = l_qt::dlgOpenFiles(&mut(win), "Add files", l_io::path::cwd(),
                 "Data files (*.dat *.mar*);;All files (*.*)",
                 new FileProxyModel);
@@ -147,10 +139,9 @@ Hub::ref Hub::addFiles() {
   return addFiles(names);
 }
 
-Hub::ref Hub::remFile(uint i) {
-  base::remFile(i);
-  emitFilesReset();
-  RTHIS
+void Hub::remFilesAt(uint_vec::rc is) {
+  if (base::remFilesAt(is))
+    emitFiles(files);
 }
 
 Hub::ref Hub::activateFileAt(uint i, bool on) {
@@ -162,7 +153,7 @@ Hub::ref Hub::activateFileAt(uint i, bool on) {
 Hub::ref Hub::selectFileAt(int i) {
   emitFileSelected(i < 0
     ? core::data::File::sh()
-    : files.at(l::to_u(i)));
+    : files->at(l::to_u(i)));
   RTHIS
 }
 
@@ -217,59 +208,52 @@ Hub::ref Hub::groupDatasetsBy(l::pint by) {
 }
 
 uint Hub::dictSize() const {
-  return files.dict->size();
+  return files->dict->size();
 }
 
 str Hub::dictKey(uint i) const {
-  return files.dict->key(i);
+  return files->dict->key(i);
 }
 
 bool Hub::dictChecked(uint i) const {
-  auto&& dict = *files.dict;
+  auto&& dict = *files->dict;
   return dict.checked(dict.key(i));
 }
 
 Hub::ref Hub::dictCheck(uint i, bool on) {
-  auto&& dict = *files.dict;
+  auto&& dict = *files->dict;
   mut(dict).check(dict.key(i), on);
   RTHIS
 }
 
-Hub::ref Hub::emitFilesReset() {
+void Hub::emitFiles(core::data::Files::sh sh) const {
   modelFiles->signalReset();
-  emit sigFilesReset();
-  RTHIS
+  emit sigFiles(sh);
 }
 
-Hub::ref Hub::emitFilesActive() {
+void Hub::emitFilesActive() const {
   emit sigFilesActive();
-  RTHIS
 }
 
-Hub::ref Hub::emitFileSelected(core::data::File::sh sh) {
+void Hub::emitFileSelected(core::data::File::sh sh) const {
   emit sigFileSelected(sh);
-  RTHIS
 }
 
-Hub::ref Hub::emitCorr() {
+void Hub::emitCorr() const {
   emit sigCorr();
-  RTHIS
 }
 
-Hub::ref Hub::emitDatasetsReset() {
+void Hub::emitDatasetsReset() const {
   modelDatasets->signalReset();
   emit sigDatasetsReset();
-  RTHIS
 }
 
-Hub::ref Hub::emitDatasetsActive() {
+void Hub::emitDatasetsActive() const {
   emit sigDatasetsActive();
-  RTHIS
 }
 
-Hub::ref Hub::emitDatasetSelected(core::data::CombinedSet::sh sh) {
+void Hub::emitDatasetSelected(core::data::CombinedSet::sh sh) const {
   emit sigDatasetSelected(sh);
-  RTHIS
 }
 
 //------------------------------------------------------------------------------

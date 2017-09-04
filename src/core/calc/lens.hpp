@@ -44,8 +44,8 @@ dcl_base_(LensBase)
 protected:
   mth_(l::sz2, transCutSize, (l::sz2));
 
-  act_(doTrans, (uint& i, uint& j));
-  act_(doCut,   (uint& i, uint& j));
+  voi_(doTrans, (uint& i, uint& j));
+  voi_(doCut,   (uint& i, uint& j));
 
   ref_(Session,            session);
   ref_(data::CombinedSets, datasets);
@@ -91,7 +91,7 @@ dcl_sub_(DatasetLens, LensBase) SHARED
 //  data::Dataset::rc dataset()  const { return dataset_;   }
 
 private:
-  act_mut_(setNorm, (eNorm));
+  voi_mut_(setNorm, (eNorm));
   inten_t normFactor;
   data::CombinedSet::rc dataset;
 dcl_end

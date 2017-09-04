@@ -38,6 +38,7 @@ l::sz2 File::imageSize() const {
 //------------------------------------------------------------------------------
 
 Files::Files() : dict(new FilesMetaDict) {}
+Files::Files(rc that) : base(that), dict(that.dict->clone()) {}
 
 static l::set<str> metaKeys(Files::rc files) {
   l::set<str> keys;
@@ -49,25 +50,22 @@ static l::set<str> metaKeys(Files::rc files) {
   return keys;
 }
 
-Files::ref Files::addFile(data::File::sh file) {
-  EXPECT_(! // not there
-    ([&]() {
-      for_i_(size())
-        if (file == at(i))
-          return true;
-      return false;
-     }())
-  )
-
-  add(file);
-  mut(file->idx->val) = size();
-
-  mutp(dict)->update(metaKeys(*this));
-
-  return *this;
+bool Files::hasPath(l_io::path::rc path) const {
+  for (auto&& file : *this)
+    if (file->path == path)
+      return true;
+  return false;
 }
 
-Files::ref Files::remFile(uint i) {
+
+void Files::addFile(data::File::sh file) {
+  EXPECT_(!hasPath(file->path))
+  add(file);
+  mut(file->idx->val) = size();
+  mut(*dict).update(metaKeys(*this));
+}
+
+void Files::remFileAt(uint i) {
   File::sh file = at(i);
   rem(i);
 
@@ -76,20 +74,18 @@ Files::ref Files::remFile(uint i) {
   for_i_(size())
     mut(at(i)->idx->val) = i + 1;
 
-  mutp(dict)->update(metaKeys(*this));
-
-  return *this;
+  mut(*dict).update(metaKeys(*this));
 }
 
 //------------------------------------------------------------------------------
 
 TEST_("data::sh",
-  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
+  File::sh f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
+  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
   CHECK_EQ(0, f1->idx->val);
   CHECK_EQ(0, f2->idx->val);
 
@@ -104,7 +100,7 @@ TEST_("data",
     l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
-  fs.remFile(0);
+  fs.remFileAt(0);
   CHECK_EQ(1, f2->idx->val);
 )
 

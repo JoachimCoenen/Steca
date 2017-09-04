@@ -2,6 +2,7 @@
 
 #include "path.hpp"
 #include "../typ/buf.hpp"
+#include "../inc/vecs.hpp"
 
 #ifdef _WIN32
   #include <stdlib.h>
@@ -69,6 +70,13 @@ void path::cd() const {
 #else
   chdir(c_str());
 #endif
+}
+
+//------------------------------------------------------------------------------
+
+path_vec::path_vec(str_vec::rc ss) {
+  for (auto&& s : ss)
+    add(s);
 }
 
 //------------------------------------------------------------------------------

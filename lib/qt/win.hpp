@@ -20,12 +20,12 @@ dcl_sub_(win, QMainWindow)
 
   virtual mth_(acts const&, getActs, ()) = 0;
 
-  virtual act_mut_(show,  (bool = true));
-  virtual act_mut_(fullScreen, (bool));
-  virtual act_mut_(about, ()) {}
-  virtual act_mut_(quit,  ());
+  virtual voi_mut_(show,  (bool = true));
+  virtual voi_mut_(fullScreen, (bool));
+  virtual voi_mut_(about, ()) {}
+  virtual voi_mut_(quit,  ());
 
-  virtual act_mut_(onFirstShow, ()) {}
+  virtual voi_mut_(onFirstShow, ()) {}
   virtual bol_mut_(onClose,     ()) RET_(true)
 
 protected:

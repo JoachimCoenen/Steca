@@ -20,6 +20,7 @@
 #include <lib/dev/io/log.hpp>
 #include "fit/fit_methods.hpp"
 #include "io/io.hpp"
+#include <algorithm>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -27,7 +28,7 @@ namespace core {
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
 Session::Session()
-: angleMapKey0()
+: files(new data::Files), angleMapKey0()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
@@ -36,8 +37,8 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
-Session::ref Session::clear() {
-  RTHIS
+void Session::clear() {
+  mut(files).reset(new data::Files);
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -58,8 +59,8 @@ Session::ref Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-Session::ref Session::load(io::Json::rc) may_err {
-  RTHIS
+void Session::load(io::Json::rc) may_err {
+  clear();
 //  QJsonParseError parseError;
 //  QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
 //  RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
@@ -207,36 +208,46 @@ Image::sh Session::intensCorr() const {
   return intensCorrImage;
 }
 
-bool Session::hasFile(l_io::path::rc path) const {
-  for (auto&& file : files)
-    if (file->path == path)
-      return true;
+bool Session::addFiles(l_io::path_vec::rc ps) may_err {
+  auto&& clone = l::sh(files->clone());
 
-  return false;
+  for (auto&& path : ps)
+    if (!clone->hasPath(path)) {
+      auto&& file = io::load(path);
+      setImageSize(file->imageSize());
+      mut(*clone).addFile(file);
+    }
+
+  if (files->size() == clone->size())
+    return false;
+
+  mut(files) = clone;
+  return true;
 }
 
-Session::ref Session::addFile(l_io::path::rc path) may_err {
-  if (!path.isEmpty()) {
-    auto file = io::load(path);
-    setImageSize(file->imageSize());
-    mut(files).addFile(file);
-  }
-  RTHIS
-}
+bool Session::remFilesAt(uint_vec::rc is) {
+  if (is.isEmpty())
+    return false;
 
-Session::ref Session::remFile(uint i) {
-  mut(files).remFile(i);
-  updateImageSize();
-  RTHIS
+  uint_vec iis = is;
+  std::sort(iis.begin(), iis.end());
+
+  auto&& clone = l::sh(files->clone());
+
+  for_i_down_(iis.size())
+    mut(*clone).remFileAt(iis.at(i));
+
+  mut(files) = clone;
+  return true;
 }
 
 Session::ref Session::activateFileAt(uint i, bool on) {
-  mut(files.at(i)->isActive) = on;
+  mut(files->at(i)->isActive) = on;
   RTHIS
 }
 
 bool Session::isActiveFileAt(uint i) const {
-  return files.at(i)->isActive;
+  return files->at(i)->isActive;
 }
 
 Session::ref Session::activateDatasetAt(uint i, bool on) {
@@ -307,7 +318,7 @@ Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
 
   auto gb = groupedBy;
   for (uint i : collectedFromFiles)
-    for (auto&& set : files.at(i)->sets) { // Set::sh
+    for (auto&& set : files->at(i)->sets) { // Set::sh
       cs->add(set);
       if (0 == --gb) {
         appendCs();
@@ -372,7 +383,7 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
 }
 
 void Session::updateImageSize() {
-  if (0 == files.size() && !corrFile)
+  if (0 == files->size() && !corrFile)
     mut(imageSize) = l::sz2(0, 0);
 }
 

@@ -23,25 +23,25 @@ namespace core { namespace fit {
 
 dcl_base_(Method)
   Method();
-  act_(fit, (Fun&, Curve::rc));
+  voi_(fit, (Fun&, Curve::rc));
 
 protected:
   // these pointers are valid during fit() call, for use in callbackY
   ptr_ (Fun,      fun);
   ptr_ (real_vec, xs);
 
-  virtual act_(approximate, (real*, real const*, real const*, real*, uint,
+  virtual voi_(approximate, (real*, real const*, real const*, real*, uint,
                                real const*, uint)) = 0;
 
   // calculate a vector of y(x)
-  act_(callbackY, (real*, real*, int, int, void*));
+  voi_(callbackY, (real*, real*, int, int, void*));
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_sub_(LinearLeastSquare, Method)
 protected:
-  act_(approximate, (real*, real const*, real const*, real*, uint,
+  voi_(approximate, (real*, real const*, real const*, real*, uint,
                       real const*, uint));
 dcl_end
 
@@ -49,9 +49,9 @@ dcl_end
 
 dcl_sub_(LevenbergMarquardt, Method)
 protected:
-  act_(approximate, (real*, real const*, real const*, real*, uint,
+  voi_(approximate, (real*, real const*, real const*, real*, uint,
                       real const*, uint));
-  act_(callbackJacobianLM, (real*, real*, int, int, void*));
+  voi_(callbackJacobianLM, (real*, real*, int, int, void*));
 dcl_end
 
 //------------------------------------------------------------------------------

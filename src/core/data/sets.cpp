@@ -45,6 +45,7 @@ int MetaDict::safeIndex(strc key) const {
 //------------------------------------------------------------------------------
 
 FilesMetaDict::FilesMetaDict() : checks() {}
+FilesMetaDict::FilesMetaDict(rc that) : base(that), checks(that.checks) {}
 
 uint FilesMetaDict::enter(strc key) {
   if (!checks.contains(key))
@@ -499,12 +500,12 @@ void CombinedSets::resetLazies() {
 //------------------------------------------------------------------------------
 
 TEST_("data::sh",
-  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
+  File::sh f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
+  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
   CHECK_EQ(0, f1->idx->val);
   CHECK_EQ(0, f2->idx->val);
 
@@ -519,7 +520,7 @@ TEST_("data",
     l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
-  fs.remFile(0);
+  fs.remFileAt(0);
   CHECK_EQ(1, f2->idx->val);
 )
 

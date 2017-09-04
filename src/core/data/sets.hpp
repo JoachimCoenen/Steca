@@ -51,7 +51,7 @@ private:
 dcl_end
 
 // attribute dictionary
-dcl_sub_(FilesMetaDict, MetaDict) SHARED
+dcl_sub_(FilesMetaDict, MetaDict) SHARED CLONED
   FilesMetaDict();
 
   mth_mut_(uint, enter, (strc));
@@ -64,6 +64,7 @@ dcl_sub_(FilesMetaDict, MetaDict) SHARED
 private:
   // key->checked
   atr_(l::hash<str COMMA bool>, checks);
+  FilesMetaDict(rc);
 dcl_end
 
 // attribute values
@@ -136,7 +137,7 @@ dcl_(Set) SHARED   // one dataset, as acquired
 
   mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
-  act_(collect, (Session const&, Image const* corr,
+  voi_(collect, (Session const&, Image const* corr,
                  core::inten_vec&, uint_vec&, gma_rge::rc,
                  tth_t minTth, tth_t deltaTth));
 dcl_end
