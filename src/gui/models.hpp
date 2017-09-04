@@ -55,7 +55,7 @@ dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
 private:
   uint_vec metaCols;  // shown metadata
   bol_(grouped, ());
-  mth_(uint, numFixedCols, ());
+  mth_(uint, numLeadCols, ());
 dcl_end
 
 dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)

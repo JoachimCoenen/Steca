@@ -45,12 +45,13 @@ rw_n ModelFiles::rows() const {
 str ModelFiles::head(cl_n cl) const {
   if (0 == cl)
     return "File";
-
   return str::null;
 }
 
-l_qt::var ModelFiles::cell(rw_n rw, cl_n) const {
-  return l_qt::var(hub.fileName(rw));
+l_qt::var ModelFiles::cell(rw_n rw, cl_n cl) const {
+  if (0 == cl)
+    return l_qt::var(hub.fileName(rw));
+  return str::null;
 }
 
 ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
@@ -71,8 +72,8 @@ ModelDatasets::ModelDatasets(Hub& hub) : RefHub(hub) {
 }
 
 cl_n ModelDatasets::cols() const {
-  // allow 1 empty column if there are no metacols (looks better)
-  return cl_n(numFixedCols() + l::max(1u, metaCols.size()));
+  // allow 1 empty column even if there are no metacols (looks better)
+  return cl_n(numLeadCols() + l::max(1u, metaCols.size()));
 }
 
 rw_n ModelDatasets::rows() const {
@@ -85,10 +86,10 @@ str ModelDatasets::head(cl_n cl) const {
   if (1 == cl && grouped())
     return "#-#";
 
-  uint i = cl - numFixedCols();
+  EXPECT_(cl >= numLeadCols())
+  uint i = cl - numLeadCols();
   if (i < metaCols.size())
     return hub.dictKey(i);
-
   return str::null;
 }
 
@@ -98,10 +99,10 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (1 == cl && grouped())
     return hub.tagAt(rw);
 
-  uint i = cl - numFixedCols();
+  EXPECT_(cl >= numLeadCols())
+  uint i = cl - numLeadCols();
   if (i < metaCols.size())
     return l_qt::var(hub.setAt(rw).meta(hub.dict())->vals.valAt(metaCols.at(i))); //TODO
-
   return l_qt::var();
 }
 
@@ -109,7 +110,7 @@ bool ModelDatasets::grouped() const {
   return 1 < hub.groupedBy();
 }
 
-uint ModelDatasets::numFixedCols() const {
+uint ModelDatasets::numLeadCols() const {
   return grouped() ? 2 : 1;
 }
 
@@ -153,9 +154,8 @@ rw_n ModelMetadata::rows() const {
 str ModelMetadata::head(cl_n cl) const {
   if (0 == cl)
     return "Tag";
-  if (0 == cl)
+  if (1 == cl)
     return "Value";
-
   return str::null;
 }
 

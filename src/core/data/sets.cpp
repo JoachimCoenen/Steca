@@ -122,7 +122,7 @@ TEST_("dict",
 #ifndef _WIN32 // CDB has some trouble with this
 TEST_("dict-throw",
   MetaDict dict;
-  CHECK_THROWS_AS(dict.index(""), l::exc::rc);
+  CHECK_THROWS_AS(dict.index(""), std::exception);
 )
 #endif
 
