@@ -135,12 +135,13 @@ TEST_("dict-throw",
 
 //------------------------------------------------------------------------------
 
-FileIdx::FileIdx(uint val_) : val(val_) {}
+FileSrc::FileSrc(l_io::path::rc path_, strc comment_)
+: path(path_), comment(comment_) {}
 
 //------------------------------------------------------------------------------
 
-Set::Set(FileIdx::sh idx_, Meta::sh meta_, Image::sh image_)
-: idx(idx_), meta(meta_), image(image_) {}
+Set::Set(FileSrc::sh src_, Meta::sh meta_, Image::sh image_)
+: src(src_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
   EXPECT_(image)
@@ -512,22 +513,17 @@ TEST_("data::sh",
 
 TEST_("data",
   File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
-  CHECK_EQ(0, f1->idx->val);
-  CHECK_EQ(0, f2->idx->val);
 
   Files fs;
   fs.addFile(l::sh(f1));
   fs.addFile(l::sh(f2));
-  CHECK_EQ(1, f1->idx->val);
-  CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::sh(new Set(
-    l::sh(new FileIdx),
+    f1->src,
     l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
   fs.remFileAt(0);
-  CHECK_EQ(1, f2->idx->val);
 )
 
 //------------------------------------------------------------------------------

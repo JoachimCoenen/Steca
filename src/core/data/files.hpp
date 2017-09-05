@@ -18,7 +18,6 @@
 #pragma once
 #include "../typ/def.hpp"
 #include "sets.hpp"
-#include <lib/dev/io/path.hpp>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -26,11 +25,8 @@ namespace core { namespace data {
 struct Files;
 
 dcl_(File) SHARED  // one file
-  atr_(FileIdx::sh,idx);      // the number within files, 0 = not
+  atr_(FileSrc::sh,src);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
-  atr_(l_io::path, path);
-  atr_(str,        name);
-  atr_(str,        comment);
   atr_(Sets,       sets);
   atr_(MetaDict::sh, dict); // for all sets
 

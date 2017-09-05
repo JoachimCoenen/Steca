@@ -64,7 +64,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(corrRem,    ())            emits;
 
   bol_(corrEnabled, ())           RET_(base::corrEnabled)
-  mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->name : str::null)
+  mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
   set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint));
   set_(collectDatasetsFromFiles, (uint_vec::rc));

@@ -22,6 +22,7 @@
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
 #include <lib/dev/typ/set.hpp>
+#include <lib/dev/io/path.hpp>
 
 namespace core {
 
@@ -105,19 +106,21 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(FileIdx) SHARED
-  atr_(uint, val);
-  FileIdx(uint = 0);
+dcl_(FileSrc) SHARED
+  atr_(l_io::path, path);
+  atr_(str, comment);
+
+  FileSrc(l_io::path::rc path, strc comment);
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(FileIdx::sh, idx);
+  atr_(FileSrc::sh, src);
   atr_(Meta::sh,    meta);
   atr_(Image::sh,   image);
 
-  Set(FileIdx::sh, Meta::sh, Image::sh);
+  Set(FileSrc::sh, Meta::sh, Image::sh);
 
   mth_(l::sz2, imageSize, ());
 

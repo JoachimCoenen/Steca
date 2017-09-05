@@ -25,7 +25,7 @@ namespace core { namespace io {
 using data::Files;
 using data::File;
 using data::Set;
-using data::FileIdx;
+using data::FileSrc;
 using data::Meta;
 
 using l_io::path;
@@ -233,7 +233,7 @@ File::sh loadMar(path::rc path) may_err {
 
   mut(*file).addSet(
     l::sh(new Set(
-      file->idx,
+      file->src,
       l::sh(md.take().ptr()),
       l::sh(new Image(convertedIntens)))));
 

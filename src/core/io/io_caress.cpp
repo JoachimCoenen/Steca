@@ -51,7 +51,7 @@ str loadCaressComment(l_io::path::rc path) {
 using data::Files;
 using data::File;
 using data::Set;
-using data::FileIdx;
+using data::FileSrc;
 using data::Meta;
 using data::MetaVals;
 
@@ -166,7 +166,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
     flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
       l::sh(new Set(
-        file->idx,
+        file->src,
         l::sh(new Meta(file->dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
         l::sh(image.take().ptr()))));
 
@@ -225,7 +225,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
       if (node.isEmpty()) { // file-level info
         str s(getAsString(dt, n));
         if (elem == "COM")
-          mut(file->comment) = s;
+          mut(file->src->comment) = s;
 //        else // ignore other strings
 //          mut(file->strs).add(std::make_pair(elem, s));
       }

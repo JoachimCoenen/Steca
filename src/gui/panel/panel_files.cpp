@@ -33,7 +33,7 @@ ViewFile::ViewFile(Hub& hub): base(hub) {
   vb.add(lbl);
 
   hub.onSigFileSelected([this, lbl](core::data::File::sh file) {
-    lbl->text(file ? file->comment : str::null);
+    lbl->text(file ? file->src->comment : str::null);
   });
 }
 
