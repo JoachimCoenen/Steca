@@ -45,7 +45,7 @@ dcl_(MetaDict) SHARED
 
   mth_(int,  safeIndex, (strc key));
 
-private:
+protected:
   // key->index
   atr_(l::hash<str COMMA uint>, idxs);
 dcl_end

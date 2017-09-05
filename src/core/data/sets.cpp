@@ -57,12 +57,18 @@ uint FilesMetaDict::enter(strc key) {
 }
 
 FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
-  for (auto it = checks.begin(); it != checks.end(); ++it)
-    if (!keys.contains(it->first))
-      mut(checks).erase(it);
+  auto cs = checks;
+
+  mut(checks).clear();
+  mut(keys).clear();
+  mut(idxs).clear();
 
   for (auto&& key : keys)
     enter(key);
+
+  for (auto&& key : keys)
+    if (checks.contains(key) && cs.contains(key))
+      check(key, cs.at(key));
 
   RTHIS
 }

@@ -50,7 +50,6 @@ dcl_sub_(lst_model, QAbstractTableModel)
   virtual set_(check, (rw_n, bool));
   virtual bol_(isChecked, (rw_n));
 
-  voi_(signalReset, ()) emits;
   voi_(updateState, ()) emits;
 
   virtual voi_(fixColumns,  (lst_view&));
@@ -58,6 +57,16 @@ dcl_sub_(lst_model, QAbstractTableModel)
 
 signals:
   void stateChanged(triChk::eState) const;
+
+public:
+  template <typename Lambda>
+  void onSignalReset(Lambda slot) const {
+    QObject::connect(this, &Self::modelReset, slot);
+  }
+
+protected:
+  voi_(signalReset, ()) emits;
+
 private:
   mutable triChk::eState state;
 

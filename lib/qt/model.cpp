@@ -78,12 +78,6 @@ bool lst_model::isChecked(rw_n) const {
   return false;
 }
 
-void lst_model::signalReset() const {
-  mutp(this)->beginResetModel();
-  mutp(this)->endResetModel();
-  updateState();
-}
-
 void lst_model::updateState() const {
   using eState = triChk::eState;
   eState newState = eState::off;
@@ -94,7 +88,7 @@ void lst_model::updateState() const {
 
   bool all = true, none = true;
   for_i_(rows())
-    if (isChecked(i))
+    if (isChecked(rw_n(i)))
       none = false;
     else
       all = false;
@@ -122,6 +116,12 @@ void lst_model::fixColumns(lst_view& view) const {
 
   for_i_(cols())
     h->setSectionResizeMode(int(i + colOff()), QHeaderView::Interactive);
+}
+
+void lst_model::signalReset() const {
+  mutp(this)->beginResetModel();
+  mutp(this)->endResetModel();
+  updateState();
 }
 
 int lst_model::columnCount(rcIndex) const {

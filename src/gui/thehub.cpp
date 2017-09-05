@@ -227,7 +227,6 @@ Hub::ref Hub::dictCheck(uint i, bool on) {
 }
 
 void Hub::emitFiles(core::data::Files::sh sh) const {
-  modelFiles->signalReset();
   emit sigFiles(sh);
 }
 
@@ -244,7 +243,6 @@ void Hub::emitCorr() const {
 }
 
 void Hub::emitDatasetsReset() const {
-  modelDatasets->signalReset();
   emit sigDatasetsReset();
 }
 

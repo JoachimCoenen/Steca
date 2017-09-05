@@ -209,6 +209,7 @@ Image::sh Session::intensCorr() const {
 }
 
 bool Session::addFiles(l_io::path_vec::rc ps) may_err {
+  l_io::busy __;
   auto&& clone = l::sh(files->clone());
 
   for (auto&& path : ps)

@@ -27,6 +27,6 @@ StressTextureCalculator, version 2. (`STeCa2`, `Steca2`, or simply `Steca`)
 ### functional:
 
 [![Travis-CI Build Status](https://travis-ci.org/jburle/STeCa2.svg?branch=functional)](https://travis-ci.org/jburle/STeCa2)
-[![AppVeyor-CI Build Status](https://ci.appveyor.com/api/projects/status/github/jburle/steca2?branch=functional&svg=true)](https://ci.appveyor.com/project/steca2-ia3uq/steca2)
+[![AppVeyor-CI Build Status](https://ci.appveyor.com/api/projects/status/github/jburle/steca2?branch=functional&svg=true)](https://ci.appveyor.com/project/jburle/steca2-ia3uq)
 
 ◆

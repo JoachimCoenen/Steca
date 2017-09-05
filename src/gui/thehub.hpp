@@ -48,9 +48,6 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(sessionLoad, (l_io::path)) emits may_err;
   mth_(void, sessionSave, (l_io::path)) may_err;
 
-  mth_(uint, numFiles, ())        RET_(base::files->size())
-  mth_(str,  fileName, (uint i))  RET_(base::files->at(i)->name)
-
   voi_mut_(addFiles,   (l_io::path_vec::rc))  emits;
   voi_mut_(addFiles,   ())                    emits;
   voi_mut_(remFilesAt, (uint_vec::rc))        emits;
@@ -100,7 +97,7 @@ signals:
 
 public:
   template <typename Signal, typename Lambda>
-  void onSignal(Signal signal, Lambda slot) {
+  void onSignal(Signal signal, Lambda slot) const {
     QObject::connect(this, signal, slot);
   }
 
@@ -108,7 +105,7 @@ public:
 private:                              \
   voi_(emit##name, ());               \
 public:                               \
-  template <typename Lambda> void onSig##name(Lambda slot) { \
+  template <typename Lambda> void onSig##name(Lambda slot) const { \
     onSignal(&Hub::sig##name, slot);  \
   }
 
@@ -116,7 +113,7 @@ public:                               \
 private:                                \
   voi_(emit##name, (par p));            \
 public:                                 \
-  template <typename Lambda> void onSig##name(Lambda slot) { \
+  template <typename Lambda> void onSig##name(Lambda slot) const { \
     onSignal(&Hub::sig##name, slot);  \
   }
 

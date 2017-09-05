@@ -52,11 +52,18 @@ private:
   void selUpdate();
 dcl_end
 
-ViewFiles::ViewFiles(Hub& hub)
-: RefHub(hub), actRem(hub.acts.get(hub.acts.FILES_REM)) {
+ViewFiles::ViewFiles(Hub& hub) : RefHub(hub)
+, actRem(hub.acts.get(hub.acts.FILES_REM)) {
 
-  hub.onSigFiles([this](core::data::Files::sh) {
-    selectRows({});
+  auto&& mf = hub.modelFiles;
+  setModel(mf);
+
+  mf->onSignalReset([this]() {
+    int num = int(model->rows());
+    if (num > 0) {
+      selectRow(rw_n(l::to_u(l::bound(0, selRow, num-1))));
+    }
+
     collectDatasets();
     selUpdate();
   });
@@ -72,14 +79,8 @@ ViewFiles::ViewFiles(Hub& hub)
 
 void ViewFiles::removeSelected() {
   auto row = selectedRow();
-  if (row < 0)
-    return;
-
-  hub.remFilesAt({l::to_u(row)});
-
-  auto num = hub.numFiles();
-  if (num > 0)
-    selectRow(rw_n(l::min(num-1, l::to_uint(row))));
+  if (0 <= row)
+    hub.remFilesAt({l::to_u(row)});
 }
 
 void ViewFiles::collectDatasets() {
@@ -103,9 +104,7 @@ void ViewFiles::selectionChanged(QItemSelection const& selected,
 }
 
 void ViewFiles::selUpdate() {
-  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
-  actRem.setEnabled(!isEmpty);
-  hub.selectFileAt(isEmpty ? -1 : int(sel.first()));
+  hub.selectFileAt(selectedRow());
 }
 
 //------------------------------------------------------------------------------
@@ -127,7 +126,6 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
 
   tab->vb.add((new ViewFile(hub)));
   tab->vb.add((view = new ViewFiles(hub)));
-  view->setModel(hub.modelFiles);
 
   tab->vb.add(mutp(hub.modelFiles)->makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));

@@ -45,8 +45,7 @@ void ViewDatasets::selectionChanged(QItemSelection const& selected,
 }
 
 void ViewDatasets::selUpdate() {
-  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
-  hub.selectDatasetAt(isEmpty ? -1 : int(sel.first()));
+  hub.selectDatasetAt(selectedRow());
 }
 
 //------------------------------------------------------------------------------

@@ -18,13 +18,13 @@
 #pragma once
 #include "refhub.hpp"
 #include <lib/qt/model.hpp>
-#include <core/data/sets.hpp>
+#include <core/data/files.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
-  ModelFiles(Hub&);
+dcl_sub_(ModelFiles, l_qt::lst_model)
+  ModelFiles(Hub const&);
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
@@ -32,10 +32,12 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check, (rw_n, bool));
+  set_(check,     (rw_n, bool));
   bol_(isChecked, (rw_n));
 
-  dcl_end
+private:
+  core::data::Files::sh files;
+dcl_end
 
 dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
   ModelDatasets(Hub&);

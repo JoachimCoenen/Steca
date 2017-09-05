@@ -29,9 +29,14 @@ using cl_n = ModelDatasets::cl_n;
 
 //------------------------------------------------------------------------------
 
-ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
+ModelFiles::ModelFiles(Hub::rc hub) {
   setCheckable(true);
   setNumbered(2);
+
+  hub.onSigFiles([this](core::data::Files::sh sh) {
+    files = sh;
+    signalReset();
+  });
 }
 
 cl_n ModelFiles::cols() const {
@@ -39,7 +44,7 @@ cl_n ModelFiles::cols() const {
 }
 
 rw_n ModelFiles::rows() const {
-  return rw_n(hub.numFiles());
+  return rw_n(files ? files->size() : 0);
 }
 
 str ModelFiles::head(cl_n cl) const {
@@ -49,19 +54,22 @@ str ModelFiles::head(cl_n cl) const {
 }
 
 l_qt::var ModelFiles::cell(rw_n rw, cl_n cl) const {
+  EXPECT_(files)
   if (0 == cl)
-    return l_qt::var(hub.fileName(rw));
+    return l_qt::var(files->at(rw)->name);
   return str::null;
 }
 
 ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
-  hub.activateFileAt(rw, on);
+  EXPECT_(files)
+  mut(files->at(rw)->isActive) = on;
   base::updateState();
   RTHIS
 }
 
 bool ModelFiles::isChecked(rw_n rw) const {
-  return hub.isActiveFileAt(rw);
+  return files->at(rw)->isActive;
+  EXPECT_(files)
 }
 
 //------------------------------------------------------------------------------

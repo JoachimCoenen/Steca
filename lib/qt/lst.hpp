@@ -45,7 +45,8 @@ dcl_sub_(lst_view, QTreeView)
 protected:
   void keyPressEvent(QKeyEvent*);
   int  sizeHintForColumn(int) const; // make narrow columns
-  QMetaObject::Connection modelConn;
+  void selectionChanged(QItemSelection const&, QItemSelection const&);
+  int  selRow;
 dcl_end
 
 //------------------------------------------------------------------------------

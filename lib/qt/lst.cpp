@@ -30,7 +30,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-lst_view::lst_view(bool hasHeader_) : hasHeader(hasHeader_), model(nullptr) {
+lst_view::lst_view(bool hasHeader_) : hasHeader(hasHeader_), model(nullptr), selRow(-1) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
   setItemDelegate(new lst_view_itemDelegate);
@@ -48,7 +48,6 @@ lst_view::ref lst_view::showHeader(bool on) {
 
 lst_view::ref lst_view::setModel(lst_model const* model_) {
   if (model) {
-    disconnect(modelConn);
     base::setModel(nullptr);
     mut(model) = nullptr;
     base::header()->setVisible(false);
@@ -101,8 +100,7 @@ int lst_view::currentRow() const {
 }
 
 lst_view::ref lst_view::selectRow(rw_n rw) {
-  if (model)
-    base::setCurrentIndex(model->index(int(rw), 1));
+  selectRows({rw});
   RTHIS
 }
 
@@ -165,6 +163,11 @@ void lst_view::keyPressEvent(QKeyEvent* e) {
 
 int lst_view::sizeHintForColumn(int) const {
   return mWidth(*this, 1.6);
+}
+
+void lst_view::selectionChanged(QItemSelection const& sel, QItemSelection const& desel) {
+  selRow = selectedRow();
+  base::selectionChanged(sel, desel);
 }
 
 //------------------------------------------------------------------------------
