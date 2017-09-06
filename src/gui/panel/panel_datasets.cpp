@@ -33,7 +33,7 @@ dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
   hub.onSigDatasetsReset([this]() {
-    selectRows({});
+// TODO    selectRows({});
 //    selUpdateOUT();
   });
 }

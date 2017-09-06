@@ -176,6 +176,16 @@ inline uint to_uint(N n) {
   return to_num<uint>(n);
 }
 
+template <typename T>
+inline T val_min(T const&) {
+  return __num_trait<T>::min;
+}
+
+template <typename T>
+inline T val_max(T const&) {
+  return __num_trait<T>::max;
+}
+
 //------------------------------------------------------------------------------
 
 extern flt32 const flt32_nan; // quiet nan

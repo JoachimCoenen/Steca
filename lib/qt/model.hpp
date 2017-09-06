@@ -60,8 +60,8 @@ signals:
 
 public:
   template <typename Lambda>
-  void onSignalReset(Lambda slot) const {
-    QObject::connect(this, &Self::modelReset, slot);
+  QMetaObject::Connection onSignalReset(Lambda slot) const {
+    return QObject::connect(this, &Self::modelReset, slot);
   }
 
 protected:

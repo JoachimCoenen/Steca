@@ -30,15 +30,16 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-lst_view::lst_view(bool hasHeader_) : hasHeader(hasHeader_), model(nullptr), selRow(-1) {
+lst_view::lst_view(bool hasHeader_)
+: hasHeader(hasHeader_), model(nullptr), currRow(-1) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
   setItemDelegate(new lst_view_itemDelegate);
   showHeader(hasHeader);
 
-  connect(this, &Self::clicked, [this](idx_rc idx) {
-    if (model && model->isCheckable && 1 == idx.column())
-      checkRow(base::currentIndex());
+  connect(this, &Self::clicked, [this](QModelIndex const& idx) {
+    if (model && 1 == idx.column())
+      checkRow(idx.row());
   });
 }
 
@@ -48,40 +49,34 @@ lst_view::ref lst_view::showHeader(bool on) {
 
 lst_view::ref lst_view::setModel(lst_model const* model_) {
   if (model) {
+    disconnect(con);
     base::setModel(nullptr);
     mut(model) = nullptr;
-    base::header()->setVisible(false);
   }
 
   if (model_) {
     base::setModel(mutp(mut(model) = model_));
+    con = model->onSignalReset([this]() {
+      setCurrentRow(currRow);
+    });
+
     fixColumns();
-    selectRow(rw_n(0));
+    setCurrentRow(0);
   }
 
   RTHIS
 }
 
-lst_view::ref lst_view::checkRow(idx_rc index) {
-  auto row = index.row();
-  if (row >= 0)
-    checkRow(rw_n(l::to_uint(row)));
-  RTHIS
-}
-
-lst_view::ref lst_view::checkRow(rw_n rw) {
-  if (model) {
-    EXPECT_(model->rows())
-    mutp(model)->check(rw);
-    QModelIndex index = model->index(int(rw), 1);
-    emit dataChanged(index, index);
+lst_view::ref lst_view::checkRow(int row) {
+  if (model && model->isCheckable && 0<=row && row <= int(model->rows())) {
+    mutp(model)->check(rw_n(uint(row)));
   }
   RTHIS
 }
 
-lst_view::ref lst_view::checkRows(rw_n_vec::rc rws) {
-  for (auto rw : rws)
-    checkRow(rw);
+lst_view::ref lst_view::checkRows(int_vec::rc rows) {
+  for (auto row : rows)
+    checkRow(row);
   RTHIS
 }
 
@@ -96,37 +91,16 @@ lst_view::rw_n_vec lst_view::checkedRows() const {
 }
 
 int lst_view::currentRow() const {
-  return base::currentIndex().row();
+  return currRow;
 }
 
-lst_view::ref lst_view::selectRow(rw_n rw) {
-  selectRows({rw});
-  RTHIS
-}
+int lst_view::setCurrentRow(int row) {
+  if (!model)
+    return (currRow = -1);
 
-int lst_view::selectedRow() const {
-  auto rws = selectedRows();
-  return rws.isEmpty() ? -1 : int(rws.first());
-}
-
-lst_view::ref lst_view::selectRows(rw_n_vec::rc rws) {
-  if (model) {
-    int cols = model->columnCount();
-
-    QItemSelection is;
-    for (auto rw : rws)
-      is.append(QItemSelectionRange(model->index(int(rw), 0),
-                                    model->index(int(rw), cols - 1)));
-    selectionModel()->select(is, QItemSelectionModel::ClearAndSelect);
-  }
-  RTHIS
-}
-
-lst_view::rw_n_vec lst_view::selectedRows() const {
-  rw_n_vec rws;
-  for (auto&& index : selectionModel()->selectedRows())
-    rws.add(rw_n(l::to_u(index.row())));
-  return rws;
+  currRow = l::bound(0, row, int(model->rows()) - 1);
+  base::setCurrentIndex(model->createIndex(currRow, 0));
+  return currRow;
 }
 
 lst_view::ref lst_view::fixColumns() {
@@ -151,11 +125,32 @@ lst_view::ref lst_view::setColWidth(cl_n cl, int w) {
 }
 
 void lst_view::keyPressEvent(QKeyEvent* e) {
+  if (!model)
+    return;
+
   switch (e->key()) {
   case Qt::Key_Space:
-    if (model && model->isCheckable)
-      checkRow(base::currentIndex());
-    return;
+    if (model)
+      checkRow(currRow);
+    break;
+  case Qt::Key_Up:
+    setCurrentRow(currRow - 1);
+    break;
+  case Qt::Key_Down:
+    setCurrentRow(currRow + 1);
+    break;
+  case Qt::Key_PageUp:
+    setCurrentRow(currRow - 10);  // TODO
+    break;
+  case Qt::Key_PageDown:
+    setCurrentRow(currRow + 10);  // TODO
+    break;
+  case Qt::Key_Home:
+    setCurrentRow(0);
+    break;
+  case Qt::Key_End:
+    setCurrentRow(l::val_max(currRow));
+    break;
   default:
     base::keyPressEvent(e);
   }
@@ -165,9 +160,9 @@ int lst_view::sizeHintForColumn(int) const {
   return mWidth(*this, 1.6);
 }
 
-void lst_view::selectionChanged(QItemSelection const& sel, QItemSelection const& desel) {
-  selRow = selectedRow();
-  base::selectionChanged(sel, desel);
+void lst_view::currentChanged(QModelIndex const& current, QModelIndex const& previous) {
+  base::currentChanged(current, previous);
+  currRow = current.row();
 }
 
 //------------------------------------------------------------------------------

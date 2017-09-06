@@ -27,16 +27,15 @@ namespace gui {
 dcl_sub_(ViewFile, Panel)
   ViewFile();
   voi_mut_(setInfo, (core::data::File const*));
-  atr_(l_qt::lbl, lbl);
+  ptr_(l_qt::lbl, lbl);
 dcl_end
 
-ViewFile::ViewFile() {
-  auto lbl = new l_qt::lbl();
-  vb.add(lbl);
+ViewFile::ViewFile() : lbl(new l_qt::lbl()) {
+  vb.add(mutp(lbl));
 }
 
 void ViewFile::setInfo(core::data::File const* file) {
-  mut(lbl).text(file ? file->src->comment : str::null);
+  mutp(lbl)->text(file ? file->src->comment : str::null);
 }
 
 //------------------------------------------------------------------------------
@@ -56,15 +55,7 @@ dcl_end
 
 ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
 , viewFile(viewFile_) , actRem(hub.acts.get(hub.acts.FILES_REM)) {
-
-  auto&& mf = hub.modelFiles;
-  setModel(mf);
-
-  mf->onSignalReset([this]() {
-    int num = int(model->rows());
-    if (num > 0)
-      selectRow(rw_n(l::to_u(l::bound(0, selRow, num-1))));
-  });
+  setModel(hub.modelFiles);
 
   actRem.onTrigger([this]() {
     removeSelected();
@@ -72,7 +63,7 @@ ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
 }
 
 void ViewFiles::removeSelected() {
-  auto row = selectedRow();
+  auto row = currentRow();
   if (0 <= row)
     hub.remFilesAt({l::to_u(row)});
 }
@@ -94,10 +85,13 @@ void ViewFiles::keyPressEvent(QKeyEvent* e) {
 void ViewFiles::selectionChanged(QItemSelection const& selected,
                                  QItemSelection const& deselected) {
   base::selectionChanged(selected, deselected);
-  int i = selectedRow();
-  EXPECT_(dynamic_cast<ModelFiles const*>(model))
-  viewFile.setInfo(0 <= i
-      ? static_cast<ModelFiles const*>(model)->at(rw_n(i)).ptr() : nullptr);
+  int i = currentRow();
+  if (0 <=i && model && uint(i) < model->rows()) {
+    EXPECT_(dynamic_cast<ModelFiles const*>(model))
+    auto m = static_cast<ModelFiles const*>(model);
+    viewFile.setInfo(m->at(rw_n(l::to_u(i))).ptr());
+  } else
+    viewFile.setInfo(nullptr);
 }
 
 //------------------------------------------------------------------------------
