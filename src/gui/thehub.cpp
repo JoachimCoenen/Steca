@@ -144,29 +144,28 @@ void Hub::remFilesAt(uint_vec::rc is) {
     emitFiles(files);
 }
 
-Hub::ref Hub::activateFileAt(uint i, bool on) {
-  base::activateFileAt(i, on);
-  emitFilesActive();
+void Hub::activateFileAt(uint i, bool on) const {
+  if (mut(*this).base::activateFileAt(i, on))
+    emitFiles(files);
+}
+
+Hub::ref Hub::selectFileAtOUT(int i) {
+//  emitFileSelected(i < 0
+//    ? core::data::File::sh()
+//    : files->at(l::to_u(i)));
   RTHIS
 }
 
-Hub::ref Hub::selectFileAt(int i) {
-  emitFileSelected(i < 0
-    ? core::data::File::sh()
-    : files->at(l::to_u(i)));
+Hub::ref Hub::activateDatasetAtOUT(uint i, bool on) {
+//  base::activateDatasetAt(i, on);
+//  emitDatasetsActive();
   RTHIS
 }
 
-Hub::ref Hub::activateDatasetAt(uint i, bool on) {
-  base::activateDatasetAt(i, on);
-  emitDatasetsActive();
-  RTHIS
-}
-
-Hub::ref Hub::selectDatasetAt(int i) {
-  emitDatasetSelected(i < 0
-    ? core::data::CombinedSet::sh()
-    : collectedDatasets.at(l::to_u(i)));
+Hub::ref Hub::selectDatasetAtOUT(int i) {
+//  emitDatasetSelected(i < 0
+//    ? core::data::CombinedSet::sh()
+//    : collectedDatasets.at(l::to_u(i)));
   RTHIS
 }
 
@@ -191,19 +190,19 @@ Hub::ref Hub::corrRem() {
   RTHIS
 }
 
-Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
-  base::collectDatasetsFromFiles(is, by);
-  emitDatasetsReset();
+Hub::ref Hub::collectDatasetsFromFilesOUT(uint_vec::rc is, l::pint by) {
+//  base::collectDatasetsFromFiles(is, by);
+//  emitDatasetsReset();
   RTHIS
 }
 
-Hub::ref Hub::collectDatasetsFromFiles(uint_vec::rc is) {
-  collectDatasetsFromFiles(is, groupedBy());
+Hub::ref Hub::collectDatasetsFromFilesOUT(uint_vec::rc is) {
+//  collectDatasetsFromFiles(is, groupedBy());
   RTHIS
 }
 
-Hub::ref Hub::groupDatasetsBy(l::pint by) {
-  collectDatasetsFromFiles(collectedFromFiles, by);
+Hub::ref Hub::groupDatasetsByOUT(l::pint by) {
+//  collectDatasetsFromFiles(collectedFromFiles, by);
   RTHIS
 }
 
@@ -230,12 +229,12 @@ void Hub::emitFiles(core::data::Files::sh sh) const {
   emit sigFiles(sh);
 }
 
-void Hub::emitFilesActive() const {
-  emit sigFilesActive();
+void Hub::emitFilesActiveOUT() const {
+//  emit sigFilesActive();
 }
 
-void Hub::emitFileSelected(core::data::File::sh sh) const {
-  emit sigFileSelected(sh);
+void Hub::emitFileSelectedOUT(core::data::File::sh sh) const {
+//  emit sigFileSelected(sh);
 }
 
 void Hub::emitCorr() const {

@@ -18,14 +18,13 @@
 #include "panel.hpp"
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/lbl.hpp>
-#include "../thehub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-Panel::Panel(Hub& hub) : Panel(str::null, hub) {}
+Panel::Panel() : Panel(str::null) {}
 
-Panel::Panel(strc title, Hub& hub_) : hub(hub_), vb(base::vb()) {
+Panel::Panel(strc title) : vb(base::vb()) {
   if (!title.isEmpty())
     vb.add(new l_qt::lbl(title));
 }

@@ -23,8 +23,8 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub_(ModelFiles, l_qt::lst_model)
-  ModelFiles(Hub const&);
+dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
+  ModelFiles(Hub&);
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
@@ -34,6 +34,8 @@ dcl_sub_(ModelFiles, l_qt::lst_model)
 
   set_(check,     (rw_n, bool));
   bol_(isChecked, (rw_n));
+
+  mth_(core::data::File::sh, at, (rw_n));
 
 private:
   core::data::Files::sh files;

@@ -24,11 +24,9 @@ namespace gui {
 struct Hub;
 
 dcl_sub_(Panel, l_qt::panel)
-  Panel(Hub&);
-  Panel(strc title, Hub&);
+  Panel();
+  Panel(strc title);
 
-protected:
-  Hub& hub;
 public:
   l_qt::box &vb;
 dcl_end

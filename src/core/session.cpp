@@ -32,7 +32,7 @@ Session::Session()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
-, collectedDatasets(), collectedDatasetsTags(), collectedFromFiles(), groupedBy(1)
+, collectedDatasetsOUT(), collectedDatasetsTagsOUT(), collectedFromFilesOUT(), groupedByOUT(1)
 , bgPolyDegree(0), bgRanges()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
@@ -242,22 +242,27 @@ bool Session::remFilesAt(uint_vec::rc is) {
   return true;
 }
 
-Session::ref Session::activateFileAt(uint i, bool on) {
+bool Session::activateFileAt(uint i, bool on) {
+  if (i >= files->size())
+    return false;
+  mut(files).reset(files->clone());
   mut(files->at(i)->isActive) = on;
+  return true;
+}
+
+bool Session::isActiveFileAtOUT(uint i) const {
+//  if (i >= files->size())
+//    return false;
+//  return files->at(i)->isActive;
+}
+
+Session::ref Session::activateDatasetAtOUT(uint i, bool on) {
+  mut(collectedDatasetsOUT.at(i)->isActive) = on;
   RTHIS
 }
 
-bool Session::isActiveFileAt(uint i) const {
-  return files->at(i)->isActive;
-}
-
-Session::ref Session::activateDatasetAt(uint i, bool on) {
-  mut(collectedDatasets.at(i)->isActive) = on;
-  RTHIS
-}
-
-bool Session::isActiveDatasetAt(uint i) const {
-  return collectedDatasets.at(i)->isActive;
+bool Session::isActiveDatasetAtOUT(uint i) const {
+  return collectedDatasetsOUT.at(i)->isActive;
 }
 
 Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
@@ -294,40 +299,40 @@ Session::ref Session::tryEnableCorr(bool on) {
   RTHIS
 }
 
-Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
-  mut(collectedFromFiles) = is;
-  mut(collectedDatasets).clear();
-  mut(collectedDatasetsTags).clear();
-  mut(groupedBy) = by;
+Session::ref Session::collectDatasetsFromFilesOUT(uint_vec::rc is, l::pint by) {
+//  mut(collectedFromFiles) = is;
+//  mut(collectedDatasets).clear();
+//  mut(collectedDatasetsTags).clear();
+//  mut(groupedBy) = by;
 
-  auto cs = l::scope(new data::CombinedSet);
-  uint i = 0;
+//  auto cs = l::scope(new data::CombinedSet);
+//  uint i = 0;
 
-  auto appendCs = [this, &cs, &i]() {
-    auto sz = cs->size();
-    if (!sz)
-      return;
+//  auto appendCs = [this, &cs, &i]() {
+//    auto sz = cs->size();
+//    if (!sz)
+//      return;
 
-    str tag = str::num(i + 1); i += sz;
-    if (groupedBy > 1)
-      tag += '-' + str::num(i);
+//    str tag = str::num(i + 1); i += sz;
+//    if (groupedBy > 1)
+//      tag += '-' + str::num(i);
 
-    mut(collectedDatasets).add(cs.takeOwn());
-    mut(collectedDatasetsTags).add(tag);
-    cs.reset(new data::CombinedSet);
-  };
+//    mut(collectedDatasets).add(cs.takeOwn());
+//    mut(collectedDatasetsTags).add(tag);
+//    cs.reset(new data::CombinedSet);
+//  };
 
-  auto gb = groupedBy;
-  for (uint i : collectedFromFiles)
-    for (auto&& set : files->at(i)->sets) { // Set::sh
-      cs->add(set);
-      if (0 == --gb) {
-        appendCs();
-        gb = groupedBy;
-      }
-    }
+//  auto gb = groupedBy;
+//  for (uint i : collectedFromFiles)
+//    for (auto&& set : files->at(i)->sets) { // Set::sh
+//      cs->add(set);
+//      if (0 == --gb) {
+//        appendCs();
+//        gb = groupedBy;
+//      }
+//    }
 
-  appendCs();  // the potentially remaining ones
+//  appendCs();  // the potentially remaining ones
 
   RTHIS
 }

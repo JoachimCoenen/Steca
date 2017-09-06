@@ -29,13 +29,14 @@ using cl_n = ModelDatasets::cl_n;
 
 //------------------------------------------------------------------------------
 
-ModelFiles::ModelFiles(Hub::rc hub) {
+ModelFiles::ModelFiles(Hub& hub) : RefHub(hub) {
   setCheckable(true);
   setNumbered(2);
 
   hub.onSigFiles([this](core::data::Files::sh sh) {
     files = sh;
     signalReset();
+    base::updateState(); // TODO needed?
   });
 }
 
@@ -56,20 +57,22 @@ str ModelFiles::head(cl_n cl) const {
 l_qt::var ModelFiles::cell(rw_n rw, cl_n cl) const {
   EXPECT_(files)
   if (0 == cl)
-    return l_qt::var(files->at(rw)->src->path.filename());
+    return l_qt::var(at(rw)->src->path.filename());
   return str::null;
 }
 
 ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
-  EXPECT_(files)
-  mut(files->at(rw)->isActive) = on;
-  base::updateState();
+  hub.activateFileAt(rw, on);
   RTHIS
 }
 
 bool ModelFiles::isChecked(rw_n rw) const {
-  return files->at(rw)->isActive;
+  return at(rw)->isActive;
   EXPECT_(files)
+}
+
+core::data::File::sh ModelFiles::at(rw_n rw) const {
+  return files->at(rw);
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +88,7 @@ cl_n ModelDatasets::cols() const {
 }
 
 rw_n ModelDatasets::rows() const {
-  return rw_n(hub.numSets());
+  return rw_n(0); // TODO rw_n(hub.numSets());
 }
 
 str ModelDatasets::head(cl_n cl) const {
@@ -105,17 +108,17 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   if (0 == cl)
     return "?"; // TODO look up in files l_qt::var(hub.setAt(rw).first()->idx->val);
   if (1 == cl && grouped())
-    return hub.tagAt(rw);
+    return "!"; // TODO hub.tagAt(rw);
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
   if (i < metaCols.size())
-    return l_qt::var(hub.setAt(rw).meta(hub.dict())->vals.valAt(metaCols.at(i))); //TODO
+    return "."; // TODO l_qt::var(hub.setAt(rw).meta(hub.dict())->vals.valAt(metaCols.at(i))); //TODO
   return l_qt::var();
 }
 
 bool ModelDatasets::grouped() const {
-  return 1 < hub.groupedBy();
+  return false; // TODO 1 < hub.groupedBy();
 }
 
 uint ModelDatasets::numLeadCols() const {
@@ -132,13 +135,14 @@ bool ModelDatasets::rightAlign(cl_n cl) const {
 }
 
 ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on) {
-  hub.activateDatasetAt(rw, on);
-  base::updateState();
+  // TODO
+//  hub.activateDatasetAt(rw, on);
+//  base::updateState();
   RTHIS
 }
 
 bool ModelDatasets::isChecked(rw_n rw) const {
-  return hub.isActiveDatasetAt(rw);
+  return false; // TODO hub.isActiveDatasetAt(rw);
 }
 
 //------------------------------------------------------------------------------

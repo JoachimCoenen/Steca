@@ -23,10 +23,10 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelDiffractogram::PanelDiffractogram(Hub& hub_) : base("", hub_) {
+PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
-  tabs->addTab((tab = new Panel(hub)), "Diffractogram");
+  tabs->addTab((tab = new Panel()), "Diffractogram");
 
   auto&& hb = tab->vb.hb();
 

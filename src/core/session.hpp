@@ -37,8 +37,10 @@ dcl_(Session)
   voi_mut_(load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
+protected:
   atr_(data::Files::sh,files);
 
+public:
   mth_(AngleMap::sh,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current
 
@@ -58,23 +60,22 @@ dcl_(Session)
   bol_mut_(addFiles,   (l_io::path_vec::rc)) may_err;
   bol_mut_(remFilesAt, (uint_vec::rc));
 
-  set_(activateFileAt, (uint, bool));
-  bol_(isActiveFileAt, (uint));
+  bol_mut_(activateFileAt, (uint, bool));
+  bol_(isActiveFileAtOUT, (uint));
 
-  set_(activateDatasetAt, (uint, bool));
-  bol_(isActiveDatasetAt, (uint));
+  set_(activateDatasetAtOUT, (uint, bool));
+  bol_(isActiveDatasetAtOUT, (uint));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
 
+  atr_(data::CombinedSets, collectedDatasetsOUT);
+  atr_(str_vec,            collectedDatasetsTagsOUT);
+  atr_(uint_vec,           collectedFromFilesOUT);
+  atr_(l::pint,            groupedByOUT);
 
-  atr_(data::CombinedSets, collectedDatasets);
-  atr_(str_vec,            collectedDatasetsTags);
-  atr_(uint_vec,           collectedFromFiles);
-  atr_(l::pint,            groupedBy);
-
-  set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint by));
+  set_(collectDatasetsFromFilesOUT, (uint_vec::rc, l::pint by));
 
   set_(setImageSize,  (l::sz2)) may_err;
 

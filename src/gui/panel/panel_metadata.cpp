@@ -31,10 +31,10 @@ ViewMetadata::ViewMetadata(Hub& hub) : RefHub(hub) {}
 
 //------------------------------------------------------------------------------
 
-PanelMetadata::PanelMetadata(Hub& hub) : base("", hub), view(nullptr) {
+PanelMetadata::PanelMetadata(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
-  tabs->addTab((tab = new Panel(hub)), "Metadata");
+  tabs->addTab((tab = new Panel()), "Metadata");
 
   tab->vb.add((view = new ViewMetadata(hub)));
   view->setModel(hub.modelMetadata);

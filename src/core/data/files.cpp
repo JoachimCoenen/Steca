@@ -70,6 +70,40 @@ void Files::remFileAt(uint i) {
   mut(*dict).update(metaKeys(*this));
 }
 
+CombinedSets::sh Files::collectDatasets(uint_vec::rc is, l::pint groupedBy) const {
+  auto css = l::sh(new data::CombinedSets);
+
+  auto cs = l::scope(new data::CombinedSet);
+
+  uint i = 0;
+  auto appendCs = [&]() {
+    auto sz = cs->size();
+    if (!sz)
+      return;
+
+    str tag = str::num(i + 1); i += sz;
+    if (groupedBy > 1)
+      tag += '-' + str::num(i);
+    mut(cs->tag) = tag;
+
+    mut(*css).add(cs.takeOwn());
+    cs.reset(new data::CombinedSet);
+  };
+
+  auto gb = groupedBy;
+  for (uint i : is)
+    for (auto&& set : at(i)->sets) {
+      cs->add(set);
+      if (0 == --gb) {
+        appendCs();
+        gb = groupedBy;
+      }
+    }
+
+  appendCs();  // the potentially remaining ones
+  return css;
+}
+
 //------------------------------------------------------------------------------
 
 TEST_("data::sh",

@@ -25,51 +25,45 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_sub_(ViewFile, Panel)
-  ViewFile(Hub&);
+  ViewFile();
+  voi_mut_(setInfo, (core::data::File const*));
+  atr_(l_qt::lbl, lbl);
 dcl_end
 
-ViewFile::ViewFile(Hub& hub): base(hub) {
+ViewFile::ViewFile() {
   auto lbl = new l_qt::lbl();
   vb.add(lbl);
+}
 
-  hub.onSigFileSelected([this, lbl](core::data::File::sh file) {
-    lbl->text(file ? file->src->comment : str::null);
-  });
+void ViewFile::setInfo(core::data::File const* file) {
+  mut(lbl).text(file ? file->src->comment : str::null);
 }
 
 //------------------------------------------------------------------------------
 
 dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
-  ViewFiles(Hub&);
+  ViewFiles(Hub&, ViewFile&);
 
   void removeSelected();
-  void collectDatasets();
+  void collectDatasetsOUT();
 
 private:
+  ViewFile& viewFile;
   l_qt::act& actRem;
   void keyPressEvent(QKeyEvent*);
   void selectionChanged(QItemSelection const&, QItemSelection const&);
-  void selUpdate();
 dcl_end
 
-ViewFiles::ViewFiles(Hub& hub) : RefHub(hub)
-, actRem(hub.acts.get(hub.acts.FILES_REM)) {
+ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
+, viewFile(viewFile_) , actRem(hub.acts.get(hub.acts.FILES_REM)) {
 
   auto&& mf = hub.modelFiles;
   setModel(mf);
 
   mf->onSignalReset([this]() {
     int num = int(model->rows());
-    if (num > 0) {
+    if (num > 0)
       selectRow(rw_n(l::to_u(l::bound(0, selRow, num-1))));
-    }
-
-    collectDatasets();
-    selUpdate();
-  });
-
-  hub.onSigFilesActive([this]() {
-    collectDatasets();
   });
 
   actRem.onTrigger([this]() {
@@ -83,8 +77,8 @@ void ViewFiles::removeSelected() {
     hub.remFilesAt({l::to_u(row)});
 }
 
-void ViewFiles::collectDatasets() {
-  hub.collectDatasetsFromFiles(checkedRows());
+void ViewFiles::collectDatasetsOUT() {
+  hub.collectDatasetsFromFilesOUT(checkedRows());
 }
 
 void ViewFiles::keyPressEvent(QKeyEvent* e) {
@@ -100,16 +94,15 @@ void ViewFiles::keyPressEvent(QKeyEvent* e) {
 void ViewFiles::selectionChanged(QItemSelection const& selected,
                                  QItemSelection const& deselected) {
   base::selectionChanged(selected, deselected);
-  selUpdate();
-}
-
-void ViewFiles::selUpdate() {
-  hub.selectFileAt(selectedRow());
+  int i = selectedRow();
+  EXPECT_(dynamic_cast<ModelFiles const*>(model))
+  viewFile.setInfo(0 <= i
+      ? static_cast<ModelFiles const*>(model)->at(rw_n(i)).ptr() : nullptr);
 }
 
 //------------------------------------------------------------------------------
 
-PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
+PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
@@ -122,10 +115,11 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   auto&& btnRem = new l_qt::actbtn(a.get(a.FILES_REM));
 
   hb.margin(0).add(btnAdd).add(btnRem);
-  tabs->addTab((tab = new Panel(hub)), "Files", p);
+  tabs->addTab((tab = new Panel()), "Files", p);
 
-  tab->vb.add((new ViewFile(hub)));
-  tab->vb.add((view = new ViewFiles(hub)));
+  auto&& vf = new ViewFile();
+  tab->vb.add(vf);
+  tab->vb.add((view = new ViewFiles(hub, *vf)));
 
   tab->vb.add(mutp(hub.modelFiles)->makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));
@@ -134,7 +128,7 @@ PanelFiles::PanelFiles(Hub& hub_) : base("", hub_), view(nullptr) {
   auto&& edit = new l_qt::edit(); edit->ro(true);
   h.add(edit);
 
-  hub.onSigCorr([this, edit]() {
+  hub.onSigCorr([this, edit, &hub]() {
     edit->text(hub.corrName());
   });
 

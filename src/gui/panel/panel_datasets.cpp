@@ -28,32 +28,32 @@ dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
 
 protected:
   void selectionChanged(QItemSelection const&, QItemSelection const&);
-  void selUpdate();
+  void selUpdateOUT();
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
   hub.onSigDatasetsReset([this]() {
     selectRows({});
-    selUpdate();
+//    selUpdateOUT();
   });
 }
 
 void ViewDatasets::selectionChanged(QItemSelection const& selected,
                                     QItemSelection const& deselected) {
   base::selectionChanged(selected, deselected);
-  selUpdate();
+//  selUpdateOUT();
 }
 
-void ViewDatasets::selUpdate() {
-  hub.selectDatasetAt(selectedRow());
+void ViewDatasets::selUpdateOUT() {
+//  hub.selectDatasetAt(selectedRow());
 }
 
 //------------------------------------------------------------------------------
 
-PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
+PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
-  tabs->addTab((tab = new Panel(hub)), "Datasets");
+  tabs->addTab((tab = new Panel()), "Datasets");
 
   tab->vb.add((view = new ViewDatasets(hub)));
   view->setModel(hub.modelDatasets);
@@ -66,14 +66,15 @@ PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
   auto spin = new l_qt::spinPint();
   h.add(spin);
 
-  spin->min(1);
-  connect(spin, &l_qt::spinPint::valChg, [&hub](l::pint val) {
-    hub.groupDatasetsBy(val);
-  });
+// TODO IN
+//  spin->min(1);
+//  connect(spin, &l_qt::spinPint::valChg, [&hub](l::pint val) {
+//    hub.groupDatasetsBy(val);
+//  });
 
-  hub.onSigDatasetsReset([spin, &hub]() {
-    spin->setValue(l::to_int(hub.groupedBy()));
-  });
+//  hub.onSigDatasetsReset([spin, &hub]() {
+//    spin->setValue(l::to_int(hub.groupedBy()));
+//  });
 }
 
 //------------------------------------------------------------------------------

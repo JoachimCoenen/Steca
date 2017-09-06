@@ -22,13 +22,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelSetup::PanelSetup(Hub& hub_) : base("", hub_) {
+PanelSetup::PanelSetup() : base("") {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
-  tabs->addTab((tabGeometry    = new Panel(hub)), "Geometry");
-  tabs->addTab((tabBackground  = new Panel(hub)), "Background");
-  tabs->addTab((tabReflections = new Panel(hub)), "Reflections");
+  tabs->addTab((tabGeometry    = new Panel()), "Geometry");
+  tabs->addTab((tabBackground  = new Panel()), "Background");
+  tabs->addTab((tabReflections = new Panel()), "Reflections");
 }
 
 //------------------------------------------------------------------------------

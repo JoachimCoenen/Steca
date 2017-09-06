@@ -169,7 +169,8 @@ dcl_end
 struct CombinedSets;
 
 dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
-  atr_(bool,      isActive); // included in calculations
+  atr_(str,  tag);
+  atr_(bool, isActive); // included in calculations
 
   CombinedSet();
 

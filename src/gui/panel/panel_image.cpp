@@ -22,12 +22,12 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelImage::PanelImage(Hub& hub) : base("", hub) {
+PanelImage::PanelImage(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
-  tabs->addTab((tabImage      = new Panel(hub)), "Image");
-  tabs->addTab((tabCorrection = new Panel(hub)), "Correction");
+  tabs->addTab((tabImage      = new Panel()), "Image");
+  tabs->addTab((tabCorrection = new Panel()), "Correction");
 }
 
 //------------------------------------------------------------------------------

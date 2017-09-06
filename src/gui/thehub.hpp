@@ -52,13 +52,13 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   voi_mut_(addFiles,   ())                    emits;
   voi_mut_(remFilesAt, (uint_vec::rc))        emits;
 
-  set_(activateFileAt, (uint, bool)) emits;
-  using base::isActiveFileAt;
-  set_(selectFileAt, (int))       emits;
+  voi_(activateFileAt, (uint, bool)) emits;
+  using base::isActiveFileAtOUT;
+  set_(selectFileAtOUT, (int))       emits;
 
-  set_(activateDatasetAt, (uint, bool)) emits;
-  using base::isActiveDatasetAt;
-  set_(selectDatasetAt, (int))    emits;
+  set_(activateDatasetAtOUT, (uint, bool)) emits;
+  using base::isActiveDatasetAtOUT;
+  set_(selectDatasetAtOUT, (int))    emits;
 
   set_(corrEnable, (bool))        emits;
   set_(corrRem,    ())            emits;
@@ -66,15 +66,15 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   bol_(corrEnabled, ())           RET_(base::corrEnabled)
   mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
-  set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint));
-  set_(collectDatasetsFromFiles, (uint_vec::rc));
-  set_(groupDatasetsBy,          (l::pint));
+  set_(collectDatasetsFromFilesOUT, (uint_vec::rc, l::pint));
+  set_(collectDatasetsFromFilesOUT, (uint_vec::rc));
+  set_(groupDatasetsByOUT,          (l::pint));
 
-  mth_(uint,    numSets,   ())    RET_(base::collectedDatasets.size())
-  mth_(l::pint, groupedBy, ())    RET_(base::groupedBy)
+  mth_(uint,    numSetsOUT,   ())    RET_(base::collectedDatasetsOUT.size())
+  mth_(l::pint, groupedByOUT, ())    RET_(base::groupedByOUT)
 
-  mth_(core::data::CombinedSet::rc, setAt, (uint i)) RET_(*base::collectedDatasets.at(i))
-  mth_(strc,                        tagAt, (uint i)) RET_(base::collectedDatasetsTags.at(i))
+  mth_(core::data::CombinedSet::rc, setAtOUT, (uint i)) RET_(*base::collectedDatasetsOUT.at(i))
+  mth_(strc,                        tagAtOUT, (uint i)) RET_(base::collectedDatasetsTagsOUT.at(i))
 
   mth_(core::data::FilesMetaDict::sh, dict, ()) RET_(files->dict)
   mth_(uint, dictSize, ());
@@ -84,9 +84,9 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
 signals:
   void sigFiles(core::data::Files::sh) const; // a new set of files <<<<< TODO here I am
-  void sigFilesActive() const;    // changed active files
+  void sigFilesActiveOUT() const;    // changed active files
 
-  void sigFileSelected(core::data::File::sh) const; // file selected (or not)
+  void sigFileSelectedOUT(core::data::File::sh) const; // file selected (or not)
 
   void sigCorr() const;           // add/rem/on/off correction file
 
@@ -118,8 +118,8 @@ public:                                 \
   }
 
   DCL_HUB_SIGNAL_ETC2(Files, core::data::Files::sh)
-  DCL_HUB_SIGNAL_ETC(FilesActive)
-  DCL_HUB_SIGNAL_ETC2(FileSelected, core::data::File::sh)
+  DCL_HUB_SIGNAL_ETC(FilesActiveOUT)
+  DCL_HUB_SIGNAL_ETC2(FileSelectedOUT, core::data::File::sh)
 
   DCL_HUB_SIGNAL_ETC(Corr)
 
