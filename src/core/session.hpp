@@ -61,21 +61,10 @@ public:
   mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
 
   mth_mut_(data::Files::sh, activateFileAt, (uint, bool));
-  bol_(isActiveFileAtOUT, (uint));
-
-  set_(activateDatasetAtOUT, (uint, bool));
-  bol_(isActiveDatasetAtOUT, (uint));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
-
-  atr_(data::CombinedSets, collectedDatasetsOUT);
-  atr_(str_vec,            collectedDatasetsTagsOUT);
-  atr_(uint_vec,           collectedFromFilesOUT);
-  atr_(l::pint,            groupedByOUT);
-
-  set_(collectDatasetsFromFilesOUT, (uint_vec::rc, l::pint by));
 
   set_(setImageSize,  (l::sz2)) may_err;
 

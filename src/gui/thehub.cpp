@@ -143,26 +143,6 @@ void Hub::activateFileAt(uint i, bool on) {
   emitFiles(base::activateFileAt(i, on));
 }
 
-Hub::ref Hub::selectFileAtOUT(int i) {
-//  emitFileSelected(i < 0
-//    ? core::data::File::sh()
-//    : files->at(l::to_u(i)));
-  RTHIS
-}
-
-Hub::ref Hub::activateDatasetAtOUT(uint i, bool on) {
-//  base::activateDatasetAt(i, on);
-//  emitDatasetsActive();
-  RTHIS
-}
-
-Hub::ref Hub::selectDatasetAtOUT(int i) {
-//  emitDatasetSelected(i < 0
-//    ? core::data::CombinedSet::sh()
-//    : collectedDatasets.at(l::to_u(i)));
-  RTHIS
-}
-
 Hub::ref Hub::corrEnable(bool on) {
   if (on && !corrFile) {
     str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),
@@ -184,51 +164,8 @@ Hub::ref Hub::corrRem() {
   RTHIS
 }
 
-Hub::ref Hub::collectDatasetsFromFilesOUT(uint_vec::rc is, l::pint by) {
-//  base::collectDatasetsFromFiles(is, by);
-//  emitDatasetsReset();
-  RTHIS
-}
-
-Hub::ref Hub::collectDatasetsFromFilesOUT(uint_vec::rc is) {
-//  collectDatasetsFromFiles(is, groupedBy());
-  RTHIS
-}
-
-Hub::ref Hub::groupDatasetsByOUT(l::pint by) {
-//  collectDatasetsFromFiles(collectedFromFiles, by);
-  RTHIS
-}
-
-uint Hub::dictSizeOUT() const {
-//  return files->dict->size();
-}
-
-str Hub::dictKeyOUT(uint i) const {
-//  return files->dict->key(i);
-}
-
-bool Hub::dictCheckedOUT(uint i) const {
-//  auto&& dict = *files->dict;
-//  return dict.checked(dict.key(i));
-}
-
-Hub::ref Hub::dictCheckOUT(uint i, bool on) {
-//  auto&& dict = *files->dict;
-//  mut(dict).check(dict.key(i), on);
-  RTHIS
-}
-
 void Hub::emitFiles(core::data::Files::sh sh) const {
   emit sigFiles(sh);
-}
-
-void Hub::emitFilesActiveOUT() const {
-//  emit sigFilesActive();
-}
-
-void Hub::emitFileSelectedOUT(core::data::File::sh sh) const {
-//  emit sigFileSelected(sh);
 }
 
 void Hub::emitCorr() const {

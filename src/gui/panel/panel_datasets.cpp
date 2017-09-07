@@ -28,7 +28,6 @@ dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
 
 protected:
   void selectionChanged(QItemSelection const&, QItemSelection const&);
-  void selUpdateOUT();
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
@@ -42,10 +41,6 @@ void ViewDatasets::selectionChanged(QItemSelection const& selected,
                                     QItemSelection const& deselected) {
   base::selectionChanged(selected, deselected);
 //  selUpdateOUT();
-}
-
-void ViewDatasets::selUpdateOUT() {
-//  hub.selectDatasetAt(selectedRow());
 }
 
 //------------------------------------------------------------------------------

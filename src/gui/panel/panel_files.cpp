@@ -44,7 +44,6 @@ dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   ViewFiles(Hub&, ViewFile&);
 
   void removeSelected();
-  void collectDatasetsOUT();
 
 private:
   ViewFile& viewFile;
@@ -66,10 +65,6 @@ void ViewFiles::removeSelected() {
   auto row = currentRow();
   if (0 <= row)
     hub.remFilesAt({l::to_u(row)});
-}
-
-void ViewFiles::collectDatasetsOUT() {
-  hub.collectDatasetsFromFilesOUT(checkedRows());
 }
 
 void ViewFiles::keyPressEvent(QKeyEvent* e) {
