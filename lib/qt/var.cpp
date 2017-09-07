@@ -9,8 +9,12 @@ namespace l_qt {
 
 var::var() : Self(QVariant()) {}
 
-var::var(strc s) : Self(toQt(s)) {}
-var::var(pcstr p) : Self(QString(p)) {}
+var::var(int   v)  : base(v)          {}
+var::var(uint  v)  : base(v)          {}
+var::var(pcstr v)  : Self(QString(v)) {}
+var::var(strc  v)  : Self(toQt(v))    {}
+var::var(flt32  v) : base(v)          {}
+var::var(flt64  v) : base(v)          {}
 
 var::var(QVariant const& v) {
   *static_cast<QVariant*>(this) = v;
@@ -40,6 +44,13 @@ int var::toInt() const may_err {
   bool ok;
   auto val = base::toInt(&ok);
   check_or_err_(ok, "bad int var");
+  return val;
+}
+
+uint var::toUInt() const may_err {
+  bool ok;
+  auto val = base::toUInt(&ok);
+  check_or_err_(ok, "bad uint var");
   return val;
 }
 

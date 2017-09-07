@@ -33,11 +33,11 @@ extern str_vec const normStrLst;
 dcl_(Session)
   Session();
 
-  voi_mut_(clear, ());
-  voi_mut_(load, (io::Json::rc)) may_err;
+  mth_mut_(data::Files::sh, clear, ());
+  mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-protected:
+private:
   atr_(data::Files::sh,files);
 
 public:
@@ -57,10 +57,10 @@ public:
   atr_(data::File::sh, corrFile);
   atr_(Image::sh,      corrImage);
 
-  bol_mut_(addFiles,   (l_io::path_vec::rc)) may_err;
-  bol_mut_(remFilesAt, (uint_vec::rc));
+  mth_mut_(data::Files::sh, addFiles,   (l_io::path_vec::rc)) may_err;
+  mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
 
-  bol_mut_(activateFileAt, (uint, bool));
+  mth_mut_(data::Files::sh, activateFileAt, (uint, bool));
   bol_(isActiveFileAtOUT, (uint));
 
   set_(activateDatasetAtOUT, (uint, bool));

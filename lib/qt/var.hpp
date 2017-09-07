@@ -10,12 +10,17 @@ namespace l_qt {
 
 dcl_sub_(var, QVariant)
   var();
+  var(int);
+  var(uint);
   var(pcstr);
   var(strc);
+  var(flt32);
+  var(flt64);
   var(QVariant const&);
 
   bol_(isNum,  ());
   mth_(int,  toInt,  ()) may_err;
+  mth_(uint, toUInt, ()) may_err;
   mth_(str,  toStr,  ());
   mth_(real, toReal, ()) may_err;
   mth_(tim,  toTim,  ());

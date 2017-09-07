@@ -39,7 +39,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 template <typename K, typename T>
-dcl_sub_(scoped_hash, hash<K COMMA scoped<T const>>)
+dcl_sub_(scoped_hashOUT, hash<K COMMA scoped<T const>>)
   mth_mut_(T const*, add, (K const& k, T const* t)) {
     base::operator[](k).reset(t);
     return t;

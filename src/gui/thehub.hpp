@@ -52,7 +52,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   voi_mut_(addFiles,   ())                    emits;
   voi_mut_(remFilesAt, (uint_vec::rc))        emits;
 
-  voi_(activateFileAt, (uint, bool)) emits;
+  voi_mut_(activateFileAt, (uint, bool)) emits;
   using base::isActiveFileAtOUT;
   set_(selectFileAtOUT, (int))       emits;
 
@@ -76,11 +76,10 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(core::data::CombinedSet::rc, setAtOUT, (uint i)) RET_(*base::collectedDatasetsOUT.at(i))
   mth_(strc,                        tagAtOUT, (uint i)) RET_(base::collectedDatasetsTagsOUT.at(i))
 
-  mth_(core::data::FilesMetaDict::sh, dict, ()) RET_(files->dict)
-  mth_(uint, dictSize, ());
-  mth_(str,  dictKey,     (uint));
-  mth_(bool, dictChecked, (uint));
-  set_(dictCheck, (uint, bool));
+  mth_(uint, dictSizeOUT, ());
+  mth_(str,  dictKeyOUT,     (uint));
+  mth_(bool, dictCheckedOUT, (uint));
+  set_(dictCheckOUT, (uint, bool));
 
 signals:
   void sigFiles(core::data::Files::sh) const; // a new set of files <<<<< TODO here I am

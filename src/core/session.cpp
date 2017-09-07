@@ -37,8 +37,9 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
-void Session::clear() {
+data::Files::sh Session::clear() {
   mut(files).reset(new data::Files);
+  return files;
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -59,8 +60,9 @@ void Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-void Session::load(io::Json::rc) may_err {
+data::Files::sh Session::load(io::Json::rc) may_err {
   clear();
+  return files;
 //  QJsonParseError parseError;
 //  QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
 //  RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
@@ -208,7 +210,7 @@ Image::sh Session::intensCorr() const {
   return intensCorrImage;
 }
 
-bool Session::addFiles(l_io::path_vec::rc ps) may_err {
+data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
   auto&& clone = l::sh(files->clone());
 
@@ -219,16 +221,14 @@ bool Session::addFiles(l_io::path_vec::rc ps) may_err {
       mut(*clone).addFile(file);
     }
 
-  if (files->size() == clone->size())
-    return false;
-
-  mut(files) = clone;
-  return true;
+  if (files->size() != clone->size())
+    mut(files) = clone;
+  return files;
 }
 
-bool Session::remFilesAt(uint_vec::rc is) {
+data::Files::sh Session::remFilesAt(uint_vec::rc is) {
   if (is.isEmpty())
-    return false;
+    return files;
 
   uint_vec iis = is;
   std::sort(iis.begin(), iis.end());
@@ -239,15 +239,16 @@ bool Session::remFilesAt(uint_vec::rc is) {
     mut(*clone).remFileAt(iis.at(i));
 
   mut(files) = clone;
-  return true;
+  return files;
 }
 
-bool Session::activateFileAt(uint i, bool on) {
-  if (i >= files->size())
-    return false;
+data::Files::sh Session::activateFileAt(uint i, bool on) {
+  if (i >= files->size() || files->at(i)->isActive == on)
+    return files;
+
   mut(files).reset(files->clone());
   mut(files->at(i)->isActive) = on;
-  return true;
+  return files;
 }
 
 bool Session::isActiveFileAtOUT(uint i) const {

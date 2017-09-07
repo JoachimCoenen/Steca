@@ -233,7 +233,7 @@ template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
 
 // clone it
 #define CLONED \
-  mth_(Self*, clone, ()) RET_(new Self(*this))
+  virtual mth_(Self*, clone, ()) RET_(new Self(*this))
 
 //------------------------------------------------------------------------------
 }

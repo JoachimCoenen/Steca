@@ -32,40 +32,26 @@ namespace data {
 //------------------------------------------------------------------------------
 // attribute dictionaries
 
-dcl_(MetaDict) SHARED
+dcl_(FilesMetaDict) SHARED CLONED
   atr_(str_vec, keys);
 
-  MetaDict();
-  virtual ~MetaDict() {}
+  FilesMetaDict();
+  virtual ~FilesMetaDict();
 
-  virtual mth_mut_(uint, enter, (strc));  // adds if necessary
+  mth_mut_(uint, enter, (strc key));  // adds if necessary
+  voi_mut_(enter, (l::set<str>::rc keys));
 
-  mth_(uint, index, (strc key)) RET_(idxs.at(key))
   mth_(uint, size,  ())         RET_(idxs.size())
   mth_(strc, key,   (uint i))   RET_(keys.at(i))
-
-  mth_(int,  safeIndex, (strc key));
 
 protected:
   // key->index
   atr_(l::hash<str COMMA uint>, idxs);
 dcl_end
 
-// attribute dictionary
-dcl_sub_(FilesMetaDict, MetaDict) SHARED CLONED
-  FilesMetaDict();
-
-  mth_mut_(uint, enter, (strc));
-
-  set_(update, (l::set<str>::rc));
-
-  bol_(checked, (strc))       may_err;
-  set_(check,   (strc, bool)) may_err;
-
-private:
-  // key->checked
-  atr_(l::hash<str COMMA bool>, checks);
-  FilesMetaDict(rc);
+dcl_sub_(MetaDict, FilesMetaDict) SHARED
+  mth_(uint, index, (strc key)) RET_(idxs.at(key))
+  mth_(int,  safeIndex, (strc key));
 dcl_end
 
 // attribute values
@@ -169,10 +155,11 @@ dcl_end
 struct CombinedSets;
 
 dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
+  atr_(uint, fileNo);
   atr_(str,  tag);
   atr_(bool, isActive); // included in calculations
 
-  CombinedSet();
+  CombinedSet(uint fileNo);
 
   mth_(Meta::sh,  meta, (core::data::FilesMetaDict::sh));
 

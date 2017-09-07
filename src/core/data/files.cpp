@@ -61,21 +61,21 @@ bool Files::hasPath(l_io::path::rc path) const {
 void Files::addFile(data::File::sh file) {
   EXPECT_(!hasPath(file->src->path))
   add(file);
-  mut(*dict).update(metaKeys(*this));
+  mut(*dict).enter(metaKeys(*this));
 }
 
 void Files::remFileAt(uint i) {
   File::sh file = at(i);
   rem(i);
-  mut(*dict).update(metaKeys(*this));
+  mut(*dict).enter(metaKeys(*this));
 }
 
-CombinedSets::sh Files::collectDatasets(uint_vec::rc is, l::pint groupedBy) const {
+CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
   auto css = l::sh(new data::CombinedSets);
 
-  auto cs = l::scope(new data::CombinedSet);
+  uint i = 0, fileNo = 1;
+  auto cs = l::scope(new data::CombinedSet(fileNo));
 
-  uint i = 0;
   auto appendCs = [&]() {
     auto sz = cs->size();
     if (!sz)
@@ -84,21 +84,24 @@ CombinedSets::sh Files::collectDatasets(uint_vec::rc is, l::pint groupedBy) cons
     str tag = str::num(i + 1); i += sz;
     if (groupedBy > 1)
       tag += '-' + str::num(i);
-    mut(cs->tag) = tag;
+    mut(cs->tag)    = tag;
 
     mut(*css).add(cs.takeOwn());
-    cs.reset(new data::CombinedSet);
+    cs.reset(new data::CombinedSet(fileNo));
   };
 
   auto gb = groupedBy;
-  for (uint i : is)
-    for (auto&& set : at(i)->sets) {
-      cs->add(set);
-      if (0 == --gb) {
-        appendCs();
-        gb = groupedBy;
+  for (auto&& file : *this) {
+    if (file->isActive)
+      for (auto&& set : file->sets) {
+        cs->add(set);
+        if (0 == --gb) {
+          appendCs();
+          gb = groupedBy;
+        }
       }
-    }
+    ++fileNo;
+  }
 
   appendCs();  // the potentially remaining ones
   return css;

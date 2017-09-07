@@ -99,8 +99,7 @@ Hub::~Hub() {
 }
 
 void Hub::sessionClear() {
-  base::clear();
-  emitFiles(files);
+  emitFiles(base::clear());
 }
 
 Hub::ref Hub::sessionLoad(l_io::path path) may_err {
@@ -109,9 +108,7 @@ Hub::ref Hub::sessionLoad(l_io::path path) may_err {
 
   using core::io::Json;
   auto json = Json::asSelf(Json::loadFrom(file.asStream()));
-
-  base::load(json);
-  emitFiles(files);
+  emitFiles(base::load(json));
 
   RTHIS
 }
@@ -124,8 +121,7 @@ void Hub::sessionSave(l_io::path path) const may_err {
 }
 
 void Hub::addFiles(l_io::path_vec::rc ps) emits {
-  if (base::addFiles(ps))
-    emitFiles(files);
+  emitFiles(base::addFiles(ps));
 }
 
 void Hub::addFiles() emits {
@@ -140,13 +136,11 @@ void Hub::addFiles() emits {
 }
 
 void Hub::remFilesAt(uint_vec::rc is) {
-  if (base::remFilesAt(is))
-    emitFiles(files);
+  emitFiles(base::remFilesAt(is));
 }
 
-void Hub::activateFileAt(uint i, bool on) const {
-  if (mut(*this).base::activateFileAt(i, on))
-    emitFiles(files);
+void Hub::activateFileAt(uint i, bool on) {
+  emitFiles(base::activateFileAt(i, on));
 }
 
 Hub::ref Hub::selectFileAtOUT(int i) {
@@ -206,22 +200,22 @@ Hub::ref Hub::groupDatasetsByOUT(l::pint by) {
   RTHIS
 }
 
-uint Hub::dictSize() const {
-  return files->dict->size();
+uint Hub::dictSizeOUT() const {
+//  return files->dict->size();
 }
 
-str Hub::dictKey(uint i) const {
-  return files->dict->key(i);
+str Hub::dictKeyOUT(uint i) const {
+//  return files->dict->key(i);
 }
 
-bool Hub::dictChecked(uint i) const {
-  auto&& dict = *files->dict;
-  return dict.checked(dict.key(i));
+bool Hub::dictCheckedOUT(uint i) const {
+//  auto&& dict = *files->dict;
+//  return dict.checked(dict.key(i));
 }
 
-Hub::ref Hub::dictCheck(uint i, bool on) {
-  auto&& dict = *files->dict;
-  mut(dict).check(dict.key(i), on);
+Hub::ref Hub::dictCheckOUT(uint i, bool on) {
+//  auto&& dict = *files->dict;
+//  mut(dict).check(dict.key(i), on);
   RTHIS
 }
 

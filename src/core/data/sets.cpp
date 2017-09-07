@@ -23,9 +23,10 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-MetaDict::MetaDict() : idxs() {}
+FilesMetaDict::FilesMetaDict() : keys(), idxs() {}
+FilesMetaDict::~FilesMetaDict() {}
 
-uint MetaDict::enter(strc key) {
+uint FilesMetaDict::enter(strc key) {
   auto it = idxs.find(key);
   if (idxs.end() != it)
     return it->second;
@@ -38,48 +39,13 @@ uint MetaDict::enter(strc key) {
   return idx;
 }
 
-int MetaDict::safeIndex(strc key) const {
-  return idxs.contains(key) ? int(idxs.at(key)) : -1;
-}
-
-//------------------------------------------------------------------------------
-
-FilesMetaDict::FilesMetaDict() : checks() {}
-FilesMetaDict::FilesMetaDict(rc that) : base(that), checks(that.checks) {}
-
-uint FilesMetaDict::enter(strc key) {
-  if (!checks.contains(key))
-    mut(checks).add(key, false);
-
-  uint idx = base::enter(key);
-  ENSURE_(checks.size() == base::size())
-  return idx;
-}
-
-FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
-  auto cs = checks;
-
-  mut(checks).clear();
-  mut(keys).clear();
-  mut(idxs).clear();
-
+void FilesMetaDict::enter(l::set<str>::rc keys) {
   for (auto&& key : keys)
     enter(key);
-
-  for (auto&& key : keys)
-    if (checks.contains(key) && cs.contains(key))
-      check(key, cs.at(key));
-
-  RTHIS
 }
 
-bool FilesMetaDict::checked(strc key) const may_err {
-  return checks.at(key);
-}
-
-FilesMetaDict::ref FilesMetaDict::check(strc key, bool on) may_err {
-  mut(checks).at(key) = on;
-  RTHIS
+int MetaDict::safeIndex(strc key) const {
+  return idxs.contains(key) ? int(idxs.at(key)) : -1;
 }
 
 //------------------------------------------------------------------------------
@@ -237,8 +203,8 @@ Sets::ref Sets::add(Set::sh set) may_err {
 
 //------------------------------------------------------------------------------
 
-CombinedSet::CombinedSet()
-: isActive(true)
+CombinedSet::CombinedSet(uint fileNo_)
+: fileNo(fileNo_), tag(), isActive(true)
 , lazyMeta()
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}

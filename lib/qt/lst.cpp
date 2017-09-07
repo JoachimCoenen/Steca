@@ -68,9 +68,8 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
 }
 
 lst_view::ref lst_view::checkRow(int row) {
-  if (model && model->isCheckable && 0<=row && row <= int(model->rows())) {
+  if (model && model->isCheckable && 0<=row && row <= int(model->rows()))
     mutp(model)->check(rw_n(uint(row)));
-  }
   RTHIS
 }
 

@@ -18,12 +18,23 @@
 #pragma once
 #include "refhub.hpp"
 #include <lib/qt/model.hpp>
+#include <lib/dev/typ/bag.hpp>
 #include <core/data/files.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
+dcl_sub2_(Model, RefHub, l_qt::lst_model)
+  Model(Hub&);
+
+protected:
+  core::data::Files::sh files;
+  virtual void newFiles() {}
+dcl_end
+
+//------------------------------------------------------------------------------
+
+dcl_sub_(ModelFiles, Model)
   ModelFiles(Hub&);
 
   mth_(cl_n, cols, ());
@@ -36,12 +47,9 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
   bol_(isChecked, (rw_n));
 
   mth_(core::data::File::sh, at, (rw_n));
-
-private:
-  core::data::Files::sh files;
 dcl_end
 
-dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
+dcl_sub_(ModelDatasets, Model)
   ModelDatasets(Hub&);
 
   mth_(cl_n, cols, ());
@@ -56,13 +64,19 @@ dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
   set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
 
+  atr_(l::pint, groupedBy);
+  voi_mut_(groupBy, (l::pint));
+
 private:
+  core::data::CombinedSets::sh combinedSets;
   uint_vec metaCols;  // shown metadata
-  bol_(grouped, ());
+
+  void newFiles();
   mth_(uint, numLeadCols, ());
+  voi_mut_(combineSets, ());
 dcl_end
 
-dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
+dcl_sub_(ModelMetadata, Model)
   ModelMetadata(Hub&);
 
   enum { clTAG, clVAL };
@@ -77,7 +91,10 @@ dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
   bol_(isChecked, (rw_n));
 
 private:
+  void newFiles();
+  core::data::FilesMetaDict::sh dict;
   core::data::CombinedSet::sh dataset;
+  l::bag<str> checked;
 dcl_end
 
 //------------------------------------------------------------------------------

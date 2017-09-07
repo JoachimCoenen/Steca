@@ -53,7 +53,7 @@ dcl_reimpl_(Files, l::vec<File::sh>) SHARED CLONED
   voi_mut_(addFile, (data::File::sh));
   voi_mut_(remFileAt, (uint));
 
-  mth_(CombinedSets::sh, collectDatasets, (uint_vec::rc is, l::pint groupedBy));
+  mth_(CombinedSets::sh, collectDatasets, (l::pint groupedBy));
 
 private:
   Files(rc);

@@ -55,26 +55,27 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   vb.add(tabs);
   tabs->addTab((tab = new Panel()), "Datasets");
 
+  ModelDatasets const *model = hub.modelDatasets;
+
   tab->vb.add((view = new ViewDatasets(hub)));
-  view->setModel(hub.modelDatasets);
+  view->setModel(model);
 
   auto&& h = tab->vb.hb();
-  h.add(mutp(hub.modelDatasets)->makeTriChk(str::null));
+  h.add(mut(*model).makeTriChk(str::null));
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
 
   auto spin = new l_qt::spinPint();
   h.add(spin);
 
-// TODO IN
-//  spin->min(1);
-//  connect(spin, &l_qt::spinPint::valChg, [&hub](l::pint val) {
-//    hub.groupDatasetsBy(val);
-//  });
+  spin->min(1);
+  connect(spin, &l_qt::spinPint::valChg, [model](l::pint val) {
+    mut(*model).groupBy(val);
+  });
 
-//  hub.onSigDatasetsReset([spin, &hub]() {
-//    spin->setValue(l::to_int(hub.groupedBy()));
-//  });
+  model->onSignalReset([spin, model](){
+    spin->setValue(int(model->groupedBy));
+  });
 }
 
 //------------------------------------------------------------------------------
