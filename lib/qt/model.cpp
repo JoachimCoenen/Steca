@@ -44,7 +44,7 @@ lst_model::ref lst_model::changeState(triChk::eState state) {
 
   bool on = triChk::eState::on == state;
   for_i_(rows())
-    check(i, on);
+    check(rw_n(i), on);
 
   signalReset();
   RTHIS

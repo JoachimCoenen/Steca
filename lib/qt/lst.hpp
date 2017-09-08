@@ -34,8 +34,8 @@ dcl_sub_(lst_view, QTreeView)
   set_(fixColWidth, (cl_n, int));
   set_(setColWidth, (cl_n, int));
 
-  virtual voi_(onSelected, (int row)) {}
-  virtual bol_(onKey,      (int key)) RET_(false)
+  virtual voi_(onSelected, (int /*row*/)) {}
+  virtual bol_(onKey,      (int /*key*/)) RET_(false)
 
 private:
   void keyPressEvent(QKeyEvent*);

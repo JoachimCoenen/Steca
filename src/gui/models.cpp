@@ -210,9 +210,6 @@ str ModelMetadata::head(cl_n cl) const {
 }
 
 l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
-  if (!set)
-    return l_qt::var();
-
   EXPECT_(dict && rw < dict->size());
   auto&& key = dict->key(rw);
 
@@ -220,11 +217,11 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   case clTAG:
     return key;
   case clVAL: {
+    if (!set)
+      return l_qt::var();
     auto&& meta = set->meta(dict);
     auto&& idx  = meta->dict->safeIndex(key);
-    if (idx < 0)
-      return l_qt::var();
-    return meta->vals.valAt(uint(idx));
+    return idx < 0 ? l_qt::var() : meta->vals.valAt(uint(idx));
   }
   default:
     NEVER
