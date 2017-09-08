@@ -70,7 +70,7 @@ CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
   auto css = l::sh(new data::CombinedSets);
 
   uint i = 0, fileNo = 1;
-  auto cs = l::scope(new data::CombinedSet(fileNo));
+  l::scoped<data::CombinedSet> cs;
 
   auto appendCs = [&]() {
     auto sz = cs->size();
@@ -83,13 +83,14 @@ CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
     mut(cs->tag)    = tag;
 
     mut(*css).add(cs.takeOwn());
-    cs.reset(new data::CombinedSet(fileNo));
   };
 
   auto gb = groupedBy;
   for (auto&& file : *this) {
     if (file->isActive)
       for (auto&& set : file->sets) {
+        if (!cs)
+          cs.reset(new data::CombinedSet(fileNo));
         cs->add(set);
         if (0 == --gb) {
           appendCs();
@@ -99,7 +100,10 @@ CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
     ++fileNo;
   }
 
-  appendCs();  // the potentially remaining ones
+  // the potentially remaining ones
+  cs.reset(new data::CombinedSet(fileNo));
+  appendCs();
+
   return css;
 }
 

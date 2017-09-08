@@ -18,8 +18,8 @@
 #include "models.hpp"
 #include "thehub.hpp"
 #include <lib/qt/inc/defs.inc>
-#include <lib/qt/lst.hpp>
 #include <lib/qt/font.hpp>
+#include <lib/qt/lst.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ l_qt::var ModelFiles::cell(rw_n rw, cl_n cl) const {
   return str::null;
 }
 
-ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
+ModelFiles::ref ModelFiles::check(rw_n rw, bool on, bool) {
   hub.activateFileAt(rw, on);
   RTHIS
 }
@@ -89,6 +89,21 @@ core::data::File::sh ModelFiles::at(rw_n rw) const {
 ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
   setCheckable(true);
   setNumbered(4);
+
+  hub.onSigMetaChecked([this](KeyBag::sh bag) {
+    uint_vec is;
+    if (dict && bag) {
+      auto&& keys = dict->keys;
+      for_i_(keys.size())
+        if (bag->contains(keys.at(i)))
+          is.add(i);
+    }
+
+    if (is != metaCols) {
+      metaCols = is;
+      signalReset();
+    }
+  });
 }
 
 cl_n ModelDatasets::cols() const {
@@ -111,7 +126,7 @@ str ModelDatasets::head(cl_n cl) const {
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
   if (i < metaCols.size())
-    return dict->key(i);
+    return dict->key(metaCols.at(i));
   return str::null;
 }
 
@@ -141,11 +156,12 @@ bool ModelDatasets::rightAlign(cl_n cl) const {
   return 0 == cl;
 }
 
-ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on) {
+ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on, bool silent) {
   auto&& isActive = sets->at(rw)->isActive;
   if (isActive != on) {
     mut(isActive) = on;
-    signalReset();
+    if (!silent)
+      signalReset();
   }
   RTHIS
 }
@@ -183,7 +199,7 @@ void ModelDatasets::gotFiles() {
 
 //------------------------------------------------------------------------------
 
-ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked() {
+ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked(new KeyBag) {
   setCheckable(true);
   hub.onSigCombinedSet([this](CombinedSet::sh sh) {
     if (set != sh) {
@@ -228,20 +244,15 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   }
 }
 
-ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on) {
-  mut(checked).set(dict->key(rw), on);
-  signalReset();
+ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on, bool silent) {
+  mut(*checked).set(dict->key(rw), on);
+  if (!silent)
+    signalReset();
   RTHIS
 }
 
 bool ModelMetadata::isChecked(rw_n rw) const {
-  return checked.contains(dict->key(rw));
-}
-
-void ModelMetadata::gotFiles() {
-  WT((files ? 1 : 0))
-  WT((dict ? 1 : 0))
-  WT((dict ? dict->size() : 0))
+  return checked->contains(dict->key(rw));
 }
 
 //------------------------------------------------------------------------------

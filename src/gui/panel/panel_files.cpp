@@ -39,7 +39,7 @@ void ViewFile::setInfo(core::data::File const* file) {
 
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
+dcl_sub_(ViewFiles, ViewModel<ModelFiles>)
   ViewFiles(Hub&, ViewFile&);
 
 private:
@@ -51,10 +51,9 @@ private:
   l_qt::act& actRem;
 dcl_end
 
-ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
-, viewFile(viewFile_) , actRem(hub.acts.get(hub.acts.FILES_REM)) {
-  setModel(hub.modelFiles);
-
+ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_)
+: base(hub, hub.modelFiles), viewFile(viewFile_)
+, actRem(hub.acts.get(hub.acts.FILES_REM)) {
   actRem.onTrigger([this]() {
     removeSelected();
   });
@@ -62,9 +61,7 @@ ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
 
 void ViewFiles::onSelected(int row) const {
   if (0 <= row && model && uint(row) < model->rows()) {
-    EXPECT_(dynamic_cast<ModelFiles const*>(model))
-    auto m = static_cast<ModelFiles const*>(model);
-    viewFile.setInfo(m->at(rw_n(l::to_uint(row))).ptr());
+    viewFile.setInfo(model->at(rw_n(l::to_uint(row))).ptr());
   } else
     viewFile.setInfo(nullptr);
 }
@@ -106,7 +103,7 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   tab->vb.add(vf);
   tab->vb.add((view = new ViewFiles(hub, *vf)));
 
-  tab->vb.add(mutp(hub.modelFiles)->makeTriChk(str::null));
+  tab->vb.add(mut(*view->model).makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));
 
   auto&& h = tab->vb.hb();

@@ -19,10 +19,11 @@
 #include "../typ/def.hpp"
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
+#include <lib/dev/io/path.hpp>
+#include <lib/dev/typ/bag.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
 #include <lib/dev/typ/set.hpp>
-#include <lib/dev/io/path.hpp>
 
 namespace core {
 
@@ -32,11 +33,14 @@ namespace data {
 //------------------------------------------------------------------------------
 // attribute dictionaries
 
+dcl_sub_(KeyBag, l::bag<str>) SHARED
+dcl_end
+
 dcl_(FilesMetaDict) SHARED CLONED
   atr_(str_vec, keys);
 
   FilesMetaDict();
-  virtual ~FilesMetaDict();
+  virtual ~FilesMetaDict(); //TODO to test GCC/release OUT
 
   voi_mut_(clear, ());
   mth_mut_(uint, enter, (strc key));  // adds if necessary

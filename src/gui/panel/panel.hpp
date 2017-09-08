@@ -17,8 +17,26 @@
 
 #pragma once
 #include <lib/qt/layout.hpp>
+#include <lib/qt/lst.hpp>
+#include "../refhub.hpp"
 
 namespace gui {
+//------------------------------------------------------------------------------
+
+dcl_sub2_(ViewModelBase, RefHub, l_qt::lst_view)
+  ViewModelBase(Hub&);
+dcl_end
+
+template <typename Model>
+dcl_sub_(ViewModel, ViewModelBase)
+  ViewModel(Hub& hub, Model const* model_) : base(hub) {
+    setModel((model = model_));
+  }
+
+protected:
+  Model const* model;
+dcl_end
+
 //------------------------------------------------------------------------------
 
 struct Hub;

@@ -18,7 +18,6 @@
 #pragma once
 #include "refhub.hpp"
 #include <lib/qt/model.hpp>
-#include <lib/dev/typ/bag.hpp>
 #include <core/data/files.hpp>
 
 namespace gui {
@@ -30,6 +29,7 @@ dcl_sub2_(Model, RefHub, l_qt::lst_model)
   using FilesMetaDict = core::data::FilesMetaDict;
   using CombinedSet   = core::data::CombinedSet;
   using CombinedSets  = core::data::CombinedSets;
+  using KeyBag        = core::data::KeyBag;
 
   Model(Hub&);
 
@@ -50,7 +50,7 @@ dcl_sub_(ModelFiles, Model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check,     (rw_n, bool));
+  set_(check,     (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
   mth_(File::sh, at, (rw_n));
@@ -72,7 +72,7 @@ dcl_sub_(ModelDatasets, Model)
   voi_(fixColumns,  (l_qt::lst_view&));
   bol_(rightAlign,  (cl_n));
 
-  set_(check, (rw_n, bool));
+  set_(check, (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
   atr_(l::pint, groupedBy);
@@ -113,13 +113,13 @@ dcl_sub_(ModelMetadata, Model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check, (rw_n, bool));
+  set_(check, (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
+  KeyBag::sh checked;
+
 private:
-  void gotFiles();
   CombinedSet::sh set;
-  l::bag<str> checked;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -17,7 +17,6 @@
 
 #pragma once
 #include "panel.hpp"
-#include <lib/qt/lst.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -27,7 +26,7 @@ dcl_sub_(PanelFiles, Panel)
 
 private:
   Panel *tab;
-  l_qt::lst_view *view;
+  ViewModelBase *view;
 dcl_end
 
 //------------------------------------------------------------------------------

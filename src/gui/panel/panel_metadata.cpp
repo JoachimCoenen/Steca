@@ -23,11 +23,11 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewMetadata, RefHub, l_qt::lst_view)
+dcl_sub_(ViewMetadata, ViewModel<ModelMetadata>)
   ViewMetadata(Hub&);
 dcl_end
 
-ViewMetadata::ViewMetadata(Hub& hub) : RefHub(hub) {}
+ViewMetadata::ViewMetadata(Hub& hub) : base(hub, hub.modelMetadata) {}
 
 //------------------------------------------------------------------------------
 
@@ -36,10 +36,8 @@ PanelMetadata::PanelMetadata(Hub& hub) : base(""), view(nullptr) {
   vb.add(tabs);
   tabs->addTab((tab = new Panel()), "Metadata");
 
-  tab->vb.add((view = new ViewMetadata(hub)));
-  view->setModel(hub.modelMetadata);
-
-  tab->vb.add(mutp(hub.modelMetadata)->makeTriChk(str::null));
+  tab->vb.add((view = new ViewMetadata(hub)));  
+  tab->vb.add(mut(*view->model).makeTriChk(str::null));
 }
 
 //------------------------------------------------------------------------------

@@ -67,6 +67,9 @@ signals:
   void sigCombinedSets(core::data::CombinedSets::sh) const;
   // a selected one
   void sigCombinedSet(core::data::CombinedSet::sh) const;
+  // chacked metadata
+  void sigMetaChecked(core::data::KeyBag::sh) const;
+
 
   void sigCorr() const;           // add/rem/on/off correction file
 
@@ -101,9 +104,10 @@ public:                                 \
     onSig(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIG_ETC2(Files, core::data::Files::sh)
+  DCL_HUB_SIG_ETC2(Files,        core::data::Files::sh)
   DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::sh)
-  DCL_HUB_SIG_ETC2(CombinedSet, core::data::CombinedSet::sh)
+  DCL_HUB_SIG_ETC2(CombinedSet,  core::data::CombinedSet::sh)
+  DCL_HUB_SIG_ETC2(MetaChecked,  core::data::KeyBag::sh)
 
   DCL_HUB_SIG_ETC(Corr)
 

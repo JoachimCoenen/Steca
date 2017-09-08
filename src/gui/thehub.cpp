@@ -101,6 +101,10 @@ Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
   modelDatasets->onSigSet([this](core::data::CombinedSet::sh sh) {
     emitCombinedSet(sh);
   });
+
+  modelMetadata->onSigReset([this]() {
+    emitMetaChecked(modelMetadata->checked);
+  });
 }
 
 Hub::~Hub() {

@@ -19,28 +19,25 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
-#include "../models.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
+dcl_sub_(ViewDatasets, ViewModel<ModelDatasets>)
   ViewDatasets(Hub&);
 
 private:
   voi_(onSelected, (int));
 dcl_end
 
-ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
+ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {
   hub.onSigDatasetsReset([this]() {
-    EXPECT_(dynamic_cast<ModelDatasets const*>(model))
-    static_cast<ModelDatasets const*>(model)->emitSetAt(-1);
+    model->emitSetAt(-1);
   });
 }
 
 void ViewDatasets::onSelected(int row) const {
-  EXPECT_(dynamic_cast<ModelDatasets const*>(model))
-  static_cast<ModelDatasets const*>(model)->emitSetAt(row);
+  model->emitSetAt(row);
 }
 
 //------------------------------------------------------------------------------
@@ -50,26 +47,25 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   vb.add(tabs);
   tabs->addTab((tab = new Panel()), "Datasets");
 
-  ModelDatasets const *model = hub.modelDatasets;
-
   tab->vb.add((view = new ViewDatasets(hub)));
-  view->setModel(model);
 
   auto&& h = tab->vb.hb();
-  h.add(mut(*model).makeTriChk(str::null));
+  h.add(mutp(view->model)->makeTriChk(str::null));
   h.addStretch();
   h.add(new l_qt::lbl("Combine"));
 
   auto spin = new l_qt::spinPint();
   h.add(spin);
 
+  auto* md = static_cast<ModelDatasets const*>(view->model);
+
   spin->min(1);
-  connect(spin, &l_qt::spinPint::valChg, [model](l::pint val) {
-    mut(*model).groupBy(val);
+  connect(spin, &l_qt::spinPint::valChg, [md](l::pint val) {
+    mut(*md).groupBy(val);
   });
 
-  model->onSigReset([spin, model](){
-    spin->setValue(int(model->groupedBy));
+  md->onSigReset([spin, md](){
+    spin->setValue(int(md->groupedBy));
   });
 }
 

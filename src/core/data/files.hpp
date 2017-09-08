@@ -48,6 +48,7 @@ dcl_reimpl_(Files, l::vec<File::sh>) SHARED CLONED
   atr_(FilesMetaDict::sh, dict);
 
   Files();
+  virtual ~Files() {}
 
   bol_(hasPath, (l_io::path::rc));
   voi_mut_(addFile, (data::File::sh));
