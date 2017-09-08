@@ -19,6 +19,7 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include "../models.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -26,21 +27,20 @@ namespace gui {
 dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
   ViewDatasets(Hub&);
 
-protected:
-  void selectionChanged(QItemSelection const&, QItemSelection const&);
+private:
+  voi_(onSelected, (int));
 dcl_end
 
 ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
   hub.onSigDatasetsReset([this]() {
-// TODO    selectRows({});
-//    selUpdateOUT();
+    EXPECT_(dynamic_cast<ModelDatasets const*>(model))
+    static_cast<ModelDatasets const*>(model)->emitSetAt(-1);
   });
 }
 
-void ViewDatasets::selectionChanged(QItemSelection const& selected,
-                                    QItemSelection const& deselected) {
-  base::selectionChanged(selected, deselected);
-//  selUpdateOUT();
+void ViewDatasets::onSelected(int row) const {
+  EXPECT_(dynamic_cast<ModelDatasets const*>(model))
+  static_cast<ModelDatasets const*>(model)->emitSetAt(row);
 }
 
 //------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
     mut(*model).groupBy(val);
   });
 
-  model->onSignalReset([spin, model](){
+  model->onSigReset([spin, model](){
     spin->setValue(int(model->groupedBy));
   });
 }

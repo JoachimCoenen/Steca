@@ -92,7 +92,16 @@ QVariant FileProxyModel::data(idx_rc idx, int role) const {
 Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
 , modelFiles(new ModelFiles(*this))
 , modelDatasets(new ModelDatasets(*this))
-, modelMetadata(new ModelMetadata(*this)) {}
+, modelMetadata(new ModelMetadata(*this)) {
+
+  modelDatasets->onSigReset([this]() {
+    emitCombinedSets(modelDatasets->sets);
+  });
+
+  modelDatasets->onSigSet([this](core::data::CombinedSet::sh sh) {
+    emitCombinedSet(sh);
+  });
+}
 
 Hub::~Hub() {
   delete modelFiles;
@@ -162,26 +171,6 @@ Hub::ref Hub::corrRem() {
   base::remCorrFile();
   emitCorr();
   RTHIS
-}
-
-void Hub::emitFiles(core::data::Files::sh sh) const {
-  emit sigFiles(sh);
-}
-
-void Hub::emitCorr() const {
-  emit sigCorr();
-}
-
-void Hub::emitDatasetsReset() const {
-  emit sigDatasetsReset();
-}
-
-void Hub::emitDatasetsActive() const {
-  emit sigDatasetsActive();
-}
-
-void Hub::emitDatasetSelected(core::data::CombinedSet::sh sh) const {
-  emit sigDatasetSelected(sh);
 }
 
 //------------------------------------------------------------------------------

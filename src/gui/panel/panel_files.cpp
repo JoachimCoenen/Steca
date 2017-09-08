@@ -19,7 +19,6 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
-#include <QKeyEvent>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -43,13 +42,13 @@ void ViewFile::setInfo(core::data::File const* file) {
 dcl_sub2_(ViewFiles, RefHub, l_qt::lst_view)
   ViewFiles(Hub&, ViewFile&);
 
-  void removeSelected();
-
 private:
+  voi_(onSelected, (int));
+  bol_(onKey, (int));
+
+  voi_(removeSelected, ());
   ViewFile& viewFile;
   l_qt::act& actRem;
-  void keyPressEvent(QKeyEvent*);
-  void selectionChanged(QItemSelection const&, QItemSelection const&);
 dcl_end
 
 ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
@@ -61,32 +60,29 @@ ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_) : RefHub(hub)
   });
 }
 
-void ViewFiles::removeSelected() {
-  auto row = currentRow();
-  if (0 <= row)
-    hub.remFilesAt({l::to_u(row)});
+void ViewFiles::onSelected(int row) const {
+  if (0 <= row && model && uint(row) < model->rows()) {
+    EXPECT_(dynamic_cast<ModelFiles const*>(model))
+    auto m = static_cast<ModelFiles const*>(model);
+    viewFile.setInfo(m->at(rw_n(l::to_uint(row))).ptr());
+  } else
+    viewFile.setInfo(nullptr);
 }
 
-void ViewFiles::keyPressEvent(QKeyEvent* e) {
-  switch (e->key()) {
+bool ViewFiles::onKey(int key) const {
+  switch (key) {
   case Qt::Key_Delete:
     removeSelected();
-    return;
+    return true;
   default:
-    base::keyPressEvent(e);
+    return false;
   }
 }
 
-void ViewFiles::selectionChanged(QItemSelection const& selected,
-                                 QItemSelection const& deselected) {
-  base::selectionChanged(selected, deselected);
-  int i = currentRow();
-  if (0 <=i && model && uint(i) < model->rows()) {
-    EXPECT_(dynamic_cast<ModelFiles const*>(model))
-    auto m = static_cast<ModelFiles const*>(model);
-    viewFile.setInfo(m->at(rw_n(l::to_u(i))).ptr());
-  } else
-    viewFile.setInfo(nullptr);
+void ViewFiles::removeSelected() const {
+  auto row = currentRow();
+  if (0 <= row)
+    hub.remFilesAt({l::to_u(row)});
 }
 
 //------------------------------------------------------------------------------

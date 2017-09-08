@@ -23,13 +23,13 @@ dcl_reimpl_(bag, std::unordered_set<T>)
   bol_(isEmpty, ())     RET_(base::empty())
   mth_(uint, size, ())  RET_(base::size())
 
+  bol_(contains, (T const& t)) {
+    return base::end() != base::find(t);
+  }
+
   mth_mut_(T const&, add, (T const& t)) {
     base::insert(t);
     return t;
-  }
-
-  bol_(contains, (T const& t)) {
-    return base::end() != base::find(t);
   }
 
   bol_mut_(remove, (T const& t)) {
@@ -37,6 +37,15 @@ dcl_reimpl_(bag, std::unordered_set<T>)
     if (base::end() == it)
       return false;
     base::erase(it);
+    return true;
+  }
+
+  bol_mut_(set, (T const& t, bool on)) {
+    if (!on)
+      return remove(t);
+    if (contains(t))
+      return false;
+    add(t);
     return true;
   }
 dcl_end

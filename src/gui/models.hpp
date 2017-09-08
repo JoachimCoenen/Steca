@@ -25,11 +25,18 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_sub2_(Model, RefHub, l_qt::lst_model)
+  using File          = core::data::File;
+  using Files         = core::data::Files;
+  using FilesMetaDict = core::data::FilesMetaDict;
+  using CombinedSet   = core::data::CombinedSet;
+  using CombinedSets  = core::data::CombinedSets;
+
   Model(Hub&);
 
 protected:
-  core::data::Files::sh files;
-  virtual void newFiles() {}
+  Files::sh         files;
+  FilesMetaDict::sh dict;
+  virtual void gotFiles() {}
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -46,11 +53,15 @@ dcl_sub_(ModelFiles, Model)
   set_(check,     (rw_n, bool));
   bol_(isChecked, (rw_n));
 
-  mth_(core::data::File::sh, at, (rw_n));
+  mth_(File::sh, at, (rw_n));
 dcl_end
+
+//------------------------------------------------------------------------------
 
 dcl_sub_(ModelDatasets, Model)
   ModelDatasets(Hub&);
+
+  enum eMdLeadCols { clFNO, clTAG };
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
@@ -67,14 +78,29 @@ dcl_sub_(ModelDatasets, Model)
   atr_(l::pint, groupedBy);
   voi_mut_(groupBy, (l::pint));
 
+  CombinedSets::sh sets;
+  voi_(emitSetAt, (int));
+
+signals:
+  void sigSet(CombinedSet::sh) const;
+
+public:
+  template <typename Lambda>
+  QMetaObject::Connection onSigSet(Lambda slot) const {
+    return QObject::connect(this, &Self::sigSet, slot);
+  }
+
 private:
-  core::data::CombinedSets::sh combinedSets;
   uint_vec metaCols;  // shown metadata
 
-  void newFiles();
+  void gotFiles();
   mth_(uint, numLeadCols, ());
   voi_mut_(combineSets, ());
+
+  Q_OBJECT
 dcl_end
+
+//------------------------------------------------------------------------------
 
 dcl_sub_(ModelMetadata, Model)
   ModelMetadata(Hub&);
@@ -91,9 +117,8 @@ dcl_sub_(ModelMetadata, Model)
   bol_(isChecked, (rw_n));
 
 private:
-  void newFiles();
-  core::data::FilesMetaDict::sh dict;
-  core::data::CombinedSet::sh dataset;
+  void gotFiles();
+  CombinedSet::sh set;
   l::bag<str> checked;
 dcl_end
 

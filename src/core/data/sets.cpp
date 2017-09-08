@@ -26,6 +26,11 @@ namespace core { namespace data {
 FilesMetaDict::FilesMetaDict() : keys(), idxs() {}
 FilesMetaDict::~FilesMetaDict() {}
 
+void FilesMetaDict::clear() {
+  mut(keys).clear();
+  mut(idxs).clear();
+}
+
 uint FilesMetaDict::enter(strc key) {
   auto it = idxs.find(key);
   if (idxs.end() != it)
@@ -39,10 +44,12 @@ uint FilesMetaDict::enter(strc key) {
   return idx;
 }
 
-void FilesMetaDict::enter(l::set<str>::rc keys) {
+void FilesMetaDict::enter(str_vec::rc keys) {
   for (auto&& key : keys)
     enter(key);
 }
+
+//------------------------------------------------------------------------------
 
 int MetaDict::safeIndex(strc key) const {
   return idxs.contains(key) ? int(idxs.at(key)) : -1;

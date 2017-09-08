@@ -40,16 +40,6 @@ l::sz2 File::imageSize() const {
 Files::Files() : dict(new FilesMetaDict) {}
 Files::Files(rc that) : base(that), dict(that.dict->clone()) {}
 
-static l::set<str> metaKeys(Files::rc files) {
-  l::set<str> keys;
-
-  for (auto&& f : files)
-    for (auto&& k : f->dict->keys)
-      keys.add(k);
-
-  return keys;
-}
-
 bool Files::hasPath(l_io::path::rc path) const {
   for (auto&& file : *this)
     if (file->src->path == path)
@@ -59,15 +49,21 @@ bool Files::hasPath(l_io::path::rc path) const {
 
 
 void Files::addFile(data::File::sh file) {
-  EXPECT_(!hasPath(file->src->path))
+  EXPECT_(file && !hasPath(file->src->path))
   add(file);
-  mut(*dict).enter(metaKeys(*this));
+  mut(*dict).enter(file->dict->keys);
 }
 
 void Files::remFileAt(uint i) {
   File::sh file = at(i);
   rem(i);
-  mut(*dict).enter(metaKeys(*this));
+
+  auto&& md = mut(*dict);
+  md.clear();
+
+  for (auto&& file : *this)
+    for (auto&& key : file->dict->keys)
+      md.enter(key);
 }
 
 CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {

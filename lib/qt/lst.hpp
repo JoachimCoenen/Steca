@@ -34,11 +34,15 @@ dcl_sub_(lst_view, QTreeView)
   set_(fixColWidth, (cl_n, int));
   set_(setColWidth, (cl_n, int));
 
-protected:
+  virtual voi_(onSelected, (int row)) {}
+  virtual bol_(onKey,      (int key)) RET_(false)
+
+private:
   void keyPressEvent(QKeyEvent*);
   int  sizeHintForColumn(int) const; // make narrow columns
   void currentChanged(QModelIndex const&, QModelIndex const&);
-private:
+  void selectionChanged(QItemSelection const&, QItemSelection const&);
+
   int  currRow;
   QMetaObject::Connection con;
 dcl_end

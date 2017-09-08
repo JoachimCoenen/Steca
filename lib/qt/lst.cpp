@@ -56,7 +56,8 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
 
   if (model_) {
     base::setModel(mutp(mut(model) = model_));
-    con = model->onSignalReset([this]() {
+    con = model->onSigReset([this]() {
+      onSelected(-1);
       setCurrentRow(currRow);
     });
 
@@ -151,7 +152,8 @@ void lst_view::keyPressEvent(QKeyEvent* e) {
     setCurrentRow(l::val_max(currRow));
     break;
   default:
-    base::keyPressEvent(e);
+    if (!onKey(e->key()))
+      base::keyPressEvent(e);
   }
 }
 
@@ -162,6 +164,12 @@ int lst_view::sizeHintForColumn(int) const {
 void lst_view::currentChanged(QModelIndex const& current, QModelIndex const& previous) {
   base::currentChanged(current, previous);
   currRow = current.row();
+}
+
+void lst_view::selectionChanged(QItemSelection const& selected,
+                                QItemSelection const& deselected) {
+  base::selectionChanged(selected, deselected);
+  onSelected(currRow);
 }
 
 //------------------------------------------------------------------------------

@@ -61,7 +61,12 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
 signals:
-  void sigFiles(core::data::Files::sh) const; // a new set of files <<<<< TODO here I am
+  // a new set of files
+  void sigFiles(core::data::Files::sh) const;
+  // a new set of combined sets
+  void sigCombinedSets(core::data::CombinedSets::sh) const;
+  // a selected one
+  void sigCombinedSet(core::data::CombinedSet::sh) const;
 
   void sigCorr() const;           // add/rem/on/off correction file
 
@@ -71,34 +76,40 @@ signals:
   void sigDatasetSelected(core::data::CombinedSet::sh) const; // dataset selected (or not)
 
 public:
-  template <typename Signal, typename Lambda>
-  void onSignal(Signal signal, Lambda slot) const {
-    QObject::connect(this, signal, slot);
+  template <typename Sig, typename Lambda>
+  void onSig(Sig sig, Lambda slot) const {
+    QObject::connect(this, sig, slot);
   }
 
-#define DCL_HUB_SIGNAL_ETC(name)      \
+#define DCL_HUB_SIG_ETC(name)      \
 private:                              \
-  voi_(emit##name, ());               \
+  voi_(emit##name, ()) {              \
+    emit sig##name();                 \
+  }                                   \
 public:                               \
   template <typename Lambda> void onSig##name(Lambda slot) const { \
-    onSignal(&Hub::sig##name, slot);  \
+    onSig(&Hub::sig##name, slot);  \
   }
 
-#define DCL_HUB_SIGNAL_ETC2(name, par)  \
+#define DCL_HUB_SIG_ETC2(name, par)  \
 private:                                \
-  voi_(emit##name, (par p));            \
+  voi_(emit##name, (par p)) {           \
+    emit sig##name(p);                  \
+  }                                     \
 public:                                 \
   template <typename Lambda> void onSig##name(Lambda slot) const { \
-    onSignal(&Hub::sig##name, slot);  \
+    onSig(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIGNAL_ETC2(Files, core::data::Files::sh)
+  DCL_HUB_SIG_ETC2(Files, core::data::Files::sh)
+  DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::sh)
+  DCL_HUB_SIG_ETC2(CombinedSet, core::data::CombinedSet::sh)
 
-  DCL_HUB_SIGNAL_ETC(Corr)
+  DCL_HUB_SIG_ETC(Corr)
 
-  DCL_HUB_SIGNAL_ETC(DatasetsReset)
-  DCL_HUB_SIGNAL_ETC(DatasetsActive)
-  DCL_HUB_SIGNAL_ETC2(DatasetSelected, core::data::CombinedSet::sh)
+  DCL_HUB_SIG_ETC(DatasetsReset)
+  DCL_HUB_SIG_ETC(DatasetsActive)
+  DCL_HUB_SIG_ETC2(DatasetSelected, core::data::CombinedSet::sh)
 
 private:
   Q_OBJECT

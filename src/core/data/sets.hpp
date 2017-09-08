@@ -38,8 +38,9 @@ dcl_(FilesMetaDict) SHARED CLONED
   FilesMetaDict();
   virtual ~FilesMetaDict();
 
+  voi_mut_(clear, ());
   mth_mut_(uint, enter, (strc key));  // adds if necessary
-  voi_mut_(enter, (l::set<str>::rc keys));
+  voi_mut_(enter, (str_vec::rc keys));
 
   mth_(uint, size,  ())         RET_(idxs.size())
   mth_(strc, key,   (uint i))   RET_(keys.at(i))

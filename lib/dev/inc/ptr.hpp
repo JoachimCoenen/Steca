@@ -196,7 +196,10 @@ struct shared : protected _shared_base_ {
 
   T const* ptr()        const RET_(static_cast<T const*>(p()))
   operator T const*()   const RET_(ptr())
-  T const* operator->() const RET_(ptr())
+  T const* operator->() const {
+    EXPECT_(ptr())
+    return ptr();
+  }
 
   shared& operator=(shared const& that) {
     if (ptr_base::p != that.ptr_base::p) {
