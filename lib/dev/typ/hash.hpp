@@ -19,7 +19,7 @@ dcl_reimpl_(hash, std::unordered_map<K COMMA T>)
   using base::find;
 
   bol_(isEmpty, ())     RET_(base::empty())
-  mth_(uint, size, ())  RET_(base::size())
+  mth_(sz_t, size, ())  RET_(sz_t(base::size()))
 
   mth_mut_(T const&, add, (K const& k, T const& t)) {
     base::insert(std::make_pair(k, t));

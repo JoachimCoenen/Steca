@@ -18,8 +18,8 @@ dcl_sub_(lst_model, QAbstractTableModel)
   use_int_(cl_n, uint, {}) // col number
   use_int_(rw_n, uint, {}) // row number
 
-  use_vec_(cl_n, uint)
-  use_vec_(rw_n, uint)
+  use_typ_(cl_n_vec, uint_vec)
+  use_typ_(rw_n_vec, uint_vec)
 
   lst_model();
 

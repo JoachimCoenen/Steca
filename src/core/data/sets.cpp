@@ -23,45 +23,75 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-FilesMetaDict::FilesMetaDict() : keys(), idxs() {}
-FilesMetaDict::~FilesMetaDict() {}
+MetaDictBase::MetaDictBase() : keys() {}
+MetaDictBase::MetaDictBase(rc that) : keys(that.keys) {}
 
-void FilesMetaDict::clear() {
+MetaDictBase::~MetaDictBase() {}
+
+void MetaDictBase::clear() {
   mut(keys).clear();
-  mut(idxs).clear();
+  keySet.clear();
 }
 
-uint FilesMetaDict::enter(strc key) {
-  auto it = idxs.find(key);
-  if (idxs.end() != it)
-    return it->second;
-
-  uint idx = idxs.size();
-  mut(idxs).add(key, idx);
+void MetaDictBase::enter(strc key) {
+  if (keySet.contains(key))
+    return;
   mut(keys).add(key);
-  ENSURE_(idxs.size() == keys.size())
-
-  return idx;
+  keySet.add(key);
 }
 
-void FilesMetaDict::enter(str_vec::rc keys) {
+void MetaDictBase::enter(str_vec::rc keys) {
   for (auto&& key : keys)
     enter(key);
 }
 
 //------------------------------------------------------------------------------
 
+FilesMetaDict::FilesMetaDict() : base() {}
+FilesMetaDict::FilesMetaDict(rc that) : base(that) {}
+
+//------------------------------------------------------------------------------
+
+MetaDict::MetaDict() : idxs() {}
+MetaDict::MetaDict(rc that) : idxs(that.idxs) {}
+
 int MetaDict::safeIndex(strc key) const {
   return idxs.contains(key) ? int(idxs.at(key)) : -1;
 }
 
+void MetaDict::clear() {
+  base::clear();
+  mut(idxs).clear();
+}
+
+void MetaDict::enter(strc key) {
+  idxEnter(key);
+}
+
+void MetaDict::enter(str_vec::rc keys) {
+  base::enter(keys);
+}
+
+MetaDict::idx MetaDict::idxEnter(strc key) {
+  auto it = idxs.find(key);
+  if (idxs.end() != it)
+    return it->second;
+
+  auto i = idxs.size();
+  mut(idxs).add(key, i);
+  base::enter(key);
+  ENSURE_(idxs.size() == keys.size())
+
+  return i;
+}
+
 //------------------------------------------------------------------------------
 
-flt32 MetaVals::valAt(uint i) const may_err {
+flt32 MetaVals::valAt(idx i) const may_err {
   return at(i);
 }
 
-MetaVals::ref MetaVals::setAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::setAt(idx i, flt32 val) {
   if (contains(i))
     at(i) = val;
   else
@@ -69,7 +99,7 @@ MetaVals::ref MetaVals::setAt(uint i, flt32 val) {
   RTHIS
 }
 
-MetaVals::ref MetaVals::addAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::addAt(idx i, flt32 val) {
   if (contains(i))
     val += at(i);
   setAt(i, val);
@@ -93,10 +123,10 @@ Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
 
 TEST_("dict",
   MetaDict dict;
-  CHECK_EQ(0, dict.enter("0"));
-  CHECK_EQ(1, dict.enter("1"));
-  CHECK_EQ(0, dict.enter("0"));
-  CHECK_EQ(2, dict.enter("2"));
+  CHECK_EQ(0, dict.idxEnter("0"));
+  CHECK_EQ(1, dict.idxEnter("1"));
+  CHECK_EQ(0, dict.idxEnter("0"));
+  CHECK_EQ(2, dict.idxEnter("2"));
 )
 
 #ifndef _WIN32 // CDB has some trouble with this
@@ -226,10 +256,10 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
   if (1==n)
     return (lazyMeta = first()->meta);
 
-  lazyMeta.reset(new Meta(*reinterpret_cast<core::data::MetaDict::sh*>(&fullDict)));
+  lazyMeta.reset(new Meta(l::sh(new MetaDict)));
 
   Meta::ref lm = mut(*lazyMeta);
-  MetaDict::rc ld = *lm.dict;
+  MetaDict::ref ld = mut(*lm.dict);
   MetaVals::rc lv = lm.vals;
 
   // max tim, mon
@@ -253,8 +283,12 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
     MetaDict::rc id = *im.dict;
     MetaVals::rc iv = im.vals;
 
-    for (auto&& k : id.keys)
-      mut(lv).addAt(ld.index(k), iv.valAt(id.index(k)));
+    for (auto&& k : id.keys) {
+      auto&& idx = id.index(k);
+      auto&& val = iv.valAt(idx);
+      auto&& idl = ld.idxEnter(k);
+      mut(lv).addAt(idl, val);
+    }
   }
 
   real fac = 1.0 / n;

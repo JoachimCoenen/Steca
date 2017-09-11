@@ -91,7 +91,7 @@ public:
   }
 
 private:
-  uint_vec metaCols;  // shown metadata
+  str_vec metaKeys;  // shown metadata
 
   void gotFiles();
   mth_(uint, numLeadCols, ());

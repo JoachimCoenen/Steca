@@ -91,16 +91,14 @@ ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
   setNumbered(4);
 
   hub.onSigMetaChecked([this](KeyBag::sh bag) {
-    uint_vec is;
-    if (dict && bag) {
-      auto&& keys = dict->keys;
-      for_i_(keys.size())
-        if (bag->contains(keys.at(i)))
-          is.add(i);
-    }
+    str_vec ks;
+    if (dict && bag)
+      for (auto&& key : dict->keys)
+        if (bag->contains(key))
+          ks.add(key);
 
-    if (is != metaCols) {
-      metaCols = is;
+    if (ks != metaKeys) {
+      metaKeys = ks;
       signalReset();
     }
   });
@@ -108,7 +106,7 @@ ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
 
 cl_n ModelDatasets::cols() const {
   // allow 1 empty column even if there are no metacols (looks better)
-  return cl_n(numLeadCols() + l::max(1u, metaCols.size()));
+  return cl_n(numLeadCols() + l::max(1u, metaKeys.size()));
 }
 
 rw_n ModelDatasets::rows() const {
@@ -125,8 +123,8 @@ str ModelDatasets::head(cl_n cl) const {
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
-  if (i < metaCols.size())
-    return dict->key(metaCols.at(i));
+  if (i < metaKeys.size())
+    return metaKeys.at(i);
   return str::null;
 }
 
@@ -142,8 +140,12 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
-  if (i < metaCols.size())
-    return set->meta(dict)->vals.valAt(metaCols.at(i));
+  if (i < metaKeys.size()) {
+    auto&& meta = set->meta(dict);
+    int idx = meta->dict->safeIndex(metaKeys.at(i));
+    if (0 <= idx)
+      return meta->vals.valAt(uint(idx));
+  }
   return l_qt::var();
 }
 

@@ -33,42 +33,69 @@ namespace data {
 //------------------------------------------------------------------------------
 // attribute dictionaries
 
+dcl_(MetaDictBase)
+  using idx = uint;
+
+  atr_(str_vec, keys);
+
+  MetaDictBase();
+  virtual ~MetaDictBase();
+
+  virtual voi_mut_(clear, ());
+
+  mth_(sz_t, size, ())      RET_(sz_t(keys.size()))
+  mth_(strc, key,  (idx i)) RET_(keys.at(i))
+
+protected:
+  l::set<str> keySet;
+  voi_mut_(enter, (strc key));
+  voi_mut_(enter, (str_vec::rc keys));
+  MetaDictBase(rc);
+dcl_end
+
 dcl_sub_(KeyBag, l::bag<str>) SHARED
 dcl_end
 
-dcl_(FilesMetaDict) SHARED CLONED
-  atr_(str_vec, keys);
+//------------------------------------------------------------------------------
 
+dcl_sub_(FilesMetaDict, MetaDictBase) SHARED CLONED
+  USING_BASE_(enter)
   FilesMetaDict();
-  virtual ~FilesMetaDict(); //TODO to test GCC/release OUT
+private:
+  FilesMetaDict(rc);
+dcl_end
+
+dcl_sub_(MetaDict, MetaDictBase) SHARED
+  atr_(l::hash<str COMMA idx>, idxs);
+
+  MetaDict();
 
   voi_mut_(clear, ());
-  mth_mut_(uint, enter, (strc key));  // adds if necessary
+  voi_mut_(enter, (strc key));
   voi_mut_(enter, (str_vec::rc keys));
 
-  mth_(uint, size,  ())         RET_(idxs.size())
-  mth_(strc, key,   (uint i))   RET_(keys.at(i))
+  mth_mut_(idx, idxEnter, (strc key));
+  mth_(idx, index,     (strc key)) RET_(idxs.at(key))
+  mth_(int, safeIndex, (strc key));
 
-protected:
-  // key->index
-  atr_(l::hash<str COMMA uint>, idxs);
+private:
+  MetaDict(rc);
 dcl_end
 
-dcl_sub_(MetaDict, FilesMetaDict) SHARED
-  mth_(uint, index, (strc key)) RET_(idxs.at(key))
-  mth_(int,  safeIndex, (strc key));
-dcl_end
+//------------------------------------------------------------------------------
 
 // attribute values
-dcl_reimpl_(MetaVals, l::hash<uint COMMA flt32>)
+dcl_reimpl_(MetaVals, l::hash<MetaDictBase::idx COMMA flt32>)
   using base::begin;
   using base::end;
   using base::clear;
   using base::isEmpty;
 
-  mth_(flt32, valAt, (uint)) may_err;
-  set_(setAt, (uint, flt32));
-  set_(addAt, (uint, flt32));
+  using idx = MetaDictBase::idx;
+
+  mth_(flt32, valAt, (idx)) may_err;
+  set_(setAt, (idx, flt32));
+  set_(addAt, (idx, flt32));
 dcl_end
 
 //------------------------------------------------------------------------------

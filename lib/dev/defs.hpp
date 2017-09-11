@@ -21,14 +21,13 @@
   #define _if_clang_(...)
 #endif
 
+#include "inc/macros.inc"
+
 //------------------------------------------------------------------------------
 // fabulous macros for declarations of structures, under these assumptions:
 // default access to data: public, unless there is a reason to hide
 //                         therefore no need to have getters
 // default ro mode:        all is immutable, unless explicitely sated otherwise
-
-// needed in macros with templates
-#define COMMA ,
 
 // declaration of self-referencing types, very useful:
 // Self: this very type; rc: const reference, ref: reference; rval: r-value
@@ -49,24 +48,24 @@
 // begin declaration of sub-struct
 #define dcl_sub_(s, b) \
   struct s : b { _self_types_(s) using base = b; \
-    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
+    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
 
 // begin a declaration of sub-struct from two bases
 #define dcl_sub2_(s, b1, b2) \
   struct s : b1, b2 { _self_types_(s) using base = b2; \
-    base const& base_rc() const { return *this; }
+    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
 
 // begin declaration of a sub-struct that reimplements another:
 // the base structure is hidden (protected, so subclasses also can access it)
 // base_rc() allows deliberate access to base
 #define dcl_reimpl_(s, b) \
   struct s : protected b { _self_types_(s) using base = b; \
-    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
+    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
 
 // from two bases
 #define dcl_reimpl2_(s, b1, b2) \
   struct s : b1, protected b2 { _self_types_(s) using base = b2; \
-    base const& base_rc() const { return *this; } // access to base, instead of 'friend'
+    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
 
 // end of declaration - either one of the above
 #define dcl_end \
@@ -123,6 +122,10 @@
 // simple return
 #define SET_(...) { __VA_ARGS__; RTHIS }
 
+// using base::
+#define USING_BASE_METHOD_(mth) using base::mth;
+#define USING_BASE_(...) FOR_(USING_BASE_METHOD_, __VA_ARGS__)
+
 //------------------------------------------------------------------------------
 // request ad-hoc mutability
 
@@ -169,6 +172,18 @@ typedef   signed int    int32;
 #else
   typedef unsigned long  uint64;
   typedef   signed long   int64;
+#endif
+
+// size type
+#ifndef NDEBUG
+  struct sz_t {                             \
+    explicit sz_t(uint val_) : val(val_) {} \
+    operator uint() const RET_(val)         \
+  protected:                                \
+    uint val;                               \
+  };
+#else
+  using sz_t = uint;
 #endif
 
 // explicitely stated sizes of floats

@@ -82,7 +82,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
   };
 
   auto addValTo = [&](MetaVals& vs, strc ns, flt32 val) -> uint {
-    auto idx = mut(*file->dict).enter(ns);
+    auto idx = mut(*file->dict).idxEnter(ns);
     setVal(vs, idx, val);
     return idx;
   };
