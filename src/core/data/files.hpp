@@ -40,7 +40,7 @@ dcl_end
 
 // the whole file group
 dcl_reimpl_(Files, l::vec<File::sh>) SHARED CLONED
-  USING_BASE_(begin, end, size, at)
+  UB4_(begin, end, size, at)
 
   atr_(FilesMetaDict::sh, dict);
 

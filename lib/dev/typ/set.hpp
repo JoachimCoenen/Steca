@@ -9,7 +9,7 @@ namespace l {
 
 template <typename T>
 dcl_reimpl_(set, std::set<T>)
-  USING_BASE_(begin, end, erase, clear, find)
+  UB5_(begin, end, erase, clear, find)
 
   using typename base::iterator;
   using typename base::const_iterator;

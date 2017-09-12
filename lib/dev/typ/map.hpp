@@ -10,7 +10,7 @@ namespace l {
 
 template <typename K, typename T>
 dcl_reimpl_(map, std::map<K COMMA T>)
-  USING_BASE_(begin, end, erase, clear, at, find)
+  UB6_(begin, end, erase, clear, at, find)
 
   using typename base::iterator;
   using typename base::const_iterator;

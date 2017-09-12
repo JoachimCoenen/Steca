@@ -10,7 +10,7 @@ namespace l {
 
 template <typename K, typename T>
 dcl_reimpl_(hash, std::unordered_map<K COMMA T>)
-  USING_BASE_(begin, end, empty, erase, clear, at, find)
+  UB7_(begin, end, empty, erase, clear, at, find)
 
   bol_(isEmpty, ())     RET_(base::empty())
   mth_(sz_t, size, ())  RET_(sz_t(base::size()))

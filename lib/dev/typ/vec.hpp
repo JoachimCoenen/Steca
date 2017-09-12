@@ -10,7 +10,7 @@ namespace l {
 
 template <typename T>
 dcl_reimpl_(vec, std::vector<T>)
-  USING_BASE_(base, begin, end, reserve, resize, erase, clear, at)
+  UB8_(base, begin, end, reserve, resize, erase, clear, at)
 
 #ifdef _WIN32
   mth_(T const*, data, ())    RET_(&(base::operator[](0)))

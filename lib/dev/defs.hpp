@@ -123,8 +123,18 @@
 #define SET_(...) { __VA_ARGS__; RTHIS }
 
 // using base::
-#define USING_BASE_METHOD_(mth) using base::mth;
-#define USING_BASE_(...) FOR_(USING_BASE_METHOD_, __VA_ARGS__)
+#define UB_(mth) using base::mth;
+//#define USING_BASE_(...) FOR_(USING_BASE_METHOD_, __VA_ARGS__)
+// using base:: (cannot use variadic macros on Win7)
+#define UB9_(a, b, c, d, e, f, g, h, i) UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g) UB_(h) UB_(i)
+#define UB8_(a, b, c, d, e, f, g, h)    UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g) UB_(h)
+#define UB7_(a, b, c, d, e, f, g)       UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g)
+#define UB6_(a, b, c, d, e, f)          UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f)
+#define UB5_(a, b, c, d, e)             UB_(a) UB_(b) UB_(c) UB_(d) UB_(e)
+#define UB4_(a, b, c, d)                UB_(a) UB_(b) UB_(c) UB_(d)
+#define UB3_(a, b, c)                   UB_(a) UB_(b) UB_(c)
+#define UB2_(a, b)                      UB_(a) UB_(b)
+#define UB1_(a)                         UB_(a)
 
 //------------------------------------------------------------------------------
 // request ad-hoc mutability

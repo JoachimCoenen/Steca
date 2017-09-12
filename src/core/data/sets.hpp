@@ -59,7 +59,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(FilesMetaDict, MetaDictBase) SHARED CLONED
-  USING_BASE_(enter)
+  UB1_(enter)
   FilesMetaDict();
 private:
   FilesMetaDict(rc);
@@ -86,7 +86,7 @@ dcl_end
 
 // attribute values
 dcl_reimpl_(MetaVals, l::hash<MetaDictBase::idx COMMA flt32>)
-  USING_BASE_(begin, end, clear, isEmpty)
+  UB4_(begin, end, clear, isEmpty)
 
   using idx = MetaDictBase::idx;
 
@@ -163,7 +163,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_reimpl_(Sets, l::vec<Set::sh>)
-  USING_BASE_(first, begin, end, isEmpty, size)
+  UB5_(first, begin, end, isEmpty, size)
 
   Sets();
 

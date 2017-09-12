@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 
 dcl_sub_(str, std::string)
-  USING_BASE_(base, c_str, length)
+  UB3_(base, c_str, length)
 
   str() {}
   str(base const& that) : base(that) {}

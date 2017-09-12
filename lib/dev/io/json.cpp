@@ -354,8 +354,8 @@ Json Json::loadObj(std::istream& is) may_err {
 //------------------------------------------------------------------------------
 
 Json::Json(l::ij::rc v) : Self(OBJ) {
-  add(key::I, Json(v.i));
-  add(key::J, Json(v.j));
+  add(key::I, Json(flt32(v.i)));
+  add(key::J, Json(flt32(v.j)));
 }
 
 l::ij Json::asIJ() const {
@@ -363,8 +363,8 @@ l::ij Json::asIJ() const {
 }
 
 Json::Json(l::xy::rc v) : Self(OBJ) {
-  add(key::X, Json(v.x));
-  add(key::Y, Json(v.y));
+  add(key::X, Json(flt32(v.x)));
+  add(key::Y, Json(flt32(v.y)));
 }
 
 l::xy Json::asXY() const {
