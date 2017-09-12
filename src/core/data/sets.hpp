@@ -86,10 +86,7 @@ dcl_end
 
 // attribute values
 dcl_reimpl_(MetaVals, l::hash<MetaDictBase::idx COMMA flt32>)
-  using base::begin;
-  using base::end;
-  using base::clear;
-  using base::isEmpty;
+  USING_BASE_(begin, end, clear, isEmpty)
 
   using idx = MetaDictBase::idx;
 
@@ -166,11 +163,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_reimpl_(Sets, l::vec<Set::sh>)
-  using base::first;
-  using base::begin;
-  using base::end;
-  using base::isEmpty;
-  using base::size;
+  USING_BASE_(first, begin, end, isEmpty, size)
 
   Sets();
 

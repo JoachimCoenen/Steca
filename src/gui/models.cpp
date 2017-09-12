@@ -106,7 +106,7 @@ ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
 
 cl_n ModelDatasets::cols() const {
   // allow 1 empty column even if there are no metacols (looks better)
-  return cl_n(numLeadCols() + l::max(1u, metaKeys.size()));
+  return cl_n(numLeadCols() + l::max(1u, uint(metaKeys.size())));
 }
 
 rw_n ModelDatasets::rows() const {

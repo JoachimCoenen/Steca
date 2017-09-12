@@ -14,8 +14,8 @@ namespace l {
     operator Base() const RET_(val)               \
     T& operator++()    SET_(++val)                \
     T& operator--()    SET_(--val)                \
-    T& operator++(int) SET_(val++)                \
-    T& operator--(int) SET_(val--)                \
+    T  operator++(int) RET_(T(val++))             \
+    T  operator--(int) RET_(T(val--))             \
   protected:                                      \
     Base val;                                     \
   };

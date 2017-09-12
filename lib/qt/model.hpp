@@ -34,7 +34,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   dcl_end
 
   mth_mut_(triChk*, makeTriChk, (strc));
-  set_(changeState, (triChk::eState));
+  voi_mut_(changeTriState, (triChk::eState));
 
   atr_(uint, isNumbered);
   set_(setNumbered, (uint));
@@ -50,13 +50,13 @@ dcl_sub_(lst_model, QAbstractTableModel)
   virtual set_(check, (rw_n, bool, bool silent = false));
   virtual bol_(isChecked, (rw_n));
 
-  voi_(updateState, ()) emits;
+  voi_(updateTriState, ()) emits;
 
   virtual voi_(fixColumns,  (lst_view&));
   virtual bol_(rightAlign, (cl_n)) RET_(false)
 
 signals:
-  void stateChanged(triChk::eState) const;
+  void triStateChanged(triChk::eState) const;
 
 public:
   template <typename Lambda>

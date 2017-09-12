@@ -107,7 +107,7 @@ dcl_base_(Json)
 
   mth_(Self, operator+, (rc that)) may_err;
 
-  mth_(uint, size, ())   may_err;
+  mth_(sz_t, size, ())   may_err;
   mth_(rc,   at, (uint)) may_err;
   mth_(rc,   at, (strc)) may_err;
 

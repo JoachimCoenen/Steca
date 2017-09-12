@@ -38,7 +38,7 @@ dcl_(Curve)
   void clear();
 
   bol_(isEmpty, ());
-  mth_(uint, size, ());
+  mth_(sz_t, size, ());
   bol_(isSorted, ());
 
   set_(add, (real x, real y));

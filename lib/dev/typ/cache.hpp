@@ -14,7 +14,7 @@ dcl_base_(cache_base)
   cache_base(pint maxItems);
 
   virtual voi_mut_(trim, (uint))  = 0;
-  virtual mth_(uint, size, ())          = 0;
+  virtual mth_(sz_t, size, ())          = 0;
 
   voi_mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
@@ -41,7 +41,7 @@ private:
 public:
   cache(pint n) : base(n) {}
 
-  mth_(uint, size, ())      RET_(cash.size())
+  mth_(sz_t, size, ())      RET_(cash.size())
   bol_(isEmpty,    ())      RET_(cash.isEmpty())
   voi_mut_(clear, ()) { trim(0); }
 

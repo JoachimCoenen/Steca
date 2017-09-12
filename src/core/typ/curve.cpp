@@ -44,13 +44,13 @@ bool Curve::isEmpty() const {
   return xs.isEmpty();
 }
 
-uint Curve::size() const {
+sz_t Curve::size() const {
   ENSURE_(xs.size() == ys.size())
   return xs.size();
 }
 
 bool Curve::isSorted() const {
-  return std::is_sorted(xs.cbegin(), xs.cend());
+  return std::is_sorted(xs.begin(), xs.end());
 }
 
 Curve::ref Curve::add(real x, real y) {

@@ -234,7 +234,7 @@ data::Files::sh Session::remFilesAt(uint_vec::rc is) {
 
   auto&& clone = l::sh(files->clone());
 
-  for_i_down_(iis.size())
+  for_i_down_(uint(iis.size()))
     mut(*clone).remFileAt(iis.at(i));
 
   mut(files) = clone;

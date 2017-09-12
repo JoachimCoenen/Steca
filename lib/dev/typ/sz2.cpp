@@ -40,7 +40,7 @@ bool sz2::isEmpty() const {
   return 0==i || 0==j;
 }
 
-uint sz2::size() const RET_(i * j)
+sz_t sz2::size() const RET_(sz_t(i * j))
 
 sz2 sz2::transposed() const {
   return sz2(j, i);

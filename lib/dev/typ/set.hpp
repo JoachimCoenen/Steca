@@ -9,19 +9,13 @@ namespace l {
 
 template <typename T>
 dcl_reimpl_(set, std::set<T>)
-  using base::base;
-
-  using base::begin;
-  using base::end;
-  using base::erase;
-  using base::clear;
-  using base::find;
+  USING_BASE_(begin, end, erase, clear, find)
 
   using typename base::iterator;
   using typename base::const_iterator;
 
   bol_(isEmpty, ())     RET_(base::empty())
-  mth_(uint, size, ())  RET_(base::size())
+  mth_(sz_t, size, ())  RET_(base::size())
 
   mth_mut_(T const&, add, (T const& t)) {
     base::insert(t);

@@ -10,17 +10,8 @@ namespace l {
 
 template <typename T>
 dcl_reimpl_(vec, std::vector<T>)
-  using base::base;
+  USING_BASE_(base, begin, end, reserve, resize, erase, clear, at)
 
-  using base::begin;
-  using base::end;
-  using base::cbegin;
-  using base::cend;
-  using base::reserve;
-  using base::resize;
-  using base::erase;
-  using base::clear;
-  using base::at;
 #ifdef _WIN32
   mth_(T const*, data, ())    RET_(&(base::operator[](0)))
   mth_mut_(T*, data, ())      RET_(&(base::operator[](0)))
@@ -29,7 +20,7 @@ dcl_reimpl_(vec, std::vector<T>)
 #endif
 
   bol_(isEmpty, ())           RET_(base::empty())
-  mth_(uint,     size, ())    RET_(base::size())
+  mth_(sz_t,     size, ())    RET_(sz_t(base::size()))
   mth_(T const&, first, ())   RET_(base::front())
   mth_(T const&, last,  ())   RET_(base::back())
 

@@ -179,6 +179,10 @@ typedef   signed int    int32;
   struct sz_t {                             \
     explicit sz_t(uint val_) : val(val_) {} \
     operator uint() const RET_(val)         \
+    sz_t& operator++()    SET_(++val)       \
+    sz_t& operator--()    SET_(--val)       \
+    sz_t  operator++(int) RET_(sz_t(val++)) \
+    sz_t  operator--(int) RET_(sz_t(val--)) \
   protected:                                \
     uint val;                               \
   };

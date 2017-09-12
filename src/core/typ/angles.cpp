@@ -106,8 +106,8 @@ static uint upperBound(l::vec<gma_t> const& vec, gma_t x, uint i1, uint i2) {
 void AngleMap::getGmaIndexes(gma_rge::rc rgeGma,
                              uint_vec const*& indexes, uint& minIndex, uint& maxIndex) const {
   indexes = &gmaIndexes;
-  minIndex = lowerBound(gmas, gma_t(rgeGma.min), 0, l::to_uint(gmas.size()));
-  maxIndex = upperBound(gmas, gma_t(rgeGma.max), 0, l::to_uint(gmas.size()));
+  minIndex = lowerBound(gmas, gma_t(rgeGma.min), 0, gmas.size());
+  maxIndex = upperBound(gmas, gma_t(rgeGma.max), 0, gmas.size());
 }
 
 void AngleMap::calculate() {
@@ -180,7 +180,7 @@ void AngleMap::calculate() {
   }
 
   uint_vec is(countWithoutCut);
-  for_i_(l::to_uint(is.size()))
+  for_i_(is.size())
     is.setAt(i, i);
 
   std::sort(is.begin(), is.end(), [this](uint i1,uint i2) {

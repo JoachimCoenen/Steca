@@ -11,10 +11,10 @@ namespace l_qt {
 
 lst_model::triChk::triChk(strc s, lst_model& model_) : base(s), model(model_) {
   connect(this, &Self::stateChanged, [this](int state) {
-    model.changeState(eState(state));
+    model.changeTriState(eState(state));
   });
 
-  connect(&model, &lst_model::stateChanged, [this](eState state) {
+  connect(&model, &lst_model::triStateChanged, [this](eState state) {
     set(state);
   });
 }
@@ -38,16 +38,17 @@ lst_model::triChk* lst_model::makeTriChk(strc s) {
   return new triChk(s, *this);
 }
 
-lst_model::ref lst_model::changeState(triChk::eState state) {
-  if (triChk::eState::part == state)
-    RTHIS;
-
-  bool on = triChk::eState::on == state;
-  for_i_(rows())
-    check(rw_n(i), on, true);
-
-  signalReset();
-  RTHIS
+void lst_model::changeTriState(triChk::eState state) {
+  using eState = triChk::eState;
+  if (!rows()) {
+    if (eState::off != state)
+      emit triStateChanged(eState::off);
+  } else if (eState::part != state) {
+    bool on = eState::on == state;
+    for_i_(rows())
+      check(rw_n(i), on, true);
+    signalReset();
+  }
 }
 
 lst_model::ref lst_model::setNumbered(uint n) {
@@ -78,14 +79,7 @@ bool lst_model::isChecked(rw_n) const {
   return false;
 }
 
-void lst_model::updateState() const {
-  using eState = triChk::eState;
-  eState newState = eState::off;
-
-  auto rs = rows();
-  if (!rs)
-    return;
-
+void lst_model::updateTriState() const {
   bool all = true, none = true;
   for_i_(rows())
     if (isChecked(rw_n(i)))
@@ -93,9 +87,10 @@ void lst_model::updateState() const {
     else
       all = false;
 
-  newState = none ? eState::off : all ? eState::on : eState::part;
+  using eState = triChk::eState;
+  eState newState = none ? eState::off : all ? eState::on : eState::part;
   if (state != newState)
-    emit stateChanged((state = newState));
+    emit triStateChanged((state = newState));
 }
 
 void lst_model::fixColumns(lst_view& view) const {
@@ -121,7 +116,7 @@ void lst_model::fixColumns(lst_view& view) const {
 void lst_model::signalReset() const {
   mutp(this)->beginResetModel();
   mutp(this)->endResetModel();
-  updateState();
+  updateTriState();
 }
 
 int lst_model::columnCount(rcIndex) const {

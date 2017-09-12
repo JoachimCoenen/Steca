@@ -173,7 +173,7 @@ Json Json::operator+(rc that) const may_err {
   return plus;
 }
 
-uint Json::size() const may_err {
+sz_t Json::size() const may_err {
   check_or_err_(VEC == val->typ, "json: bad type");
   auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.size();
