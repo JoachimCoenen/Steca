@@ -17,6 +17,7 @@ function files {
 
 echo -e '\nHEADERS += \\' >> $PRO
 files . h >> $PRO
+files . hpp >> $PRO
 
 echo -e '\nSOURCES += \\' >> $PRO
 files . cpp >> $PRO

@@ -6,7 +6,7 @@ DATE=`date +%y%m%d_%H%M`
 cat >> $PRO <<EOT
 TARGET   = STeCa-$DATE
 TEMPLATE = app
-CONFIG  += c++11 #silent
+CONFIG  += c++11 silent
 QT      += widgets svg multimedia
 
 INCLUDEPATH += \$\$PWD/..
@@ -17,14 +17,15 @@ function files {
   find $where -type f -name \*.$ext -exec echo ' ' {} \\ \;
 }
 
-MODULES='core gui'
+MODULES='core core_legacy gui'
 echo -e '\nHEADERS += \\' >> $PRO
 for m in $MODULES ; do files $m h >> $PRO ; done
 for m in $MODULES ; do files $m hpp >> $PRO ; done
 
 echo -e '\nSOURCES += \\' >> $PRO
 for m in $MODULES ; do files $m cpp >> $PRO ; done
-echo ' ' main.cpp >> $PRO
+echo ' ' main.cpp \\ >> $PRO
+echo ' ' manifest.cpp >> $PRO
 
 cat >> $PRO <<EOT
 

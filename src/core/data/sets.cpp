@@ -52,8 +52,8 @@ FilesMetaDict::FilesMetaDict(rc that) : base(that) {}
 
 //------------------------------------------------------------------------------
 
-MetaDict::MetaDict() : idxs() {}
-MetaDict::MetaDict(rc that) : idxs(that.idxs) {}
+MetaDict::MetaDict() : base(), idxs() {}
+MetaDict::MetaDict(rc that) : base(that), idxs(that.idxs) {}
 
 int MetaDict::safeIndex(strc key) const {
   return idxs.contains(key) ? int(idxs.at(key)) : -1;
