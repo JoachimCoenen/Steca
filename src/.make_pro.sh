@@ -1,4 +1,4 @@
-PRO=steca.pro
+PRO=src.pro
 echo -e '# generated project\n' > $PRO
 
 DATE=`date +%y%m%d_%H%M`
@@ -6,7 +6,7 @@ DATE=`date +%y%m%d_%H%M`
 cat >> $PRO <<EOT
 TARGET   = STeCa-$DATE
 TEMPLATE = app
-CONFIG  += c++11 silent
+CONFIG  += c++11 #silent
 QT      += widgets svg multimedia
 
 INCLUDEPATH += \$\$PWD/..
@@ -32,7 +32,7 @@ RESOURCES += \
   gui/rc.qrc
 
 # for Windoze & Linux
-win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../qt_lib/release/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/release/ -ldev_lib
-else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../qt_lib/debug/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/debug/ -ldev_lib
-else:unix:!macx: LIBS += -L\$\$OUT_PWD/../qt_lib/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/ -ldev_lib
+win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../lib/qt/release/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/release/ -ldev_lib
+else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../lib/qt/debug/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/debug/ -ldev_lib
+else:unix:!macx: LIBS += -L\$\$OUT_PWD/../lib/qt/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/ -ldev_lib
 EOT

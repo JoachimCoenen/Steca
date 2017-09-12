@@ -141,7 +141,7 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
   if (i < metaKeys.size()) {
-    auto&& meta = set->meta(dict);
+    auto&& meta = set->meta();
     int idx = meta->dict->safeIndex(metaKeys.at(i));
     if (0 <= idx)
       return meta->vals.valAt(uint(idx));
@@ -237,7 +237,7 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   case clVAL: {
     if (!set)
       return l_qt::var();
-    auto&& meta = set->meta(dict);
+    auto&& meta = set->meta();
     auto&& idx  = meta->dict->safeIndex(key);
     return idx < 0 ? l_qt::var() : meta->vals.valAt(uint(idx));
   }

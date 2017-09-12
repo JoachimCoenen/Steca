@@ -26,7 +26,7 @@ dcl_(RealNum)
 #undef REALNUM_DCL_OP
 
 #define REALNUM_DCL_OP(op) \
-  mth_(Self, operator op, (rc that)) RET_(RealNum(*this) op that)
+  mth_(Self, operator op, (rc that)) RET_(RealNum(*this) op##= that)
 
   REALNUM_DCL_OP(+)
   REALNUM_DCL_OP(-)

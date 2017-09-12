@@ -186,7 +186,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   CombinedSet(uint fileNo);
 
-  mth_(Meta::sh,  meta, (core::data::FilesMetaDict::sh));
+  mth_(Meta::sh,  meta, ());
 
   // no tth
   mth_(omg_t::rc, omg, ());

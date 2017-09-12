@@ -246,7 +246,7 @@ CombinedSet::CombinedSet(uint fileNo_)
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
 
-Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
+Meta::sh CombinedSet::meta() const {
   if (lazyMeta)
     return lazyMeta;
 
