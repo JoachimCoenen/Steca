@@ -101,7 +101,7 @@ dcl_(Meta) SHARED // metadata
   atr_(str, comment);
   atr_(str, date);
 
-  atr_(MetaDict::sh, dict); // other than the values stored explicitly below
+  atr_(MetaDict::shp, dict); // other than the values stored explicitly below
   atr_(MetaVals,     vals); // their values
 
   atr_(tth_t,  tth);    // *mid* tth
@@ -114,8 +114,8 @@ dcl_(Meta) SHARED // metadata
   atr_(flt32, dTim);   // delta time, may be nan
   atr_(flt32, dMon);   // delta mon. count, may be nan
 
-  Meta(MetaDict::sh);
-  Meta(MetaDict::sh, MetaVals::rc, flt32, flt32, flt32, flt32,
+  Meta(MetaDict::shp);
+  Meta(MetaDict::shp, MetaVals::rc, flt32, flt32, flt32, flt32,
                                    flt32, flt32, flt32, flt32);
 dcl_end
 
@@ -131,11 +131,11 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(FileSrc::sh, src);
-  atr_(Meta::sh,    meta);
-  atr_(Image::sh,   image);
+  atr_(FileSrc::shp, src);
+  atr_(Meta::shp,    meta);
+  atr_(Image::shp,   image);
 
-  Set(FileSrc::sh, Meta::sh, Image::sh);
+  Set(FileSrc::shp, Meta::shp, Image::shp);
 
   mth_(l::sz2, imageSize, ());
 
@@ -162,17 +162,17 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Sets, l::vec<Set::sh>)
+dcl_reimpl_(Sets, l::vec<Set::shp>)
   UB5_(first, begin, end, isEmpty, size)
 
   Sets();
 
   mth_(l::sz2,    imageSize, ());
-  mth_(Image::sh, foldImage, ());
-  set_(add, (Set::sh)) may_err;
+  mth_(Image::shp, foldImage, ());
+  set_(add, (Set::shp)) may_err;
 
 private:
-  mutable Image::sh lazyFoldImage;
+  mutable Image::shp lazyFoldImage;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   CombinedSet(uint fileNo);
 
-  mth_(Meta::sh,  meta, ());
+  mth_(Meta::shp,  meta, ());
 
   // no tth
   mth_(omg_t::rc, omg, ());
@@ -206,7 +206,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(inten_vec, collectIntens, (Session const&,
                                   Image const* intensCorr, gma_rge::rc));
 private:
-  mutable Meta::sh lazyMeta;
+  mutable Meta::shp lazyMeta;
 
   mutable omg_t    lazyOmg;
   mutable phi_t    lazyPhi;
@@ -222,7 +222,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
+dcl_sub_(CombinedSets, l::vec<CombinedSet::shp>) SHARED
   CombinedSets();
 
   set_(add, (l::give_me<CombinedSet>));

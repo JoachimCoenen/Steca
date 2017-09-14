@@ -108,12 +108,12 @@ MetaVals::ref MetaVals::addAt(idx i, flt32 val) {
 
 //------------------------------------------------------------------------------
 
-Meta::Meta(MetaDict::sh dict_)
+Meta::Meta(MetaDict::shp dict_)
 : comment()
 , dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
+Meta::Meta(MetaDict::shp dict_, MetaVals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
@@ -143,7 +143,7 @@ FileSrc::FileSrc(l_io::path::rc path_, strc comment_)
 
 //------------------------------------------------------------------------------
 
-Set::Set(FileSrc::sh src_, Meta::sh meta_, Image::sh image_)
+Set::Set(FileSrc::shp src_, Meta::shp meta_, Image::shp image_)
 : src(src_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
@@ -215,7 +215,7 @@ l::sz2 Sets::imageSize() const {
   return first()->imageSize();
 }
 
-Image::sh Sets::foldImage() const {
+Image::shp Sets::foldImage() const {
   if (lazyFoldImage)
     return lazyFoldImage;
 
@@ -231,7 +231,7 @@ Image::sh Sets::foldImage() const {
   return lazyFoldImage;
 }
 
-Sets::ref Sets::add(Set::sh set) may_err {
+Sets::ref Sets::add(Set::shp set) may_err {
   check_or_err_(isEmpty() || first()->imageSize() == set->imageSize(),
                 "Inconsistent image size");
   base::add(set);
@@ -246,7 +246,7 @@ CombinedSet::CombinedSet(uint fileNo_)
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
 
-Meta::sh CombinedSet::meta() const {
+Meta::shp CombinedSet::meta() const {
   if (lazyMeta)
     return lazyMeta;
 
@@ -513,8 +513,8 @@ void CombinedSets::resetLazies() {
 
 //------------------------------------------------------------------------------
 
-TEST_("data::sh",
-  File::sh f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
+TEST_("data::shp",
+  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 

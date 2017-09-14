@@ -25,33 +25,33 @@ namespace core { namespace data {
 struct Files;
 
 dcl_(File) SHARED  // one file
-  atr_(FileSrc::sh,src);      // the number within files, 0 = not
+  atr_(FileSrc::shp,src);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
   atr_(Sets,       sets);
-  atr_(MetaDict::sh, dict); // for all sets
+  atr_(MetaDict::shp, dict); // for all sets
 
   File(l_io::path::rc);
 
-  set_(addSet, (Set::sh)) may_err;
+  set_(addSet, (Set::shp)) may_err;
   mth_(l::sz2, imageSize, ());
 dcl_end
 
 //------------------------------------------------------------------------------
 
 // the whole file group
-dcl_reimpl_(Files, l::vec<File::sh>) SHARED CLONED
+dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   UB4_(begin, end, size, at)
 
-  atr_(FilesMetaDict::sh, dict);
+  atr_(FilesMetaDict::shp, dict);
 
   Files();
   virtual ~Files() {}
 
   bol_(hasPath, (l_io::path::rc));
-  voi_mut_(addFile, (data::File::sh));
+  voi_mut_(addFile, (data::File::shp));
   voi_mut_(remFileAt, (uint));
 
-  mth_(CombinedSets::sh, collectDatasets, (l::pint groupedBy));
+  mth_(CombinedSets::shp, collectDatasets, (l::pint groupedBy));
 
 private:
   Files(rc);

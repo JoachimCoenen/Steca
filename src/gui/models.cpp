@@ -30,7 +30,7 @@ using cl_n = ModelDatasets::cl_n;
 //------------------------------------------------------------------------------
 
 Model::Model(Hub& hub) : RefHub(hub) {
-  hub.onSigFiles([this](Files::sh sh) {
+  hub.onSigFiles([this](Files::shp sh) {
     if (files != sh) {
       if ((files = sh))
         dict = files->dict;
@@ -79,7 +79,7 @@ bool ModelFiles::isChecked(rw_n rw) const {
   return at(rw)->isActive;
 }
 
-core::data::File::sh ModelFiles::at(rw_n rw) const {
+core::data::File::shp ModelFiles::at(rw_n rw) const {
   EXPECT_(files)
   return files->at(rw);
 }
@@ -90,7 +90,7 @@ ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
   setCheckable(true);
   setNumbered(4);
 
-  hub.onSigMetaChecked([this](KeyBag::sh bag) {
+  hub.onSigMetaChecked([this](KeyBag::shp bag) {
     str_vec ks;
     if (dict && bag)
       for (auto&& key : dict->keys)
@@ -180,7 +180,7 @@ void ModelDatasets::groupBy(l::pint by) {
 void ModelDatasets::emitSetAt(int row) const {
   emit sigSet(
     (sets && 0 <= row && uint(row) < sets->size())
-    ? sets->at(uint(row)) : CombinedSet::sh());
+    ? sets->at(uint(row)) : CombinedSet::shp());
 }
 
 uint ModelDatasets::numLeadCols() const {
@@ -203,7 +203,7 @@ void ModelDatasets::gotFiles() {
 
 ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked(new KeyBag) {
   setCheckable(true);
-  hub.onSigCombinedSet([this](CombinedSet::sh sh) {
+  hub.onSigCombinedSet([this](CombinedSet::shp sh) {
     if (set != sh) {
       set = sh;
       signalReset();

@@ -72,7 +72,7 @@ dcl_(AngleMap) SHARED
 
 private:
   voi_mut_(calculate, ());
-  angle_arr::sh angles;
+  angle_arr::shp angles;
 
   // sorted
   l::vec<gma_t> gmas;

@@ -16,11 +16,19 @@ exc::exc(strc msg_, bool silent_) noexcept : msg(msg_), silent(silent_) {}
   throw exc(msg, false);
 }
 
+[[noreturn]] void err(pcstr msg) will_err {
+  throw exc(msg, false);
+}
+
 [[noreturn]] void errSilent() will_err {
   throw exc(str::null, true);
 }
 
 [[noreturn]] void errSilent(strc msg) will_err {
+  throw exc(msg, true);
+}
+
+[[noreturn]] void errSilent(pcstr msg) will_err {
   throw exc(msg, true);
 }
 

@@ -58,8 +58,8 @@ bool couldBeTiffDat(l_io::path::rc path) may_err {
 
 //------------------------------------------------------------------------------
 
-data::File::sh load(l_io::path::rc path) may_err {
-  data::File::sh file;
+data::File::shp load(l_io::path::rc path) may_err {
+  data::File::shp file;
 
   if (couldBeCaress(path))
     file = loadCaress(path);

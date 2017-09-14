@@ -33,15 +33,15 @@ extern str_vec const normStrLst;
 dcl_(Session)
   Session();
 
-  mth_mut_(data::Files::sh, clear, ());
-  mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
+  mth_mut_(data::Files::shp, clear, ());
+  mth_mut_(data::Files::shp, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
 private:
   atr_(data::Files::sh,files);
 
 public:
-  mth_(AngleMap::sh,   angleMap, (data::Set::rc));
+  mth_(AngleMap::shp,   angleMap, (data::Set::rc));
   atr_(AngleMap::Key0, angleMapKey0); // current
 
   atr_(ImageTransform, imageTransform);
@@ -52,15 +52,15 @@ public:
   atr_(l::peal,        intenScale);
 
   atr_(bool,           corrEnabled);
-  mth_(Image::sh,      intensCorr, ());
+  mth_(Image::shp,      intensCorr, ());
 
-  atr_(data::File::sh, corrFile);
-  atr_(Image::sh,      corrImage);
+  atr_(data::File::shp, corrFile);
+  atr_(Image::shp,      corrImage);
 
-  mth_mut_(data::Files::sh, addFiles,   (l_io::path_vec::rc)) may_err;
-  mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
+  mth_mut_(data::Files::shp, addFiles,   (l_io::path_vec::rc)) may_err;
+  mth_mut_(data::Files::shp, remFilesAt, (uint_vec::rc));
 
-  mth_mut_(data::Files::sh, activateFileAt, (uint, bool));
+  mth_mut_(data::Files::shp, activateFileAt, (uint, bool));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
@@ -68,9 +68,9 @@ public:
 
   set_(setImageSize,  (l::sz2)) may_err;
 
-  mth_(calc::ImageLens::sh, imageLens,
+  mth_(calc::ImageLens::shp, imageLens,
         (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
-  mth_(calc::DatasetLens::sh, datasetLens,
+  mth_(calc::DatasetLens::shp, datasetLens,
         (data::CombinedSets::rc, data::CombinedSet::rc,
          eNorm, bool trans, bool cut));
   mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
@@ -83,7 +83,7 @@ public:
 
 private:
   mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
-  mutable Image::sh intensCorrImage;
+  mutable Image::shp intensCorrImage;
   mutable bool corrHasNaNs;
 
   voi_mut_(updateImageSize, ());

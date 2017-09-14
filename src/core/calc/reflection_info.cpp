@@ -29,12 +29,12 @@ ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta)
 
 ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta, gma_rge rgeGma,
     inten_t inten, inten_t intenError, tth_t tth, tth_t tthError, fwhm_t fwhm, fwhm_t fwhmError)
-  : ReflectionInfo(data::Meta::sh(), alpha, beta, rgeGma,
+  : ReflectionInfo(data::Meta::shp(), alpha, beta, rgeGma,
                    inten, intenError, tth, tthError, fwhm, fwhmError)
 {
 }
 
-ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
+ReflectionInfo::ReflectionInfo(data::Meta::shp md_,
     l::deg alpha_, l::deg beta_, gma_rge rgeGma_,
     inten_t inten_, inten_t intenError_,
     tth_t   tth_,   tth_t   tthError_,

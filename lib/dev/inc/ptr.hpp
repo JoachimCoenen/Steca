@@ -2,6 +2,7 @@
 
 #pragma once
 #include "../defs.hpp"
+#include <type_traits>
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
@@ -10,6 +11,9 @@ typedef void const* pcvoid;
 // parts adapted from https://github.com/Microsoft/GSL.git
 
 namespace l {
+
+[[noreturn]] void err(pcstr);
+
 //------------------------------------------------------------------------------
 
 dcl_(ptr_base)
@@ -213,12 +217,30 @@ protected:
 
 template <typename T> struct shp;
 
+template <typename T, bool constructible> struct T_maybe_maker;
+template <typename T> struct T_maybe_maker<T, false> {
+  T* make() {
+    err("cannot make T");
+  }
+};
+template <typename T> struct T_maybe_maker<T, true> {
+  T* make() {
+    return new T;
+  }
+};
+
+template <typename T> struct T_maker {
+  T_maybe_maker<T, std::is_default_constructible<T>::value> maker;
+  T* make() {
+    return maker.make();
+  }
+};
+
 // non-mutable shared pointer and reference
 template <typename T>
 struct shr : sh_base<T> {
-  explicit shr(T const* p) : sh_base<T>(p) {
-    EXPECT_(p)
-  }
+  // default () forced by Qt metasystem
+  explicit shr(T const* p = nullptr) : sh_base<T>(p ? p : maker.make()) {}
 
   shr(shr const& that) : sh_base<T>(that) {}
   T const& operator()() const {
@@ -234,7 +256,13 @@ struct shr : sh_base<T> {
   shp<T> shp() const {
     return l::shp<T>(*reinterpret_cast<l::shp<T> const*>(this));
   }
+
+private:
+  static T_maker<T> maker;
 };
+
+template <typename T> T_maker<T> shr<T>::maker;
+
 
 template <typename T>
 struct shp : sh_base<T> {
@@ -272,7 +300,7 @@ template <typename T> shr<T const> sh(T const* p) RET_(shr<T>(p))
 template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
 
 // declare struct as shr
-#define SH \
+#define SHARED \
   using sh  = l::shr<Self>; \
   using shp = l::shp<Self>;
 

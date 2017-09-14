@@ -81,7 +81,7 @@ dcl_sub_(SumFuns, Fun)
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
   // summed funs
-  l::vec<Fun::sh> funs;
+  l::vec<Fun::shp> funs;
 
 protected:
   // the aggregate par list

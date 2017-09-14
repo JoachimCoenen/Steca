@@ -34,8 +34,8 @@ dcl_sub2_(Model, RefHub, l_qt::lst_model)
   Model(Hub&);
 
 protected:
-  Files::sh         files;
-  FilesMetaDict::sh dict;
+  Files::shp         files;
+  FilesMetaDict::shp dict;
   virtual void gotFiles() {}
 dcl_end
 
@@ -53,7 +53,7 @@ dcl_sub_(ModelFiles, Model)
   set_(check,     (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
-  mth_(File::sh, at, (rw_n));
+  mth_(File::shp, at, (rw_n));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -78,11 +78,11 @@ dcl_sub_(ModelDatasets, Model)
   atr_(l::pint, groupedBy);
   voi_mut_(groupBy, (l::pint));
 
-  CombinedSets::sh sets;
+  CombinedSets::shp sets;
   voi_(emitSetAt, (int));
 
 signals:
-  void sigSet(CombinedSet::sh) const;
+  void sigSet(CombinedSet::shp) const;
 
 public:
   template <typename Lambda>
@@ -116,10 +116,10 @@ dcl_sub_(ModelMetadata, Model)
   set_(check, (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
-  KeyBag::sh checked;
+  KeyBag::shp checked;
 
 private:
-  CombinedSet::sh set;
+  CombinedSet::shp set;
 dcl_end
 
 //------------------------------------------------------------------------------

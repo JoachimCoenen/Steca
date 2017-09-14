@@ -12,7 +12,7 @@ namespace l_qt {
 
 struct Hub;
 
-dcl_sub_(Task, QEvent) SH
+dcl_sub_(Task, QEvent) SHARED
   Task();
  ~Task();
 

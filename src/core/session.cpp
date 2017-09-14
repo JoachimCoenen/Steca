@@ -36,8 +36,8 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
-data::Files::sh Session::clear() {
-  mut(files).reset(new data::Files);
+data::Files::shp Session::clear() {
+  mut(files) = l::sh(new data::Files);
   return files;
   //TODO
 //  while (0 < numFiles())
@@ -59,7 +59,7 @@ data::Files::sh Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-data::Files::sh Session::load(io::Json::rc) may_err {
+data::Files::shp Session::load(io::Json::rc) may_err {
   clear();
   return files;
 //  QJsonParseError parseError;
@@ -123,7 +123,7 @@ data::Files::sh Session::load(io::Json::rc) may_err {
 
 //  auto reflectionsObj = top.loadArr(config_key::REFLECTIONS);
 //  for_i (reflectionsObj.count()) {
-//    calc::shp_Reflection reflection(new calc::Reflection);
+//    calc::shpp_Reflection reflection(new calc::Reflection);
 //    reflection->loadJson(reflectionsObj.objAt(i));
 //    session_->addReflection(reflection);
 //  }
@@ -191,17 +191,17 @@ io::Json Session::save() const {
 //  return QJsonDocument(top.sup()).toJson();
 }
 
-AngleMap::sh Session::angleMap(data::Set::rc set) const {
+AngleMap::shp Session::angleMap(data::Set::rc set) const {
   AngleMap::Key key(angleMapKey0, set.tth());
   auto map = angleMapCache.get(key);
   if (!map)
-    map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
+    map = angleMapCache.add(key, AngleMap::shp(new AngleMap(key)));
   return map;
 }
 
-Image::sh Session::intensCorr() const {
+Image::shp Session::intensCorr() const {
   if (!corrEnabled)
-    return Image::sh();
+    return Image::shp();
 
   if (!intensCorrImage)
     calcIntensCorr();
@@ -209,30 +209,30 @@ Image::sh Session::intensCorr() const {
   return intensCorrImage;
 }
 
-data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
+data::Files::shp Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
-  auto&& clone = l::sh(files->clone());
+  auto&& clone = l::sh(files().clone());
 
   for (auto&& path : ps)
-    if (!clone->hasPath(path)) {
+    if (!clone().hasPath(path)) {
       auto&& file = io::load(path);
       setImageSize(file->imageSize());
       mut(*clone).addFile(file);
     }
 
-  if (files->size() != clone->size())
+  if (files().size() != clone().size())
     mut(files) = clone;
   return files;
 }
 
-data::Files::sh Session::remFilesAt(uint_vec::rc is) {
+data::Files::shp Session::remFilesAt(uint_vec::rc is) {
   if (is.isEmpty())
     return files;
 
   uint_vec iis = is;
   std::sort(iis.begin(), iis.end());
 
-  auto&& clone = l::sh(files->clone());
+  auto&& clone = l::sh(files().clone());
 
   for_i_down_(uint(iis.size()))
     mut(*clone).remFileAt(iis.at(i));
@@ -241,12 +241,12 @@ data::Files::sh Session::remFilesAt(uint_vec::rc is) {
   return files;
 }
 
-data::Files::sh Session::activateFileAt(uint i, bool on) {
-  if (i >= files->size() || files->at(i)->isActive == on)
+data::Files::shp Session::activateFileAt(uint i, bool on) {
+  if (i >= files().size() || files().at(i)->isActive == on)
     return files;
 
-  mut(files).reset(files->clone());
-  mut(files->at(i)->isActive) = on;
+  mut(files) = l::sh(files().clone());
+  mut(files().at(i)->isActive) = on;
   return files;
 }
 
@@ -293,7 +293,7 @@ Session::ref Session::setImageSize(l::sz2 size) may_err {
 }
 
 
-calc::ImageLens::sh Session::imageLens(
+calc::ImageLens::shp Session::imageLens(
   Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
 {
   return l::sh(new calc::ImageLens(*this, image, datasets, trans, cut));
@@ -306,7 +306,7 @@ Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
   return curve;
 }
 
-calc::DatasetLens::sh Session::datasetLens(
+calc::DatasetLens::shp Session::datasetLens(
     data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
     eNorm norm, bool trans, bool cut) const {
   return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
@@ -336,7 +336,7 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
 }
 
 void Session::updateImageSize() {
-  if (0 == files->size() && !corrFile)
+  if (0 == files().size() && !corrFile)
     mut(imageSize) = l::sz2(0, 0);
 }
 
@@ -369,7 +369,7 @@ void Session::calcIntensCorr() const {
       corrHasNaNs = true;
     }
 
-    mutp(intensCorrImage)->setInten(i + di, j + dj, inten_t(factor));
+    mut(*intensCorrImage).setInten(i + di, j + dj, inten_t(factor));
   }
 }
 

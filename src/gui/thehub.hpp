@@ -62,13 +62,13 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
 signals:
   // a new set of files
-  void sigFiles(core::data::Files::sh) const;
+  void sigFiles(core::data::Files::shp) const;
   // a new set of combined sets
-  void sigCombinedSets(core::data::CombinedSets::sh) const;
+  void sigCombinedSets(core::data::CombinedSets::shp) const;
   // a selected one
-  void sigCombinedSet(core::data::CombinedSet::sh) const;
+  void sigCombinedSet(core::data::CombinedSet::shp) const;
   // chacked metadata
-  void sigMetaChecked(core::data::KeyBag::sh) const;
+  void sigMetaChecked(core::data::KeyBag::shp) const;
 
 
   void sigCorr() const;           // add/rem/on/off correction file
@@ -76,7 +76,7 @@ signals:
   void sigDatasetsReset() const;  // a major change in datasets
   void sigDatasetsActive() const; // changed active datasets
 
-  void sigDatasetSelected(core::data::CombinedSet::sh) const; // dataset selected (or not)
+  void sigDatasetSelected(core::data::CombinedSet::shp) const; // dataset selected (or not)
 
 public:
   template <typename Sig, typename Lambda>
@@ -104,16 +104,16 @@ public:                                 \
     onSig(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIG_ETC2(Files,        core::data::Files::sh)
-  DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::sh)
-  DCL_HUB_SIG_ETC2(CombinedSet,  core::data::CombinedSet::sh)
-  DCL_HUB_SIG_ETC2(MetaChecked,  core::data::KeyBag::sh)
+  DCL_HUB_SIG_ETC2(Files,        core::data::Files::shp)
+  DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::shp)
+  DCL_HUB_SIG_ETC2(CombinedSet,  core::data::CombinedSet::shp)
+  DCL_HUB_SIG_ETC2(MetaChecked,  core::data::KeyBag::shp)
 
   DCL_HUB_SIG_ETC(Corr)
 
   DCL_HUB_SIG_ETC(DatasetsReset)
   DCL_HUB_SIG_ETC(DatasetsActive)
-  DCL_HUB_SIG_ETC2(DatasetSelected, core::data::CombinedSet::sh)
+  DCL_HUB_SIG_ETC2(DatasetSelected, core::data::CombinedSet::shp)
 
 private:
   Q_OBJECT

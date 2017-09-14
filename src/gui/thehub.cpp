@@ -98,7 +98,7 @@ Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
     emitCombinedSets(modelDatasets->sets);
   });
 
-  modelDatasets->onSigSet([this](core::data::CombinedSet::sh sh) {
+  modelDatasets->onSigSet([this](core::data::CombinedSet::shp sh) {
     emitCombinedSet(sh);
   });
 

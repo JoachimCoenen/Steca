@@ -25,7 +25,7 @@ File::File(l_io::path::rc path)
 : src(new FileSrc(path, str::null)), isActive(true)
 , sets(), dict(new MetaDict) {}
 
-File::ref File::addSet(Set::sh set) may_err {
+File::ref File::addSet(Set::shp set) may_err {
   mut(sets).add(set);
   return *this;
 }
@@ -48,14 +48,14 @@ bool Files::hasPath(l_io::path::rc path) const {
 }
 
 
-void Files::addFile(data::File::sh file) {
+void Files::addFile(data::File::shp file) {
   EXPECT_(file && !hasPath(file->src->path))
   add(file);
   mut(*dict).enter(file->dict->keys);
 }
 
 void Files::remFileAt(uint i) {
-  File::sh file = at(i);
+  File::shp file = at(i);
   rem(i);
 
   auto&& md = mut(*dict);
@@ -66,7 +66,7 @@ void Files::remFileAt(uint i) {
       md.enter(key);
 }
 
-CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
+CombinedSets::shp Files::collectDatasets(l::pint groupedBy) const {
   auto css = l::sh(new data::CombinedSets);
 
   uint i = 0, fileNo = 1;
@@ -109,8 +109,8 @@ CombinedSets::sh Files::collectDatasets(l::pint groupedBy) const {
 
 //------------------------------------------------------------------------------
 
-TEST_("data::sh",
-  File::sh f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
+TEST_("data::shp",
+  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 

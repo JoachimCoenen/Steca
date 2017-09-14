@@ -92,7 +92,7 @@ real SimpleFun::parErr(uint i) const {
 
 SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
   uint parIdx = parCount();
-  funs.add(Fun::sh(fun.ptr()));
+  funs.add(Fun::shp(fun.ptr()));
 
   for_i_(fun->parCount()) {
     // aggregate par list

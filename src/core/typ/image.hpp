@@ -96,7 +96,7 @@ dcl_(Image) SHARED
   mth_(inten_rge, rgeInten, ()) RET_(intens->rgeCount)
 
 private:
-  count_arr2::sh intens;
+  count_arr2::shp intens;
 dcl_end
 
 //------------------------------------------------------------------------------
