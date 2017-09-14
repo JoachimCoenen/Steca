@@ -187,36 +187,22 @@ protected:
   void cleanup();
 };
 
-// non-mutable
 template <typename T>
-struct shared : protected _shared_base_ {
-  explicit shared(T const* p = nullptr) : _shared_base_(p)    {}
-  shared(shared const& that) : _shared_base_(that) {}
- ~shared() { _drop(); }
+struct sh_base : protected _shared_base_ {
+ ~sh_base() { _drop(); }
 
   T const* ptr()        const RET_(static_cast<T const*>(p()))
   operator T const*()   const RET_(ptr())
-  T const* operator->() const {
-    EXPECT_(ptr())
-    return ptr();
-  }
 
-  shared& operator=(shared const& that) {
+protected:
+  using _shared_base_::_shared_base_;
+
+  void _set(sh_base const& that) {
     if (ptr_base::p != that.ptr_base::p) {
       _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
     }
-    RTHIS
   }
 
-  void reset(T* p) {
-    *this = shared(p);
-  }
-
-  void drop() {
-    reset(nullptr);
-  }
-
-private:
   void _drop() {
      if (dec()) {
        delete static_cast<T*>(mutp(p()));
@@ -225,14 +211,70 @@ private:
    }
 };
 
-// a handy way to make a shared pointer
-template <typename T> shared<T> sh(T* p)             RET_(shared<T>(p))
-template <typename T> shared<T const> sh(T const* p) RET_(shared<T>(p))
-template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
+template <typename T> struct shp;
 
-// declare struct as shared
-#define SHARED \
-  using sh     = l::shared<Self>;
+// non-mutable shared pointer and reference
+template <typename T>
+struct shr : sh_base<T> {
+  explicit shr(T const* p) : sh_base<T>(p) {
+    EXPECT_(p)
+  }
+
+  shr(shr const& that) : sh_base<T>(that) {}
+  T const& operator()() const {
+    EXPECT_(sh_base<T>::ptr())
+    return *sh_base<T>::ptr();
+  }
+
+  shr& operator=(shr const& that) {
+    sh_base<T>::_set(that);
+    RTHIS
+  }
+
+  shp<T> shp() const {
+    return l::shp<T>(*reinterpret_cast<l::shp<T> const*>(this));
+  }
+};
+
+template <typename T>
+struct shp : sh_base<T> {
+  explicit shp(T const* p = nullptr) : sh_base<T>(p) {}
+
+  shp(shp const& that) : sh_base<T>(that) {}
+  shp(shr<T> const& that) : sh_base<T>(that) {}
+
+  T const* operator->() const {
+    EXPECT_(sh_base<T>::ptr())
+    return sh_base<T>::ptr();
+  }
+
+  shp& operator=(shp const& that) {
+    sh_base<T>::_set(that);
+    RTHIS
+  }
+
+  shr<T> sh() const {
+    return shr<T>(*reinterpret_cast<l::shr<T> const*>(this));
+  }
+
+  void reset(T const* p) {
+    *this = shp(p);
+  }
+
+  void drop() {
+    *this = shp(nullptr);
+  }
+};
+
+// a handy way to make a shr pointer
+template <typename T> shr<T> sh(T* p)             RET_(shr<T>(p))
+template <typename T> shr<T const> sh(T const* p) RET_(shr<T>(p))
+template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
+
+// declare struct as shr
+#define SH \
+  using sh  = l::shr<Self>; \
+  using shp = l::shp<Self>;
 
 // clone it
 #define CLONED \
@@ -245,7 +287,7 @@ template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
 template <typename T> T* mutp(l::jp<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
-template <typename T> T* mutp(l::shared<T> const& p) \
+template <typename T> T* mutp(l::shr<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------

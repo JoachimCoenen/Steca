@@ -30,7 +30,7 @@ template <typename Key, typename T>
 dcl_sub_(cache, cache_base)
 private:
   using rcKey = Key const&;
-  using Tsh   = shared<T>;
+  using Tsh   = shp<T>;
   using tsh_mru = std::pair<Tsh, mru_t>;
 
   using cash_t  = map<Key,tsh_mru>;

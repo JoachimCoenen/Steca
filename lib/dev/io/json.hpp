@@ -90,7 +90,7 @@ dcl_base_(Json)
   dcl_end
 
   // data
-  atr_(l::shared<Val>, val);
+  atr_(l::shr<Val>, val);
 
   Json(Typ);
   Json(rc) = default;

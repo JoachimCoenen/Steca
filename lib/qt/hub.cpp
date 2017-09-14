@@ -53,7 +53,7 @@ void Hub::workDone(Task::sh task) {
 
 void Hub::registerMetaTypes() {
   ONLY_ONCE
-  qRegisterMetaType<Task::sh>("Task::sh");
+  qRegisterMetaType<Task::shp>("Task::shp");
 }
 
 bool Hub::event(QEvent* e) {
