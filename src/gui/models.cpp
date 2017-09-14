@@ -105,7 +105,7 @@ cl_n ModelDatasets::cols() const {
 }
 
 rw_n ModelDatasets::rows() const {
-  return rw_n(sets ? sets->size() : 0);
+  return rw_n(sets().size());
 }
 
 str ModelDatasets::head(cl_n cl) const {
@@ -124,19 +124,19 @@ str ModelDatasets::head(cl_n cl) const {
 }
 
 l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
-  auto&& set = sets->at(rw);
+  auto&& set = sets().at(rw);
 
   if (cl < numLeadCols())
     switch (cl) {
-    case clFNO: return set->fileNo;
-    case clTAG: return set->tag;
+    case clFNO: return set().fileNo;
+    case clTAG: return set().tag;
     default: NEVER
     }
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
   if (i < metaKeys.size()) {
-    auto&& meta = set->meta();
+    auto&& meta = set().meta();
     int idx = meta->dict->safeIndex(metaKeys.at(i));
     if (0 <= idx)
       return meta->vals.valAt(uint(idx));
@@ -154,7 +154,7 @@ bool ModelDatasets::rightAlign(cl_n cl) const {
 }
 
 ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on, bool silent) {
-  auto&& isActive = sets->at(rw)->isActive;
+  auto&& isActive = sets().at(rw)().isActive;
   if (isActive != on) {
     mut(isActive) = on;
     if (!silent)
@@ -164,7 +164,7 @@ ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on, bool silent) {
 }
 
 bool ModelDatasets::isChecked(rw_n rw) const {
-  return sets->at(rw)->isActive;
+  return sets().at(rw)().isActive;
 }
 
 void ModelDatasets::groupBy(l::pint by) {
@@ -174,8 +174,8 @@ void ModelDatasets::groupBy(l::pint by) {
 
 void ModelDatasets::emitSetAt(int row) const {
   emit sigSet(
-    (sets && 0 <= row && uint(row) < sets->size())
-    ? sets->at(uint(row)) : CombinedSet::shp());
+    (0 <= row && uint(row) < sets().size())
+     ? sets().at(uint(row)) : CombinedSet::shp());
 }
 
 uint ModelDatasets::numLeadCols() const {
@@ -246,7 +246,7 @@ ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on, bool silent) {
 }
 
 bool ModelMetadata::isChecked(rw_n rw) const {
-  return checked->contains(dict().key(rw));
+  return checked().contains(dict().key(rw));
 }
 
 //------------------------------------------------------------------------------

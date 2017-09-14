@@ -212,7 +212,7 @@ Sets::Sets() : lazyFoldImage() {}
 l::sz2 Sets::imageSize() const {
   EXPECT_(!isEmpty())
   // all images have the same size; simply take the first one
-  return first()->imageSize();
+  return first()().imageSize();
 }
 
 Image::shp Sets::foldImage() const {
@@ -226,13 +226,13 @@ Image::shp Sets::foldImage() const {
 
   Image::ref d = mut(*lazyFoldImage);
   for_i_(n)
-    d.addIntens(*(at(i)->image));
+    d.addIntens(*(at(i)().image));
 
   return lazyFoldImage;
 }
 
-Sets::ref Sets::add(Set::shp set) may_err {
-  check_or_err_(isEmpty() || first()->imageSize() == set->imageSize(),
+Sets::ref Sets::add(Set::sh set) may_err {
+  check_or_err_(isEmpty() || first()().imageSize() == set().imageSize(),
                 "Inconsistent image size");
   base::add(set);
   RTHIS;
@@ -254,7 +254,7 @@ Meta::shp CombinedSet::meta() const {
   EXPECT_(0 < n)
 
   if (1==n)
-    return (lazyMeta = first()->meta);
+    return (lazyMeta = first()().meta);
 
   lazyMeta.reset(new Meta(l::sh(new MetaDict)));
 
@@ -267,7 +267,7 @@ Meta::shp CombinedSet::meta() const {
   // avg all else
 
   for_i_(n) {
-    Meta::rc im = *(at(i)->meta);
+    Meta::rc im = *(at(i)().meta);
 
     mut(lm.tth) = lm.tth + im.tth;
     mut(lm.omg) = lm.omg + im.omg;
@@ -305,11 +305,11 @@ Meta::shp CombinedSet::meta() const {
 }
 
 #define AVG_SETS_VAL(lazyVal, fun)  \
-  if (l::isnan(lazyVal)) {            \
-    EXPECT_(!isEmpty())        \
-    for (auto&& set: *this)           \
-      mut(lazyVal) += set->fun();   \
-    mut(lazyVal) /= size();    \
+  if (l::isnan(lazyVal)) {          \
+    EXPECT_(!isEmpty())             \
+    for (auto&& set: *this)         \
+      mut(lazyVal) += set().fun();  \
+    mut(lazyVal) /= size();         \
   }
 
 omg_t::rc CombinedSet::omg() const {
@@ -338,10 +338,10 @@ flt32 CombinedSet::mon() const {
 }
 
 #define SUM_SETS_VAL(lazyVal, fun)  \
-  if (l::isnan(lazyVal)) {            \
-    EXPECT_(!isEmpty())        \
-    for (auto&& set: *this)           \
-      mut(lazyVal) += set->fun();   \
+  if (l::isnan(lazyVal)) {          \
+    EXPECT_(!isEmpty())             \
+    for (auto&& set: *this)         \
+      mut(lazyVal) += set().fun();  \
   }
 
 flt32 CombinedSet::dTim() const {
@@ -354,11 +354,11 @@ flt32 CombinedSet::dMon() const {
   return lazyDMon;
 }
 
-#define RGE_SETS_COMBINE(op, fun)   \
-  EXPECT_(!isEmpty())          \
-  Range rge;                        \
-  for (auto&& set : *this)            \
-    rge.op(set->fun);               \
+#define RGE_SETS_COMBINE(op, fun) \
+  EXPECT_(!isEmpty())             \
+  Range rge;                      \
+  for (auto&& set : *this)        \
+    rge.op(set().fun);            \
   return rge;
 
 gma_rge CombinedSet::rgeGma(Session const& s) const {
@@ -389,7 +389,7 @@ inten_vec CombinedSet::collectIntens(
   uint numBins;
   if (1 < size()) {  // combined datasets
     auto one   = first();
-    auto delta = tth_t(one->rgeTth(session).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(session).width() / pixWidth);
     numBins    = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins    = pixWidth; // simply match the number of pixels
@@ -402,7 +402,7 @@ inten_vec CombinedSet::collectIntens(
   auto deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one->collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
   if (session.avgScaleIntens) {
@@ -427,7 +427,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   uint numBins;
   if (1 < size()) {
     auto one   = first();
-    auto delta = tth_t(one->rgeTth(s).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(s).width() / pixWidth);
     numBins = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins = pixWidth; // simply match the pixel resolution
@@ -439,7 +439,7 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one->collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
   if (s.avgScaleIntens) {
@@ -471,7 +471,7 @@ l::sz2 CombinedSets::imageSize() const {
     return l::sz2(0,0);
 
   // all images have the same size; simply take the first one
-  return first()->imageSize();
+  return first()().imageSize();
 }
 
 flt32 CombinedSets::mon() const {
@@ -495,8 +495,8 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
 
     for (auto&& set: *this)
       for (auto&& one : *set) {
-        if (one->image) {
-          auto&& image = *one->image;
+        if (one().image) {
+          auto&& image = *one().image;
           auto imageLens = session.imageLens(image,*this,trans,cut);
           lazyRgeFixedInten.extendBy(imageLens->rgeInten(false));
         }

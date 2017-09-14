@@ -74,9 +74,9 @@ data::File::shp load(l_io::path::rc path) may_err {
                 CAT("File contains no datasets: ", path));
 
   // ensure that all datasets have images of the same size
-  auto size = file->sets.first()->image->size();
+  auto size = file->sets.first()().image->size();
   for (auto&& set : file->sets)
-    if (set->image->size() != size)
+    if (set().image->size() != size)
       l::err(CAT("Inconsistent image size in file: ", path));
 
   return file;

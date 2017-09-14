@@ -218,13 +218,17 @@ protected:
 template <typename T> struct shp;
 
 template <typename T, bool constructible> struct T_maybe_maker;
+
 template <typename T> struct T_maybe_maker<T, false> {
   T* make() {
+    static_assert(std::is_abstract<T>::value || std::is_default_constructible<T>::value, "cannot make T");
     err("cannot make T");
   }
 };
+
 template <typename T> struct T_maybe_maker<T, true> {
   T* make() {
+    static_assert(std::is_default_constructible<T>::value, "");
     return new T;
   }
 };
@@ -240,7 +244,8 @@ template <typename T> struct T_maker {
 template <typename T>
 struct shr : sh_base<T> {
   // default () forced by Qt metasystem
-  explicit shr(T const* p = nullptr) : sh_base<T>(p ? p : maker.make()) {}
+  explicit shr() : sh_base<T>(maker.make()) {}
+  explicit shr(T const* p) : sh_base<T>(p) {}
 
   shr(shr const& that) : sh_base<T>(that) {}
   T const& operator()() const {

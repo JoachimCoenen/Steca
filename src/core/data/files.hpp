@@ -32,7 +32,7 @@ dcl_(File) SHARED  // one file
 
   File(l_io::path::rc);
 
-  set_(addSet, (Set::shp)) may_err;
+  set_(addSet, (Set::sh)) may_err;
   mth_(l::sz2, imageSize, ());
 dcl_end
 
@@ -51,7 +51,7 @@ dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   voi_mut_(addFile, (data::File::shp));
   voi_mut_(remFileAt, (uint));
 
-  mth_(CombinedSets::shp, collectDatasets, (l::pint groupedBy));
+  mth_(CombinedSets::sh, collectDatasets, (l::pint groupedBy));
 
 private:
   Files(rc);

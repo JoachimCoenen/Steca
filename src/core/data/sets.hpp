@@ -162,14 +162,14 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Sets, l::vec<Set::shp>)
+dcl_reimpl_(Sets, l::vec<Set::sh>)
   UB5_(first, begin, end, isEmpty, size)
 
   Sets();
 
   mth_(l::sz2,    imageSize, ());
   mth_(Image::shp, foldImage, ());
-  set_(add, (Set::shp)) may_err;
+  set_(add, (Set::sh)) may_err;
 
 private:
   mutable Image::shp lazyFoldImage;
@@ -222,7 +222,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(CombinedSets, l::vec<CombinedSet::shp>) SHARED
+dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   CombinedSets();
 
   set_(add, (l::give_me<CombinedSet>));

@@ -78,7 +78,7 @@ dcl_sub_(ModelDatasets, Model)
   atr_(l::pint, groupedBy);
   voi_mut_(groupBy, (l::pint));
 
-  CombinedSets::shp sets;
+  CombinedSets::sh sets;
   voi_(emitSetAt, (int));
 
 signals:
@@ -116,7 +116,7 @@ dcl_sub_(ModelMetadata, Model)
   set_(check, (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
-  KeyBag::shp checked;
+  KeyBag::sh checked;
 
 private:
   CombinedSet::shp set;
