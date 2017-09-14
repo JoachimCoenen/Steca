@@ -42,7 +42,7 @@ dcl_end
 dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   UB4_(begin, end, size, at)
 
-  atr_(FilesMetaDict::shp, dict);
+  atr_(FilesMetaDict::sh, dict);
 
   Files();
   virtual ~Files() {}

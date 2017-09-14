@@ -38,7 +38,7 @@ l::sz2 File::imageSize() const {
 //------------------------------------------------------------------------------
 
 Files::Files() : dict(new FilesMetaDict) {}
-Files::Files(rc that) : base(that), dict(that.dict->clone()) {}
+Files::Files(rc that) : base(that), dict(that.dict().clone()) {}
 
 bool Files::hasPath(l_io::path::rc path) const {
   for (auto&& file : *this)

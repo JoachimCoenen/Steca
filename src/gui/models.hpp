@@ -34,8 +34,8 @@ dcl_sub2_(Model, RefHub, l_qt::lst_model)
   Model(Hub&);
 
 protected:
-  Files::shp         files;
-  FilesMetaDict::shp dict;
+  Files::sh          files;
+  FilesMetaDict::sh  dict;
   virtual void gotFiles() {}
 dcl_end
 

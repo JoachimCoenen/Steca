@@ -62,7 +62,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
 signals:
   // a new set of files
-  void sigFiles(core::data::Files::shp) const;
+  void sigFiles(core::data::Files::sh) const;
   // a new set of combined sets
   void sigCombinedSets(core::data::CombinedSets::shp) const;
   // a selected one
@@ -104,7 +104,7 @@ public:                                 \
     onSig(&Hub::sig##name, slot);  \
   }
 
-  DCL_HUB_SIG_ETC2(Files,        core::data::Files::shp)
+  DCL_HUB_SIG_ETC2(Files,        core::data::Files::sh)
   DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::shp)
   DCL_HUB_SIG_ETC2(CombinedSet,  core::data::CombinedSet::shp)
   DCL_HUB_SIG_ETC2(MetaChecked,  core::data::KeyBag::shp)

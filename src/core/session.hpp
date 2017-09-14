@@ -33,12 +33,12 @@ extern str_vec const normStrLst;
 dcl_(Session)
   Session();
 
-  mth_mut_(data::Files::shp, clear, ());
-  mth_mut_(data::Files::shp, load, (io::Json::rc)) may_err;
+  mth_mut_(data::Files::sh, clear, ());
+  mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
 private:
-  atr_(data::Files::sh,files);
+  atr_(data::Files::sh, files);
 
 public:
   mth_(AngleMap::shp,   angleMap, (data::Set::rc));
@@ -57,10 +57,10 @@ public:
   atr_(data::File::shp, corrFile);
   atr_(Image::shp,      corrImage);
 
-  mth_mut_(data::Files::shp, addFiles,   (l_io::path_vec::rc)) may_err;
-  mth_mut_(data::Files::shp, remFilesAt, (uint_vec::rc));
+  mth_mut_(data::Files::sh, addFiles,   (l_io::path_vec::rc)) may_err;
+  mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
 
-  mth_mut_(data::Files::shp, activateFileAt, (uint, bool));
+  mth_mut_(data::Files::sh, activateFileAt, (uint, bool));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());

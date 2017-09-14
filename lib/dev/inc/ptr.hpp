@@ -253,11 +253,24 @@ struct shr : sh_base<T> {
     RTHIS
   }
 
-  shp<T> shp() const {
-    return l::shp<T>(*reinterpret_cast<l::shp<T> const*>(this));
+  bool operator==(shr<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator==(shp<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator!=(shr<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+  bool operator!=(shp<T> const& that) {
+    return this->ptr() != that.ptr();
   }
 
 private:
+  operator bool() const;  // not to be used
   static T_maker<T> maker;
 };
 
@@ -268,7 +281,7 @@ template <typename T>
 struct shp : sh_base<T> {
   explicit shp(T const* p = nullptr) : sh_base<T>(p) {}
 
-  shp(shp const& that) : sh_base<T>(that) {}
+  shp(shp const& that)    : sh_base<T>(that) {}
   shp(shr<T> const& that) : sh_base<T>(that) {}
 
   T const* operator->() const {
@@ -279,6 +292,22 @@ struct shp : sh_base<T> {
   shp& operator=(shp const& that) {
     sh_base<T>::_set(that);
     RTHIS
+  }
+
+  bool operator==(shp<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator==(shr<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator!=(shp<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+  bool operator!=(shr<T> const& that) {
+    return this->ptr() != that.ptr();
   }
 
   shr<T> sh() const {

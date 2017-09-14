@@ -30,13 +30,9 @@ using cl_n = ModelDatasets::cl_n;
 //------------------------------------------------------------------------------
 
 Model::Model(Hub& hub) : RefHub(hub) {
-  hub.onSigFiles([this](Files::shp sh) {
+  hub.onSigFiles([this](Files::sh sh) {
     if (files != sh) {
-      if ((files = sh))
-        dict = files->dict;
-      else
-        dict.drop();
-
+      dict = (files = sh)().dict;
       gotFiles();
       signalReset();
     }
@@ -55,7 +51,7 @@ cl_n ModelFiles::cols() const {
 }
 
 rw_n ModelFiles::rows() const {
-  return rw_n(files ? files->size() : 0);
+  return rw_n(files().size());
 }
 
 str ModelFiles::head(cl_n cl) const {
@@ -80,8 +76,7 @@ bool ModelFiles::isChecked(rw_n rw) const {
 }
 
 core::data::File::shp ModelFiles::at(rw_n rw) const {
-  EXPECT_(files)
-  return files->at(rw);
+  return files().at(rw);
 }
 
 //------------------------------------------------------------------------------
@@ -92,8 +87,8 @@ ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
 
   hub.onSigMetaChecked([this](KeyBag::shp bag) {
     str_vec ks;
-    if (dict && bag)
-      for (auto&& key : dict->keys)
+    if (bag)
+      for (auto&& key : dict().keys)
         if (bag->contains(key))
           ks.add(key);
 
@@ -188,10 +183,7 @@ uint ModelDatasets::numLeadCols() const {
 }
 
 void ModelDatasets::combineSets() {
-  if (files)
-    sets = files->collectDatasets(groupedBy);
-  else
-    sets.drop();
+  sets = files().collectDatasets(groupedBy);
   signalReset();
 }
 
@@ -216,7 +208,7 @@ cl_n ModelMetadata::cols() const {
 }
 
 rw_n ModelMetadata::rows() const {
-  return dict ? rw_n(dict->size()) : rw_n(0);
+  return rw_n(dict().size());
 }
 
 str ModelMetadata::head(cl_n cl) const {
@@ -228,8 +220,8 @@ str ModelMetadata::head(cl_n cl) const {
 }
 
 l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
-  EXPECT_(dict && rw < dict->size());
-  auto&& key = dict->key(rw);
+  EXPECT_(rw < dict().size());
+  auto&& key = dict().key(rw);
 
   switch (cl) {
   case clTAG:
@@ -247,14 +239,14 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
 }
 
 ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on, bool silent) {
-  mut(*checked).set(dict->key(rw), on);
+  mut(*checked).set(dict().key(rw), on);
   if (!silent)
     signalReset();
   RTHIS
 }
 
 bool ModelMetadata::isChecked(rw_n rw) const {
-  return checked->contains(dict->key(rw));
+  return checked->contains(dict().key(rw));
 }
 
 //------------------------------------------------------------------------------

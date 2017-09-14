@@ -36,7 +36,7 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
-data::Files::shp Session::clear() {
+data::Files::sh Session::clear() {
   mut(files) = l::sh(new data::Files);
   return files;
   //TODO
@@ -59,7 +59,7 @@ data::Files::shp Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-data::Files::shp Session::load(io::Json::rc) may_err {
+data::Files::sh Session::load(io::Json::rc) may_err {
   clear();
   return files;
 //  QJsonParseError parseError;
@@ -209,7 +209,7 @@ Image::shp Session::intensCorr() const {
   return intensCorrImage;
 }
 
-data::Files::shp Session::addFiles(l_io::path_vec::rc ps) may_err {
+data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
   auto&& clone = l::sh(files().clone());
 
@@ -225,7 +225,7 @@ data::Files::shp Session::addFiles(l_io::path_vec::rc ps) may_err {
   return files;
 }
 
-data::Files::shp Session::remFilesAt(uint_vec::rc is) {
+data::Files::sh Session::remFilesAt(uint_vec::rc is) {
   if (is.isEmpty())
     return files;
 
@@ -241,7 +241,7 @@ data::Files::shp Session::remFilesAt(uint_vec::rc is) {
   return files;
 }
 
-data::Files::shp Session::activateFileAt(uint i, bool on) {
+data::Files::sh Session::activateFileAt(uint i, bool on) {
   if (i >= files().size() || files().at(i)->isActive == on)
     return files;
 
