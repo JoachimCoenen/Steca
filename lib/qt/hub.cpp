@@ -60,7 +60,7 @@ bool Hub::event(QEvent* e) {
     return QObject::event(e);
 
   auto&& sh = l::sh(task->clone());
-  mutp(sh)->set(*this);
+  mut(*sh).set(*this);
 
   emit doWork(sh);
   return true;

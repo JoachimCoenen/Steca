@@ -146,6 +146,7 @@ template <typename T> struct mut_typ<T const>   { using typ = T; };
 // make a pointer value mutable
 template <typename T> T const*& mut(T const*const& t) \
   RET_(const_cast<T const*&>(t))
+
 // make a value mutable
 template <typename T> T& mut(T const& t) \
   RET_(const_cast<T&>(t))

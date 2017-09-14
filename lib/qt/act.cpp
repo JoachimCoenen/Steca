@@ -22,7 +22,7 @@ l::own<act> act::make(strc tx, strc key) {
 }
 
 l::own<act> act::make(strc tx, strc key, strc ic) {
-  auto a = make(tx, key); mutp(a)->icon(ic);
+  auto a = make(tx, key); mut(*a).icon(ic);
   return a;
 }
 

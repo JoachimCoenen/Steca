@@ -34,7 +34,7 @@ ViewFile::ViewFile() : lbl(new l_qt::lbl()) {
 }
 
 void ViewFile::setInfo(core::data::File const* file) {
-  mutp(lbl)->text(file ? file->src->comment : str::null);
+  mut(*lbl).text(file ? file->src->comment : str::null);
 }
 
 //------------------------------------------------------------------------------
