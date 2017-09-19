@@ -111,8 +111,8 @@ rw_n ModelDatasets::rows() const {
 str ModelDatasets::head(cl_n cl) const {
   if (cl < numLeadCols())
     switch (cl) {
-    case clFNO: return "F#";
-    case clTAG: return "#-#";
+    case clFNO: return "F";
+    case clTAG: return " - ";
     default: NEVER
     }
 
@@ -142,11 +142,6 @@ l_qt::var ModelDatasets::cell(rw_n rw, cl_n cl) const {
       return meta->vals.valAt(uint(idx));
   }
   return l_qt::var();
-}
-
-void ModelDatasets::fixColumns(l_qt::lst_view& view) const {
-  base::fixColumns(view);
-  view.fixColWidth(cl_n(0), oWidth(view, 3));
 }
 
 bool ModelDatasets::rightAlign(cl_n cl) const {

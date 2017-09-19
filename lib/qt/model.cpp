@@ -22,7 +22,8 @@ lst_model::triChk::triChk(strc s, lst_model& model_) : base(s), model(model_) {
 //------------------------------------------------------------------------------
 
 lst_model::lst_model()
-: isCheckable(false), isNumbered(false), state(triChk::eState::off) {}
+: isCheckable(false), isNumbered(false), state(triChk::eState::off) {
+}
 
 lst_model::ref lst_model::setCheckable(bool on) {
   mut(isCheckable) = on;
@@ -95,22 +96,39 @@ void lst_model::updateTriState() const {
 
 void lst_model::fixColumns(lst_view& view) const {
   auto h = view.header();
-  h->setMinimumSectionSize(oWidth(view, 1));
+
+  h->setMinimumSectionSize(16);
+  h->resizeSections(QHeaderView::ResizeToContents);
 
   if (isCheckable) {
     int col = checkableCol();
-    view.setColumnWidth(col, mWidth(view, 1.6));
     h->setSectionResizeMode(col, QHeaderView::Fixed);
+    view.setColumnWidth(col, 8 + QCheckBox().sizeHint().rwidth());
   }
+
+  // auto-sizing ourselves, Qt can't get to work
+  auto&& colWdt = [this, &view](int col) -> int {
+    int w = 0;
+    auto&& m = view.fontMetrics();
+    for_i_(rows()) {
+      auto&& v = displayData(rw_n(i), col);
+      auto&& s = v.isReal() ? QString::number(v.toDouble()) : v.toString();
+      w = l::max(w, m.boundingRect(s).width());
+    }
+    return 24 + w; // TODO Qt views use what format?  (e.g. e+06)
+  };
 
   if (isNumbered) {
     int col = numberedCol();
-    view.setColumnWidth(col, oWidth(view, 1 + isNumbered));
     h->setSectionResizeMode(col, QHeaderView::Fixed);
+    view.setColumnWidth(col, colWdt(col));
   }
 
-  for_i_(cols())
-    h->setSectionResizeMode(int(i + colOff()), QHeaderView::Interactive);
+  for_i_(cols()) {
+    int col = int(i + colOff());
+    h->setSectionResizeMode(col, QHeaderView::Interactive);
+    view.setColumnWidth(col, colWdt(col));
+  }
 }
 
 void lst_model::signalReset() const {
@@ -175,7 +193,7 @@ QVariant lst_model::data(rcIndex index, int role) const {
   if (col == numberedCol()) {
     switch (role) {
     case Qt::DisplayRole:
-      return row + 1;
+      return displayData(rw, col);
     case Qt::TextAlignmentRole:
       return Qt::AlignRight;
     default:
@@ -188,12 +206,20 @@ QVariant lst_model::data(rcIndex index, int role) const {
 
   switch (role) {
   case Qt::DisplayRole:
-    return cell(rw, cl);
+    return displayData(rw, col);
   case Qt::TextAlignmentRole:
     return rightAlign(cl) ? Qt::AlignRight : Qt::AlignLeft;
   default:
     return QVariant();
   }
+}
+
+var lst_model::displayData(rw_n rw, int col) const {
+  if (int(col) == numberedCol())
+    return rw + 1;
+
+  auto cl = lst_model::cl_n(l::to_u(col) - colOff());
+  return cell(rw, cl);
 }
 
 uint lst_model::colOff() const {

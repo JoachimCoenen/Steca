@@ -29,7 +29,7 @@ dcl_sub_(lst_view, QTreeView)
   mth_(int, currentRow, ()); // -1 if not
   mth_mut_(int, setCurrentRow, (int));
 
-  virtual set_(fixColumns,  ());
+  set_(fixColumns,  ());
 
   set_(fixColWidth, (cl_n, int));
   set_(setColWidth, (cl_n, int));

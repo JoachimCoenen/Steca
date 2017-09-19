@@ -69,7 +69,6 @@ dcl_sub_(ModelDatasets, Model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  voi_(fixColumns,  (l_qt::lst_view&));
   bol_(rightAlign,  (cl_n));
 
   set_(check, (rw_n, bool, bool));

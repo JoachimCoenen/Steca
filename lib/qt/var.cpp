@@ -40,6 +40,18 @@ bool var::isNum() const {
   }
 }
 
+bool var::isReal() const {
+  auto type = QMetaType::Type(QVariant::type());
+
+  switch (type) {
+  case QMetaType::Double:
+  case QMetaType::Float:
+    return true;
+  default:
+    return false;
+  }
+}
+
 int var::toInt() const may_err {
   bool ok;
   auto val = base::toInt(&ok);

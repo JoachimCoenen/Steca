@@ -73,7 +73,6 @@ signals:
 
   void sigCorr() const;           // add/rem/on/off correction file
 
-  void sigDatasetsReset() const;  // a major change in datasets
   void sigDatasetsActive() const; // changed active datasets
 
 public:
@@ -109,7 +108,6 @@ public:                                 \
 
   DCL_HUB_SIG_ETC(Corr)
 
-  DCL_HUB_SIG_ETC(DatasetsReset)
   DCL_HUB_SIG_ETC(DatasetsActive)
 
 private:

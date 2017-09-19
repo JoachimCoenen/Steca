@@ -52,7 +52,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
 
   voi_(updateTriState, ()) emits;
 
-  virtual voi_(fixColumns,  (lst_view&));
+  voi_(fixColumns,  (lst_view&));
   virtual bol_(rightAlign, (cl_n)) RET_(false)
 
 signals:
@@ -79,6 +79,7 @@ protected:
 
   QVariant headerData(int, Qt::Orientation, int) const;
   QVariant data(rcIndex, int)                    const;
+  var displayData(rw_n, int col) const;
 
   uint colOff() const;
   friend struct lst_view;

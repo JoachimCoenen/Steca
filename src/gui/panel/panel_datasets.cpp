@@ -30,11 +30,7 @@ private:
   voi_(onSelected, (int));
 dcl_end
 
-ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {
-  hub.onSigDatasetsReset([this]() {
-    model->emitSetAt(-1);
-  });
-}
+ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {}
 
 void ViewDatasets::onSelected(int row) const {
   model->emitSetAt(row);

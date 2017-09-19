@@ -19,6 +19,8 @@ dcl_sub_(var, QVariant)
   var(QVariant const&);
 
   bol_(isNum,  ());
+  bol_(isReal, ());
+
   mth_(int,  toInt,  ()) may_err;
   mth_(uint, toUInt, ()) may_err;
   mth_(str,  toStr,  ());
