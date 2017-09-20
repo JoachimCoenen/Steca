@@ -35,6 +35,7 @@ using chi_t = l::deg;
 using gma_t = l::deg;
 
 struct Range;
+struct Ranges;
 
 using tth_rge = Range;
 using gma_rge = Range;

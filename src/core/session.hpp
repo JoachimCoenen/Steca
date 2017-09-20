@@ -18,6 +18,7 @@
 #pragma once
 #include "calc/lens.hpp"
 #include "data/files.hpp"
+#include "data/fit.hpp"
 #include "io/json.hpp"
 #include "typ/angles.hpp"
 #include "typ/curve.hpp"
@@ -31,27 +32,29 @@ namespace core {
 extern str_vec const normStrLst;
 
 dcl_(Session)
+  using Range  = core::Range;
+  using Ranges = core::Ranges;
+
   Session();
 
-  mth_mut_(data::Files::sh, clear, ());
+  voi_mut_(clear, ());
   mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-private:
   atr_(data::Files::sh, files);
+  atr_(data::Fit::sh,   fit);
 
-public:
   mth_(AngleMap::shp,   angleMap, (data::Set::rc));
-  atr_(AngleMap::Key0, angleMapKey0); // current
+  atr_(AngleMap::Key0,  angleMapKey0); // current
 
-  atr_(ImageTransform, imageTransform);
-  atr_(ImageCut,       imageCut);
-  atr_(l::sz2,         imageSize);
+  atr_(ImageTransform,  imageTransform);
+  atr_(ImageCut,        imageCut);
+  atr_(l::sz2,          imageSize);
 
-  atr_(bool,           avgScaleIntens);
-  atr_(l::peal,        intenScale);
+  atr_(bool,            avgScaleIntens);
+  atr_(l::peal,         intenScale);
 
-  atr_(bool,           corrEnabled);
+  atr_(bool,            corrEnabled);
   mth_(Image::shp,      intensCorr, ());
 
   atr_(data::File::shp, corrFile);
@@ -65,6 +68,12 @@ public:
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
+
+  voi_mut_(setBg, (Ranges::rc));
+  voi_mut_(addBg, (Range::rc));
+  voi_mut_(remBg, (Range::rc));
+
+  voi_mut_(setRefl, (Range::rc));
 
   set_(setImageSize,  (l::sz2)) may_err;
 

@@ -54,11 +54,15 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   voi_mut_(activateFileAt, (uint, bool)) emits;
 
-  set_(corrEnable, (bool))        emits;
-  set_(corrRem,    ())            emits;
+  set_(corrEnable, (bool)) emits;
+  set_(corrRem,    ())     emits;
 
-  bol_(corrEnabled, ())           RET_(base::corrEnabled)
-  mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
+  bol_(corrEnabled, ()); // TODO out - signal
+  mth_(str, corrName, ()); // TODO out - signal
+
+  voi_mut_(setBg, (core::Ranges::rc)) emits;
+  voi_mut_(addBg, (core::Range::rc))  emits;
+  voi_mut_(remBg, (core::Range::rc))  emits;
 
 signals:
   // a new set of files
@@ -67,13 +71,14 @@ signals:
   void sigCombinedSets(core::data::CombinedSets::sh) const;
   // a selected one
   void sigCombinedSet(core::data::CombinedSet::shp) const;
-  // chacked metadata
+  // checked metadata
   void sigMetaChecked(core::data::KeyBag::sh) const;
 
+  // add/rem/on/off correction file
+  void sigCorr(core::data::File::shp) const;
 
-  void sigCorr() const;           // add/rem/on/off correction file
-
-  void sigDatasetsActive() const; // changed active datasets
+  // a new fit
+  void sigFit(core::data::Fit::sh) const;
 
 public:
   template <typename Sig, typename Lambda>
@@ -81,34 +86,34 @@ public:
     QObject::connect(this, sig, slot);
   }
 
-#define DCL_HUB_SIG_ETC(name)      \
-private:                              \
-  voi_(emit##name, ()) {              \
-    emit sig##name();                 \
-  }                                   \
-public:                               \
+//#define DCL_HUB_SIG_ETC(name)      \
+//private:                              \
+//  voi_(emit##name, ()) {              \
+//    emit sig##name();                 \
+//  }                                   \
+//public:                               \
+//  template <typename Lambda> void onSig##name(Lambda slot) const { \
+//    onSig(&Hub::sig##name, slot);  \
+//  }
+
+#define DCL_HUB_SIG_ETC(name, par)  \
+private:                            \
+  voi_(emit##name, (par p)) {       \
+    emit sig##name(p);              \
+  }                                 \
+public:                             \
   template <typename Lambda> void onSig##name(Lambda slot) const { \
-    onSig(&Hub::sig##name, slot);  \
+    onSig(&Hub::sig##name, slot);   \
   }
 
-#define DCL_HUB_SIG_ETC2(name, par)  \
-private:                                \
-  voi_(emit##name, (par p)) {           \
-    emit sig##name(p);                  \
-  }                                     \
-public:                                 \
-  template <typename Lambda> void onSig##name(Lambda slot) const { \
-    onSig(&Hub::sig##name, slot);  \
-  }
+  DCL_HUB_SIG_ETC(Files,        core::data::Files::sh)
+  DCL_HUB_SIG_ETC(CombinedSets, core::data::CombinedSets::sh)
+  DCL_HUB_SIG_ETC(CombinedSet,  core::data::CombinedSet::shp)
+  DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::sh)
 
-  DCL_HUB_SIG_ETC2(Files,        core::data::Files::sh)
-  DCL_HUB_SIG_ETC2(CombinedSets, core::data::CombinedSets::sh)
-  DCL_HUB_SIG_ETC2(CombinedSet,  core::data::CombinedSet::shp)
-  DCL_HUB_SIG_ETC2(MetaChecked,  core::data::KeyBag::sh)
+  DCL_HUB_SIG_ETC(Fit,          core::data::Fit::sh)
 
-  DCL_HUB_SIG_ETC(Corr)
-
-  DCL_HUB_SIG_ETC(DatasetsActive)
+  DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
 
 private:
   Q_OBJECT

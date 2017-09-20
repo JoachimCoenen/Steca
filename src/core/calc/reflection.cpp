@@ -20,6 +20,33 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
+Reflection::Reflection(fit::ePeakType type) : peakFun(new fit::Raw) {
+  setType(type);
+}
+
+void Reflection::setType(fit::ePeakType type) {
+  setPeakFun(type);
+}
+
+void Reflection::setRange(Range::rc r) {
+  mut(peakFun()).setRange(r);
+}
+
+void Reflection::setGuess(peak_t::rc p, fwhm_t f) {
+  mut(peakFun()).setGuess(p, f);
+}
+
+void Reflection::setPeakFun(fit::ePeakType type) {
+  Range r =   mut(peakFun()).range;
+  setPeakFun(fit::PeakFun::factory(type));
+  setRange(r);
+}
+
+void Reflection::setPeakFun(l::give_me<fit::PeakFun> f) {
+  mut(peakFun) = l::sh(f);
+}
+
+
 //str_vec::rc Reflection::typeStrLst() {
 //  static str_vec types{"Raw", "Gaussian", "Lorentzian", "PseudoVoigt1",
 //                       "PseudoVoigt2"};
@@ -30,16 +57,8 @@ namespace core { namespace calc {
 //  return typeStrLst().at(uint(type));
 //}
 
-//Reflection::Reflection(fit::ePeakType type) : peakFunction_(nullptr) {
-//  setPeakFunction(type);
-//}
-
 //fit::ePeakType Reflection::type() const {
 //  return peakFunction_->type();
-//}
-
-//void Reflection::setType(fit::ePeakType type) {
-//  setPeakFunction(type);
 //}
 
 //fit::PeakFunction::rc Reflection::peakFunction() const {
@@ -51,32 +70,10 @@ namespace core { namespace calc {
 //  return peakFunction_->range();
 //}
 
-//void Reflection::setRange(typ::Range::rc range) {
-//  peakFunction_->setRange(range);
-//}
-
-//void Reflection::invalidateGuesses() {
-//  peakFunction_->setGuessedPeak(peak_t());
-//  peakFunction_->setGuessedFWHM(l::flt_nan);
-//}
-
 //void Reflection::fit(typ::Curve::rc curve) {
 //  peakFunction_->fit(curve);
 //}
 
-//void Reflection::setPeakFunction(fit::ePeakType type) {
-//  bool haveRange = !peakFunction_.isNull();
-//  typ::Range oldRange;
-//  if (haveRange) oldRange = peakFunction_->range();
-
-//  setPeakFunction(fit::PeakFunction::factory(type));
-
-//  if (haveRange) peakFunction_->setRange(oldRange);
-//}
-
-//void Reflection::setPeakFunction(fit::PeakFunction* f) {
-//  peakFunction_.reset(f);
-//}
 
 //typ::JsonObj Reflection::saveJson() const {
 //  return peakFunction_->saveJson();

@@ -112,7 +112,9 @@ Hub::~Hub() {
 }
 
 void Hub::sessionClear() {
-  emitFiles(base::clear());
+  base::clear();
+  emitFiles(base::files);
+  emitFit(base::fit);
 }
 
 Hub::ref Hub::sessionLoad(l_io::path path) may_err {
@@ -167,14 +169,33 @@ Hub::ref Hub::corrEnable(bool on) {
   }
 
   base::tryEnableCorr(on);
-  emitCorr();
+  emitCorr(base::corrFile);
   RTHIS
 }
 
 Hub::ref Hub::corrRem() {
   base::remCorrFile();
-  emitCorr();
+  emitCorr(base::corrFile);
   RTHIS
+}
+
+bool Hub::corrEnabled() const
+  RET_(base::corrEnabled)
+
+str Hub::corrName() const
+  RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
+
+void Hub::setBg(core::Ranges::rc rs) emits {
+  base::setBg(rs);
+  emitFit(base::fit);
+}
+
+void Hub::addBg(core::Range::rc) emits {
+
+}
+
+void Hub::remBg(core::Range::rc) emits {
+
 }
 
 //------------------------------------------------------------------------------

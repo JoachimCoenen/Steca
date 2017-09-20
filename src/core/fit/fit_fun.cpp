@@ -113,11 +113,17 @@ l::own<PeakFun> PeakFun::clone() const {
 
 PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::flt_nan) {}
 
-PeakFun::ref PeakFun::reset() {
+void PeakFun::reset() {
   base::reset();
-  setGuessedPeak(peak_t(0, 0));
-  setGuessedFWHM(fwhm_t(0));
-  RTHIS
+  setGuess(peak_t(0, 0), fwhm_t(0));
+}
+
+void PeakFun::setRange(Range::rc r) {
+  mut(range) = r;
+}
+
+void PeakFun::setGuess(peak_t::rc p, fwhm_t f) {
+  mut(guessedPeak) = p; mut(guessedFWHM) = f;
 }
 
 void PeakFun::fit(Curve::rc curve, Range::rc range) {

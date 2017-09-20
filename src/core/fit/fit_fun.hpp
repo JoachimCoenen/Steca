@@ -51,7 +51,7 @@ enum class ePeakType {
   NUM_TYPES
 };
 
-dcl_sub_(PeakFun, SimpleFun)
+dcl_sub_(PeakFun, SimpleFun) SHARED
   fry_(l::own<PeakFun>, factory, (ePeakType));
 
   PeakFun();
@@ -68,11 +68,10 @@ dcl_sub_(PeakFun, SimpleFun)
   virtual mth_(peak_t, peakError,  ()) = 0;
   virtual mth_(fwhm_t, fwhmError,  ()) = 0;
 
-  set_(reset, ());
+  voi_mut_(reset, ());
 
-  virtual set_(setRange, (Range::rc r))         SET_(mut(range)       = r)
-  virtual set_(setGuessedPeak, (peak_t::rc p))  SET_(mut(guessedPeak) = p)
-  virtual set_(setGuessedFWHM, (fwhm_t f))      SET_(mut(guessedFWHM) = f)
+  virtual voi_mut_(setRange, (Range::rc));
+  virtual voi_mut_(setGuess, (peak_t::rc, fwhm_t));
 
   voi_mut_(fit, (Curve::rc curve)) { fit(curve, range); }
   virtual voi_mut_(fit, (Curve::rc, Range::rc));
@@ -96,7 +95,7 @@ dcl_sub_(Raw, PeakFun)
   mth_(peak_t, peakError,  ());
   mth_(fwhm_t, fwhmError,  ());
 
-  set_(setRange, (Range::rc r));
+  voi_mut_(setRange, (Range::rc r));
 
   voi_mut_(fit, (Curve::rc, Range::rc));
 

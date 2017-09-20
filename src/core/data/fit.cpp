@@ -15,47 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
-#include <lib/dev/defs.hpp>
-#include <lib/dev/inc/ptr.hpp>
-#include "../fit/fit_fun.hpp"
+#include "fit.hpp"
+#include <lib/dev/inc/defs.inc>
 
-namespace core { namespace calc {
+namespace core { namespace data {
 //------------------------------------------------------------------------------
-
-dcl_(Reflection) SHARED // TODO rename -> Peak ?
-  atr_(fit::PeakFun::sh, peakFun);
-
-  Reflection(fit::ePeakType = fit::ePeakType::RAW);
-
-  voi_mut_(setType,  (fit::ePeakType));
-  voi_mut_(setRange, (Range::rc));
-  voi_mut_(setGuess, (peak_t::rc = peak_t(), fwhm_t = fwhm_t()));
-
-private:
-  void setPeakFun(fit::ePeakType);
-  void setPeakFun(l::give_me<fit::PeakFun>);
-
-  //  static str_vec::rc typeStrLst();
-//  static rcstr       typeTag(fit::ePeakType);
-
-
-//  fit::ePeakType type() const;
-
-//  fit::PeakFunction::rc peakFunction() const;  // REMOVE
-
-//  typ::Range::rc range() const;
-
-
-//  void fit(typ::Curve::rc);
-
-//_private
-
-
-//public:
-//  typ::JsonObj saveJson() const;
-//  void loadJson(typ::JsonObj::rc) THROWS;
-dcl_end
 
 //------------------------------------------------------------------------------
 }}

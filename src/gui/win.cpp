@@ -213,7 +213,7 @@ void Win::onFirstShow() {
 #ifdef DEVELOPMENT
   hub.addFiles(str_vec{
 //    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
-    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
   });

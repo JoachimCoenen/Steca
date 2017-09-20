@@ -28,7 +28,7 @@ namespace core {
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
 Session::Session()
-: files(new data::Files), angleMapKey0()
+: files(new data::Files), fit(new data::Fit), angleMapKey0()
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
@@ -36,9 +36,8 @@ Session::Session()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
-data::Files::sh Session::clear() {
-  mut(files) = l::sh(new data::Files);
-  return files;
+void Session::clear() {
+  mut(files) = l::sh(new data::Files); mut(fit) = l::sh(new data::Fit);
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -282,6 +281,24 @@ Session::ref Session::remCorrFile() {
 Session::ref Session::tryEnableCorr(bool on) {
   mut(corrEnabled) = on && corrFile;
   RTHIS
+}
+
+void Session::setBg(Ranges::rc rs) {
+  mut(fit().bg) = rs;
+}
+
+void Session::addBg(Range::rc r) {
+  mut(fit().bg).add(r);
+}
+
+void Session::remBg(Range::rc r) {
+  mut(fit().bg).rem(r);
+}
+
+void Session::setRefl(Range::rc r) {
+  auto&& refl = fit().currRefl;
+  if (refl)
+    mut(*refl).setRange(r);
 }
 
 Session::ref Session::setImageSize(l::sz2 size) may_err {

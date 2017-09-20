@@ -45,13 +45,13 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
 
   tab->vb.add((view = new ViewDatasets(hub)));
 
-  auto&& h = tab->vb.hb();
-  h.add(mut(*view->model).makeTriChk(str::null));
-  h.addStretch();
-  h.add(new l_qt::lbl("Combine"));
+  auto&& hb = tab->vb.hb();
+  hb.add(mut(*view->model).makeTriChk(str::null));
+  hb.addStretch();
+  hb.add(new l_qt::lbl("Combine"));
 
   auto spin = new l_qt::spinPint();
-  h.add(spin);
+  hb.add(spin);
 
   auto* md = static_cast<ModelDatasets const*>(view->model);
 

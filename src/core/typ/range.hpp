@@ -19,6 +19,7 @@
 #include "def.hpp"
 
 namespace core {
+//------------------------------------------------------------------------------
 
 dcl_(Range) COMPARABLE EQ_NE
   using rv_t = real;
@@ -55,6 +56,8 @@ dcl_(Range) COMPARABLE EQ_NE
   ref   operator=(rc);
 dcl_end
 
+//------------------------------------------------------------------------------
+
 dcl_(Ranges) EQ_NE
   Ranges();
 
@@ -75,5 +78,6 @@ private:
   l::vec<Range> rs;
 dcl_end
 
+//------------------------------------------------------------------------------
 }
 // eof
