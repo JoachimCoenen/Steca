@@ -75,7 +75,7 @@ dcl_sub_(ModelDatasets, Model)
   bol_(isChecked, (rw_n));
 
   atr_(l::pint, groupedBy);
-  voi_mut_(groupBy, (l::pint));
+  mut_(groupBy, (l::pint));
 
   CombinedSets::sh sets;
   voi_(emitSetAt, (int));
@@ -94,7 +94,7 @@ private:
 
   void gotFiles();
   mth_(uint, numLeadCols, ());
-  voi_mut_(combineSets, ());
+  mut_(combineSets, ());
 
   Q_OBJECT
 dcl_end

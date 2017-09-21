@@ -44,15 +44,15 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   Hub(Win&);
  ~Hub();
 
-  voi_mut_(sessionClear, ())          emits;
+  mut_(sessionClear, ())          emits;
   set_(sessionLoad, (l_io::path)) emits may_err;
   mth_(void, sessionSave, (l_io::path)) may_err;
 
-  voi_mut_(addFiles,   (l_io::path_vec::rc))  emits;
-  voi_mut_(addFiles,   ())                    emits;
-  voi_mut_(remFilesAt, (uint_vec::rc))        emits;
+  mut_(addFiles,   (l_io::path_vec::rc))  emits;
+  mut_(addFiles,   ())                    emits;
+  mut_(remFilesAt, (uint_vec::rc))        emits;
 
-  voi_mut_(activateFileAt, (uint, bool)) emits;
+  mut_(activateFileAt, (uint, bool)) emits;
 
   set_(corrEnable, (bool)) emits;
   set_(corrRem,    ())     emits;
@@ -60,9 +60,18 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   bol_(corrEnabled, ()); // TODO out - signal
   mth_(str, corrName, ()); // TODO out - signal
 
-  voi_mut_(setBg, (core::Ranges::rc)) emits;
-  voi_mut_(addBg, (core::Range::rc))  emits;
-  voi_mut_(remBg, (core::Range::rc))  emits;
+  mut_(setBg, (core::Ranges::rc)) emits;
+  mut_(addBg, (core::Range::rc))  emits;
+  mut_(remBg, (core::Range::rc))  emits;
+
+  mut_(setRefl, (Range::rc r)) emits;
+
+  mut_(combinedDgram, (bool on)) emits;
+  mut_(setNorm, (core::eNorm))   emits;
+
+  using base::datasetLens;
+  using base::dgram_options;
+  using base::makeDgram;
 
 signals:
   // a new set of files
@@ -79,6 +88,9 @@ signals:
 
   // a new fit
   void sigFit(core::data::Fit::sh) const;
+
+  // change in diagram rendering
+  void sigDgramOptions(dgram_options const&) const;
 
 public:
   template <typename Sig, typename Lambda>
@@ -114,6 +126,8 @@ public:                             \
   DCL_HUB_SIG_ETC(Fit,          core::data::Fit::sh)
 
   DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
+
+  DCL_HUB_SIG_ETC(DgramOptions, dgram_options const&)
 
 private:
   Q_OBJECT

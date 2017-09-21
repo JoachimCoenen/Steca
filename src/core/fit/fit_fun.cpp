@@ -200,10 +200,9 @@ fwhm_t Raw::fwhmError() const {
   return fwhm_t(0);
 }
 
-Raw::ref Raw::setRange(Range::rc r) {
+void Raw::setRange(Range::rc r) {
   base::setRange(r);
   prepareY();
-  RTHIS;
 }
 
 void Raw::fit(Curve::rc curve, Range::rc range) {
@@ -237,18 +236,12 @@ Gaussian::Gaussian(real ampl, real xShift, real sigma) {
   mut(parSigma).set(sigma, 0);
 }
 
-Gaussian::ref Gaussian::setGuessedPeak(peak_t::rc xy) {
-  base::setGuessedPeak(xy);
-  setParVal(parXSHIFT, xy.x);
-  setParVal(parAMPL,   xy.y);
-  RTHIS
-}
-
-Gaussian::ref Gaussian::setGuessedFWHM(fwhm_t fwhm) {
-  base::setGuessedFWHM(fwhm);
+void Gaussian::setGuess(peak_t::rc p, fwhm_t f) {
+  base::setGuess(p, f);
+  setParVal(parXSHIFT, p.x);
+  setParVal(parAMPL,   p.y);
   // sigma = FWHM * 1/4 * (SQRT(2)/SQRT(ln(2))) = FWHM * 0.424661
-  setParVal(parSIGMA, fwhm * 0.424661);
-  RTHIS
+  setParVal(parSIGMA,  f * 0.424661);
 }
 
 real Gaussian::y(real x, real const* parVals) const {
@@ -313,18 +306,12 @@ Lorentzian::Lorentzian(real ampl, real xShift, real gamma) {
   mut(parGamma).set(gamma, 0);
 }
 
-Lorentzian::ref Lorentzian::setGuessedPeak(peak_t::rc xy) {
-  base::setGuessedPeak(xy);
-  setParVal(parXSHIFT, xy.x);
-  setParVal(parAMPL,   xy.y);
-  RTHIS
-}
-
-Lorentzian::ref Lorentzian::setGuessedFWHM(fwhm_t fwhm) {
-  base::setGuessedFWHM(fwhm);
+void Lorentzian::setGuess(peak_t::rc p, fwhm_t f) {
+  base::setGuess(p, f);
+  setParVal(parXSHIFT, p.x);
+  setParVal(parAMPL,   p.y);
   // gamma = HWHM = FWHM / 2
-  setParVal(parGAMMA, fwhm / 2);
-  RTHIS
+  setParVal(parGAMMA, f / 2);
 }
 
 real Lorentzian::y(real x, real const* parVals) const {
@@ -391,17 +378,11 @@ PseudoVoigt1::PseudoVoigt1(real ampl, real xShift, real sigmaGamma,
   mut(parEta).set(eta, 0);
 }
 
-PseudoVoigt1::ref PseudoVoigt1::setGuessedPeak(peak_t::rc xy) {
-  base::setGuessedPeak(xy);
-  setParVal(parXSHIFT, xy.x);
-  setParVal(parAMPL,   xy.y);
-  RTHIS
-}
-
-PseudoVoigt1::ref PseudoVoigt1::setGuessedFWHM(fwhm_t fwhm) {
-  base::setGuessedFWHM(fwhm);
-  setParVal(parSIGMAGAMMA, fwhm / 2);
-  RTHIS
+void PseudoVoigt1::setGuess(peak_t::rc p, fwhm_t f) {
+  base::setGuess(p, f);
+  setParVal(parXSHIFT, p.x);
+  setParVal(parAMPL,   p.y);
+  setParVal(parSIGMAGAMMA, f / 2);
 }
 
 real PseudoVoigt1::y(real x, real const* parVals) const {
@@ -484,18 +465,12 @@ PseudoVoigt2::PseudoVoigt2(real ampl, real mu, real hwhmG, real hwhmL,
   mut(parEta).set(eta, 0);
 }
 
-PseudoVoigt2::ref PseudoVoigt2::setGuessedPeak(peak_t::rc xy) {
-  base::setGuessedPeak(xy);
-  setParVal(parXSHIFT, xy.x);
-  setParVal(parAMPL,   xy.y);
-  RTHIS
-}
-
-PseudoVoigt2::ref PseudoVoigt2::setGuessedFWHM(fwhm_t fwhm) {
-  base::setGuessedFWHM(fwhm);
-  setParVal(parSIGMA, fwhm * 0.424661);
-  setParVal(parGAMMA, fwhm / 2);
-  RTHIS
+void PseudoVoigt2::setGuess(peak_t::rc p, fwhm_t f) {
+  base::setGuess(p, f);
+  setParVal(parXSHIFT, p.x);
+  setParVal(parAMPL,   p.y);
+  setParVal(parSIGMA, f * 0.424661);
+  setParVal(parGAMMA, f / 2);
 }
 
 real PseudoVoigt2::y(real x, real const* parVals) const {

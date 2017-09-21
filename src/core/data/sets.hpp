@@ -41,15 +41,15 @@ dcl_(MetaDictBase)
   MetaDictBase();
   virtual ~MetaDictBase();
 
-  virtual voi_mut_(clear, ());
+  virtual mut_(clear, ());
 
   mth_(sz_t, size, ())      RET_(sz_t(keys.size()))
   mth_(strc, key,  (idx i)) RET_(keys.at(i))
 
 protected:
   l::set<str> keySet;
-  voi_mut_(enter, (strc key));
-  voi_mut_(enter, (str_vec::rc keys));
+  mut_(enter, (strc key));
+  mut_(enter, (str_vec::rc keys));
   MetaDictBase(rc);
 dcl_end
 
@@ -70,9 +70,9 @@ dcl_sub_(MetaDict, MetaDictBase) SHARED
 
   MetaDict();
 
-  voi_mut_(clear, ());
-  voi_mut_(enter, (strc key));
-  voi_mut_(enter, (str_vec::rc keys));
+  mut_(clear, ());
+  mut_(enter, (strc key));
+  mut_(enter, (str_vec::rc keys));
 
   mth_mut_(idx, idxEnter, (strc key));
   mth_(idx, index,     (strc key)) RET_(idxs.at(key))
@@ -234,6 +234,7 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   mth_(flt32, dMon, ());
 
   mth_(inten_rge::rc, rgeFixedInten, (Session const&, bool trans, bool cut));
+  mth_(core::data::CombinedSet::sh, combineAll, ());
 
 private:
   mutable flt32 lazyMon;

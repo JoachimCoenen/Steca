@@ -97,7 +97,7 @@
 
 // void methods
 #define voi_(mth, args)                   mth_(void, mth, args)
-#define voi_mut_(mth, args)               mth_mut_(void, mth, args)
+#define mut_(mth, args)                   mth_mut_(void, mth, args)
 
 // setters: allow chaining; useful for reimplementation
 #define set_(mth, args)                   mth_mut_(ref, mth, args)
@@ -113,9 +113,6 @@
                     bool operator<=(rc) const; \
                     bool operator> (rc) const; \
                     bool operator>=(rc) const;
-// ... equality and inequality ops
-#define COMP_OPS    EQ_NE LGTE
-
 // simple return
 #define RET_(expr) { return expr; }
 

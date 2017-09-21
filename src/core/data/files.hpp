@@ -48,8 +48,8 @@ dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   virtual ~Files() {}
 
   bol_(hasPath, (l_io::path::rc));
-  voi_mut_(addFile, (data::File::shp));
-  voi_mut_(remFileAt, (uint));
+  mut_(addFile, (data::File::shp));
+  mut_(remFileAt, (uint));
 
   mth_(CombinedSets::sh, collectDatasets, (l::pint groupedBy));
 

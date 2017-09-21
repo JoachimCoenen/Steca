@@ -38,10 +38,10 @@ struct jp : ptr_base {
 
   // from another type jp
   template <typename O>
-  jp (jp<O> const& that) : ptr_base(static_cast<O const*>(that.p)) {}
+  jp (jp<O> const& that) : ptr_base(static_cast<O const*>(that.ptr())) {}
 
   template <typename O>
-  jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.p)))
+  jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.ptr())))
 
   T const* ptr()        const RET_(static_cast<T const*>(p))
   operator T const*()   const RET_(ptr())
@@ -120,7 +120,7 @@ struct own_ptr : ptr_base {
 // expecting an owning over; will take ownership
 // only a hint, ownership not enforced
 
-template <typename T>
+template <typename T> // TODO implicit T const ?
 struct give_me : own<T> { using base = own<T>;
   explicit give_me(T* p) : base(p) {}
   give_me(own<T> p)      : base(p) {}
@@ -133,7 +133,6 @@ struct scoped : ptr_base {
   scoped(T* p = nullptr): ptr_base(p) {}
   scoped(jp<T> p)       : ptr_base(p) {}
   scoped(own_ptr<T> p)  : ptr_base(p) {}
-  scoped(own<T> p)      : ptr_base(p) {}
   scoped(scoped&& that) : ptr_base(that.take()) {}
   scoped(scoped const&) = delete;
 

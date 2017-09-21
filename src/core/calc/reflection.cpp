@@ -24,28 +24,29 @@ Reflection::Reflection(fit::ePeakType type) : peakFun(new fit::Raw) {
   setType(type);
 }
 
+Reflection::Reflection(l::give_me<fit::PeakFun const> f) : peakFun(f) {}
+
 void Reflection::setType(fit::ePeakType type) {
   setPeakFun(type);
 }
 
 void Reflection::setRange(Range::rc r) {
-  mut(peakFun()).setRange(r);
+  mut(*peakFun).setRange(r);
 }
 
 void Reflection::setGuess(peak_t::rc p, fwhm_t f) {
-  mut(peakFun()).setGuess(p, f);
+  mut(*peakFun).setGuess(p, f);
 }
 
 void Reflection::setPeakFun(fit::ePeakType type) {
-  Range r =   mut(peakFun()).range;
+  Range r =   mut(*peakFun).range;
   setPeakFun(fit::PeakFun::factory(type));
   setRange(r);
 }
 
 void Reflection::setPeakFun(l::give_me<fit::PeakFun> f) {
-  mut(peakFun) = l::sh(f);
+  mut(peakFun).reset(mutp(f.ptr())); // TODO mutp?
 }
-
 
 //str_vec::rc Reflection::typeStrLst() {
 //  static str_vec types{"Raw", "Gaussian", "Lorentzian", "PseudoVoigt1",

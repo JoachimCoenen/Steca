@@ -41,21 +41,13 @@ dcl_(AngleMap) SHARED
     using base::base;
   dcl_end
 
-  dcl_(Key0) COMPARABLE EQ_NE
+  dcl_(Key) COMPARABLE EQ_NE LGTE
     atr_(Geometry, geometry);
-    atr_(l::sz2, size);
+    atr_(l::sz2,   size);
     atr_(ImageCut, cut);
-    atr_(l::ij, midPix);
+    atr_(tth_t,    midTth);
 
-    Key0();
-    Key0(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix);
-  dcl_end
-
-  dcl_sub_(Key, Key0) COMPARABLE COMP_OPS
-    atr_(tth_t, midTth);
-
-    Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
-    Key(Key0, tth_t midTth);
+    Key(Geometry::rc, l::sz2::rc, ImageCut::rc, tth_t midTth);
   dcl_end
 
   atr_(Key, key);
@@ -71,7 +63,7 @@ dcl_(AngleMap) SHARED
   voi_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
 
 private:
-  voi_mut_(calculate, ());
+  mut_(calculate, ());
   angle_arr::shp angles;
 
   // sorted

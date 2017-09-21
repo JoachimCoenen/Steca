@@ -24,13 +24,14 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 dcl_(Reflection) SHARED // TODO rename -> Peak ?
-  atr_(fit::PeakFun::sh, peakFun);
+  atr_(l::scoped<fit::PeakFun>, peakFun);
 
-  Reflection(fit::ePeakType = fit::ePeakType::RAW);
+  Reflection(fit::ePeakType);
+  Reflection(l::give_me<fit::PeakFun const>);
 
-  voi_mut_(setType,  (fit::ePeakType));
-  voi_mut_(setRange, (Range::rc));
-  voi_mut_(setGuess, (peak_t::rc = peak_t(), fwhm_t = fwhm_t()));
+  mut_(setType,  (fit::ePeakType)); // TODO r/o remove ?
+  mut_(setRange, (Range::rc));
+  mut_(setGuess, (peak_t::rc = peak_t(), fwhm_t = fwhm_t()));
 
 private:
   void setPeakFun(fit::ePeakType);

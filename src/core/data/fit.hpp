@@ -29,6 +29,8 @@ dcl_(Fit) SHARED
 
   enum eWhat { NONE, BACKGROUND, PEAK };
 
+  Fit();
+
   atr_(Ranges, bg);
   atr_(l::vec<Reflection::sh>, refls);
   atr_(Reflection::shp, currRefl);

@@ -506,6 +506,14 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
   return lazyRgeFixedInten;
 }
 
+CombinedSet::sh CombinedSets::combineAll() const {
+  auto&& set = l::sh(new CombinedSet(0));
+  for (auto&& cs : *this)
+    for (auto&& s : cs())
+      mut(set()).add(s);
+  return set;
+};
+
 void CombinedSets::resetLazies() {
   lazyMon = lazyDTim = lazyDMon = l::flt32_nan;
   lazyRgeFixedInten = inten_rge();

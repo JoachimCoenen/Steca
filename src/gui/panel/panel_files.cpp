@@ -25,7 +25,7 @@ namespace gui {
 
 dcl_sub_(ViewFile, Panel)
   ViewFile();
-  voi_mut_(setInfo, (core::data::File const*));
+  mut_(setInfo, (core::data::File const*));
   ptr_(l_qt::lbl, lbl);
 dcl_end
 

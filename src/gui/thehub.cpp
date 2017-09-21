@@ -185,17 +185,34 @@ bool Hub::corrEnabled() const
 str Hub::corrName() const
   RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
-void Hub::setBg(core::Ranges::rc rs) emits {
+void Hub::setBg(Ranges::rc rs) emits {
   base::setBg(rs);
   emitFit(base::fit);
 }
 
-void Hub::addBg(core::Range::rc) emits {
-
+void Hub::addBg(Range::rc r) emits {
+  base::addBg(r);
+  emitFit(base::fit);
 }
 
-void Hub::remBg(core::Range::rc) emits {
+void Hub::remBg(Range::rc r) emits {
+  base::remBg(r);
+  emitFit(base::fit);
+}
 
+void Hub::setRefl(Range::rc r) emits {
+  base::setRefl(r);
+  emitFit(base::fit);
+}
+
+void Hub::combinedDgram(bool on) emits {
+  mut(dgramOptions.isDgramCombined) = on;
+  emitDgramOptions(dgramOptions);
+}
+
+void Hub::setNorm(core::eNorm norm) {
+  mut(dgramOptions.norm) = norm;
+  emitDgramOptions(dgramOptions);
 }
 
 //------------------------------------------------------------------------------

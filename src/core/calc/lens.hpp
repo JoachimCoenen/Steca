@@ -24,7 +24,6 @@
 
 namespace core {
 
-//struct Session;
 enum class eNorm {
   NONE,
   MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
@@ -91,7 +90,7 @@ dcl_sub_(DatasetLens, LensBase) SHARED
 //  data::Dataset::rc dataset()  const { return dataset_;   }
 
 private:
-  voi_mut_(setNorm, (eNorm));
+  mut_(setNorm, (eNorm));
   inten_t normFactor;
   data::CombinedSet::rc dataset;
 dcl_end

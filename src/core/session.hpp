@@ -37,15 +37,16 @@ dcl_(Session)
 
   Session();
 
-  voi_mut_(clear, ());
+  mut_(clear, ());
   mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
   atr_(data::Files::sh, files);
   atr_(data::Fit::sh,   fit);
 
+  atr_(Geometry, geometry);
+
   mth_(AngleMap::shp,   angleMap, (data::Set::rc));
-  atr_(AngleMap::Key0,  angleMapKey0); // current
 
   atr_(ImageTransform,  imageTransform);
   atr_(ImageCut,        imageCut);
@@ -69,11 +70,11 @@ dcl_(Session)
   set_(remCorrFile,   ());
   set_(tryEnableCorr, (bool on));
 
-  voi_mut_(setBg, (Ranges::rc));
-  voi_mut_(addBg, (Range::rc));
-  voi_mut_(remBg, (Range::rc));
+  mut_(setBg, (Ranges::rc));
+  mut_(addBg, (Range::rc));
+  mut_(remBg, (Range::rc));
 
-  voi_mut_(setRefl, (Range::rc));
+  mut_(setRefl, (Range::rc));
 
   set_(setImageSize,  (l::sz2)) may_err;
 
@@ -90,12 +91,31 @@ dcl_(Session)
   mth_(real, calcAvgBackground, (data::CombinedSets::rc, data::CombinedSet::rc));
   mth_(real, calcAvgBackground, (data::CombinedSets::rc));
 
+  dcl_(dgram_options) EQ_NE
+    atr_(core::eNorm, norm)       = core::eNorm::NONE; // TODO out to fit_options?
+    atr_(bool, isDgramCombined)   = false; // TODO to plot ?
+    atr_(bool, isFixedIntenScale) = false; // TODO to plot ?
+    atr_(core::Range, gammaRange); // TODO to plot ?
+    mut_(set, (rc));
+  dcl_end
+
+  dcl_(image_options) EQ_NE
+    atr_(bool, isFixedIntenScale) = false;
+    mut_(set, (rc));
+  dcl_end
+
+  atr_(dgram_options, dgramOptions);
+  atr_(image_options, imageOptions);
+
+  voi_(makeDgram, (Curve& dgram, Curve& bgFitted, Curve& bg, curve_vec& refls,
+                   data::CombinedSets::rc, data::CombinedSet const*,
+                   data::Fit::rc, dgram_options::rc));
 private:
   mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
   mutable Image::shp intensCorrImage;
   mutable bool corrHasNaNs;
 
-  voi_mut_(updateImageSize, ());
+  mut_(updateImageSize, ());
   voi_(calcIntensCorr, ());
 dcl_end
 

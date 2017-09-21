@@ -28,11 +28,11 @@ namespace core {
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
 Session::Session()
-: files(new data::Files), fit(new data::Fit), angleMapKey0()
+: files(new data::Files), fit(new data::Fit)
 , imageTransform(), imageCut(), imageSize()
 , avgScaleIntens(), intenScale(1)
 , corrEnabled(false), corrFile(), corrImage()
-, bgPolyDegree(0), bgRanges()
+, bgPolyDegree(0), bgRanges(), dgramOptions(), imageOptions()
 , angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
 {}
 
@@ -51,6 +51,7 @@ void Session::clear() {
 //  reflections_.clear();
 
 //  norm_ = eNorm::NONE;
+
 
 //  angleMapCache_.clear();
 
@@ -191,7 +192,8 @@ io::Json Session::save() const {
 }
 
 AngleMap::shp Session::angleMap(data::Set::rc set) const {
-  AngleMap::Key key(angleMapKey0, set.tth());
+//  Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
+  AngleMap::Key key(geometry, imageSize, imageCut, set.tth());
   auto map = angleMapCache.get(key);
   if (!map)
     map = angleMapCache.add(key, AngleMap::shp(new AngleMap(key)));
@@ -350,6 +352,60 @@ real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
     bg += calcAvgBackground(datasets, *dataset);
 
   return bg / datasets.size();
+}
+
+bool Session::dgram_options::operator==(rc that) const {
+  return
+      norm              == that.norm &&
+      isDgramCombined   == that.isDgramCombined &&
+      isFixedIntenScale == that.isFixedIntenScale &&
+      gammaRange        == that.gammaRange;
+}
+
+bool Session::dgram_options::operator!=(rc that) const {
+  return !(*this == that);
+}
+
+void Session::dgram_options::set(rc that) {
+  mut(norm)              = that.norm;
+  mut(isDgramCombined)   = that.isDgramCombined;
+  mut(isFixedIntenScale) = that.isFixedIntenScale;
+  mut(gammaRange)        = that.gammaRange;
+}
+
+void Session::makeDgram(Curve& dgram, Curve& bgFitted, Curve& bg, curve_vec& refls,
+                        data::CombinedSets::rc sets, data::CombinedSet const* set,
+                        data::Fit::rc fit, dgram_options::rc opts) const {
+
+  EXPECT_(dgram.isEmpty() && bgFitted.isEmpty() && bg.isEmpty() && refls.isEmpty())
+
+  if (opts.isDgramCombined)
+    dgram = datasetLens(sets, sets.combineAll()(), opts.norm, true, true)
+            -> makeCurve();
+  else if (set)
+    dgram = datasetLens(sets, *set, opts.norm, true, true)
+            -> makeCurve(dgramOptions.gammaRange);
+
+  auto&& bgPolynom = fit::Polynom::fromFit(bgPolyDegree, dgram, bgRanges);
+  for_i_(dgram.size()) {
+    auto x = dgram.xs.at(i), y = bgPolynom.y(x);
+    bg.add(x, y);
+    bgFitted.add(x, dgram.ys.at(i) - y);
+  }
+
+  for (auto&& rsh : fit.refls) {
+    auto&& fun = *rsh().peakFun;
+    fun.fit(bgFitted);
+
+    auto&& rge = fun.range;
+
+    Curve c;
+    for (auto&& x : bgFitted.xs)
+      if (rge.contains(x))
+        c.add(x, fun.y(x));
+
+    refls.add(c);
+  }
 }
 
 void Session::updateImageSize() {

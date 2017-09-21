@@ -26,9 +26,16 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+using CombinedSets = core::data::CombinedSets;
+using CombinedSet  = core::data::CombinedSet;
+
 using Fit    = core::data::Fit;
 using Range  = core::Range;
 using Ranges = core::Ranges;
+using Curve  = core::Curve;
+using curve_vec = core::curve_vec;
+
+using eTool = Fit::eWhat;
 
 struct Plot;
 
@@ -58,47 +65,50 @@ protected:
 dcl_end
 
 dcl_sub2_(Plot, RefHub, QCustomPlot)
+  ptr_(Overlay, overlay);
+  atr_(eTool, tool);
+
   Plot(Hub&);
 
-  ptr_(Overlay, overlay);
-  atr_(Fit::eWhat, tool);
+  void setTool(eTool);
 
-  void  setTool(Fit::eWhat);
-
-  //  void  plot(typ::Curve::rc, typ::Curve::rc, typ::Curve::rc,
-  //             typ::curve_vec::rc, uint);
+  void plot(Curve::rc, Curve::rc, Curve::rc, curve_vec::rc);
 
   Range fromPixels(int, int);
 
-  void setNewReflRange(Range::rc);
-  void updateBg();
-
-  //  void clearReflLayer();
+  void render(bool withBg);
+  void calcReflections();
 
   QColor bgRgeColor, reflRgeColor;
 
   //  void enterZoom(bool);
 
   //protected:
-  //  void addBgItem(typ::Range::rc);
+  void addBgItem(Range::rc);
   void resizeEvent(QResizeEvent*);
 
   //private:
   //  Diffractogram &diffractogram_;
 
-  //  bool showBgFit_;
+  bool showBgFit = false;
 
   QCPGraph *bgGraph, *dgramGraph, *dgramBgFittedGraph, *dgramBgFittedGraph2,
            *guesses, *fits;
 
-  //  typ::vec<QCPGraph*>       reflGraph_;
+  l::vec<QCPGraph*> reflGraph;
+
+protected:
+  core::data::CombinedSets::sh sets;
+  core::data::CombinedSet::shp  set;
+  Fit::sh fit;
+  Hub::dgram_options dgramOptions;
 dcl_end
 
 //------------------------------------------------------------------------------
 
 Overlay::Overlay(Hub& hub, Plot& plot_)
 : RefHub(hub), base(&plot_), plot(plot_), hasCursor(false), mouseDown(false)
-//, cursorPos_(0), mouseDownPos_(0)
+, cursorPos(0), mouseDownPos(0)
 {
   setMouseTracking(true);
   setMargins(0, 0);
@@ -135,7 +145,7 @@ void Overlay::mouseMoveEvent(QMouseEvent* e) {
 void Overlay::mousePressEvent(QMouseEvent* e) {
   mouseDownPos = cursorPos;
   mouseDown    = true;
-  auto&& addColor = Fit::eWhat::BACKGROUND == plot.tool ? bgColor: reflColor;
+  auto&& addColor = eTool::BACKGROUND == plot.tool ? bgColor: reflColor;
   color = Qt::LeftButton == e->button() ? addColor : remColor;
   update();
 }
@@ -143,18 +153,18 @@ void Overlay::mousePressEvent(QMouseEvent* e) {
 void Overlay::mouseReleaseEvent(QMouseEvent* e) {
   mouseDown = false;
 
-  Range range(plot.fromPixels(mouseDownPos, cursorPos));
+  Range r(plot.fromPixels(mouseDownPos, cursorPos));
   switch (plot.tool) {
-  case Fit::eWhat::NONE:
+  case eTool::NONE:
     break;
-  case Fit::eWhat::BACKGROUND:
+  case eTool::BACKGROUND:
     if (Qt::LeftButton == e->button())
-      hub.addBg(range);
+      hub.addBg(r);
     else
-      hub.remBg(range);
+      hub.remBg(r);
     break;
-  case Fit::eWhat::PEAK:
-    plot.setNewReflRange(range);
+  case eTool::PEAK:
+    hub.setRefl(r);
     break;
   }
 
@@ -180,7 +190,8 @@ void Overlay::paintEvent(QPaintEvent*) {
 
 void Overlay::updateCursorRegion() {
   auto g = geometry();
-  // updating 2 pixels would to work both on Linux & Mac, but we'll do 8* for less flicker
+  // updating 2 pixels works both on Linux & Mac,
+  // but we'll do 8*that for less flicker
   update(cursorPos - 8*1, g.top(), 8*2, g.height());
 }
 
@@ -189,7 +200,32 @@ void Overlay::updateCursorRegion() {
 //DiffractogramPlot::DiffractogramPlot(TheHub& hub, Diffractogram& diffractogram)
 //: RefHub(hub), diffractogram_(diffractogram), showBgFit_(false)
 Plot::Plot(Hub& hub) : RefHub(hub)
-, overlay(new Overlay(hub, *this)), tool(Fit::eWhat::NONE) {
+, overlay(new Overlay(hub, *this)), tool(eTool::NONE) {
+
+  hub.onSigCombinedSets([this](CombinedSets::sh sh) {
+    sets = sh; // only capture
+  });
+
+  hub.onSigCombinedSet([this](CombinedSet::shp sh) {
+    if (set != sh) {
+      set = sh;
+      render(false);
+    }
+  });
+
+  hub.onSigFit([this](Fit::sh sh) {
+    if (fit != sh) {
+      fit = sh;
+      render(true);
+    }
+  });
+
+  hub.onSigDgramOptions([this](Hub::dgram_options::rc os) {
+    if (dgramOptions != os) {
+      mut(dgramOptions).set(os);
+      render(true);
+    }
+  });
 
   auto&& ar = axisRect();
 
@@ -279,139 +315,137 @@ Plot::Plot(Hub& hub) : RefHub(hub)
 //    updateBg();
 //  });
 
-  mut(tool) = Fit::eWhat::NONE;
+  mut(tool) = eTool::NONE;
 }
 
-void Plot::setTool(Fit::eWhat tool_) {
+void Plot::setTool(eTool tool_) {
   mut(tool) = tool_;
-  updateBg();
+  render(true);
 }
 
-//void DiffractogramPlot::plot(typ::Curve::rc dgram, typ::Curve::rc dgramBgFitted,
-//                             typ::Curve::rc bg, typ::curve_vec::rc refls,
-//                             uint currReflIndex)
-//{
-//  if (dgram.isEmpty()) {
-//    xAxis->setVisible(false);
-//    yAxis->setVisible(false);
+void Plot::plot(Curve::rc dgram, Curve::rc bgFitted, Curve::rc bg, curve_vec::rc refls) {
+  for (auto g : reflGraph)
+    removeGraph(g);
+  reflGraph.clear();
 
-//    bgGraph_->clearData();
-//    dgramGraph_->clearData();
-//    dgramBgFittedGraph_->clearData();
-//    dgramBgFittedGraph2_->clearData();
+  if (dgram.isEmpty()) {
+    xAxis->setVisible(false);
+    yAxis->setVisible(false);
 
-//    clearReflLayer();
-//  } else {
-//    auto tthRange = dgram.rgeX();
+    bgGraph->clearData();
+    dgramGraph->clearData();
+    dgramBgFittedGraph->clearData();
+    dgramBgFittedGraph2->clearData();
+  } else {
+    auto&& tthRange = dgram.rgeX;
 
-//    typ::Range intenRange;
-//    if (hub_.isFixedIntenDgramScale()) {
+    Range intenRange;
+// TODO if (dgramOptions.isFixedIntenScale) {
 //      ENSURE(!diffractogram_.dataset().isNull())
 //      auto lens = hub_.datasetLens(*diffractogram_.dataset());
 //      intenRange = lens->rgeInten();
 //    } else {
-//      intenRange = dgramBgFitted.rgeY();
-//      intenRange.extendBy(dgram.rgeY());
+    intenRange = bgFitted.rgeY;
+    intenRange.extendBy(dgram.rgeY);
 //    }
 
-//    xAxis->setRange(tthRange.min, tthRange.max);
-//    yAxis->setRange(qMin(0., intenRange.min), intenRange.max);
-//    yAxis->setNumberFormat("g");
-//    xAxis->setVisible(true);
-//    yAxis->setVisible(true);
+    xAxis->setRange(tthRange.min, tthRange.max);
+    yAxis->setRange(qMin(0., intenRange.min), intenRange.max);
+    yAxis->setNumberFormat("g");
+    xAxis->setVisible(true);
+    yAxis->setVisible(true);
 
-//    if (showBgFit_) {
-//      bgGraph_->setData(bg.xs().sup(), bg.ys().sup());
-//    } else {
-//      bgGraph_->clearData();
-//    }
+    auto qv = [](real_vec::rc rs) {
+      return QVector<real>::fromStdVector(rs.base_rc().base_rc());
+    };
 
-//    dgramGraph_->setData(dgram.xs().sup(), dgram.ys().sup());
-//    dgramBgFittedGraph_->setData(dgramBgFitted.xs().sup(), dgramBgFitted.ys().sup());
-//    dgramBgFittedGraph2_->setData(dgramBgFitted.xs().sup(), dgramBgFitted.ys().sup());
+    if (showBgFit)
+      bgGraph->setData(qv(bg.xs), qv(bg.ys));
+    else
+      bgGraph->clearData();
 
-//    clearReflLayer();
-//    setCurrentLayer("refl");
+    dgramGraph->setData(qv(dgram.xs), qv(dgram.ys));
+    dgramBgFittedGraph->setData(qv(bgFitted.xs), qv(bgFitted.ys));
+    dgramBgFittedGraph2->setData(qv(bgFitted.xs), qv(bgFitted.ys));
 
-//    for_i (refls.count()) {
-//      auto&& r = refls.at(i);
-//      auto* graph = addGraph();
-//      reflGraph_.append(graph);
-//      graph->setPen(QPen(Qt::green, i == currReflIndex ? 2 : 1));
-//      graph->setData(r.xs().sup(), r.ys().sup());
-//    }
-//  }
+    setCurrentLayer("refl");
 
-//  replot();
-//}
+    for (auto&& r : refls) {
+      auto* graph = addGraph();
+      reflGraph.add(graph);
+      graph->setPen(QPen(Qt::green, /*TODO i == currReflIndex ? 2 : 1*/1));
+      graph->setData(qv(r.xs), qv(r.ys));
+    }
+  }
+
+  replot();
+}
 
 Range Plot::fromPixels(int pix1, int pix2) {
   return Range::safeFrom(xAxis->pixelToCoord(pix1),
                          xAxis->pixelToCoord(pix2));
 }
 
-void Plot::setNewReflRange(Range::rc range) {
-//  diffractogram_.setCurrReflNewRange(range);
-//  updateBg();
+void Plot::render(bool withBg) {
+  if (withBg) {
+    clearItems();
+
+    switch (tool) {
+    case eTool::BACKGROUND:
+      for (auto&& bg : fit().bg)
+        addBgItem(bg);
+      break;
+    case eTool::PEAK: {
+      auto&& currRefl = fit().currRefl;
+      if (currRefl)
+        addBgItem(currRefl->peakFun->range);
+      break;
+    }
+    case eTool::NONE:
+      break;
+    }
+  }
+
+  Curve dgram, bgFitted, bg; curve_vec refls;
+  hub.makeDgram(dgram, bgFitted, bg, refls, sets(), set, fit(), dgramOptions);
+
+  plot(dgram, bgFitted, bg, refls);
 }
-
-void Plot::updateBg() {
-//  clearItems();
-
-//  switch (tool_) {
-//  case eTool::BACKGROUND: {
-//    typ::Ranges::rc rs = hub_.bgRanges();
-//    for_i (rs.count())
-//      addBgItem(rs.at(i));
-//    break;
-//  }
-//  case eTool::PEAK_REGION:
-//    addBgItem(diffractogram_.currReflRange());
-//    break;
-//  case eTool::NONE:
-//    break;
-//  }
-
-//  diffractogram_.render();
-}
-
-//void DiffractogramPlot::clearReflLayer() {
-//  for (auto g : reflGraph_)
-//    removeGraph(g);
-//  reflGraph_.clear();
-//}
 
 //void DiffractogramPlot::enterZoom(bool on) {
 //  overlay_->setHidden(on);
 //  dgramBgFittedGraph2_->setVisible(on);
 //}
 
-//void DiffractogramPlot::addBgItem(typ::Range::rc range) {
-//  setCurrentLayer("bg");
+void Plot::addBgItem(Range::rc range) {
+  setCurrentLayer("bg");
 
-//  QColor color;
-//  switch (hub_.fittingTab()) {
-//  case eFittingTab::BACKGROUND:
-//    color = bgRgeColor_;
-//    break;
-//  case eFittingTab::REFLECTIONS:
-//    color = reflRgeColor_;
-//    break;
-//  default:
-//    break;
-//  }
+  QColor color;
+  switch (tool) {
+  case eTool::BACKGROUND:
+    color = bgRgeColor;
+    break;
+  case eTool::PEAK:
+    color = reflRgeColor;
+    break;
+  default:
+    break;
+  }
 
-//  auto ir = new QCPItemRect(this);
-//  ir->setPen(QPen(color));
-//  ir->setBrush(QBrush(color));
-//  auto br = ir->bottomRight;
-//  br->setTypeY(QCPItemPosition::ptViewportRatio);
-//  br->setCoords(range.max, 1);
-//  auto tl = ir->topLeft;
-//  tl->setTypeY(QCPItemPosition::ptViewportRatio);
-//  tl->setCoords(range.min, 0);
-//  addItem(ir);
-//}
+  auto&& ir = new QCPItemRect(this);
+  ir->setPen(QPen(color));
+  ir->setBrush(QBrush(color));
+
+  auto&& br = ir->bottomRight;
+  br->setTypeY(QCPItemPosition::ptViewportRatio);
+  br->setCoords(range.max, 1);
+
+  auto&& tl = ir->topLeft;
+  tl->setTypeY(QCPItemPosition::ptViewportRatio);
+  tl->setCoords(range.min, 0);
+
+  addItem(ir);
+}
 
 void Plot::resizeEvent(QResizeEvent* e) {
   base::resizeEvent(e);

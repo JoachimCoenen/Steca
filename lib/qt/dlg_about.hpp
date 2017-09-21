@@ -16,7 +16,7 @@ protected:
   virtual mth_(str,      infoText, ()) = 0;
   virtual mth_(QLayout*, extra,    ()) RET_(nullptr)
 
-  voi_mut_(construct, ());
+  mut_(construct, ());
 dcl_end
 
 //------------------------------------------------------------------------------

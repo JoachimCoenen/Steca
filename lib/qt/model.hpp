@@ -34,7 +34,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   dcl_end
 
   mth_mut_(triChk*, makeTriChk, (strc));
-  voi_mut_(changeTriState, (triChk::eState));
+  mut_(changeTriState, (triChk::eState));
 
   atr_(uint, isNumbered);
   set_(setNumbered, (uint));
