@@ -15,13 +15,44 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "fit.hpp"
-#include <lib/dev/inc/defs.inc>
+#pragma once
+#include <lib/dev/inc/flt.hpp>
+#include <lib/dev/typ/trg.hpp>
+#include <lib/dev/typ/vec.hpp>
+#include <lib/dev/typ/xy.hpp>
 
-namespace core { namespace data {
+namespace core {
 //------------------------------------------------------------------------------
 
-Fit::Fit() : bg(), refls() {}
+using tth_t = l::deg;
+using omg_t = l::deg;
+using phi_t = l::deg;
+using chi_t = l::deg;
+
+using gma_t = l::deg;
+
+struct Range;
+struct Ranges;
+
+using tth_rge = Range;
+using gma_rge = Range;
+
+using peak_t = l::xy;
+using fwhm_t = l::Flt32;
+
+using inten_t   = l::Flt32;
+using inten_vec = l::vec<inten_t>;
+using inten_rge = Range;
+
+struct Geometry;
+
+//------------------------------------------------------------------------------
+}
+
+namespace core { namespace calc {
+//------------------------------------------------------------------------------
+
+struct FitParams;
 
 //------------------------------------------------------------------------------
 }}

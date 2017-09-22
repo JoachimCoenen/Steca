@@ -18,7 +18,7 @@
 #include "panel_diffractogram.hpp"
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
-#include <core/data/fit.hpp>
+#include <core/calc/fit_params.hpp>
 #include "../QCP/qcustomplot.h"
 #include "../thehub.hpp"
 #include <QCoreApplication>
@@ -29,13 +29,13 @@ namespace gui {
 using CombinedSets = core::data::CombinedSets;
 using CombinedSet  = core::data::CombinedSet;
 
-using Fit    = core::data::Fit;
+using FitParams = core::calc::FitParams;
 using Range  = core::Range;
 using Ranges = core::Ranges;
 using Curve  = core::Curve;
 using curve_vec = core::curve_vec;
 
-using eTool = Fit::eWhat;
+using eTool = FitParams::eWhat;
 
 struct Plot;
 
@@ -100,8 +100,8 @@ dcl_sub2_(Plot, RefHub, QCustomPlot)
 protected:
   core::data::CombinedSets::sh sets;
   core::data::CombinedSet::shp  set;
-  Fit::sh fit;
-  Hub::dgram_options dgramOptions;
+  FitParams::shp fp;
+  dgram_options dgramOptions;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -213,14 +213,14 @@ Plot::Plot(Hub& hub) : RefHub(hub)
     }
   });
 
-  hub.onSigFit([this](Fit::sh sh) {
-    if (fit != sh) {
-      fit = sh;
+  hub.onSigFitParams([this](FitParams::sh sh) {
+    if (fp != sh) {
+      fp = sh;
       render(true);
     }
   });
 
-  hub.onSigDgramOptions([this](Hub::dgram_options::rc os) {
+  hub.onSigDgramOptions([this](dgram_options::rc os) {
     if (dgramOptions != os) {
       mut(dgramOptions).set(os);
       render(true);
@@ -390,13 +390,14 @@ void Plot::render(bool withBg) {
   if (withBg) {
     clearItems();
 
+    EXPECT_(fp)
     switch (tool) {
     case eTool::BACKGROUND:
-      for (auto&& bg : fit().bg)
+      for (auto&& bg : fp->bg)
         addBgItem(bg);
       break;
     case eTool::PEAK: {
-      auto&& currRefl = fit().currRefl;
+      auto&& currRefl = fp->currRefl;
       if (currRefl)
         addBgItem(currRefl->peakFun->range);
       break;
@@ -407,7 +408,7 @@ void Plot::render(bool withBg) {
   }
 
   Curve dgram, bgFitted, bg; curve_vec refls;
-  hub.makeDgram(dgram, bgFitted, bg, refls, sets(), set, fit(), dgramOptions);
+  hub.makeDgram(dgram, bgFitted, bg, refls, sets(), set, *fp, dgramOptions);
 
   plot(dgram, bgFitted, bg, refls);
 }

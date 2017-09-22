@@ -16,9 +16,9 @@
  ******************************************************************************/
 
 #include "sets.hpp"
+#include "../calc/fit_params.hpp"
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
-#include "../session.hpp"
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -143,6 +143,8 @@ FileSrc::FileSrc(l_io::path::rc path_, strc comment_)
 
 //------------------------------------------------------------------------------
 
+using FitParams = calc::FitParams;
+
 Set::Set(FileSrc::shp src_, Meta::shp meta_, Image::shp image_)
 : src(src_), meta(meta_), image(image_) {}
 
@@ -151,22 +153,22 @@ l::sz2 Set::imageSize() const {
   return image->size();
 }
 
-gma_rge Set::rgeGma(Session::rc s) const {
+gma_rge Set::rgeGma(FitParams::rc s) const {
   return s.angleMap(*this)->rgeGma;
 }
 
-gma_rge Set::rgeGmaFull(Session::rc s) const {
+gma_rge Set::rgeGmaFull(FitParams::rc s) const {
   return s.angleMap(*this)->rgeGmaFull;
 }
 
-tth_rge Set::rgeTth(Session::rc s)const {
+tth_rge Set::rgeTth(FitParams::rc s)const {
   return s.angleMap(*this)->rgeTth;
 }
 
-void Set::collect(Session::rc s, Image const* corr,
+void Set::collect(FitParams::rc fp,
                 core::inten_vec& intens, uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
-  auto&& map = *s.angleMap(*this);
+  auto&& map = *fp.angleMap(*this);
 
   uint_vec const* gmaIndexes = nullptr;
   uint gmaIndexMin = 0, gmaIndexMax = 0;
@@ -181,13 +183,14 @@ void Set::collect(Session::rc s, Image const* corr,
 
   EXPECT_(0 < deltaTth)
 
+  auto* corrImg = fp.corrImage.ptr();
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
     auto inten = image->inten(ind);
     if (l::isnan(inten))
       continue;
 
-    inten_t ci = corr ? corr->inten(ind) : inten_t(1);
+    inten_t ci = corrImg ? corrImg->inten(ind) : inten_t(1);
     if (l::isnan(ci))
       continue;
 
@@ -361,15 +364,15 @@ flt32 CombinedSet::dMon() const {
     rge.op(set().fun);            \
   return rge;
 
-gma_rge CombinedSet::rgeGma(Session const& s) const {
+gma_rge CombinedSet::rgeGma(calc::FitParams::rc s) const {
   RGE_SETS_COMBINE(extendBy, rgeGma(s))
 }
 
-gma_rge CombinedSet::rgeGmaFull(Session const& s) const {
+gma_rge CombinedSet::rgeGmaFull(FitParams const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeGmaFull(s))
 }
 
-tth_rge CombinedSet::rgeTth(Session const& s) const {
+tth_rge CombinedSet::rgeTth(FitParams const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeTth(s))
 }
 
@@ -377,19 +380,17 @@ inten_rge CombinedSet::rgeInten() const {
   RGE_SETS_COMBINE(intersect, rgeInten())
 }
 
-inten_vec CombinedSet::collectIntens(
-    Session::rc session, Image const* intensCorr, gma_rge::rc rgeGma) const
-{
-  auto tthRge = rgeTth(session);
+inten_vec CombinedSet::collectIntens(FitParams::rc fp, gma_rge::rc rgeGma) const {
+  auto tthRge = rgeTth(fp);
   auto tthWdt = tth_t(tthRge.width());
 
-  auto cut = session.imageCut;
-  uint pixWidth = session.imageSize.i - cut.left - cut.right;
+  auto cut = fp.geometry.imageCut;
+  uint pixWidth = fp.geometry.imageSize.i - cut.left - cut.right;
 
   uint numBins;
   if (1 < size()) {  // combined datasets
     auto one   = first();
-    auto delta = tth_t(one().rgeTth(session).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(fp).width() / pixWidth);
     numBins    = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins    = pixWidth; // simply match the number of pixels
@@ -402,11 +403,11 @@ inten_vec CombinedSet::collectIntens(
   auto deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one().collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
-  if (session.avgScaleIntens) {
-    auto scale = session.intenScale;
+  if (fp.avgScaleIntens) {
+    auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
@@ -417,17 +418,17 @@ inten_vec CombinedSet::collectIntens(
   return intens;
 }
 
-inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rgeGma) const {
-  tth_rge tthRge = rgeTth(s);
+inten_vec CombinedSet::collect(FitParams::rc fp, gma_rge::rc rgeGma) const {
+  tth_rge tthRge = rgeTth(fp);
   tth_t   tthWdt = tth_t(tthRge.width());
 
-  auto cut = s.imageCut;
-  uint pixWidth = s.imageSize.i - cut.left - cut.right;
+  auto cut = fp.geometry.imageCut;
+  uint pixWidth = fp.geometry.imageSize.i - cut.left - cut.right;
 
   uint numBins;
   if (1 < size()) {
     auto one   = first();
-    auto delta = tth_t(one().rgeTth(s).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(fp).width() / pixWidth);
     numBins = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins = pixWidth; // simply match the pixel resolution
@@ -439,11 +440,11 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one().collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
-  if (s.avgScaleIntens) {
-    auto scale = s.intenScale;
+  if (fp.avgScaleIntens) {
+    auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
@@ -489,7 +490,7 @@ flt32 CombinedSets::dMon() const {
   return lazyDMon;
 }
 
-inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool cut) const {
+inten_rge::rc CombinedSets::rgeFixedInten(calc::FitParams const& fp, bool trans, bool cut) const {
   if (!lazyRgeFixedInten.isDef()) {
     l_io::busy __;
 
@@ -497,7 +498,7 @@ inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool 
       for (auto&& one : *set) {
         if (one().image) {
           auto&& image = *one().image;
-          auto imageLens = session.imageLens(image,*this,trans,cut);
+          auto imageLens = fp.imageLens(image,*this,trans,cut);
           lazyRgeFixedInten.extendBy(imageLens->rgeInten(false));
         }
       }
@@ -522,23 +523,23 @@ void CombinedSets::resetLazies() {
 //------------------------------------------------------------------------------
 
 TEST_("data::shp",
-  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
-  f2 = f2; f1 = f2; f2 = f1; f1 = f1;
+//  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
+//  f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
+//  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
 
-  Files fs;
-  fs.addFile(l::sh(f1));
-  fs.addFile(l::sh(f2));
+//  Files fs;
+//  fs.addFile(l::sh(f1));
+//  fs.addFile(l::sh(f2));
 
-  f1->addSet(l::sh(new Set(
-    f1->src,
-    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
-    l::sh(new Image))));
+//  f1->addSet(l::sh(new Set(
+//    f1->src,
+//    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+//    l::sh(new Image))));
 
-  fs.remFileAt(0);
+//  fs.remFileAt(0);
 )
 
 //------------------------------------------------------------------------------

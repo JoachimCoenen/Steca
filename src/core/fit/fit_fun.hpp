@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 #pragma once
-#include "../typ/fun.hpp"
 #include "../typ/curve.hpp"
+#include "../typ/fun.hpp"
 #include "../typ/range.hpp"
+#include "../types.hpp"
 
 namespace core { namespace fit {
 //------------------------------------------------------------------------------

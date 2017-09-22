@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-#include "../typ/def.hpp"
 #include "sets.hpp"
 
 namespace core { namespace data {

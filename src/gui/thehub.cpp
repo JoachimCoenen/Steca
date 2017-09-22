@@ -90,6 +90,7 @@ QVariant FileProxyModel::data(idx_rc idx, int role) const {
 //------------------------------------------------------------------------------
 
 Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
+, dgramOptions(), imageOptions()
 , modelFiles(new ModelFiles(*this))
 , modelDatasets(new ModelDatasets(*this))
 , modelMetadata(new ModelMetadata(*this)) {
@@ -111,10 +112,45 @@ Hub::~Hub() {
   delete modelFiles;
 }
 
+void Hub::makeDgram(core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
+                    core::data::CombinedSets::rc sets, core::data::CombinedSet const* set,
+                    core::calc::FitParams::rc fp, dgram_options::rc dGramOpts) const {
+
+  EXPECT_(dgram.isEmpty() && bgFitted.isEmpty() && bg.isEmpty() && refls.isEmpty())
+
+  if (dGramOpts.isCombined)
+    dgram = fp.datasetLens(sets, sets.combineAll()(), dGramOpts.norm, true, true)
+            -> makeCurve();
+  else if (set)
+    dgram = fp.datasetLens(sets, *set, dGramOpts.norm, true, true)
+            -> makeCurve(dgramOptions.gammaRange);
+
+  auto&& bgPolynom = core::fit::Polynom::fromFit(fp.bgPolyDegree, dgram, fp.bgRanges);
+  for_i_(dgram.size()) {
+    auto x = dgram.xs.at(i), y = bgPolynom.y(x);
+    bg.add(x, y);
+    bgFitted.add(x, dgram.ys.at(i) - y);
+  }
+
+  for (auto&& rsh : fp.refls) {
+    auto&& fun = *rsh().peakFun;
+    fun.fit(bgFitted);
+
+    auto&& rge = fun.range;
+
+    core::Curve c;
+    for (auto&& x : bgFitted.xs)
+      if (rge.contains(x))
+        c.add(x, fun.y(x));
+
+    refls.add(c);
+  }
+}
+
 void Hub::sessionClear() {
   base::clear();
   emitFiles(base::files);
-  emitFit(base::fit);
+  emitFitParams(fp);
 }
 
 Hub::ref Hub::sessionLoad(l_io::path path) may_err {
@@ -179,34 +215,34 @@ Hub::ref Hub::corrRem() {
   RTHIS
 }
 
-bool Hub::corrEnabled() const
-  RET_(base::corrEnabled)
+//bool Hub::corrEnabled() const
+//  RET_(base::corrEnabled)
 
 str Hub::corrName() const
   RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
 void Hub::setBg(Ranges::rc rs) emits {
   base::setBg(rs);
-  emitFit(base::fit);
+// TODO emitFit(base::fit);
 }
 
 void Hub::addBg(Range::rc r) emits {
   base::addBg(r);
-  emitFit(base::fit);
+// TODO emitFit(base::fit);
 }
 
 void Hub::remBg(Range::rc r) emits {
   base::remBg(r);
-  emitFit(base::fit);
+// TODO emitFit(base::fit);
 }
 
 void Hub::setRefl(Range::rc r) emits {
   base::setRefl(r);
-  emitFit(base::fit);
+// TODO emitFit(base::fit);
 }
 
 void Hub::combinedDgram(bool on) emits {
-  mut(dgramOptions.isDgramCombined) = on;
+// TODO   mut(dgramOptions.isDgramCombined) = on;
   emitDgramOptions(dgramOptions);
 }
 

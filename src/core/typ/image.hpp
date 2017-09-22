@@ -16,45 +16,13 @@
  ******************************************************************************/
 
 #pragma once
-#include "def.hpp"
+#include "../types.hpp"
 #include "range.hpp"
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/typ/arr2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
-
-dcl_(ImageTransform)
-  enum eTransform {
-    ROTATE_0        = 0,  // no transform
-    ROTATE_1        = 1,  // one quarter
-    ROTATE_2        = 2,  // two quarters
-    ROTATE_3        = 3,  // three quarters
-    MIRROR          = 4,
-    MIRROR_ROTATE_0 = MIRROR | ROTATE_0,
-    MIRROR_ROTATE_1 = MIRROR | ROTATE_1,
-    MIRROR_ROTATE_2 = MIRROR | ROTATE_2,
-    MIRROR_ROTATE_3 = MIRROR | ROTATE_3,
-  };
-
-  atr_(eTransform, val);
-
-  // clamps val appropriately
-  ImageTransform(uint val = ROTATE_0);
-
-  // adds/removes the mirror flag
-  ImageTransform mirror(bool on) const;
-
-  // rotates only; keeps the mirror flag
-  ImageTransform rotateTo(rc) const;
-
-  // rotates by one quarter-turn
-  ImageTransform nextRotate() const;
-
-  bol_(isTransposed, ()) RET_(0 != (val & 1))
-
-  bol_(operator==, (rc that)) RET_(val == that.val)
-dcl_end
 
 dcl_(count_arr2) SHARED
   using count_rge = Range;

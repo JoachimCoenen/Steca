@@ -16,15 +16,15 @@
  ******************************************************************************/
 
 #pragma once
-#include "calc/lens.hpp"
+#include "typ/options.hpp"
 #include "data/files.hpp"
-#include "data/fit.hpp"
 #include "io/json.hpp"
-#include "typ/angles.hpp"
 #include "typ/curve.hpp"
+#include "calc/fit_params.hpp"
+#include "typ/geometry.hpp"
 #include <lib/dev/inc/num.hpp>
-#include <lib/dev/typ/cache.hpp>
 #include <lib/dev/io/path.hpp>
+#include <lib/dev/typ/cache.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -42,24 +42,10 @@ dcl_(Session)
   mth_(io::Json, save, ());
 
   atr_(data::Files::sh, files);
-  atr_(data::Fit::sh,   fit);
-
-  atr_(Geometry, geometry);
-
-  mth_(AngleMap::shp,   angleMap, (data::Set::rc));
-
-  atr_(ImageTransform,  imageTransform);
-  atr_(ImageCut,        imageCut);
-  atr_(l::sz2,          imageSize);
-
-  atr_(bool,            avgScaleIntens);
-  atr_(l::peal,         intenScale);
-
-  atr_(bool,            corrEnabled);
-  mth_(Image::shp,      intensCorr, ());
+  atr_(Geometry::sh,   geometry);
+  atr_(calc::FitParams::sh,   fp);
 
   atr_(data::File::shp, corrFile);
-  atr_(Image::shp,      corrImage);
 
   mth_mut_(data::Files::sh, addFiles,   (l_io::path_vec::rc)) may_err;
   mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
@@ -78,45 +64,8 @@ dcl_(Session)
 
   set_(setImageSize,  (l::sz2)) may_err;
 
-  mth_(calc::ImageLens::shp, imageLens,
-        (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
-  mth_(calc::DatasetLens::shp, datasetLens,
-        (data::CombinedSets::rc, data::CombinedSet::rc,
-         eNorm, bool trans, bool cut));
-  mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
-
-  atr_(uint,   bgPolyDegree);
-  atr_(Ranges, bgRanges);
-
-  mth_(real, calcAvgBackground, (data::CombinedSets::rc, data::CombinedSet::rc));
-  mth_(real, calcAvgBackground, (data::CombinedSets::rc));
-
-  dcl_(dgram_options) EQ_NE
-    atr_(core::eNorm, norm)       = core::eNorm::NONE; // TODO out to fit_options?
-    atr_(bool, isDgramCombined)   = false; // TODO to plot ?
-    atr_(bool, isFixedIntenScale) = false; // TODO to plot ?
-    atr_(core::Range, gammaRange); // TODO to plot ?
-    mut_(set, (rc));
-  dcl_end
-
-  dcl_(image_options) EQ_NE
-    atr_(bool, isFixedIntenScale) = false;
-    mut_(set, (rc));
-  dcl_end
-
-  atr_(dgram_options, dgramOptions);
-  atr_(image_options, imageOptions);
-
-  voi_(makeDgram, (Curve& dgram, Curve& bgFitted, Curve& bg, curve_vec& refls,
-                   data::CombinedSets::rc, data::CombinedSet const*,
-                   data::Fit::rc, dgram_options::rc));
 private:
-  mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
-  mutable Image::shp intensCorrImage;
-  mutable bool corrHasNaNs;
-
   mut_(updateImageSize, ());
-  voi_(calcIntensCorr, ());
 dcl_end
 
 //------------------------------------------------------------------------------

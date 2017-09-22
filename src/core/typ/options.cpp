@@ -15,43 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
-#include <lib/dev/inc/vecs.hpp>
-#include "fun.hpp"
-#include "range.hpp"
+#include "options.hpp"
+#include <lib/dev/inc/defs.inc>
 
 namespace core {
 //------------------------------------------------------------------------------
-// A set of x-y datapoints.
-
-dcl_(Curve)
-  atr_(real_vec, xs);
-  atr_(real_vec, ys);
-  atr_(Range, rgeX);
-  atr_(Range, rgeY);
-
-  Curve();
-
-  set_(operator=, (rc));
-
-  void clear();
-
-  bol_(isEmpty, ());
-  mth_(sz_t, size, ());
-  bol_(isSorted, ());
-
-  set_(add, (real x, real y));
-
-  mth_(Curve, intersect, (Range::rc));
-  mth_(Curve, intersect, (Ranges::rc));
-
-  set_(subtract, (Fun::rc));
-
-  mth_(uint, maxYindex, ());  // the index of the maximum y value
-  mth_(real, sumY, ());
-};
-
-using curve_vec =  l::vec<Curve>;
 
 //------------------------------------------------------------------------------
 }

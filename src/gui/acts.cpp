@@ -65,7 +65,7 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   });
 
   hub.onSigCorr([&hub, &actCE]() {
-    actCE.check(hub.corrEnabled());
+    // TODO actCE.check(hub.corrEnabled());
   });
 
   get(CORR_REM).onTrigger([&hub]() {

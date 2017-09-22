@@ -16,28 +16,17 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/defs.hpp>
 #include "../data/sets.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"
-#include "../typ/image.hpp"
+#include "../typ/options.hpp"
 
-namespace core {
-
-enum class eNorm {
-  NONE,
-  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
-};
-
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 // View the dataset through a lens (thanks, Antti!)
 
 dcl_base_(LensBase)
-  LensBase(Session const&, data::CombinedSets::rc,
-           ImageTransform::rc, ImageCut::rc,
-           bool trans, bool cut);
-
+  LensBase(FitParams const&, data::CombinedSets::rc, bool trans, bool cut);
   virtual mth_(l::sz2, size, ()) = 0;
 
 protected:
@@ -46,22 +35,19 @@ protected:
   voi_(doTrans, (uint& i, uint& j));
   voi_(doCut,   (uint& i, uint& j));
 
-  ref_(Session,            session);
-  ref_(data::CombinedSets, datasets);
-  ref_(ImageTransform,     imageTransform);
-  ref_(ImageCut,           imageCut);
+  atr_(bool, trans); // TODO remove ?
+  atr_(bool, cut);
 
-  atr_(bool, trans); atr_(bool, cut);
-  ptr_(Image, intensCorr);
+  ref_(FitParams,          fp);
+  ref_(data::CombinedSets, datasets);
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_sub_(ImageLens, LensBase) SHARED
-  ImageLens(Session const&, Image::rc, data::CombinedSets::rc,
-            bool trans, bool cut);
+  ImageLens(FitParams const&, Image::rc, data::CombinedSets::rc, bool trans, bool cut);
 
-  mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()));
+  mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()))
   mth_(inten_t, imageInten, (uint i, uint j));
 
   inten_rge::rc rgeInten(bool fixed) const;
@@ -74,8 +60,8 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(DatasetLens, LensBase) SHARED
-  DatasetLens(Session const&, data::CombinedSet::rc, data::CombinedSets::rc,
-              eNorm, bool trans, bool cut, ImageTransform::rc, ImageCut::rc);
+  DatasetLens(FitParams const&, data::CombinedSet::rc, data::CombinedSets::rc,
+              eNorm, bool trans, bool cut);
 
   mth_(l::sz2, size, ());
 

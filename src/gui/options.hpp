@@ -16,25 +16,25 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/inc/ptr.hpp>
-#include "../calc/reflection.hpp"
-#include "../typ/def.hpp"
-#include "../typ/range.hpp"
+#include <core/typ/options.hpp>
+#include <core/typ/range.hpp>
 
-namespace core { namespace data {
+namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_(Fit) SHARED
-  using Reflection = calc::Reflection;
+dcl_(dgram_options) EQ_NE
+  atr_(core::eNorm, norm)       = core::eNorm::NONE; // TODO out to fit_options?
+  atr_(bool, isCombined)   = false; // TODO to plot ?
+  atr_(bool, isFixedIntenScale) = false; // TODO to plot ?
+  atr_(core::Range, gammaRange); // TODO to plot ?
+  mut_(set, (rc));
+dcl_end
 
-  enum eWhat { NONE, BACKGROUND, PEAK };
-
-  Fit();
-
-  atr_(Ranges, bg);
-  atr_(l::vec<Reflection::sh>, refls);
-  atr_(Reflection::shp, currRefl);
+dcl_(image_options) EQ_NE
+  atr_(bool, isFixedIntenScale) = false;
+  mut_(set, (rc));
 dcl_end
 
 //------------------------------------------------------------------------------
-}}
+}
+// eof

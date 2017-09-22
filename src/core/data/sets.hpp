@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-#include "../typ/def.hpp"
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/io/path.hpp>
@@ -25,11 +24,7 @@
 #include <lib/dev/typ/map.hpp>
 #include <lib/dev/typ/set.hpp>
 
-namespace core {
-
-struct Session;
-
-namespace data {
+namespace core { namespace data {
 //------------------------------------------------------------------------------
 // attribute dictionaries
 
@@ -149,13 +144,13 @@ dcl_(Set) SHARED   // one dataset, as acquired
   mth_(flt32,    dTim, ()) RET_(meta->dTim)
   mth_(flt32,    dMon, ()) RET_(meta->dMon)
 
-  mth_(gma_rge,   rgeGma,     (Session const&));
-  mth_(gma_rge,   rgeGmaFull, (Session const&));
-  mth_(tth_rge,   rgeTth,     (Session const&));
+  mth_(gma_rge,   rgeGma,     (calc::FitParams const&));
+  mth_(gma_rge,   rgeGmaFull, (calc::FitParams const&));
+  mth_(tth_rge,   rgeTth,     (calc::FitParams const&));
 
   mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
-  voi_(collect, (Session const&, Image const* corr,
+  voi_(collect, (calc::FitParams const&,
                  core::inten_vec&, uint_vec&, gma_rge::rc,
                  tth_t minTth, tth_t deltaTth));
 dcl_end
@@ -198,13 +193,12 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(flt32,    dTim, ());
   mth_(flt32,    dMon, ());
 
-  mth_(gma_rge,   rgeGma,     (Session const&));
-  mth_(gma_rge,   rgeGmaFull, (Session const&));
-  mth_(tth_rge,   rgeTth,     (Session const&));
+  mth_(gma_rge,   rgeGma,     (calc::FitParams const&));
+  mth_(gma_rge,   rgeGmaFull, (calc::FitParams const&));
+  mth_(tth_rge,   rgeTth,     (calc::FitParams const&));
 
   mth_(inten_rge, rgeInten, ());
-  mth_(inten_vec, collectIntens, (Session const&,
-                                  Image const* intensCorr, gma_rge::rc));
+  mth_(inten_vec, collectIntens, (calc::FitParams const&, gma_rge::rc));
 private:
   mutable Meta::shp lazyMeta;
 
@@ -217,7 +211,7 @@ private:
   mutable flt32    lazyDTim;
   mutable flt32    lazyDMon;
 
-  mth_(inten_vec, collect, (Session const&, Image const* corr, gma_rge::rc));
+  mth_(inten_vec, collect, (calc::FitParams const&, gma_rge::rc));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -233,7 +227,7 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   mth_(flt32, dTim, ());
   mth_(flt32, dMon, ());
 
-  mth_(inten_rge::rc, rgeFixedInten, (Session const&, bool trans, bool cut));
+  mth_(inten_rge::rc, rgeFixedInten, (calc::FitParams const&, bool trans, bool cut));
   mth_(core::data::CombinedSet::sh, combineAll, ());
 
 private:

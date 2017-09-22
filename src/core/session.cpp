@@ -28,16 +28,14 @@ namespace core {
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
 Session::Session()
-: files(new data::Files), fit(new data::Fit)
-, imageTransform(), imageCut(), imageSize()
-, avgScaleIntens(), intenScale(1)
-, corrEnabled(false), corrFile(), corrImage()
-, bgPolyDegree(0), bgRanges(), dgramOptions(), imageOptions()
-, angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
+: files(new data::Files), geometry(), fp(new calc::FitParams(geometry()))
+, corrFile()
 {}
 
 void Session::clear() {
-  mut(files) = l::sh(new data::Files); mut(fit) = l::sh(new data::Fit);
+  mut(files) = l::sh(new data::Files);
+  mut(geometry) = l::sh(new Geometry); // TODO with def. values or a copy or leave ?
+  mut(fp) = l::sh(new calc::FitParams(geometry())); // OR leave geometry and make its clone here
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -191,25 +189,6 @@ io::Json Session::save() const {
 //  return QJsonDocument(top.sup()).toJson();
 }
 
-AngleMap::shp Session::angleMap(data::Set::rc set) const {
-//  Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
-  AngleMap::Key key(geometry, imageSize, imageCut, set.tth());
-  auto map = angleMapCache.get(key);
-  if (!map)
-    map = angleMapCache.add(key, AngleMap::shp(new AngleMap(key)));
-  return map;
-}
-
-Image::shp Session::intensCorr() const {
-  if (!corrEnabled)
-    return Image::shp();
-
-  if (!intensCorrImage)
-    calcIntensCorr();
-
-  return intensCorrImage;
-}
-
 data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
   auto&& clone = l::sh(files().clone());
@@ -261,189 +240,59 @@ Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
     auto&& sets = file->sets;
 
     setImageSize(sets.imageSize());
-    mut(corrImage) = sets.foldImage();
-    intensCorrImage.drop();
+    mut(fp().corrImage) = sets.foldImage(); // TODO make a copy of fp
+    mut(fp().intensCorrImage).drop();
 
     // all ok
     mut(corrFile)    = file;
-    mut(corrEnabled) = true;
+    mut(fp().corrEnabled) = true;
   }
   RTHIS
 }
 
 Session::ref Session::remCorrFile() {
   mut(corrFile).drop();
-  mut(corrImage).drop();
-  mut(intensCorrImage).drop();
-  mut(corrEnabled) = false;
+  mut(fp().corrImage).drop(); // TODO copy fp
+  mut(fp().intensCorrImage).drop();
+  mut(fp().corrEnabled) = false;
   updateImageSize();
   RTHIS
 }
 
 Session::ref Session::tryEnableCorr(bool on) {
-  mut(corrEnabled) = on && corrFile;
+  mut(fp().corrEnabled) = on && corrFile;
   RTHIS
 }
 
 void Session::setBg(Ranges::rc rs) {
-  mut(fit().bg) = rs;
+  mut(fp().bg) = rs;
 }
 
 void Session::addBg(Range::rc r) {
-  mut(fit().bg).add(r);
+  mut(fp().bg).add(r);
 }
 
 void Session::remBg(Range::rc r) {
-  mut(fit().bg).rem(r);
+  mut(fp().bg).rem(r);
 }
 
 void Session::setRefl(Range::rc r) {
-  auto&& refl = fit().currRefl;
+  auto&& refl = fp().currRefl;
   if (refl)
     mut(*refl).setRange(r);
 }
 
 Session::ref Session::setImageSize(l::sz2 size) may_err {
-  if (imageSize.isEmpty())
-    mut(imageSize) = size;  // the first one
-  else if (imageSize != size)
+  if (geometry().imageSize.isEmpty())
+    mut(geometry().imageSize) = size;  // the first one
+  else if (geometry().imageSize != size)
     l::err("inconsistent image size");
   RTHIS
 }
 
-
-calc::ImageLens::shp Session::imageLens(
-  Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
-{
-  return l::sh(new calc::ImageLens(*this, image, datasets, trans, cut));
-}
-
-Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
-  Curve curve = lens.makeCurve(rgeGma);
-  curve.subtract(fit::Polynom::fromFit(bgPolyDegree, curve, bgRanges));
-
-  return curve;
-}
-
-calc::DatasetLens::shp Session::datasetLens(
-    data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
-    eNorm norm, bool trans, bool cut) const {
-  return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
-                         trans, cut, imageTransform, imageCut));
-}
-
-real Session::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
-  auto lens = datasetLens(datasets, dataset, eNorm::NONE, true, true);
-
-  Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
-  auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);
-  return bgPolynom.avgY(lens->rgeTth());
-}
-
-real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
-  if (datasets.isEmpty())
-    return 0;
-
-  l_io::busy __;
-
-  real bg = 0;
-
-  for (auto&& dataset : datasets)
-    bg += calcAvgBackground(datasets, *dataset);
-
-  return bg / datasets.size();
-}
-
-bool Session::dgram_options::operator==(rc that) const {
-  return
-      norm              == that.norm &&
-      isDgramCombined   == that.isDgramCombined &&
-      isFixedIntenScale == that.isFixedIntenScale &&
-      gammaRange        == that.gammaRange;
-}
-
-bool Session::dgram_options::operator!=(rc that) const {
-  return !(*this == that);
-}
-
-void Session::dgram_options::set(rc that) {
-  mut(norm)              = that.norm;
-  mut(isDgramCombined)   = that.isDgramCombined;
-  mut(isFixedIntenScale) = that.isFixedIntenScale;
-  mut(gammaRange)        = that.gammaRange;
-}
-
-void Session::makeDgram(Curve& dgram, Curve& bgFitted, Curve& bg, curve_vec& refls,
-                        data::CombinedSets::rc sets, data::CombinedSet const* set,
-                        data::Fit::rc fit, dgram_options::rc opts) const {
-
-  EXPECT_(dgram.isEmpty() && bgFitted.isEmpty() && bg.isEmpty() && refls.isEmpty())
-
-  if (opts.isDgramCombined)
-    dgram = datasetLens(sets, sets.combineAll()(), opts.norm, true, true)
-            -> makeCurve();
-  else if (set)
-    dgram = datasetLens(sets, *set, opts.norm, true, true)
-            -> makeCurve(dgramOptions.gammaRange);
-
-  auto&& bgPolynom = fit::Polynom::fromFit(bgPolyDegree, dgram, bgRanges);
-  for_i_(dgram.size()) {
-    auto x = dgram.xs.at(i), y = bgPolynom.y(x);
-    bg.add(x, y);
-    bgFitted.add(x, dgram.ys.at(i) - y);
-  }
-
-  for (auto&& rsh : fit.refls) {
-    auto&& fun = *rsh().peakFun;
-    fun.fit(bgFitted);
-
-    auto&& rge = fun.range;
-
-    Curve c;
-    for (auto&& x : bgFitted.xs)
-      if (rge.contains(x))
-        c.add(x, fun.y(x));
-
-    refls.add(c);
-  }
-}
-
 void Session::updateImageSize() {
   if (0 == files().size() && !corrFile)
-    mut(imageSize) = l::sz2(0, 0);
-}
-
-void Session::calcIntensCorr() const {
-  corrHasNaNs = false;
-
-  EXPECT_(corrImage)
-  l::sz2 size = corrImage->size() - imageCut.marginSize();
-  ENSURE_(!size.isEmpty())
-
-  uint w = size.i, h = size.j,
-       di = imageCut.left, dj = imageCut.top;
-
-  real sum = 0;
-  for_ij_(w, h)
-    sum += corrImage->inten(i + di, j + dj);
-
-  real avg = sum / (w * h);
-
-  intensCorrImage = l::sh(new Image(corrImage->size(), inten_t(1)));
-
-  for_ij_(w, h) {
-    auto inten = corrImage->inten(i + di, j + dj);
-    real factor;
-
-    if (inten > 0) {
-      factor = avg / inten;
-    } else {
-      factor = l::flt_nan;
-      corrHasNaNs = true;
-    }
-
-    mut(*intensCorrImage).setInten(i + di, j + dj, inten_t(factor));
-  }
+    mut(geometry().imageSize) = l::sz2(0, 0);
 }
 
 //------------------------------------------------------------------------------

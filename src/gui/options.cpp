@@ -15,37 +15,30 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
+#include "options.hpp"
+#include <lib/dev/inc/defs.inc>
 
-#include <lib/dev/defs.hpp>
-#include <lib/dev/inc/flt.hpp>
-#include <lib/dev/typ/trg.hpp>
-#include <lib/dev/typ/vec.hpp>
-#include <lib/dev/typ/ij.hpp>
-#include <lib/dev/typ/xy.hpp>
-
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-using tth_t = l::deg;
-using omg_t = l::deg;
-using phi_t = l::deg;
-using chi_t = l::deg;
+bool dgram_options::operator==(rc that) const {
+  return
+      norm              == that.norm &&
+      isCombined        == that.isCombined &&
+      isFixedIntenScale == that.isFixedIntenScale &&
+      gammaRange        == that.gammaRange;
+}
 
-using gma_t = l::deg;
+bool dgram_options::operator!=(rc that) const {
+  return !(*this == that);
+}
 
-struct Range;
-struct Ranges;
-
-using tth_rge = Range;
-using gma_rge = Range;
-
-using peak_t = l::xy;
-using fwhm_t = l::Flt32;
-
-using inten_t   = l::Flt32;
-using inten_vec = l::vec<inten_t>;
-using inten_rge = Range;
+void dgram_options::set(rc that) {
+  mut(norm)              = that.norm;
+  mut(isCombined)        = that.isCombined;
+  mut(isFixedIntenScale) = that.isFixedIntenScale;
+  mut(gammaRange)        = that.gammaRange;
+}
 
 //------------------------------------------------------------------------------
 }

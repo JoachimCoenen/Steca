@@ -19,6 +19,7 @@
 #include "acts.hpp"
 #include "refhub.hpp"
 #include "models.hpp"
+#include "options.hpp"
 #include <core/session.hpp>
 #include <lib/dev/defs.hpp>
 #include <lib/dev/io/path.hpp>
@@ -57,7 +58,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   set_(corrEnable, (bool)) emits;
   set_(corrRem,    ())     emits;
 
-  bol_(corrEnabled, ()); // TODO out - signal
+//  bol_(corrEnabled, ()); // TODO out - signal
   mth_(str, corrName, ()); // TODO out - signal
 
   mut_(setBg, (core::Ranges::rc)) emits;
@@ -69,9 +70,12 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mut_(combinedDgram, (bool on)) emits;
   mut_(setNorm, (core::eNorm))   emits;
 
-  using base::datasetLens;
-  using base::dgram_options;
-  using base::makeDgram;
+  atr_(dgram_options, dgramOptions);
+  atr_(image_options, imageOptions);
+
+  voi_(makeDgram, (core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
+                   core::data::CombinedSets::rc, core::data::CombinedSet const*,
+                   core::calc::FitParams::rc, dgram_options::rc));
 
 signals:
   // a new set of files
@@ -87,7 +91,7 @@ signals:
   void sigCorr(core::data::File::shp) const;
 
   // a new fit
-  void sigFit(core::data::Fit::sh) const;
+  void sigFitParams(core::calc::FitParams::sh) const;
 
   // change in diagram rendering
   void sigDgramOptions(dgram_options const&) const;
@@ -123,7 +127,7 @@ public:                             \
   DCL_HUB_SIG_ETC(CombinedSet,  core::data::CombinedSet::shp)
   DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::sh)
 
-  DCL_HUB_SIG_ETC(Fit,          core::data::Fit::sh)
+  DCL_HUB_SIG_ETC(FitParams,    core::calc::FitParams::sh)
 
   DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
 

@@ -32,14 +32,11 @@ Angles::ref Angles::operator=(rc that) {
   return *this;
 }
 
-AngleMap::Key::Key(Geometry::rc geometry_, l::sz2::rc size_,
-                     ImageCut::rc cut_, tth_t midTth_)
-: geometry(geometry_), size(size_), cut(cut_), midTth(midTth_) {}
+AngleMap::Key::Key(Geometry::rc geometry_, tth_t midTth_)
+: geometry(geometry_), midTth(midTth_) {}
 
 COMPARABLE_IMPL(AngleMap::Key) {
   RET_COMPARABLES_IF_NE(geometry)
-  RET_COMPARABLES_IF_NE(size)
-  RET_COMPARABLES_IF_NE(cut)
   RET_COMPARE_IF_NE_THAT(midTth)
   return 0;
 }
@@ -94,17 +91,17 @@ void AngleMap::getGmaIndexes(gma_rge::rc rgeGma,
 void AngleMap::calculate() {
   auto&& pixSize = key.geometry.pixSize;
   auto&& d_z     = key.geometry.detectorDistance;
-  auto&& size    = key.size;
-  auto&& cut     = key.cut;
   auto&& midPix  = key.geometry.midPixOffset;
   auto&& midTth  = key.midTth;
 
+  auto&& size = key.geometry.imageSize;
   angles.reset(new angle_arr(size));
 
   mut(rgeTth) = Range();
   mut(rgeGma) = Range();
   mut(rgeGmaFull) = Range();
 
+  auto&& cut = key.geometry.imageCut;
   EXPECT_(size.i > cut.left + cut.right)
   EXPECT_(size.j > cut.top  + cut.bottom)
 
