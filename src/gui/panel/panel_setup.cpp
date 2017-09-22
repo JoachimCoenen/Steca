@@ -26,9 +26,9 @@ PanelSetup::PanelSetup() : base("") {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
 
-  tabs->addTab((tabGeometry    = new Panel()), "Geometry");
-  tabs->addTab((tabBackground  = new Panel()), "Background");
-  tabs->addTab((tabReflections = new Panel()), "Reflections");
+  tabs->addTab(tabGeometry    = new Panel(), "Geometry");
+  tabs->addTab(tabBackground  = new Panel(), "Background");
+  tabs->addTab(tabReflections = new Panel(), "Reflections");
 }
 
 //------------------------------------------------------------------------------

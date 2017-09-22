@@ -91,7 +91,7 @@ void lst_model::updateTriState() const {
   using eState = triChk::eState;
   eState newState = none ? eState::off : all ? eState::on : eState::part;
   if (state != newState)
-    emit triStateChanged((state = newState));
+    emit triStateChanged(state = newState);
 }
 
 void lst_model::fixColumns(lst_view& view) const {

@@ -40,8 +40,8 @@ DEF_EQ_NE_IMPL(Range)
 
 TEST_("Range::compare",
   Range rn1, rn2, r(1,2), r1(1,2), r2(2,3);
-  CHECK_FALSE((rn1 == rn2));
-  CHECK_FALSE((rn1 != rn2));
+  CHECK_EQ(rn1, rn2);
+  CHECK_NE(rn1, rn2);
   CHECK_EQ(r, r1);
   CHECK_NE(r, r2);
 )

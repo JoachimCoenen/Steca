@@ -41,19 +41,19 @@ void ViewDatasets::onSelected(int row) const {
 PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
-  tabs->addTab((tab = new Panel()), "Datasets");
+  tabs->addTab(tab = new Panel(), "Datasets");
 
-  tab->vb.add((view = new ViewDatasets(hub)));
+  tab->vb.add(view = new ViewDatasets(hub));
 
   auto&& hb = tab->vb.hb();
   hb.add(mut(*view->model).makeTriChk(str::null));
   hb.addStretch();
   hb.add(new l_qt::lbl("Combine"));
 
-  auto spin = new l_qt::spinPint();
+  auto&& spin = new l_qt::spinPint();
   hb.add(spin);
 
-  auto* md = static_cast<ModelDatasets const*>(view->model);
+  auto&& md = static_cast<ModelDatasets const*>(view->model);
 
   spin->min(1);
   connect(spin, &l_qt::spinPint::valChg, [md](l::pint val) {

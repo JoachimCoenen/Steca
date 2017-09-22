@@ -458,9 +458,9 @@ void Plot::resizeEvent(QResizeEvent* e) {
 PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
   vb.add(tabs);
-  tabs->addTab((tab = new Panel()), "Diffractogram");
+  tabs->addTab(tab = new Panel(), "Diffractogram");
 
-  tab->vb.add((plot = new Plot(hub)));
+  tab->vb.add(plot = new Plot(hub));
 
   auto&& hb = tab->vb.hb();
 

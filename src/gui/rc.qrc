@@ -18,7 +18,7 @@
         <file alias="cutRight">rc/cut_right.svg</file>
         <file alias="cutTop">rc/cut_top.svg</file>
         <file alias="crop">rc/crop.svg</file>
-        <file alias="steps">rc/steps.svg</file>
+        <file alias="stepz">rc/stepz.svg</file>
         <file alias="selRegion">rc/sel_region.svg</file>
         <file alias="reflRegion">rc/refl_region.svg</file>
         <file alias="clear">rc/clear.svg</file>
@@ -35,7 +35,6 @@
         <file alias="tool_q">rc/tool_q.svg</file>
         <file alias="load">rc/load.svg</file>
         <file alias="save">rc/save.svg</file>
-        <file>rc/ge.wav</file>
     </qresource>
     <qresource prefix="/HAL">
         <file alias="good_evening">rc/ge.wav</file>

@@ -48,7 +48,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(spinReal, QDoubleSpinBox)
-  spinReal();
+  spinReal(uint decimals = 2);
 
   set_(decimals,   (uint));
   set_(digitWidth, (uint));

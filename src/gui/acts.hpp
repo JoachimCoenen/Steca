@@ -39,9 +39,16 @@ dcl_sub_(Acts, l_qt::acts)
   cst_(str, CORR_ENABLE);
   cst_(str, CORR_REM);
 
+  // diffractogram
   cst_(str, DIFF_ZOOM);
   cst_(str, DIFF_ALL_DSETS);
   cst_(str, DIFF_FIX_INTEN);
+
+  // image
+  cst_(str, IMG_FIX_INTEN);
+  cst_(str, IMG_STEP_ZOOM);
+  cst_(str, IMG_SHOW_OVER);
+  cst_(str, IMG_SHOW_GAMMA);
 dcl_end
 
 //------------------------------------------------------------------------------

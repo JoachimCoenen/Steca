@@ -141,8 +141,8 @@ QLayout* DlgAbout::extra() const {
   auto&& hb = vb->hb();
 
   hb.addWidget(new l_qt::lbl("at startup: "));
-  hb.addWidget((chkAbout  = new l_qt::chk("&show this dialog")));
-  hb.addWidget((chkUpdate = new l_qt::chk("&check for update")));
+  hb.addWidget(chkAbout  = new l_qt::chk("&show this dialog"));
+  hb.addWidget(chkUpdate = new l_qt::chk("&check for update"));
   hb.addStretch();
 
   using S = Settings;
@@ -214,7 +214,7 @@ void Win::onFirstShow() {
   hub.addFiles(str_vec{
 //    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
-    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
   });
 #endif

@@ -48,8 +48,8 @@ spinPint::spinPint() {
 
 //------------------------------------------------------------------------------
 
-spinReal::spinReal() {
-  decimals(0);
+spinReal::spinReal(uint decimals_) {
+  decimals(decimals_);
   connect(this, static_cast<void (Self::*)(double)>(&Self::valueChanged), [this](double) {
     emit valChg(val());
   });

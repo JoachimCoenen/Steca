@@ -50,6 +50,11 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(DIFF_ALL_DSETS, act::make("All datasets",               ""));
   add(DIFF_FIX_INTEN, act::make("Fixed intensity scale",      ""));
 
+  add(IMG_FIX_INTEN,  act::make("Fixed intensity scale",      "",       ":/icon/scale"));
+  add(IMG_STEP_ZOOM,  act::make("Zoom in steps",              "",       ":/icon/stepz"));
+  add(IMG_SHOW_OVER,  act::make("Show overlay",               "",       ":/icon/crop"));
+  add(IMG_SHOW_GAMMA, act::make("Show gamma",                 "",       ":/icon/angle"));
+
   get(FILES_ADD).onTrigger([&hub]() {
     hub.addFiles();
   });
@@ -83,6 +88,11 @@ str const Acts::CORR_REM        ("corrRem");
 str const Acts::DIFF_ZOOM       ("diffZoom");
 str const Acts::DIFF_ALL_DSETS  ("diffAllDsets");
 str const Acts::DIFF_FIX_INTEN  ("diffFixInten");
+
+str const Acts::IMG_FIX_INTEN   ("imgFixInten");
+str const Acts::IMG_STEP_ZOOM   ("imgStepZoom");
+str const Acts::IMG_SHOW_OVER   ("imgShowOver");
+str const Acts::IMG_SHOW_GAMMA  ("imgShowGamma");
 
 //------------------------------------------------------------------------------
 }

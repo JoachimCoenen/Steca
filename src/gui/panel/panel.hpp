@@ -30,7 +30,7 @@ dcl_end
 template <typename Model>
 dcl_sub_(ViewModel, ViewModelBase)
   ViewModel(Hub& hub, Model const* model_) : base(hub) {
-    setModel((model = model_));
+    setModel(model = model_);
   }
 
 protected:

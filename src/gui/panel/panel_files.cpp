@@ -97,11 +97,11 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto&& btnRem = new l_qt::actbtn(a.get(a.FILES_REM));
 
   hb.margin(0).add(btnAdd).add(btnRem);
-  tabs->addTab((tab = new Panel()), "Files", p);
+  tabs->addTab(tab = new Panel(), "Files", p);
 
   auto&& vf = new ViewFile();
   tab->vb.add(vf);
-  tab->vb.add((view = new ViewFiles(hub, *vf)));
+  tab->vb.add(view = new ViewFiles(hub, *vf));
 
   tab->vb.add(mut(*view->model).makeTriChk(str::null));
   tab->vb.add(new l_qt::lbl("Correction file"));

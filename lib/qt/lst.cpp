@@ -44,7 +44,7 @@ lst_view::lst_view(bool hasHeader_)
 }
 
 lst_view::ref lst_view::showHeader(bool on) {
-  base::header()->setVisible((mut(hasHeader) = on)); RTHIS
+  base::header()->setVisible(mut(hasHeader) = on); RTHIS
 }
 
 lst_view::ref lst_view::setModel(lst_model const* model_) {

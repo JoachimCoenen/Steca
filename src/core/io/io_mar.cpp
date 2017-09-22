@@ -40,7 +40,7 @@ File::shp loadMar(path::rc path) may_err {
 
   FILE *fpIn;
 
-  check_or_err_((fpIn = fopen(path.c_str(), "rb")),
+  check_or_err_(fpIn = fopen(path.c_str(), "rb"),
                 CAT("Cannot open data file: ", path));
 
   struct CloseFile { // TODO remove, replace with QFile etc.

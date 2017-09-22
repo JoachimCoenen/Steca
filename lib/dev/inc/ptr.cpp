@@ -88,7 +88,7 @@ TEST_("scoped",
   typedef scoped<cnt> sco_ptr;
   {
     cnt *c;
-    sco_ptr p((c = new cnt));
+    sco_ptr p(c = new cnt);
     CHECK_EQ(1, cnt::cnt);
     CHECK(bool(p));
     CHECK_EQ(c, p);
