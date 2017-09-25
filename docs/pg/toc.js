@@ -1,12 +1,12 @@
 book.toc = {
-  simple: true, static: true, // TODO static to toc. ?
+  simple: false,
   src: [
-    ['about',     '',               'About Steca'],
-    ['docs',      'docs.html',      'Documentation'],
-    ['get',       'get.html',       'Get Steca'],
-    ['gui',       'gui.html',       'GUI overview'],
-    ['session',   'session.html',   'Sessions'],
-    ['workflow',  'workflow.html',  'Workflow'],
-    ['output',    'output.html',    'Output'],
+    ['about', '', 'About Steca'],
+    ['docs', 'docs.html', 'Documentation'],
+    ['get', 'get.html', 'Get Steca'],
+    ['gui', 'gui.html', 'GUI overview'],
+    ['session', 'session.html', 'Sessions'],
+    ['workflow', 'workflow.html', 'Workflow'],
+    ['output', 'output.html', 'Output'],
   ],
 };
