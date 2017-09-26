@@ -387,10 +387,14 @@ Range Plot::fromPixels(int pix1, int pix2) {
 }
 
 void Plot::render(bool withBg) {
+  if (!fp) {
+    clearItems();
+    return;
+  }
+
   if (withBg) {
     clearItems();
 
-    EXPECT_(fp)
     switch (tool) {
     case eTool::BACKGROUND:
       for (auto&& bg : fp->bg)

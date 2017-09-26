@@ -45,6 +45,8 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   Hub(Win&);
  ~Hub();
 
+  mut_(init, ());
+
   mut_(sessionClear, ())          emits;
   set_(sessionLoad, (l_io::path)) emits may_err;
   mth_(void, sessionSave, (l_io::path)) may_err;
@@ -96,22 +98,6 @@ signals:
   // change in diagram rendering
   void sigDgramOptions(dgram_options const&) const;
 
-public:
-  template <typename Sig, typename Lambda>
-  void onSig(Sig sig, Lambda slot) const {
-    QObject::connect(this, sig, slot);
-  }
-
-//#define DCL_HUB_SIG_ETC(name)      \
-//private:                              \
-//  voi_(emit##name, ()) {              \
-//    emit sig##name();                 \
-//  }                                   \
-//public:                               \
-//  template <typename Lambda> void onSig##name(Lambda slot) const { \
-//    onSig(&Hub::sig##name, slot);  \
-//  }
-
 #define DCL_HUB_SIG_ETC(name, par)  \
 private:                            \
   voi_(emit##name, (par p)) {       \
@@ -119,7 +105,7 @@ private:                            \
   }                                 \
 public:                             \
   template <typename Lambda> void onSig##name(Lambda slot) const { \
-    onSig(&Hub::sig##name, slot);   \
+    QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
   DCL_HUB_SIG_ETC(Files,        core::data::Files::sh)

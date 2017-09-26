@@ -34,6 +34,7 @@ dcl_sub_(Win, l_qt::win)
   Win();
   Hub hub;
 
+  mut_(init, ());
   mth_(l_qt::acts const&, getActs, ());
 
   mut_(about, ());

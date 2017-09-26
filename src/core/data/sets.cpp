@@ -153,16 +153,16 @@ l::sz2 Set::imageSize() const {
   return image->size();
 }
 
-gma_rge Set::rgeGma(FitParams::rc s) const {
-  return s.angleMap(*this)->rgeGma;
+gma_rge Set::rgeGma(FitParams::rc fp) const {
+  return fp.angleMap(*this)->rgeGma;
 }
 
-gma_rge Set::rgeGmaFull(FitParams::rc s) const {
-  return s.angleMap(*this)->rgeGmaFull;
+gma_rge Set::rgeGmaFull(FitParams::rc fp) const {
+  return fp.angleMap(*this)->rgeGmaFull;
 }
 
-tth_rge Set::rgeTth(FitParams::rc s)const {
-  return s.angleMap(*this)->rgeTth;
+tth_rge Set::rgeTth(FitParams::rc fp)const {
+  return fp.angleMap(*this)->rgeTth;
 }
 
 void Set::collect(FitParams::rc fp,

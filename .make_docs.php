@@ -1,17 +1,8 @@
 #!/usr/bin/php
 <?php
-chdir(dirname(__FILE__));
+chdir(dirname(__FILE__).'/src');
 
-function extractCm ($f) {
-  // between /*:> or //:> and <:*/ or //<:
-  $s = file_get_contents($f);
-  preg_match_all("~(/\*:>|//:>)(.*?)(<:\*/|//<:)~s", $s, $res);
-  // print_r($res);
-  return join("\n", $res[2]);
-}
-
-$pg = '../docs/pg/';
-@mkdir($pg);
+@mkdir($pg = '../docs/pg/');
 
 $pgSrc = [
   ['about',     '',               'About Steca', [
@@ -22,9 +13,17 @@ $pgSrc = [
   ['session',   'session.html',   'Sessions', []],
   ['workflow',  'workflow.html',  'Workflow', []],
   ['output',    'output.html',    'Output', []],
+  // [['code', '', 'Code'],],
 ];
 
 $toc = '';
+
+function extractCm ($f) {
+  // between /*:> or //:> and <:*/ or //<:
+  $s = file_get_contents($f);
+  preg_match_all("~(/\*:>|//:>)(.*?)(<:\*/|//<:)~s", $s, $res);
+  return join("\n", $res[2]);
+}
 
 foreach ($pgSrc as $src) {
   list($id, $file, $tx, $fs) = $src;

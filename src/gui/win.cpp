@@ -102,6 +102,10 @@ Win::Win() : hub(*this) {
   });
 }
 
+void Win::init() {
+  hub.init();
+}
+
 l_qt::acts const& Win::getActs() const {
   return hub.acts;
 }

@@ -111,7 +111,7 @@ rw_n ModelDatasets::rows() const {
 str ModelDatasets::head(cl_n cl) const {
   if (cl < numLeadCols())
     switch (cl) {
-    case clFNO: return "F";
+    case clFNO: return "F#";
     case clTAG: return " - ";
     default: NEVER
     }

@@ -7,6 +7,9 @@ book.toc = {
     ['gui', 'gui.html', 'GUI overview'],
     ['session', 'session.html', 'Sessions'],
     ['workflow', 'workflow.html', 'Workflow'],
-    ['output', 'output.html', 'Output'],
+    [
+      ['code', '', 'Code'],
+      ['code1', 'code.html', 'Code1'],
+    ],
   ],
 };

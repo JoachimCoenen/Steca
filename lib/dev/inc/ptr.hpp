@@ -293,6 +293,11 @@ struct shp : sh_base<T> {
     return sh_base<T>::ptr();
   }
 
+  T const& operator*() const {
+    EXPECT_(sh_base<T>::ptr())
+    return *sh_base<T>::ptr();
+  }
+
   shp& operator=(shp const& that) {
     sh_base<T>::_set(that);
     RTHIS

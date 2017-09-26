@@ -147,6 +147,10 @@ void Hub::makeDgram(core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, 
   }
 }
 
+void Hub::init() {
+  sessionClear();
+}
+
 void Hub::sessionClear() {
   base::clear();
   emitFiles(base::files);
