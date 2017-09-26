@@ -56,12 +56,11 @@ ImageWidget::ImageWidget(Hub& hub) : RefHub(hub), scale(0) {
     setScale();
   });
 
-  hub.onSigCombinedSets([this](core::data::SetsPair pair) {
-    if (set != pair.set) {
-      set = pair.set;
+  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
+    if (set != info.set) {
+      set = info.set;
     }
   });
-
 }
 
 void ImageWidget::setPixmap(QPixmap const& pixmap) {

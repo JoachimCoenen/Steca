@@ -150,7 +150,6 @@ void Hub::init() {
 void Hub::sessionClear() {
   base::clear();
   emitFiles(base::files);
-  emitFitParams(fp);
 }
 
 Hub::ref Hub::sessionLoad(l_io::path path) may_err {

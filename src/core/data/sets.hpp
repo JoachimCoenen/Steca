@@ -241,14 +241,4 @@ private:
 dcl_end
 
 //------------------------------------------------------------------------------
-
-dcl_(SetsPair)
-  atr_(CombinedSets::shr, sets);
-  atr_(CombinedSet::shp,  set);
-
-  SetsPair(CombinedSets::shr sets_, CombinedSet::shp set_)
-    : sets(sets_), set(set_) {}
-dcl_end
-
-//------------------------------------------------------------------------------
 }}

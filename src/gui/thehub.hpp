@@ -81,22 +81,27 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
                    core::data::CombinedSets::rc, core::data::CombinedSet const*,
                    core::calc::FitParams::rc, bool combined));
 
+  dcl_(SetsInfo)
+    atr_(core::data::CombinedSets::shr, sets);
+    atr_(core::data::CombinedSet::shp,  set);
+    atr_(core::calc::FitParams::shr,    fp);
+
+    SetsInfo(core::data::CombinedSets::shr sets_, core::data::CombinedSet::shp set_,
+             core::calc::FitParams::shr fp_)
+      : sets(sets_), set(set_), fp(fp_) {}
+  dcl_end
+
 signals:
-  // a new set of files
-  void sigFiles(core::data::Files::shr) const;
-  // a new set of combined sets, and opt. the selected one
-  void sigCombinedSets(core::data::SetsPair) const;
+  // a new set of combined sets, opt. the selected one, fit params
+  void sigSetsInfo(SetsInfo) const;
   // checked metadata
   void sigMetaChecked(core::data::KeyBag::shr) const;
 
   // add/rem/on/off correction file
   void sigCorr(core::data::File::shp) const;
 
-  // a new fit
-  void sigFitParams(core::calc::FitParams::shr) const;
-
-//  // change in diagram rendering
-//  void sigDgramOptions(dgram_options const&) const;
+private:
+  mut_(newFiles, ());
 
 #define DCL_HUB_SIG_ETC(name, par)  \
 private:                            \
@@ -108,15 +113,10 @@ public:                             \
     QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
-  DCL_HUB_SIG_ETC(Files,        core::data::Files::shr)
-  DCL_HUB_SIG_ETC(CombinedSets, core::data::SetsPair)
+  DCL_HUB_SIG_ETC(SetsInfo,     SetsInfo)
   DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::shr)
 
-  DCL_HUB_SIG_ETC(FitParams,    core::calc::FitParams::shr)
-
   DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
-
-//  DCL_HUB_SIG_ETC(DgramOptions, dgram_options const&)
 
 private:
   Q_OBJECT

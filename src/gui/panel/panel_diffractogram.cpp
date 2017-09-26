@@ -28,7 +28,6 @@ namespace gui {
 
 using CombinedSets = core::data::CombinedSets;
 using CombinedSet  = core::data::CombinedSet;
-using SetsPair     = core::data::SetsPair;
 
 using FitParams = core::calc::FitParams;
 using Range  = core::Range;
@@ -77,7 +76,7 @@ dcl_sub2_(Plot, RefHub, QCustomPlot)
 
   Range fromPixels(int, int);
 
-  void render(bool withBg);
+  void renderPlot();
   void calcReflections();
 
   QColor bgRgeColor, reflRgeColor;
@@ -203,18 +202,10 @@ void Overlay::updateCursorRegion() {
 Plot::Plot(Hub& hub) : RefHub(hub)
 , overlay(new Overlay(hub, *this)), tool(eTool::NONE) {
 
-  hub.onSigCombinedSets([this](SetsPair pair) {
-    sets = pair.sets;
-    if (set != pair.set) {
-      set = pair.set;
-      render(false);
-    }
-  });
-
-  hub.onSigFitParams([this](FitParams::shr sh) {
-    if (fp != sh) {
-      fp = sh;
-      render(true);
+  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
+    if (set != info.set || fp != info.fp) {
+      sets = info.sets; set = info.set; fp = info.fp;
+      renderPlot();
     }
   });
 
@@ -318,7 +309,7 @@ Plot::Plot(Hub& hub) : RefHub(hub)
 
 void Plot::setTool(eTool tool_) {
   mut(tool) = tool_;
-  render(true);
+  renderPlot();
 }
 
 void Plot::plot(Curve::rc dgram, Curve::rc bgFitted, Curve::rc bg, curve_vec::rc refls) {
@@ -384,29 +375,22 @@ Range Plot::fromPixels(int pix1, int pix2) {
                          xAxis->pixelToCoord(pix2));
 }
 
-void Plot::render(bool withBg) {
-  if (!fp) {
-    clearItems();
+void Plot::renderPlot() {
+  clearItems();
+  if (!fp)
     return;
-  }
 
-  if (withBg) {
-    clearItems();
-
-    switch (tool) {
-    case eTool::BACKGROUND:
-      for (auto&& bg : fp->bg)
-        addBgItem(bg);
-      break;
-    case eTool::PEAK: {
-      auto&& currRefl = fp->currRefl;
-      if (currRefl)
-        addBgItem(currRefl->peakFun->range);
-      break;
-    }
-    case eTool::NONE:
-      break;
-    }
+  switch (tool) {
+  case eTool::BACKGROUND:
+    for (auto&& bg : fp->bg)
+      addBgItem(bg);
+    break;
+  case eTool::PEAK:
+    if (fp->currRefl)
+      addBgItem(fp->currRefl->peakFun->range);
+    break;
+  case eTool::NONE:
+    break;
   }
 
   Curve dgram, bgFitted, bg; curve_vec refls;
