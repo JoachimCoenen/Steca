@@ -32,7 +32,7 @@ dcl_(FitParams) SHARED
 
   enum eWhat { NONE, BACKGROUND, PEAK };
 
-  FitParams(Geometry::rc);
+  FitParams();
 
   atr_(core::eNorm, norm)       = core::eNorm::NONE;
   atr_(uint,   bgPolyDegree);
@@ -50,7 +50,7 @@ dcl_(FitParams) SHARED
 
   mth_(Image::shp,      intensCorr, ());
 
-  mth_(ImageLens::shp, imageLens,
+  mth_(ImageLens::shp,  imageLens,
         (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
   mth_(DatasetLens::shp, datasetLens,
         (data::CombinedSets::rc, data::CombinedSet::rc, bool trans, bool cut));

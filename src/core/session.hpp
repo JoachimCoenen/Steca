@@ -42,7 +42,6 @@ dcl_(Session)
   mth_(io::Json, save, ());
 
   atr_(data::Files::shr, files);
-  atr_(Geometry::shr,   geometry);
   atr_(calc::FitParams::shr,   fp);
 
   atr_(data::File::shp, corrFile);

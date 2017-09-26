@@ -28,14 +28,13 @@ namespace core {
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
 Session::Session()
-: files(new data::Files), geometry(), fp(new calc::FitParams(geometry()))
+: files(new data::Files), fp(new calc::FitParams())
 , corrFile()
 {}
 
 void Session::clear() {
   mut(files) = l::sh(new data::Files);
-  mut(geometry) = l::sh(new Geometry); // TODO with def. values or a copy or leave ?
-  mut(fp) = l::sh(new calc::FitParams(geometry())); // OR leave geometry and make its clone here
+  mut(fp) = l::sh(new calc::FitParams()); // OR leave geometry and make its clone here
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -283,16 +282,17 @@ void Session::setRefl(Range::rc r) {
 }
 
 Session::ref Session::setImageSize(l::sz2 size) may_err {
-  if (geometry().imageSize.isEmpty())
-    mut(geometry().imageSize) = size;  // the first one
-  else if (geometry().imageSize != size)
+  auto&& g = fp().geometry;
+  if (g.imageSize.isEmpty())
+    mut(g.imageSize) = size;  // the first one
+  else if (g.imageSize != size)
     l::err("inconsistent image size");
   RTHIS
 }
 
 void Session::updateImageSize() {
   if (0 == files().size() && !corrFile)
-    mut(geometry().imageSize) = l::sz2(0, 0);
+    mut(fp().geometry.imageSize) = l::sz2(0, 0);
 }
 
 //------------------------------------------------------------------------------
