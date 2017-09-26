@@ -27,7 +27,7 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
-dcl_(FitParams) SHARED
+dcl_(FitParams) SHARED CLONED
   using Reflection = calc::Reflection;
 
   enum eWhat { NONE, BACKGROUND, PEAK };
@@ -64,6 +64,9 @@ dcl_(FitParams) SHARED
   mutable Image::shp intensCorrImage;
   voi_(calcIntensCorr, ());
   mutable bool corrHasNaNs;
+
+private:
+  FitParams(rc) = default;
 dcl_end
 
 //------------------------------------------------------------------------------

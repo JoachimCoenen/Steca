@@ -33,8 +33,8 @@ using l_io::path;
 //------------------------------------------------------------------------------
 // Code taken from the original STeCa, only slightly modified.
 
-File::shp loadMar(path::rc path) may_err {
-  File::shp file(new File(path));
+l::own<File> loadMar(path::rc path) may_err {
+  auto&& file = l::scope(new File(path));
 
   using WORD = short;
 
@@ -240,7 +240,7 @@ File::shp loadMar(path::rc path) may_err {
   delete[] i2_image;
   delete[] i4_image;
 
-  return file;
+  return file.takeOwn();
 }
 
 TEST_("loadMar",

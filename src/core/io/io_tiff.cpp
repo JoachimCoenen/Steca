@@ -240,8 +240,8 @@ TEST_("loadTiff",
 
 //------------------------------------------------------------------------------
 
-File::shp loadTiffDat(l_io::path::rc path) may_err {
-  File::shp file(new File(path));
+l::own<File> loadTiffDat(l_io::path::rc path) may_err {
+  auto&& file = l::scope(new File(path));
 
   FileTiffDat fin(path);
 
@@ -277,7 +277,7 @@ File::shp loadTiffDat(l_io::path::rc path) may_err {
     )
   }
 
-  return file;
+  return file.takeOwn();
 }
 
 TEST_("loadTiffDat",

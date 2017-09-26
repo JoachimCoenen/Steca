@@ -27,12 +27,12 @@ bool couldBeMar    (l_io::path::rc) may_err;
 bool couldBeTiffDat(l_io::path::rc) may_err;
 
 // load a file; file type will be sensed
-data::File::shp load(l_io::path::rc) may_err;
+l::own<data::File> load(l_io::path::rc) may_err;
 
 // load a specific file type
-data::File::shp loadCaress (l_io::path::rc) may_err;
-data::File::shp loadMar    (l_io::path::rc) may_err;
-data::File::shp loadTiffDat(l_io::path::rc) may_err;
+l::own<data::File> loadCaress (l_io::path::rc) may_err;
+l::own<data::File> loadMar    (l_io::path::rc) may_err;
+l::own<data::File> loadTiffDat(l_io::path::rc) may_err;
 
 str loadCaressComment(l_io::path::rc) may_err;
 

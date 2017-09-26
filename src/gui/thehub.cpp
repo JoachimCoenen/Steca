@@ -140,18 +140,17 @@ void Hub::init() {
 
 void Hub::sessionClear() {
   base::clear();
-  emitFiles(base::files);
+  emitFiles(l::sh(base::files->clone()));
 }
 
-Hub::ref Hub::sessionLoad(l_io::path path) may_err {
+void Hub::sessionLoad(l_io::path path) may_err {
   l_io::ftin file(path);
   path.cwd();
 
   using core::io::Json;
   auto json = Json::asSelf(Json::loadFrom(file.asStream()));
-  emitFiles(base::load(json));
-
-  RTHIS
+  base::load(json);
+  emitFiles(l::sh(base::files->clone()));
 }
 
 void Hub::sessionSave(l_io::path path) const may_err {
@@ -162,7 +161,8 @@ void Hub::sessionSave(l_io::path path) const may_err {
 }
 
 void Hub::addFiles(l_io::path_vec::rc ps) emits {
-  emitFiles(base::addFiles(ps));
+  if (base::addFiles(ps))
+    emitFiles(l::sh(base::files->clone()));
 }
 
 void Hub::addFiles() emits {
@@ -177,14 +177,16 @@ void Hub::addFiles() emits {
 }
 
 void Hub::remFilesAt(uint_vec::rc is) {
-  emitFiles(base::remFilesAt(is));
+  if (base::remFilesAt(is))
+    emitFiles(l::sh(base::files->clone()));
 }
 
 void Hub::activateFileAt(uint i, bool on) {
-  emitFiles(base::activateFileAt(i, on));
+  if (base::activateFileAt(i, on))
+    emitFiles(l::sh(base::files->clone()));
 }
 
-Hub::ref Hub::corrEnable(bool on) {
+void Hub::corrEnable(bool on) {
   if (on && !corrFile) {
     str name = l_qt::dlgOpenFile(&mut(win), "Select correction file", l_io::path::cwd(),
                  "Data files (*.dat *.mar*);;All files (*.*)");
@@ -196,19 +198,17 @@ Hub::ref Hub::corrEnable(bool on) {
 
   base::tryEnableCorr(on);
   emitCorr(base::corrFile);
-  RTHIS
 }
 
-Hub::ref Hub::corrRem() {
+void Hub::corrRem() {
   base::remCorrFile();
   emitCorr(base::corrFile);
-  RTHIS
 }
 
 //bool Hub::corrEnabled() const
 //  RET_(base::corrEnabled)
 
-str Hub::corrName() const
+str Hub::corrName() const // TODO remove, broadcast corrFile
   RET_(base::corrFile ? base::corrFile->src->path.filename() : str::null)
 
 void Hub::setBg(Ranges::rc rs) emits {
@@ -237,7 +237,7 @@ void Hub::setNorm(core::eNorm norm) {
 }
 
 void Hub::sendSetsInfo(core::data::CombinedSets::shr sets, core::data::CombinedSet::shp set) {
-  emitSetsInfo(SetsInfo(sets, set, base::fp));
+  emitSetsInfo(SetsInfo(sets, set, l::sh(base::fp->clone())));
 }
 
 void Hub::sendMetaChecked(core::data::KeyBag::shr bag) {

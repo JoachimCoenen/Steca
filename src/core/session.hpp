@@ -38,22 +38,22 @@ dcl_(Session)
   Session();
 
   mut_(clear, ());
-  mth_mut_(data::Files::shr, load, (io::Json::rc)) may_err;
+  mut_(load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-  atr_(data::Files::shr, files);
-  atr_(calc::FitParams::shr,   fp);
+  // one active copy; Hub will share out clones
+  atr_(l::scoped<data::Files>,     files);
+  atr_(l::shp<data::File>,         corrFile); // not modified in Session, can be shp
+  atr_(l::scoped<calc::FitParams>, fp);
 
-  atr_(data::File::shp, corrFile);
+  bol_mut_(addFiles,   (l_io::path_vec::rc)) may_err;
+  bol_mut_(remFilesAt, (uint_vec::rc));
 
-  mth_mut_(data::Files::shr, addFiles,   (l_io::path_vec::rc)) may_err;
-  mth_mut_(data::Files::shr, remFilesAt, (uint_vec::rc));
+  bol_mut_(activateFileAt, (uint, bool));
 
-  mth_mut_(data::Files::shr, activateFileAt, (uint, bool));
-
-  set_(setCorrFile,   (l_io::path::rc)) may_err;
+  mut_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());
-  set_(tryEnableCorr, (bool on));
+  mut_(tryEnableCorr, (bool on));
 
   mut_(setBg, (Ranges::rc));
   mut_(addBg, (Range::rc));

@@ -51,7 +51,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mut_(init, ());
 
   mut_(sessionClear, ())          emits;
-  set_(sessionLoad, (l_io::path)) emits may_err;
+  mut_(sessionLoad, (l_io::path)) emits may_err;
   mth_(void, sessionSave, (l_io::path)) may_err;
 
   mut_(addFiles,   (l_io::path_vec::rc))  emits;
@@ -60,8 +60,8 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   mut_(activateFileAt, (uint, bool)) emits;
 
-  set_(corrEnable, (bool)) emits;
-  set_(corrRem,    ())     emits;
+  mut_(corrEnable, (bool)) emits;
+  mut_(corrRem,    ())     emits;
 
 //  bol_(corrEnabled, ()); // TODO out - signal
   mth_(str, corrName, ()); // TODO out - signal

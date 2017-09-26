@@ -27,14 +27,14 @@ namespace core {
 
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
-Session::Session()
-: files(new data::Files), fp(new calc::FitParams())
-, corrFile()
-{}
+Session::Session() : files(), corrFile(), fp() {
+  clear();
+}
 
 void Session::clear() {
-  mut(files) = l::sh(new data::Files);
-  mut(fp) = l::sh(new calc::FitParams()); // OR leave geometry and make its clone here
+  mut(files).reset(new data::Files);
+  mut(corrFile).drop();
+  mut(fp).reset(new calc::FitParams);
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -56,9 +56,8 @@ void Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-data::Files::shr Session::load(io::Json::rc) may_err {
+void Session::load(io::Json::rc) may_err {
   clear();
-  return files;
 //  QJsonParseError parseError;
 //  QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
 //  RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
@@ -188,101 +187,93 @@ io::Json Session::save() const {
 //  return QJsonDocument(top.sup()).toJson();
 }
 
-data::Files::shr Session::addFiles(l_io::path_vec::rc ps) may_err {
+bool Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
-  auto&& clone = l::sh(files().clone());
-
+  bool res = false;
   for (auto&& path : ps)
-    if (!clone().hasPath(path)) {
-      auto&& file = io::load(path);
+    if (!files->hasPath(path)) {
+      auto&& file = l::scope(io::load(path));
       setImageSize(file->imageSize());
-      mut(*clone).addFile(file);
+      mut(*files).addFile(l::sh(file.takeOwn()));
+      res = true;
     }
 
-  if (files().size() != clone().size())
-    mut(files) = clone;
-  return files;
+  return res;
 }
 
-data::Files::shr Session::remFilesAt(uint_vec::rc is) {
+bool Session::remFilesAt(uint_vec::rc is) {
   if (is.isEmpty())
-    return files;
+    return false;
 
   uint_vec iis = is;
   std::sort(iis.begin(), iis.end());
 
-  auto&& clone = l::sh(files().clone());
-
   for_i_down_(uint(iis.size()))
-    mut(*clone).remFileAt(iis.at(i));
+    mut(*files).remFileAt(iis.at(i));
 
-  mut(files) = clone;
-  return files;
+  return true;
 }
 
-data::Files::shr Session::activateFileAt(uint i, bool on) {
-  if (i >= files().size() || files().at(i)->isActive == on)
-    return files;
+bool Session::activateFileAt(uint i, bool on) {
+  if (i >= files->size() || files->at(i)->isActive == on)
+    return false;
 
-  mut(files) = l::sh(files().clone());
-  mut(files().at(i)->isActive) = on;
-  return files;
+  mut(files->at(i)->isActive) = on;
+  return true;
 }
 
-Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
+void Session::setCorrFile(l_io::path::rc path) may_err {
   if (path.isEmpty()) {
     remCorrFile();
   } else {
     l_io::busy __;
 
-    auto file = io::load(path);
+    auto&& file = l::scope(io::load(path));
     auto&& sets = file->sets;
 
     setImageSize(sets.imageSize());
-    mut(fp().corrImage) = sets.foldImage(); // TODO make a copy of fp
-    mut(fp().intensCorrImage).drop();
 
-    // all ok
-    mut(corrFile)    = file;
-    mut(fp().corrEnabled) = true;
+    mut(fp->corrImage)   = sets.foldImage();
+    mut(fp->intensCorrImage).drop();
+    mut(fp->corrEnabled) = true;
+    mut(corrFile).reset(file.takeOwn());
   }
-  RTHIS
 }
 
 Session::ref Session::remCorrFile() {
   mut(corrFile).drop();
-  mut(fp().corrImage).drop(); // TODO copy fp
-  mut(fp().intensCorrImage).drop();
-  mut(fp().corrEnabled) = false;
+  mut(fp->corrImage).drop();
+  mut(fp->intensCorrImage).drop();
+  mut(fp->corrEnabled) = false;
+
   updateImageSize();
   RTHIS
 }
 
-Session::ref Session::tryEnableCorr(bool on) {
-  mut(fp().corrEnabled) = on && corrFile;
-  RTHIS
+void Session::tryEnableCorr(bool on) {
+  mut(fp->corrEnabled) = on && corrFile;
 }
 
 void Session::setBg(Ranges::rc rs) {
-  mut(fp().bg) = rs;
+  mut(fp->bg) = rs;
 }
 
 void Session::addBg(Range::rc r) {
-  mut(fp().bg).add(r);
+  mut(fp->bg).add(r);
 }
 
 void Session::remBg(Range::rc r) {
-  mut(fp().bg).rem(r);
+  mut(fp->bg).rem(r);
 }
 
 void Session::setRefl(Range::rc r) {
-  auto&& refl = fp().currRefl;
+  auto&& refl = fp->currRefl;
   if (refl)
     mut(*refl).setRange(r);
 }
 
 Session::ref Session::setImageSize(l::sz2 size) may_err {
-  auto&& g = fp().geometry;
+  auto&& g = fp->geometry;
   if (g.imageSize.isEmpty())
     mut(g.imageSize) = size;  // the first one
   else if (g.imageSize != size)
@@ -291,8 +282,8 @@ Session::ref Session::setImageSize(l::sz2 size) may_err {
 }
 
 void Session::updateImageSize() {
-  if (0 == files().size() && !corrFile)
-    mut(fp().geometry.imageSize) = l::sz2(0, 0);
+  if (0 == files->size() && !corrFile)
+    mut(fp->geometry.imageSize) = l::sz2(0, 0);
 }
 
 //------------------------------------------------------------------------------

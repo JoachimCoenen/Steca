@@ -165,14 +165,14 @@ struct scoped : ptr_base {
   T* ptr() const {
     return static_cast<T*>(mutp(p));
   }
-  operator T*()   const RET_(ptr())
+  operator T*()   const RET_(ptr()) // TODO remove
   T* operator->() const RET_(ptr())
 };
 
 // a handy way to make a scoped pointer
 template <typename T> scoped<T> scope(T* p)             RET_(scoped<T>(p))
 template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
-template <typename T> scoped<T> scope(own<T> p)         RET_(scope(p))
+template <typename T> scoped<T> scope(own<T> p)         RET_(scoped<T>(p.ptr()))
 
 //------------------------------------------------------------------------------
 // shared - for reference-counted data
@@ -242,14 +242,22 @@ template <typename T> struct T_maker {
 // non-mutable shared pointer and reference
 template <typename T>
 struct shr : sh_base<T> {
-  // default () forced by Qt metasystem
+  // default () forced by Qt metasystem, but quite useful, too
   explicit shr() : sh_base<T>(maker.make()) {}
-  explicit shr(T const* p) : sh_base<T>(p) {}
+  explicit shr(T const* p) : sh_base<T>(p)  {}
 
   shr(shr const& that) : sh_base<T>(that) {}
   T const& operator()() const {
     EXPECT_(sh_base<T>::ptr())
     return *sh_base<T>::ptr();
+  }
+
+  void construct() {
+    *this = shr(maker.make());
+  }
+
+  void clone() {
+    *this = shr(this().clone());
   }
 
   shr& operator=(shr const& that) {
@@ -279,7 +287,6 @@ private:
 };
 
 template <typename T> T_maker<T> shr<T>::maker;
-
 
 template <typename T>
 struct shp : sh_base<T> {

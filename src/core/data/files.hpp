@@ -23,7 +23,7 @@ namespace core { namespace data {
 
 struct Files;
 
-dcl_(File) SHARED  // one file
+dcl_(File) SHARED CLONED // one file
   atr_(FileSrc::shp,src);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
   atr_(Sets,       sets);
@@ -33,6 +33,9 @@ dcl_(File) SHARED  // one file
 
   set_(addSet, (Set::shr)) may_err;
   mth_(l::sz2, imageSize, ());
+
+private:
+  File(rc) = default;
 dcl_end
 
 //------------------------------------------------------------------------------
