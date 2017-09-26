@@ -44,7 +44,7 @@ dcl_sub_(ModelFiles, Model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check,     (rw_n, bool, bool));
+  set_(check,     (rw_n, bool));
   bol_(isChecked, (rw_n));
 
   mth_(core::data::File::shp, at, (rw_n));
@@ -65,7 +65,7 @@ dcl_sub_(ModelDatasets, Model)
 
   bol_(rightAlign,  (cl_n));
 
-  set_(check, (rw_n, bool, bool));
+  set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
 
   atr_(l::pint, groupedBy);
@@ -95,7 +95,7 @@ dcl_sub_(ModelMetadata, Model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check, (rw_n, bool, bool));
+  set_(check, (rw_n, bool));
   bol_(isChecked, (rw_n));
 
   core::data::KeyBag::shr checked;

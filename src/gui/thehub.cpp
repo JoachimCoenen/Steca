@@ -93,16 +93,7 @@ Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
 , dgramOptions(), imageOptions()
 , modelFiles(new ModelFiles(*this))
 , modelDatasets(new ModelDatasets(*this))
-, modelMetadata(new ModelMetadata(*this)) {
-
-//TODO to models  modelDatasets->onSigReset([this]() {
-//    emitCombinedSets(modelDatasets->sets);
-//  });
-
-//  modelMetadata->onSigReset([this]() {
-//    emitMetaChecked(modelMetadata->checked);
-//  });
-}
+, modelMetadata(new ModelMetadata(*this)) {}
 
 Hub::~Hub() {
   delete modelFiles;
@@ -243,6 +234,14 @@ void Hub::setRefl(Range::rc r) emits {
 void Hub::setNorm(core::eNorm norm) {
 // ... base::remBg(r);
 // TODO emitFit(base::fit);
+}
+
+void Hub::sendSetsInfo(core::data::CombinedSets::shr sets, core::data::CombinedSet::shp set) {
+  emitSetsInfo(SetsInfo(sets, set, base::fp));
+}
+
+void Hub::sendMetaChecked(core::data::KeyBag::shr bag) {
+  emitMetaChecked(bag);
 }
 
 //------------------------------------------------------------------------------

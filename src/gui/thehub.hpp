@@ -91,7 +91,14 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
       : sets(sets_), set(set_), fp(fp_) {}
   dcl_end
 
+private:
+  void sendSetsInfo(core::data::CombinedSets::shr, core::data::CombinedSet::shp); // TODO mth_,
+  void sendMetaChecked(core::data::KeyBag::shr); // TODO mth_,
+  // TODO move models to hub, remove their data, replace with hub's active collection
+
 signals:
+  // new set of files
+  void sigFiles(core::data::Files::shr) const;
   // a new set of combined sets, opt. the selected one, fit params
   void sigSetsInfo(SetsInfo) const;
   // checked metadata
@@ -113,6 +120,7 @@ public:                             \
     QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
+  DCL_HUB_SIG_ETC(Files,        core::data::Files::shr)
   DCL_HUB_SIG_ETC(SetsInfo,     SetsInfo)
   DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::shr)
 

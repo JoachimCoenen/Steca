@@ -58,7 +58,8 @@ lst_view::ref lst_view::setModel(lst_model const* model_) {
     base::setModel(mutp(mut(model) = model_));
     con = model->onSigReset([this]() {
       fixColumns();
-      onSelected(-1);
+      if (!model->rows())
+        onSelected(-1);
       setCurrentRow(currRow);
     });
 

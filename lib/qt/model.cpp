@@ -47,8 +47,7 @@ void lst_model::changeTriState(triChk::eState state) {
   } else if (eState::part != state) {
     bool on = eState::on == state;
     for_i_(rows())
-      check(rw_n(i), on, true);
-    signalReset();
+      check(rw_n(i), on);
   }
 }
 
@@ -73,7 +72,7 @@ var lst_model::cell(rw_n, cl_n) const {
 lst_model::ref lst_model::check(rw_n rw)
   SET_(check(rw, !isChecked(rw)))
 
-lst_model::ref lst_model::check(rw_n, bool, bool)
+lst_model::ref lst_model::check(rw_n, bool)
   SET_()
 
 bool lst_model::isChecked(rw_n) const {
@@ -132,8 +131,14 @@ void lst_model::fixColumns(lst_view& view) const {
 }
 
 void lst_model::signalReset() const {
-  mutp(this)->beginResetModel();
-  mutp(this)->endResetModel();
+  mut(*this).beginResetModel();
+  mut(*this).endResetModel();
+  updateTriState();
+  emit columnsToFix();
+}
+
+void lst_model::signalRowChanged(rw_n rw) const {
+  emit mut(*this).dataChanged(index(int(rw), 0), index(int(rw), columnCount() - 1));
   updateTriState();
 }
 

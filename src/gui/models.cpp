@@ -68,7 +68,7 @@ l_qt::var ModelFiles::cell(rw_n rw, cl_n cl) const {
   return str::null;
 }
 
-ModelFiles::ref ModelFiles::check(rw_n rw, bool on, bool) {
+ModelFiles::ref ModelFiles::check(rw_n rw, bool on) {
   hub.activateFileAt(rw, on);
   RTHIS
 }
@@ -150,12 +150,11 @@ bool ModelDatasets::rightAlign(cl_n cl) const {
   return 0 == cl;
 }
 
-ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on, bool silent) {
+ModelDatasets::ref ModelDatasets::check(rw_n rw, bool on) {
   auto&& isActive = sets().at(rw)().isActive;
   if (isActive != on) {
     mut(isActive) = on;
-    if (!silent)
-      signalReset();
+    signalRowChanged(rw);
   }
   RTHIS
 }
@@ -171,8 +170,7 @@ void ModelDatasets::groupBy(l::pint by) {
 
 void ModelDatasets::emitSetAt(int row) const {
   EXPECT_(row < 0 || uint(row) < sets().size())
-  hub.emitCombinedSets(core::data::SetsPair(sets,
-    0 <= row ? sets().at(uint(row)) : CombinedSet::shp()));
+  hub.sendSetsInfo(sets, 0 <= row ? sets().at(uint(row)) : CombinedSet::shp());
 }
 
 uint ModelDatasets::numLeadCols() const {
@@ -192,9 +190,9 @@ void ModelDatasets::gotFiles() {
 
 ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked(new KeyBag) {
   setCheckable(true);
-  hub.onSigCombinedSets([this](SetsPair pair) {
-    if (set != pair.set) {
-      set = pair.set;
+  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
+    if (set != info.set) {
+      set = info.set;
       signalReset();
     }
   });
@@ -235,10 +233,11 @@ l_qt::var ModelMetadata::cell(rw_n rw, cl_n cl) const {
   }
 }
 
-ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on, bool silent) {
-  mut(*checked).set(dict().key(rw), on);
-  if (!silent)
-    signalReset();
+ModelMetadata::ref ModelMetadata::check(rw_n rw, bool on) {
+  if (mut(*checked).set(dict().key(rw), on)) {
+    signalRowChanged(rw);
+    hub.sendMetaChecked(checked);
+  }
   RTHIS
 }
 
