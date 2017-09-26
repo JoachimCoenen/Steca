@@ -38,19 +38,19 @@ dcl_(Session)
   Session();
 
   mut_(clear, ());
-  mth_mut_(data::Files::sh, load, (io::Json::rc)) may_err;
+  mth_mut_(data::Files::shr, load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-  atr_(data::Files::sh, files);
-  atr_(Geometry::sh,   geometry);
-  atr_(calc::FitParams::sh,   fp);
+  atr_(data::Files::shr, files);
+  atr_(Geometry::shr,   geometry);
+  atr_(calc::FitParams::shr,   fp);
 
   atr_(data::File::shp, corrFile);
 
-  mth_mut_(data::Files::sh, addFiles,   (l_io::path_vec::rc)) may_err;
-  mth_mut_(data::Files::sh, remFilesAt, (uint_vec::rc));
+  mth_mut_(data::Files::shr, addFiles,   (l_io::path_vec::rc)) may_err;
+  mth_mut_(data::Files::shr, remFilesAt, (uint_vec::rc));
 
-  mth_mut_(data::Files::sh, activateFileAt, (uint, bool));
+  mth_mut_(data::Files::shr, activateFileAt, (uint, bool));
 
   set_(setCorrFile,   (l_io::path::rc)) may_err;
   set_(remCorrFile,   ());

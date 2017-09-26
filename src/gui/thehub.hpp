@@ -38,6 +38,9 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
+  friend struct ModelFiles;
+  friend struct ModelDatasets;
+  friend struct ModelMetadata;
   ptr_(ModelFiles,    modelFiles);
   ptr_(ModelDatasets, modelDatasets);
   ptr_(ModelMetadata, modelMetadata);
@@ -69,7 +72,6 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   mut_(setRefl, (Range::rc r)) emits;
 
-  mut_(combinedDgram, (bool on)) emits;
   mut_(setNorm, (core::eNorm))   emits;
 
   atr_(dgram_options, dgramOptions);
@@ -77,26 +79,24 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   voi_(makeDgram, (core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
                    core::data::CombinedSets::rc, core::data::CombinedSet const*,
-                   core::calc::FitParams::rc, dgram_options::rc));
+                   core::calc::FitParams::rc, bool combined));
 
 signals:
   // a new set of files
-  void sigFiles(core::data::Files::sh) const;
-  // a new set of combined sets
-  void sigCombinedSets(core::data::CombinedSets::sh) const;
-  // a selected one
-  void sigCombinedSet(core::data::CombinedSet::shp) const;
+  void sigFiles(core::data::Files::shr) const;
+  // a new set of combined sets, and opt. the selected one
+  void sigCombinedSets(core::data::SetsPair) const;
   // checked metadata
-  void sigMetaChecked(core::data::KeyBag::sh) const;
+  void sigMetaChecked(core::data::KeyBag::shr) const;
 
   // add/rem/on/off correction file
   void sigCorr(core::data::File::shp) const;
 
   // a new fit
-  void sigFitParams(core::calc::FitParams::sh) const;
+  void sigFitParams(core::calc::FitParams::shr) const;
 
-  // change in diagram rendering
-  void sigDgramOptions(dgram_options const&) const;
+//  // change in diagram rendering
+//  void sigDgramOptions(dgram_options const&) const;
 
 #define DCL_HUB_SIG_ETC(name, par)  \
 private:                            \
@@ -108,16 +108,15 @@ public:                             \
     QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
-  DCL_HUB_SIG_ETC(Files,        core::data::Files::sh)
-  DCL_HUB_SIG_ETC(CombinedSets, core::data::CombinedSets::sh)
-  DCL_HUB_SIG_ETC(CombinedSet,  core::data::CombinedSet::shp)
-  DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::sh)
+  DCL_HUB_SIG_ETC(Files,        core::data::Files::shr)
+  DCL_HUB_SIG_ETC(CombinedSets, core::data::SetsPair)
+  DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::shr)
 
-  DCL_HUB_SIG_ETC(FitParams,    core::calc::FitParams::sh)
+  DCL_HUB_SIG_ETC(FitParams,    core::calc::FitParams::shr)
 
   DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
 
-  DCL_HUB_SIG_ETC(DgramOptions, dgram_options const&)
+//  DCL_HUB_SIG_ETC(DgramOptions, dgram_options const&)
 
 private:
   Q_OBJECT

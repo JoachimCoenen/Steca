@@ -59,13 +59,13 @@ Image::shp FitParams::intensCorr() const {
 
 DatasetLens::shp FitParams::datasetLens(
     data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
-    eNorm norm, bool trans, bool cut) const {
-  return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
+    bool trans, bool cut) const {
+  return l::sh(new calc::DatasetLens(*this, datasets, dataset, norm,
                          trans, cut));
 }
 
 real FitParams::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
-  auto lens = datasetLens(datasets, dataset, eNorm::NONE, true, true);
+  auto lens = datasetLens(datasets, dataset, true, true);
 
   Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
   auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);

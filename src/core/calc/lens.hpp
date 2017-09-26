@@ -60,7 +60,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(DatasetLens, LensBase) SHARED
-  DatasetLens(FitParams const&, data::CombinedSet::rc, data::CombinedSets::rc,
+  DatasetLens(FitParams const&, data::CombinedSets::rc, data::CombinedSet::rc,
               eNorm, bool trans, bool cut);
 
   mth_(l::sz2, size, ());

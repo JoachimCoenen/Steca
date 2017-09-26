@@ -24,18 +24,12 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_sub2_(Model, RefHub, l_qt::lst_model)
-  using File          = core::data::File;
-  using Files         = core::data::Files;
-  using FilesMetaDict = core::data::FilesMetaDict;
-  using CombinedSet   = core::data::CombinedSet;
-  using CombinedSets  = core::data::CombinedSets;
-  using KeyBag        = core::data::KeyBag;
-
   Model(Hub&);
 
 protected:
-  Files::sh          files;
-  FilesMetaDict::sh  dict;
+  core::data::Files::shr         files;
+  core::data::FilesMetaDict::shr dict;
+
   virtual void gotFiles() {}
 dcl_end
 
@@ -53,7 +47,7 @@ dcl_sub_(ModelFiles, Model)
   set_(check,     (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
-  mth_(File::shp, at, (rw_n));
+  mth_(core::data::File::shp, at, (rw_n));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -77,17 +71,8 @@ dcl_sub_(ModelDatasets, Model)
   atr_(l::pint, groupedBy);
   mut_(groupBy, (l::pint));
 
-  CombinedSets::sh sets;
+  core::data::CombinedSets::shr sets;
   voi_(emitSetAt, (int));
-
-signals:
-  void sigSet(CombinedSet::shp) const;
-
-public:
-  template <typename Lambda>
-  QMetaObject::Connection onSigSet(Lambda slot) const {
-    return QObject::connect(this, &Self::sigSet, slot);
-  }
 
 private:
   str_vec metaKeys;  // shown metadata
@@ -95,8 +80,6 @@ private:
   void gotFiles();
   mth_(uint, numLeadCols, ());
   mut_(combineSets, ());
-
-  Q_OBJECT
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -115,10 +98,10 @@ dcl_sub_(ModelMetadata, Model)
   set_(check, (rw_n, bool, bool));
   bol_(isChecked, (rw_n));
 
-  KeyBag::sh checked;
+  core::data::KeyBag::shr checked;
 
 private:
-  CombinedSet::shp set;
+  core::data::CombinedSet::shp set;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -97,9 +97,6 @@ void AngleMap::calculate() {
   auto&& size = key.geometry.imageSize;
   angles.reset(new angle_arr(size));
 
-  if (size.isEmpty())
-    return;
-
   mut(rgeTth) = Range();
   mut(rgeGma) = Range();
   mut(rgeGmaFull) = Range();

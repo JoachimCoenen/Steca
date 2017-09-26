@@ -23,10 +23,9 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_(dgram_options) EQ_NE
-  atr_(core::eNorm, norm)       = core::eNorm::NONE; // TODO out to fit_options?
-  atr_(bool, isCombined)   = false; // TODO to plot ?
-  atr_(bool, isFixedIntenScale) = false; // TODO to plot ?
-  atr_(core::Range, gammaRange); // TODO to plot ?
+  atr_(bool, isCombined)        = false;
+  atr_(bool, isFixedIntenScale) = false;
+  atr_(core::Range, gammaRange) = core::Range();
   mut_(set, (rc));
 dcl_end
 

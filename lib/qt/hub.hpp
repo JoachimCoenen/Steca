@@ -30,10 +30,10 @@ dcl_end
 dcl_sub_(Worker, QObject)
   Worker(Hub&);
 
-  void doWork(Task::sh);
+  void doWork(Task::shr);
 
 signals:
-  void workDone(Task::sh);
+  void workDone(Task::shr);
 
 private:
   Hub& hub;
@@ -47,10 +47,10 @@ dcl_sub_(Hub, QObject)
  ~Hub();
 
   void post(Task*);
-  void workDone(Task::sh);
+  void workDone(Task::shr);
 
 signals:
-  void doWork(Task::sh);
+  void doWork(Task::shr);
 
 private:
   void registerMetaTypes();

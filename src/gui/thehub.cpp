@@ -95,17 +95,13 @@ Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
 , modelDatasets(new ModelDatasets(*this))
 , modelMetadata(new ModelMetadata(*this)) {
 
-  modelDatasets->onSigReset([this]() {
-    emitCombinedSets(modelDatasets->sets);
-  });
+//TODO to models  modelDatasets->onSigReset([this]() {
+//    emitCombinedSets(modelDatasets->sets);
+//  });
 
-  modelDatasets->onSigSet([this](core::data::CombinedSet::shp shp) {
-    emitCombinedSet(shp);
-  });
-
-  modelMetadata->onSigReset([this]() {
-    emitMetaChecked(modelMetadata->checked);
-  });
+//  modelMetadata->onSigReset([this]() {
+//    emitMetaChecked(modelMetadata->checked);
+//  });
 }
 
 Hub::~Hub() {
@@ -114,15 +110,15 @@ Hub::~Hub() {
 
 void Hub::makeDgram(core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
                     core::data::CombinedSets::rc sets, core::data::CombinedSet const* set,
-                    core::calc::FitParams::rc fp, dgram_options::rc dGramOpts) const {
+                    core::calc::FitParams::rc fp, bool combined) const {
 
   EXPECT_(dgram.isEmpty() && bgFitted.isEmpty() && bg.isEmpty() && refls.isEmpty())
 
-  if (dGramOpts.isCombined)
-    dgram = fp.datasetLens(sets, sets.combineAll()(), dGramOpts.norm, true, true)
+  if (combined)
+    dgram = fp.datasetLens(sets, sets.combineAll()(), true, true)
             -> makeCurve();
   else if (set)
-    dgram = fp.datasetLens(sets, *set, dGramOpts.norm, true, true)
+    dgram = fp.datasetLens(sets, *set, true, true)
             -> makeCurve(dgramOptions.gammaRange);
 
   auto&& bgPolynom = core::fit::Polynom::fromFit(fp.bgPolyDegree, dgram, fp.bgRanges);
@@ -245,14 +241,9 @@ void Hub::setRefl(Range::rc r) emits {
 // TODO emitFit(base::fit);
 }
 
-void Hub::combinedDgram(bool on) emits {
-// TODO   mut(dgramOptions.isDgramCombined) = on;
-  emitDgramOptions(dgramOptions);
-}
-
 void Hub::setNorm(core::eNorm norm) {
-  mut(dgramOptions.norm) = norm;
-  emitDgramOptions(dgramOptions);
+// ... base::remBg(r);
+// TODO emitFit(base::fit);
 }
 
 //------------------------------------------------------------------------------

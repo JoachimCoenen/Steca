@@ -34,11 +34,12 @@ dcl_(FitParams) SHARED
 
   FitParams(Geometry::rc);
 
+  atr_(core::eNorm, norm)       = core::eNorm::NONE;
   atr_(uint,   bgPolyDegree);
   atr_(Ranges, bgRanges);
   atr_(Image::shp,      corrImage);
   atr_(Ranges, bg);
-  atr_(l::vec<Reflection::sh>, refls);
+  atr_(l::vec<Reflection::shr>, refls);
   atr_(Reflection::shp, currRefl);
   atr_(l::peal,         intenScale);
   atr_(Geometry, geometry);
@@ -52,8 +53,7 @@ dcl_(FitParams) SHARED
   mth_(ImageLens::shp, imageLens,
         (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
   mth_(DatasetLens::shp, datasetLens,
-        (data::CombinedSets::rc, data::CombinedSet::rc,
-         eNorm, bool trans, bool cut));
+        (data::CombinedSets::rc, data::CombinedSet::rc, bool trans, bool cut));
   mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
 
   mth_(real, calcAvgBackground, (data::CombinedSets::rc, data::CombinedSet::rc));

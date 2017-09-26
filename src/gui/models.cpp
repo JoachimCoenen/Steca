@@ -21,6 +21,8 @@
 #include <lib/qt/font.hpp>
 #include <lib/qt/lst.hpp>
 
+using namespace core::data;
+
 namespace gui {
 //------------------------------------------------------------------------------
 
@@ -30,7 +32,7 @@ using cl_n = ModelDatasets::cl_n;
 //------------------------------------------------------------------------------
 
 Model::Model(Hub& hub) : RefHub(hub) {
-  hub.onSigFiles([this](Files::sh sh) {
+  hub.onSigFiles([this](Files::shr sh) {
     if (files != sh) {
       dict = (files = sh)().dict;
       gotFiles();
@@ -168,9 +170,9 @@ void ModelDatasets::groupBy(l::pint by) {
 }
 
 void ModelDatasets::emitSetAt(int row) const {
-  emit sigSet(
-    (0 <= row && uint(row) < sets().size())
-     ? sets().at(uint(row)) : CombinedSet::shp());
+  EXPECT_(row < 0 || uint(row) < sets().size())
+  hub.emitCombinedSets(core::data::SetsPair(sets,
+    0 <= row ? sets().at(uint(row)) : CombinedSet::shp()));
 }
 
 uint ModelDatasets::numLeadCols() const {
@@ -190,9 +192,9 @@ void ModelDatasets::gotFiles() {
 
 ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked(new KeyBag) {
   setCheckable(true);
-  hub.onSigCombinedSet([this](CombinedSet::shp sh) {
-    if (set != sh) {
-      set = sh;
+  hub.onSigCombinedSets([this](SetsPair pair) {
+    if (set != pair.set) {
+      set = pair.set;
       signalReset();
     }
   });

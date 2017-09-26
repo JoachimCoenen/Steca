@@ -114,7 +114,7 @@ inten_rge::rc ImageLens::rgeInten(bool fixed) const {
 //------------------------------------------------------------------------------
 
 DatasetLens::DatasetLens(FitParams::rc fp,
-   data::CombinedSet::rc dataset_, data::CombinedSets::rc datasets,
+   data::CombinedSets::rc datasets, data::CombinedSet::rc dataset_,
    eNorm norm, bool trans, bool cut)
 : base(fp, datasets, trans, cut)
 , normFactor(1), dataset(dataset_) {

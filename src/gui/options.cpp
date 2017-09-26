@@ -23,7 +23,6 @@ namespace gui {
 
 bool dgram_options::operator==(rc that) const {
   return
-      norm              == that.norm &&
       isCombined        == that.isCombined &&
       isFixedIntenScale == that.isFixedIntenScale &&
       gammaRange        == that.gammaRange;
@@ -34,7 +33,6 @@ bool dgram_options::operator!=(rc that) const {
 }
 
 void dgram_options::set(rc that) {
-  mut(norm)              = that.norm;
   mut(isCombined)        = that.isCombined;
   mut(isFixedIntenScale) = that.isFixedIntenScale;
   mut(gammaRange)        = that.gammaRange;

@@ -234,7 +234,7 @@ Image::shp Sets::foldImage() const {
   return lazyFoldImage;
 }
 
-Sets::ref Sets::add(Set::sh set) may_err {
+Sets::ref Sets::add(Set::shr set) may_err {
   check_or_err_(isEmpty() || first()().imageSize() == set().imageSize(),
                 "Inconsistent image size");
   base::add(set);
@@ -507,7 +507,7 @@ inten_rge::rc CombinedSets::rgeFixedInten(calc::FitParams const& fp, bool trans,
   return lazyRgeFixedInten;
 }
 
-CombinedSet::sh CombinedSets::combineAll() const {
+CombinedSet::shr CombinedSets::combineAll() const {
   auto&& set = l::sh(new CombinedSet(0));
   for (auto&& cs : *this)
     for (auto&& s : cs())

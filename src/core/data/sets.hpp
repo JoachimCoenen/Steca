@@ -157,14 +157,14 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Sets, l::vec<Set::sh>)
+dcl_reimpl_(Sets, l::vec<Set::shr>)
   UB5_(first, begin, end, isEmpty, size)
 
   Sets();
 
   mth_(l::sz2,    imageSize, ());
   mth_(Image::shp, foldImage, ());
-  set_(add, (Set::sh)) may_err;
+  set_(add, (Set::shr)) may_err;
 
 private:
   mutable Image::shp lazyFoldImage;
@@ -216,7 +216,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
+dcl_sub_(CombinedSets, l::vec<CombinedSet::shr>) SHARED
   CombinedSets();
 
   set_(add, (l::give_me<CombinedSet>));
@@ -228,7 +228,7 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   mth_(flt32, dMon, ());
 
   mth_(inten_rge::rc, rgeFixedInten, (calc::FitParams const&, bool trans, bool cut));
-  mth_(core::data::CombinedSet::sh, combineAll, ());
+  mth_(core::data::CombinedSet::shr, combineAll, ());
 
 private:
   mutable flt32 lazyMon;
@@ -238,6 +238,16 @@ private:
   mutable inten_rge lazyRgeFixedInten;
 
   void resetLazies();
+dcl_end
+
+//------------------------------------------------------------------------------
+
+dcl_(SetsPair)
+  atr_(CombinedSets::shr, sets);
+  atr_(CombinedSet::shp,  set);
+
+  SetsPair(CombinedSets::shr sets_, CombinedSet::shp set_)
+    : sets(sets_), set(set_) {}
 dcl_end
 
 //------------------------------------------------------------------------------

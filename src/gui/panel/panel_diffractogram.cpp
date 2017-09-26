@@ -28,6 +28,7 @@ namespace gui {
 
 using CombinedSets = core::data::CombinedSets;
 using CombinedSet  = core::data::CombinedSet;
+using SetsPair     = core::data::SetsPair;
 
 using FitParams = core::calc::FitParams;
 using Range  = core::Range;
@@ -98,7 +99,7 @@ dcl_sub2_(Plot, RefHub, QCustomPlot)
   l::vec<QCPGraph*> reflGraph;
 
 protected:
-  core::data::CombinedSets::sh sets;
+  core::data::CombinedSets::shr sets;
   core::data::CombinedSet::shp  set;
   FitParams::shp fp;
   dgram_options dgramOptions;
@@ -202,30 +203,27 @@ void Overlay::updateCursorRegion() {
 Plot::Plot(Hub& hub) : RefHub(hub)
 , overlay(new Overlay(hub, *this)), tool(eTool::NONE) {
 
-  hub.onSigCombinedSets([this](CombinedSets::sh sh) {
-    sets = sh; // only capture
-  });
-
-  hub.onSigCombinedSet([this](CombinedSet::shp sh) {
-    if (set != sh) {
-      set = sh;
+  hub.onSigCombinedSets([this](SetsPair pair) {
+    sets = pair.sets;
+    if (set != pair.set) {
+      set = pair.set;
       render(false);
     }
   });
 
-  hub.onSigFitParams([this](FitParams::sh sh) {
+  hub.onSigFitParams([this](FitParams::shr sh) {
     if (fp != sh) {
       fp = sh;
       render(true);
     }
   });
 
-  hub.onSigDgramOptions([this](dgram_options::rc os) {
-    if (dgramOptions != os) {
-      mut(dgramOptions).set(os);
-      render(true);
-    }
-  });
+//OUT  hub.onSigDgramOptions([this](dgram_options::rc os) {
+//    if (dgramOptions != os) {
+//      mut(dgramOptions).set(os);
+//      render(true);
+//    }
+//  });
 
   auto&& ar = axisRect();
 
@@ -412,7 +410,7 @@ void Plot::render(bool withBg) {
   }
 
   Curve dgram, bgFitted, bg; curve_vec refls;
-  hub.makeDgram(dgram, bgFitted, bg, refls, sets(), set, *fp, dgramOptions);
+  hub.makeDgram(dgram, bgFitted, bg, refls, sets(), set, *fp, dgramOptions.isCombined);
 
   plot(dgram, bgFitted, bg, refls);
 }

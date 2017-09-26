@@ -31,7 +31,7 @@ dcl_(File) SHARED  // one file
 
   File(l_io::path::rc);
 
-  set_(addSet, (Set::sh)) may_err;
+  set_(addSet, (Set::shr)) may_err;
   mth_(l::sz2, imageSize, ());
 dcl_end
 
@@ -41,7 +41,7 @@ dcl_end
 dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   UB4_(begin, end, size, at)
 
-  atr_(FilesMetaDict::sh, dict);
+  atr_(FilesMetaDict::shr, dict);
 
   Files();
   virtual ~Files() {}
@@ -50,7 +50,7 @@ dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   mut_(addFile, (data::File::shp));
   mut_(remFileAt, (uint));
 
-  mth_(CombinedSets::sh, collectDatasets, (l::pint groupedBy));
+  mth_(CombinedSets::shr, collectDatasets, (l::pint groupedBy));
 
 private:
   Files(rc);

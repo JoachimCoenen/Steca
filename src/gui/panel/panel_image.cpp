@@ -56,9 +56,9 @@ ImageWidget::ImageWidget(Hub& hub) : RefHub(hub), scale(0) {
     setScale();
   });
 
-  hub.onSigCombinedSet([this](core::data::CombinedSet::shp sh) {
-    if (set != sh) {
-      set = sh;
+  hub.onSigCombinedSets([this](core::data::SetsPair pair) {
+    if (set != pair.set) {
+      set = pair.set;
     }
   });
 

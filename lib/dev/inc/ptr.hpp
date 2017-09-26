@@ -332,14 +332,14 @@ struct shp : sh_base<T> {
   }
 };
 
-// a handy way to make a shr pointer
+// a handy way to make a shr
 template <typename T> shr<T> sh(T* p)             RET_(shr<T>(p))
 template <typename T> shr<T const> sh(T const* p) RET_(shr<T>(p))
 template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
 
 // declare struct as shr
 #define SHARED \
-  using sh  = l::shr<Self>; \
+  using shr = l::shr<Self>; \
   using shp = l::shp<Self>;
 
 // clone it

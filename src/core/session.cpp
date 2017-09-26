@@ -57,7 +57,7 @@ void Session::clear() {
 //  intenScale_ = preal(1);
 }
 
-data::Files::sh Session::load(io::Json::rc) may_err {
+data::Files::shr Session::load(io::Json::rc) may_err {
   clear();
   return files;
 //  QJsonParseError parseError;
@@ -189,7 +189,7 @@ io::Json Session::save() const {
 //  return QJsonDocument(top.sup()).toJson();
 }
 
-data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
+data::Files::shr Session::addFiles(l_io::path_vec::rc ps) may_err {
   l_io::busy __;
   auto&& clone = l::sh(files().clone());
 
@@ -205,7 +205,7 @@ data::Files::sh Session::addFiles(l_io::path_vec::rc ps) may_err {
   return files;
 }
 
-data::Files::sh Session::remFilesAt(uint_vec::rc is) {
+data::Files::shr Session::remFilesAt(uint_vec::rc is) {
   if (is.isEmpty())
     return files;
 
@@ -221,7 +221,7 @@ data::Files::sh Session::remFilesAt(uint_vec::rc is) {
   return files;
 }
 
-data::Files::sh Session::activateFileAt(uint i, bool on) {
+data::Files::shr Session::activateFileAt(uint i, bool on) {
   if (i >= files().size() || files().at(i)->isActive == on)
     return files;
 
