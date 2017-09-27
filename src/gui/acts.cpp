@@ -59,17 +59,20 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
     hub.addFiles();
   });
 
-  auto&& actCE = get(CORR_ENABLE);
-  actCE.onToggle([&hub](bool on) {
+  get(CORR_ENABLE).onToggle([&hub](bool on) {
     hub.corrEnable(on);
   });
 
-// TODO  hub.onSigCorrFileName([&hub, &actCE]() {
-//    // TODO actCE.check(hub.corrEnabled());
-//  });
-
   get(CORR_REM).onTrigger([&hub]() {
     hub.corrRem();
+  });
+
+  hub.onSigCorrFileName([this](str name) {
+    get(CORR_REM).setEnabled(!name.isEmpty());
+  });
+
+  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
+    get(CORR_ENABLE).check(info.fp().corrEnabled);
   });
 }
 

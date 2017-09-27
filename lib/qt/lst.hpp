@@ -45,6 +45,7 @@ private:
 
   int  currRow;
   QMetaObject::Connection con;
+  l::scoped<QAbstractItemDelegate> styleDelegeate;
 dcl_end
 
 //------------------------------------------------------------------------------

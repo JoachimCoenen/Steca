@@ -223,24 +223,25 @@ bool Session::activateFileAt(uint i, bool on) {
 }
 
 void Session::setCorrFile(l_io::path::rc path) may_err {
-  if (path.isEmpty()) {
-    remCorrFile();
-  } else {
-    l_io::busy __;
+  EXPECT_(!path.isEmpty())
 
-    auto&& file = l::scope(io::load(path));
-    auto&& sets = file->sets;
+  l_io::busy __;
 
-    setImageSize(sets.imageSize());
+  auto&& file = l::scope(io::load(path));
+  auto&& sets = file->sets;
 
-    mut(fp->corrImage)   = sets.foldImage();
-    mut(fp->intensCorrImage).drop();
-    mut(fp->corrEnabled) = true;
-    mut(corrFile).reset(file.takeOwn());
-  }
+  setImageSize(sets.imageSize());
+
+  mut(fp->corrImage)   = sets.foldImage();
+  mut(fp->intensCorrImage).drop();
+  mut(fp->corrEnabled) = true;
+  mut(corrFile).reset(file.takeOwn());
 }
 
 void Session::remCorrFile() {
+  if (!corrFile)
+    return;
+
   mut(corrFile).drop();
   mut(fp->corrImage).drop();
   mut(fp->intensCorrImage).drop();

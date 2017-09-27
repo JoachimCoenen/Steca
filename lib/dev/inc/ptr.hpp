@@ -145,9 +145,10 @@ struct scoped : ptr_base {
   template <typename O>
   scoped& operator=(own<O>& that)    SET_(reset(that.take()))
 
-  void reset(T* p_) {
+  T* reset(T* p_) {
     delete static_cast<T*>(mutp(p));
     mut(p) = mut(p_);
+    return p_;
   }
 
   void drop() {
@@ -194,8 +195,8 @@ template <typename T>
 struct sh_base : protected _shared_base_ {
  ~sh_base() { _drop(); }
 
-  T const* ptr()        const RET_(static_cast<T const*>(p()))
-  operator T const*()   const RET_(ptr())
+  T const* ptr()      const RET_(static_cast<T const*>(p()))
+  operator T const*() const RET_(ptr())
 
 protected:
   using _shared_base_::_shared_base_;

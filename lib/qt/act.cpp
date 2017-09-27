@@ -59,11 +59,11 @@ bool act::isCheckable() const {
 }
 
 act::ref act::check(bool on) {
-  if (isCheckable())
-    base::setChecked(on);
-  else
+  if (isCheckable()) {
+    if (base::isChecked() != on)
+      base::setChecked(on);
+  } else
     base::trigger();
-
   RTHIS
 }
 

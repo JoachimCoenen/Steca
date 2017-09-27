@@ -199,7 +199,6 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
       addVal(vals);
 
     } else if (elem == "MASTER1V") {
-
       // scan data
       block = eBlock::MASTER1V;
 

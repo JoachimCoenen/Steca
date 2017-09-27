@@ -183,7 +183,7 @@ void Set::collect(FitParams::rc fp,
 
   EXPECT_(0 < deltaTth)
 
-  auto* corrImg = fp.corrImage.ptr();
+  auto* corrImg = fp.corrEnabled ? fp.corrImage.ptr() : nullptr;
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
     auto inten = image->inten(ind);

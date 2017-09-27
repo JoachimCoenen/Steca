@@ -52,7 +52,7 @@ dcl_(Session)
   bol_mut_(activateFileAt, (uint, bool));
 
   mut_(setCorrFile,   (l_io::path::rc)) may_err;
-  mut_(remCorrFile,   ());
+  mut_(remCorrFile, ());
   mut_(tryEnableCorr, (bool on));
 
   mut_(setBg, (Ranges::rc));

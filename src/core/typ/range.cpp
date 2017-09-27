@@ -134,8 +134,9 @@ TEST_("Range::safeFrom",
 )
 
 void Range::extendBy(rv_t val) {
-  mut(min) = l::isnan(min) ? val : l::min(min, val);
-  mut(max) = l::isnan(max) ? val : l::max(max, val);
+  EXPECT_(!l::isnan(val))
+  mut(min) = l::min(min, val); // works even if min/max are nan
+  mut(max) = l::max(max, val);
 }
 
 void Range::extendBy(Range::rc that) {

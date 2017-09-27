@@ -304,10 +304,6 @@ void Hub::setSet(core::data::CombinedSet::shp set) {
   }
 }
 
-Hub::~Hub() {
-  delete modelFiles;
-}
-
 void Hub::makeDgram(core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
                     CombinedSets::rc sets, CombinedSet const* set,
                     core::calc::FitParams::rc fp, bool combined) const {
@@ -346,7 +342,9 @@ void Hub::init() {
 }
 
 void Hub::sessionClear() {
+  // TODO set acts to default states
   base::clear();
+  corrRem(); // to reset controls
   filesModified();
 }
 
@@ -403,15 +401,15 @@ void Hub::corrEnable(bool on) {
     }
   }
 
-  base::tryEnableCorr(on);
   emitCorrFileName(corrFile ? corrFile->src->path.filename() : str::null);
-//  TODO emitSetsInfo()
+  base::tryEnableCorr(on);
+  sendSetsInfo();
 }
 
 void Hub::corrRem() {
   base::remCorrFile();
   emitCorrFileName(str::null);
-//  TODO emitSetsInfo()
+  sendSetsInfo();
 }
 
 void Hub::setBg(Ranges::rc rs) emits {

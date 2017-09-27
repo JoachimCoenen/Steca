@@ -34,7 +34,7 @@ lst_view::lst_view(bool hasHeader_)
 : hasHeader(hasHeader_), model(nullptr), currRow(-1) {
   base::setSelectionBehavior(SelectRows);
   base::setAlternatingRowColors(true);
-  setItemDelegate(new lst_view_itemDelegate);
+  setItemDelegate(styleDelegeate.reset(new lst_view_itemDelegate));
   showHeader(hasHeader);
 
   connect(this, &Self::clicked, [this](QModelIndex const& idx) {

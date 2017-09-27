@@ -125,12 +125,11 @@ public:
   friend struct ModelFiles;
   friend struct ModelDatasets;
   friend struct ModelMetadata;
-  ptr_(ModelFiles,    modelFiles);
-  ptr_(ModelDatasets, modelDatasets);
-  ptr_(ModelMetadata, modelMetadata);
+  atr_(l::scoped<ModelFiles>,    modelFiles);
+  atr_(l::scoped<ModelDatasets>, modelDatasets);
+  atr_(l::scoped<ModelMetadata>, modelMetadata);
 
   Hub(Win&);
- ~Hub();
 
   mut_(init, ());
 

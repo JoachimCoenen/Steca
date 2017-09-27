@@ -94,7 +94,6 @@ inten_t ImageLens::imageInten(uint i, uint j) const {
   auto&& intensCorr = fp.intensCorr();
   if (intensCorr)
     inten *= intensCorr->inten(i, j);
-
   return inten;
 }
 
