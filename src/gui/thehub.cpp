@@ -87,24 +87,11 @@ File::shp Hub::ModelFiles::at(rw_n rw) const {
 Hub::ModelDatasets::ModelDatasets(Hub& hub) : base(hub), groupedBy(1) {
   setCheckable(true);
   setNumbered(4);
-
-  hub.onSigMetaChecked([this, &hub](KeyBag::shp bag) {
-    str_vec ks;
-    if (bag)
-      for (auto&& key : hub.currentDict().keys)
-        if (bag->contains(key))
-          ks.add(key);
-
-    if (ks != metaKeys) {
-      metaKeys = ks;
-      signalReset();
-    }
-  });
 }
 
 cl_n Hub::ModelDatasets::cols() const {
   // allow 1 empty column even if there are no metacols (looks better)
-  return cl_n(numLeadCols() + l::max(1u, uint(metaKeys.size())));
+  return cl_n(numLeadCols() + l::max(1u, uint(hub.currentMetaKeys.size())));
 }
 
 rw_n Hub::ModelDatasets::rows() const {
@@ -121,8 +108,8 @@ str Hub::ModelDatasets::head(cl_n cl) const {
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
-  if (i < metaKeys.size())
-    return metaKeys.at(i);
+  if (i < hub.currentMetaKeys.size())
+    return hub.currentMetaKeys.at(i);
   return str::null;
 }
 
@@ -138,9 +125,9 @@ l_qt::var Hub::ModelDatasets::cell(rw_n rw, cl_n cl) const {
 
   EXPECT_(cl >= numLeadCols())
   uint i = cl - numLeadCols();
-  if (i < metaKeys.size()) {
+  if (i < hub.currentMetaKeys.size()) {
     auto&& meta = set().meta();
-    int idx = meta->dict->safeIndex(metaKeys.at(i));
+    int idx = meta->dict->safeIndex(hub.currentMetaKeys.at(i));
     if (0 <= idx)
       return meta->vals.valAt(uint(idx));
   }
@@ -171,9 +158,9 @@ void Hub::ModelDatasets::groupBy(l::pint by) {
   combineSets();
 }
 
-void Hub::ModelDatasets::emitSetAt(int row) const {
+void Hub::ModelDatasets::setSetAt(int row) const {
   EXPECT_(row < 0 || uint(row) < hub.currentSets().size())
-  hub.sendSetsInfo(hub.currentSets, 0 <= row ? hub.currentSets().at(uint(row)) : CombinedSet::shp());
+  hub.setSet(0 <= row ? hub.currentSets().at(uint(row)) : CombinedSet::shp());
 }
 
 uint Hub::ModelDatasets::numLeadCols() const {
@@ -236,7 +223,7 @@ Hub::ModelMetadata::ref Hub::ModelMetadata::check(rw_n rw, bool on, bool done) {
   if (mut(*checked).set(hub.currentDict().key(rw), on)) {
     signalRowChanged(rw);
     if (done)
-      hub.sendMetaChecked(checked);
+      hub.setMetaChecked(checked);
   }
   RTHIS
 }
@@ -309,6 +296,13 @@ Hub::Hub(Win& win_) : win(win_), acts(*this, win_)
 , modelDatasets(new ModelDatasets(*this))
 , modelMetadata(new ModelMetadata(*this))
 {}
+
+void Hub::setSet(core::data::CombinedSet::shp set) {
+  if (currentSet != set) {
+    currentSet = set;
+    sendSetsInfo();
+  }
+}
 
 Hub::~Hub() {
   delete modelFiles;
@@ -450,12 +444,20 @@ void Hub::filesModified() {
   mut(*modelDatasets).combineSets();
 }
 
-void Hub::sendSetsInfo(CombinedSets::shr sets, CombinedSet::shp set) {
-  emitSetsInfo(SetsInfo(sets, set, l::sh(base::fp->clone())));
+void Hub::sendSetsInfo() {
+  emitSetsInfo(SetsInfo(currentSets, currentSet, l::sh(base::fp->clone())));
 }
 
-void Hub::sendMetaChecked(KeyBag::shr bag) {
-  emitMetaChecked(bag);
+void Hub::setMetaChecked(KeyBag::shr bag) {
+  str_vec ks;
+  for (auto&& key : currentDict().keys)
+    if (bag().contains(key))
+      ks.add(key);
+
+  if (currentMetaKeys != ks) {
+    currentMetaKeys = ks;
+    modelDatasets->signalReset();
+  }
 }
 
 //------------------------------------------------------------------------------

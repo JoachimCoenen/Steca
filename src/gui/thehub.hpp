@@ -78,11 +78,9 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     atr_(l::pint, groupedBy);
     mut_(groupBy, (l::pint));
 
-    voi_(emitSetAt, (int));
+    voi_(setSetAt, (int));
 
   private:
-    str_vec metaKeys;  // shown metadata
-
     mth_(uint, numLeadCols, ());
     mut_(combineSets, ());
   dcl_end
@@ -119,6 +117,9 @@ private:
   mth_(core::data::FilesMetaDict::rc, currentDict, ())
     RET_(base::files->dict())
   core::data::CombinedSets::shr currentSets;
+  core::data::CombinedSet::shp  currentSet;
+  void setSet(core::data::CombinedSet::shp);
+  str_vec currentMetaKeys; // shown metadata
 
 public:
   friend struct ModelFiles;
@@ -170,16 +171,12 @@ public:
 
 private:
   void filesModified();
-  void sendSetsInfo(core::data::CombinedSets::shr, core::data::CombinedSet::shp); // TODO mth_,
-  void sendMetaChecked(core::data::KeyBag::shr); // TODO mth_,
-  // TODO move models to hub, remove their data, replace with hub's active collection
+  void sendSetsInfo();
+  void setMetaChecked(core::data::KeyBag::shr);
 
 signals:
   // a new set of combined sets, opt. the selected one, fit params
   void sigSetsInfo(SetsInfo) const;
-  // checked metadata
-  void sigMetaChecked(core::data::KeyBag::shr) const;
-
   // add/rem/on/off correction file
   void sigCorrFileName(str) const;
 
@@ -197,8 +194,6 @@ public:                             \
   }
 
   DCL_HUB_SIG_ETC(SetsInfo,     SetsInfo)
-  DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::shr)
-
   DCL_HUB_SIG_ETC(CorrFileName, str)
 
 private:

@@ -33,7 +33,7 @@ dcl_end
 ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {}
 
 void ViewDatasets::onSelected(int row) const {
-  model->emitSetAt(row);
+  model->setSetAt(row);
 }
 
 //------------------------------------------------------------------------------
