@@ -47,7 +47,7 @@ void lst_model::changeTriState(triChk::eState state) {
   } else if (eState::part != state) {
     bool on = eState::on == state;
     for_i_(rows())
-      check(rw_n(i), on);
+      check(rw_n(i), on, i+1 == iEnd);
   }
 }
 
@@ -72,7 +72,7 @@ var lst_model::cell(rw_n, cl_n) const {
 lst_model::ref lst_model::check(rw_n rw)
   SET_(check(rw, !isChecked(rw)))
 
-lst_model::ref lst_model::check(rw_n, bool)
+lst_model::ref lst_model::check(rw_n, bool, bool)
   SET_()
 
 bool lst_model::isChecked(rw_n) const {

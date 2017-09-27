@@ -47,7 +47,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   virtual mth_(var,  cell, (rw_n, cl_n));
 
   virtual set_(check, (rw_n));
-  virtual set_(check, (rw_n, bool));
+  virtual set_(check, (rw_n, bool, bool done = true));
   virtual bol_(isChecked, (rw_n));
 
   voi_(updateTriState, ()) emits;

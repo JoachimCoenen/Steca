@@ -69,7 +69,7 @@ l_qt::var Hub::ModelFiles::cell(rw_n rw, cl_n cl) const {
   return str::null;
 }
 
-Hub::ModelFiles::ref Hub::ModelFiles::check(rw_n rw, bool on) {
+Hub::ModelFiles::ref Hub::ModelFiles::check(rw_n rw, bool on, bool) {
   hub.activateFileAt(rw, on);
   RTHIS
 }
@@ -153,7 +153,7 @@ bool Hub::ModelDatasets::rightAlign(cl_n cl) const {
 
 // TODO macro like this
 #define _set_(cls) cls::ref cls
-_set_(Hub::ModelDatasets)::check(rw_n rw, bool on) {
+_set_(Hub::ModelDatasets)::check(rw_n rw, bool on, bool) {
   auto&& isActive = hub.currentSets().at(rw)().isActive;
   if (isActive != on) {
     mut(isActive) = on;
@@ -232,10 +232,11 @@ l_qt::var Hub::ModelMetadata::cell(rw_n rw, cl_n cl) const {
   }
 }
 
-Hub::ModelMetadata::ref Hub::ModelMetadata::check(rw_n rw, bool on) {
+Hub::ModelMetadata::ref Hub::ModelMetadata::check(rw_n rw, bool on, bool done) {
   if (mut(*checked).set(hub.currentDict().key(rw), on)) {
     signalRowChanged(rw);
-    hub.sendMetaChecked(checked);
+    if (done)
+      hub.sendMetaChecked(checked);
   }
   RTHIS
 }

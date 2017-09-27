@@ -52,7 +52,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mth_(str,       head, (cl_n));
     mth_(l_qt::var, cell, (rw_n, cl_n));
 
-    set_(check,     (rw_n, bool));
+    set_(check,     (rw_n, bool, bool));
     bol_(isChecked, (rw_n));
 
     mth_(core::data::File::shp, at, (rw_n));
@@ -72,7 +72,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
     bol_(rightAlign,  (cl_n));
 
-    set_(check, (rw_n, bool));
+    set_(check, (rw_n, bool, bool));
     bol_(isChecked, (rw_n));
 
     atr_(l::pint, groupedBy);
@@ -99,7 +99,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mth_(str,       head, (cl_n));
     mth_(l_qt::var, cell, (rw_n, cl_n));
 
-    set_(check, (rw_n, bool));
+    set_(check, (rw_n, bool, bool));
     bol_(isChecked, (rw_n));
 
     core::data::KeyBag::shr checked;
