@@ -36,7 +36,6 @@ protected:
   void resizeEvent(QResizeEvent*);
 
 private:
-  core::data::CombinedSet::shp set;
   qreal scale; bool stepScale = false, showOver = false;
   QPixmap original, scaled;
   void paintEvent(QPaintEvent*);
@@ -54,12 +53,6 @@ ImageWidget::ImageWidget(Hub& hub) : RefHub(hub), scale(0) {
   a.get(a.IMG_STEP_ZOOM).onToggle([this](bool on) {
     stepScale = on;
     setScale();
-  });
-
-  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
-    if (set != info.set) {
-      set = info.set;
-    }
   });
 }
 
@@ -161,8 +154,9 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     auto&& tab = new Panel;
     tabs->addTab(tabImage = tab, "Image");
 
-    auto&& hb = tab->vb.hb();
-//  box.setAlignment(hb, Qt::AlignTop);
+    auto&& vb = tab->vb;
+    auto&& hb = vb.hb();
+    vb.align(hb, Qt::AlignTop);
 
     hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_FIX_INTEN)));
     hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_STEP_ZOOM)));
@@ -188,7 +182,7 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     hb.add(new l_qt::lbl("bin#"));
     hb.add(binNo = new l_qt::spinPint);
 
-//    box.addWidget((dataImageWidget_ = new ImageWidget(hub_)));
+    vb.addWidget(wgtImage = new ImageWidget(hub));
 
 //    connect(spinN_, slot(QSpinBox,valueChanged,int), [this]() {
 //      render();
@@ -211,22 +205,21 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     auto&& tab = new Panel;
     tabs->addTab(tabImage = tab, "Correction");
 
-    //    onSigCorrFile([&tab](data::shp_File file) {
-    //      tab.setEnabled(!file.isNull());
-    //    });
+    tab->setEnabled(false);
+//TODO    hub.onSigCorr([tab](core::data::File::shp file) {
+//      tab->setEnabled(file);
+//    });
 
-    //    auto&& box = tab.box();
+    auto&& vb = tab->vb;
+    auto&& hb = vb.hb();
+    vb.align(hb, Qt::AlignTop);
 
-    //    auto hb = hbox();
-    //    box.addLayout(hb);
-    //    box.setAlignment(hb, Qt::AlignTop);
+    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_FIX_INTEN)));
+    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_STEP_ZOOM)));
+    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_SHOW_OVER)));
+    hb.addStretch();
 
-    //    hb.add(iconButton(actions.fixedIntenImage));
-    //    hb.add(iconButton(actions.stepScale));
-    //    hb.add(iconButton(actions.showOverlay));
-    //    hb->addStretch(1);
-
-    //    box.addWidget((corrImageWidget_ = new ImageWidget(hub_)));
+    vb.addWidget(wgtCorrection = new ImageWidget(hub));
   }
 
 //  connect(actions.enableCorr, &QAction::toggled, [this](bool) {
@@ -253,7 +246,153 @@ PanelImage::PanelImage(Hub& hub) : base("") {
 //    setDataset(dataset);
 //  });
 
-//  render();
+  hub.onSigSetsInfo([this](Hub::SetsInfo info) {
+    if (set != info.set || fp != info.fp) {
+      sets = info.sets; set = info.set; fp = info.fp;
+      renderTabs(); // TODO only one tab
+    }
+  });
+
+//  hub.onSigCorr([this](core::data::File::shp file) {
+//    if (file)
+//      corrImage = file->sets.foldImage();
+//    else
+//      corrImage.drop();
+//    renderTabs(); // TODO only one tab
+//  });
+
+  renderTabs();
+}
+
+void PanelImage::renderTabs() {
+//  {
+//    QPixmap pixMap;
+
+//    uint nSlices  = to_u(numSlices_->value());
+//    numSlice_->setMaximum(qMax(1, to_i(nSlices)));
+//    numSlice_->setEnabled(nSlices > 0);
+
+//    if (dataset_) {
+//      // 1 - based
+//      uint by = qBound(1u, uint(hub_.datasetsGroupedBy()), dataset_->count());
+//      uint n  = qBound(1u, to_u(spinN_->value()), by);
+
+//      spinN_->setValue(to_i(n));
+//      spinN_->setEnabled(by > 1);
+
+//      lens_ = hub_.datasetLens(*dataset_);
+
+//      typ::Range rge;
+//      if (nSlices > 0) {
+//        uint nSlice  = qMax(1u, to_u(numSlice_->value()));
+//        uint iSlice  = nSlice - 1;
+
+//        auto rgeGma = lens_->rgeGma();
+//        auto min    = rgeGma.min;
+//        auto wn = rgeGma.width() / nSlices;
+
+//        rge = gma_rge(min + iSlice * wn, min + (iSlice+1) * wn);
+
+//        minGamma_->setValue(rge.min);
+//        maxGamma_->setValue(rge.max);
+//      } else {
+//        rge = typ::Range::infinite();;
+//        minGamma_->clear();
+//        maxGamma_->clear();
+//      }
+
+//      hub_.setGammaRange(rge);
+
+//      auto oneDataset = dataset_->at(n-1);
+
+//      numBin_->setEnabled(true);
+//      if (hub_.actions.showBins->isChecked()) {
+//        typ::Range rgeTth = lens_->rgeTth();
+//        auto curve = lens_->makeCurve(false); // TODO factor out lens::binCount()
+//        int count  = to_i(curve.count());
+//        numBin_->setMaximum(count-1);
+//        auto min = rgeTth.min, wdt = rgeTth.width();
+//        qreal num = qreal(numBin_->value());
+//        pixMap = makePixmap(*oneDataset, rge, typ::Range(min + wdt * (num/count), min + wdt * ((num+1)/count)));
+//      } else {
+//        pixMap = makePixmap(oneDataset->image());
+//      }
+//    } else {
+//      spinN_->setEnabled(false);
+//      numBin_->setMaximum(0);
+//      numBin_->setEnabled(false);
+
+//      pixMap = makeBlankPixmap();
+//    }
+
+//    dataImageWidget_->setPixmap(pixMap);
+//  }
+
+  using inten_t = core::inten_t;
+  auto intenImage = [](inten_t inten, inten_t maxInten, bool curved) {
+    if (qIsNaN(inten))
+      return qRgb(0x00, 0xff, 0xff);
+    if (qIsInf(inten))
+      return qRgb(0xff, 0xff, 0xff);
+
+    if (qIsNaN(maxInten) || maxInten <= 0)
+      return qRgb(0x00, 0x00, 0x00);
+
+    inten /= maxInten;
+
+    if (curved && inten > 0)
+      inten = l::pow(inten, .6f);
+
+    inten_t const low(.25f), mid(.5f), high(.75f);
+    if (inten < low)
+      return qRgb(int(0xff * inten * 4), 0, 0);
+    if (inten < mid)
+      return qRgb(0xff, int(0xff * (inten - low) * 4), 0);
+    if (inten < high)
+      return qRgb(int(0xff - (0xff * (inten - mid) * 4)), 0xff,
+                  int(0xff * (inten - mid) * 4));
+    return qRgb(int(0xff * (inten - high) * 4), 0xff, 0xff);
+  };
+
+  auto makeImage = [this, intenImage](core::Image::shp image, bool curvedScale) {
+    QImage im;
+    if (!image)
+      return im;
+
+    auto&& lens = fp().imageLens(*image, sets(), true, false);
+    auto&& size = lens().size();
+    if (size.isEmpty())
+      return im;
+
+    im = QImage(QSize(l::to_i(size.i), l::to_i(size.j)), QImage::Format_RGB32);
+
+    auto&& rgeInten = lens().rgeInten(true/*hub_.isFixedIntenImageScale()*/);
+    inten_t maxInten = inten_t(rgeInten.max);
+
+    for_ij_(size.i, size.j)
+      im.setPixel(l::to_i(i), l::to_i(j),
+                  intenImage(lens().imageInten(i, j), maxInten, curvedScale));
+    return im;
+  };
+
+  auto makeBlankPixmap = [this]() {
+    auto&& size = fp().geometry.imageSize;
+
+    QPixmap pixmap(l::to_i(size.i), l::to_i(size.j));
+    pixmap.fill(QColor(0, 0, 0, 0));
+
+    return pixmap;
+  };
+
+  auto makePixmap = [this, makeImage](core::Image::shp image) {
+    return QPixmap::fromImage(makeImage(image, true/*!hub_.isFixedIntenImageScale()*/));
+  };
+
+
+  {
+    QPixmap pixMap = makePixmap(fp().corrImage);
+    wgtImage->setPixmap(pixMap);
+  }
 }
 
 //------------------------------------------------------------------------------

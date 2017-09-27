@@ -39,7 +39,7 @@ void ViewFile::setInfo(core::data::File const* file) {
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(ViewFiles, ViewModel<ModelFiles>)
+dcl_sub_(ViewFiles, ViewModel<Hub::ModelFiles>)
   ViewFiles(Hub&, ViewFile&);
 
 private:
@@ -110,9 +110,9 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto&& edit = new l_qt::edit(); edit->ro(true);
   h.add(edit);
 
-  hub.onSigCorr([this, edit, &hub]() {
-    edit->text(hub.corrName());
-  });
+//  TODO hub.onSigCorr([this, edit, &hub]() {
+//    edit->text(hub.corrName());
+//  });
 
   h.add(new l_qt::actbtn(a.get(a.CORR_ENABLE)));
   h.add(new l_qt::actbtn(a.get(a.CORR_REM)));

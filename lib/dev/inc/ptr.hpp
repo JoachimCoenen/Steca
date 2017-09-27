@@ -165,7 +165,7 @@ struct scoped : ptr_base {
   T* ptr() const {
     return static_cast<T*>(mutp(p));
   }
-  operator T*()   const RET_(ptr()) // TODO remove
+  operator T*()   const RET_(ptr())
   T* operator->() const RET_(ptr())
 };
 

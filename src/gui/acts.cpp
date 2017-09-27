@@ -64,9 +64,9 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
     hub.corrEnable(on);
   });
 
-  hub.onSigCorr([&hub, &actCE]() {
-    // TODO actCE.check(hub.corrEnabled());
-  });
+// TODO  hub.onSigCorrFileName([&hub, &actCE]() {
+//    // TODO actCE.check(hub.corrEnabled());
+//  });
 
   get(CORR_REM).onTrigger([&hub]() {
     hub.corrRem();

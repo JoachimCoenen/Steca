@@ -41,7 +41,7 @@ dcl_(Session)
   mut_(load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-  // one active copy; Hub will share out clones
+  // one active copy; Hub will share out clones as needed
   atr_(l::scoped<data::Files>,     files);
   atr_(l::shp<data::File>,         corrFile); // not modified in Session, can be shp
   atr_(l::scoped<calc::FitParams>, fp);
@@ -52,7 +52,7 @@ dcl_(Session)
   bol_mut_(activateFileAt, (uint, bool));
 
   mut_(setCorrFile,   (l_io::path::rc)) may_err;
-  set_(remCorrFile,   ());
+  mut_(remCorrFile,   ());
   mut_(tryEnableCorr, (bool on));
 
   mut_(setBg, (Ranges::rc));

@@ -96,7 +96,7 @@ private:
 // WaTch
 #define WT(what) TR(#what ">" << what)
 // do not go here
-#define NEVER    EXPECT_(false)
+#define NEVER_RETURN(what) EXPECT_(false) return what;
 
 //------------------------------------------------------------------------------
 // loops

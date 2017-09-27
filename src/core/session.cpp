@@ -240,14 +240,13 @@ void Session::setCorrFile(l_io::path::rc path) may_err {
   }
 }
 
-Session::ref Session::remCorrFile() {
+void Session::remCorrFile() {
   mut(corrFile).drop();
   mut(fp->corrImage).drop();
   mut(fp->intensCorrImage).drop();
   mut(fp->corrEnabled) = false;
 
   updateImageSize();
-  RTHIS
 }
 
 void Session::tryEnableCorr(bool on) {

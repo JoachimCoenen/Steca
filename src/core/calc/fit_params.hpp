@@ -50,9 +50,9 @@ dcl_(FitParams) SHARED CLONED
 
   mth_(Image::shp,      intensCorr, ());
 
-  mth_(ImageLens::shp,  imageLens,
-        (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
-  mth_(DatasetLens::shp, datasetLens,
+  mth_(ImageLens::shr,  imageLens,
+       (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
+  mth_(DatasetLens::shr, datasetLens,
         (data::CombinedSets::rc, data::CombinedSet::rc, bool trans, bool cut));
   mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
 

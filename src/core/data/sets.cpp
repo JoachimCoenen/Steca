@@ -498,8 +498,8 @@ inten_rge::rc CombinedSets::rgeFixedInten(calc::FitParams const& fp, bool trans,
       for (auto&& one : *set) {
         if (one().image) {
           auto&& image = *one().image;
-          auto imageLens = fp.imageLens(image,*this,trans,cut);
-          lazyRgeFixedInten.extendBy(imageLens->rgeInten(false));
+          auto&& lens = fp.imageLens(image,*this,trans,cut);
+          lazyRgeFixedInten.extendBy(lens().rgeInten(false));
         }
       }
   }

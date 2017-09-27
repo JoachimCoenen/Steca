@@ -23,7 +23,7 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub_(ViewDatasets, ViewModel<ModelDatasets>)
+dcl_sub_(ViewDatasets, ViewModel<Hub::ModelDatasets>)
   ViewDatasets(Hub&);
 
 private:
@@ -53,7 +53,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   auto&& spin = new l_qt::spinPint();
   hb.add(spin);
 
-  auto&& md = static_cast<ModelDatasets const*>(view->model);
+  auto&& md = static_cast<Hub::ModelDatasets const*>(view->model);
 
   spin->min(1);
   connect(spin, &l_qt::spinPint::valChg, [md](l::pint val) {

@@ -34,12 +34,14 @@ dcl_sub_(box, QBoxLayout)
   split& hs();
   split& vs();
 
+  box();
+
   set_(margin,  (uint));
   set_(spacing, (uint));
   set_(add, (QWidget*));
   set_(addStretch, ());
-
-  box();
+  set_(align,   (QLayout&, Qt::Alignment));
+  set_(align,   (QWidget*, Qt::Alignment));
 dcl_end
 
 dcl_sub_(hbox, box)

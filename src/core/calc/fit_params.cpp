@@ -34,8 +34,8 @@ AngleMap::shp FitParams::angleMap(data::Set::rc set) const {
   return map;
 }
 
-ImageLens::shp FitParams::imageLens(
-  Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
+ImageLens::shr FitParams::imageLens(
+    Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
 {
   return l::sh(new ImageLens(*this, image, datasets, trans, cut));
 }
@@ -57,7 +57,7 @@ Image::shp FitParams::intensCorr() const {
   return intensCorrImage;
 }
 
-DatasetLens::shp FitParams::datasetLens(
+DatasetLens::shr FitParams::datasetLens(
     data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
     bool trans, bool cut) const {
   return l::sh(new calc::DatasetLens(*this, datasets, dataset, norm,
@@ -67,9 +67,9 @@ DatasetLens::shp FitParams::datasetLens(
 real FitParams::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
   auto lens = datasetLens(datasets, dataset, true, true);
 
-  Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
+  Curve gmaCurve = lens().makeCurve(true); // REVIEW averaged?
   auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);
-  return bgPolynom.avgY(lens->rgeTth());
+  return bgPolynom.avgY(lens().rgeTth());
 }
 
 real FitParams::calcAvgBackground(data::CombinedSets::rc datasets) const {

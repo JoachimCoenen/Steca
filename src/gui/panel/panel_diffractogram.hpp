@@ -26,7 +26,6 @@ dcl_sub_(PanelDiffractogram, Panel)
 
 private:
   Panel *tab;
-  QWidget *plot;
 dcl_end
 
 //------------------------------------------------------------------------------

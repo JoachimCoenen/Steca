@@ -103,7 +103,7 @@ static bool inQuadrant(eQuadrant quadrant, l::deg deltaAlpha, l::deg deltaBeta) 
     return deltaAlpha < 0 && deltaBeta >= 0;
   }
 
-  NEVER return false;
+  NEVER_RETURN(false)
 }
 
 // Search quadrant remapping in case no point was found.
@@ -119,7 +119,7 @@ eQuadrant remapQuadrant(eQuadrant q) {
     return eQuadrant::SOUTHEAST;
   }
 
-  NEVER return eQuadrant::NORTHEAST;
+  NEVER_RETURN(eQuadrant::NORTHEAST)
 }
 
 // Checks if (alpha,beta) is inside radius from (centerAlpha,centerBeta).

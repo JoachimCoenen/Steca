@@ -23,7 +23,7 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub_(ViewMetadata, ViewModel<ModelMetadata>)
+dcl_sub_(ViewMetadata, ViewModel<Hub::ModelMetadata>)
   ViewMetadata(Hub&);
 dcl_end
 

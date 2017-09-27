@@ -248,7 +248,11 @@ template <typename T> T const& notnan(T const& a, T const& b) {
   return !isnan(a) ? a : b;
 }
 
-real pow(real x, uint n);
+flt32 pow(flt32 x, uint n);
+flt64 pow(flt64 x, uint n);
+
+flt32 pow(flt32 x, flt32 y);
+flt64 pow(flt64 x, flt64 y);
 
 //------------------------------------------------------------------------------
 }

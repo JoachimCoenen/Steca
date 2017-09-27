@@ -41,6 +41,11 @@ grid::grid() {
 
 //------------------------------------------------------------------------------
 
+box::box() : base(QBoxLayout::LeftToRight) {
+  base::setSpacing(2);
+  base::setMargin(2);
+}
+
 box& box::hb() {
   auto hb = new hbox;
   addLayout(hb);
@@ -87,10 +92,11 @@ box::ref box::add(QWidget* wgt) {
 box::ref box::addStretch()
   SET_(base::addStretch(0))
 
-box::box() : base(QBoxLayout::LeftToRight) {
-  base::setSpacing(2);
-  base::setMargin(2);
-}
+box::ref box::align(QLayout& l, Qt::Alignment a)
+  SET_(base::setAlignment(&l, a))
+
+box::ref box::align(QWidget* w, Qt::Alignment a)
+SET_(base::setAlignment(w, a))
 
 //------------------------------------------------------------------------------
 

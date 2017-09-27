@@ -17,13 +17,13 @@
 
 #pragma once
 #include "acts.hpp"
-#include "refhub.hpp"
-#include "models.hpp"
 #include "options.hpp"
+#include "refhub.hpp"
 #include <core/session.hpp>
 #include <lib/dev/defs.hpp>
 #include <lib/dev/io/path.hpp>
 #include <lib/qt/hub.hpp>
+#include <lib/qt/model.hpp>
 
 /* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
  * names (hub & thehub) *must* differ, because that's how MOC operates: on base
@@ -38,6 +38,89 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
+  dcl_sub2_(Model, RefHub, l_qt::lst_model)
+    Model(Hub&);
+  dcl_end
+
+  dcl_sub_(ModelFiles, Model)
+    friend struct Hub;
+    ModelFiles(Hub&);
+
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
+
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
+
+    set_(check,     (rw_n, bool));
+    bol_(isChecked, (rw_n));
+
+    mth_(core::data::File::shp, at, (rw_n));
+  dcl_end
+
+  dcl_sub_(ModelDatasets, Model)
+    friend struct Hub;
+    ModelDatasets(Hub&);
+
+    enum eMdLeadCols { clFNO, clTAG };
+
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
+
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
+
+    bol_(rightAlign,  (cl_n));
+
+    set_(check, (rw_n, bool));
+    bol_(isChecked, (rw_n));
+
+    atr_(l::pint, groupedBy);
+    mut_(groupBy, (l::pint));
+
+    voi_(emitSetAt, (int));
+
+  private:
+    str_vec metaKeys;  // shown metadata
+
+    mth_(uint, numLeadCols, ());
+    mut_(combineSets, ());
+  dcl_end
+
+  dcl_sub_(ModelMetadata, Model)
+    friend struct Hub;
+    ModelMetadata(Hub&);
+
+    enum { clTAG, clVAL };
+
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
+
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
+
+    set_(check, (rw_n, bool));
+    bol_(isChecked, (rw_n));
+
+    core::data::KeyBag::shr checked;
+
+  private:
+    core::data::CombinedSet::shp set;
+  dcl_end
+
+//------------------------------------------------------------------------------
+
+private:
+  atr_(dgram_options, dgramOptions);
+  atr_(image_options, imageOptions);
+
+  mth_(core::data::Files::rc, currentFiles, ())
+    RET_(*base::files)
+  mth_(core::data::FilesMetaDict::rc, currentDict, ())
+    RET_(base::files->dict())
+  core::data::CombinedSets::shr currentSets;
+
+public:
   friend struct ModelFiles;
   friend struct ModelDatasets;
   friend struct ModelMetadata;
@@ -63,9 +146,6 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mut_(corrEnable, (bool)) emits;
   mut_(corrRem,    ())     emits;
 
-//  bol_(corrEnabled, ()); // TODO out - signal
-  mth_(str, corrName, ()); // TODO out - signal
-
   mut_(setBg, (core::Ranges::rc)) emits;
   mut_(addBg, (core::Range::rc))  emits;
   mut_(remBg, (core::Range::rc))  emits;
@@ -73,9 +153,6 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   mut_(setRefl, (Range::rc r)) emits;
 
   mut_(setNorm, (core::eNorm))   emits;
-
-  atr_(dgram_options, dgramOptions);
-  atr_(image_options, imageOptions);
 
   voi_(makeDgram, (core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
                    core::data::CombinedSets::rc, core::data::CombinedSet const*,
@@ -92,20 +169,19 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   dcl_end
 
 private:
+  void filesModified();
   void sendSetsInfo(core::data::CombinedSets::shr, core::data::CombinedSet::shp); // TODO mth_,
   void sendMetaChecked(core::data::KeyBag::shr); // TODO mth_,
   // TODO move models to hub, remove their data, replace with hub's active collection
 
 signals:
-  // new set of files
-  void sigFiles(core::data::Files::shr) const;
   // a new set of combined sets, opt. the selected one, fit params
   void sigSetsInfo(SetsInfo) const;
   // checked metadata
   void sigMetaChecked(core::data::KeyBag::shr) const;
 
   // add/rem/on/off correction file
-  void sigCorr(core::data::File::shp) const;
+  void sigCorrFileName(str) const;
 
 private:
   mut_(newFiles, ());
@@ -120,11 +196,10 @@ public:                             \
     QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
-  DCL_HUB_SIG_ETC(Files,        core::data::Files::shr)
   DCL_HUB_SIG_ETC(SetsInfo,     SetsInfo)
   DCL_HUB_SIG_ETC(MetaChecked,  core::data::KeyBag::shr)
 
-  DCL_HUB_SIG_ETC(Corr,         core::data::File::shp)
+  DCL_HUB_SIG_ETC(CorrFileName, str)
 
 private:
   Q_OBJECT

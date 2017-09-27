@@ -96,7 +96,7 @@ l::own<PeakFun> PeakFun::factory(ePeakType type) {
   case ePeakType::PSEUDOVOIGT2:
     return l::owned(new PseudoVoigt2());
   default:
-    NEVER return l::own<Self>(nullptr);
+    NEVER_RETURN(l::own<PeakFun>(nullptr))
   }
 }
 
@@ -271,7 +271,7 @@ real Gaussian::dy(real x, uint parIndex, real const* parVals) const {
   case parSIGMA:
     return ampl * exa * ((x - xShift) * (x - xShift)) / (sigma * sigma * sigma);
   default:
-    NEVER return 0;
+    NEVER_RETURN(0)
   }
 }
 
@@ -341,7 +341,7 @@ real Lorentzian::dy(real x, uint parIndex, real const* parVals) const {
     return 2 * ampl * (x - xShift) * (x - xShift) /
            (arg3 * gamma * gamma * gamma);
   default:
-    NEVER return 0;
+    NEVER_RETURN(0)
   }
 }
 
@@ -426,7 +426,7 @@ real PseudoVoigt1::dy(real x, uint parIndex, real const* parVals) const {
   case parETA:
     return ampl / arg4 - ampl * arg3;
   default:
-    NEVER return 0;
+    NEVER_RETURN(0)
   }
 }
 
@@ -522,7 +522,7 @@ real PseudoVoigt2::dy(real x, uint parIndex, real const* parVals) const {
   case parETA:
     return ampl / argL3 - ampl * argG3;
   default:
-    NEVER return 0;
+    NEVER_RETURN(0)
   }
 }
 

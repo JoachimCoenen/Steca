@@ -447,7 +447,7 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
   vb.add(tabs);
   tabs->addTab(tab = new Panel(), "Diffractogram");
 
-  tab->vb.add(plot = new Plot(hub));
+  tab->vb.add(new Plot(hub));
 
   auto&& hb = tab->vb.hb();
 

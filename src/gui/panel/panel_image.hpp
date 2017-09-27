@@ -17,6 +17,8 @@
 
 #pragma once
 #include "panel.hpp"
+#include <core/data/sets.hpp>
+#include <core/calc/fit_params.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -26,6 +28,12 @@ dcl_sub_(PanelImage, Panel)
 
 private:
   Panel *tabImage, *tabCorrection;
+  struct ImageWidget *wgtImage, *wgtCorrection;
+  core::data::CombinedSets::shr sets;
+  core::data::CombinedSet::shp  set;
+  core::calc::FitParams::shr    fp;
+  core::Image::shp              corrImage;
+  void renderTabs();
 dcl_end
 
 //------------------------------------------------------------------------------
