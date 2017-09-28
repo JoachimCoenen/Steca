@@ -60,10 +60,12 @@ ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_)
 }
 
 void ViewFiles::onSelected(int row) const {
-  if (0 <= row && model && uint(row) < model->rows()) {
-    viewFile.setInfo(model->at(rw_n(l::to_uint(row))).ptr());
-  } else
-    viewFile.setInfo(nullptr);
+    core::data::File const* file = nullptr;
+    if (0 <= row && model && uint(row) < model->rows())
+      file = model->at(rw_n(l::to_uint(row))).ptr();
+
+    viewFile.setInfo(file);
+    actRem.setEnabled(file);
 }
 
 bool ViewFiles::onKey(int key) const {

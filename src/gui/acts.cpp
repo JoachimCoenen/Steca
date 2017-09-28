@@ -34,15 +34,15 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   get(ABOUT).icon(":/icon/tool_a");
   get(QUIT).icon(":/icon/tool_q");
 
-  add(SHOW_FILES,     act::make("Show files",                 "Ctrl+F", ":/icon/tool_f"));
-  add(SHOW_DATASETS,  act::make("Show datasets",              "Ctrl+D", ":/icon/tool_d"));
-  add(SHOW_METADATA,  act::make("Show metadata",              "Ctrl+M", ":/icon/tool_m"));
+  add(SHOW_FILES,     act::make("Show files",                 "Ctrl+1", ":/icon/tool_f"));
+  add(SHOW_DATASETS,  act::make("Show datasets",              "Ctrl+2", ":/icon/tool_d"));
+  add(SHOW_METADATA,  act::make("Show metadata",              "Ctrl+3", ":/icon/tool_m"));
 
-  add(SESSION_LOAD,   act::make("Load session",               "",       ":/icon/load"));
-  add(SESSION_SAVE,   act::make("Save session",               "",       ":/icon/save"));
+  add(SESSION_LOAD,   act::make("Load session",               "Ctrl+O", ":/icon/load"));
+  add(SESSION_SAVE,   act::make("Save session",               "Ctrl+S", ":/icon/save"));
 
-  add(FILES_ADD,      act::make("Add files...",               "",       ":/icon/add"));
-  add(FILES_REM,      act::make("Remove selected file",       "",       ":/icon/rem"));
+  add(FILES_ADD,      act::make("Add files...",               "Ins",    ":/icon/add"));
+  add(FILES_REM,      act::make("Remove selected file",       "Del",    ":/icon/rem"));
   add(CORR_ENABLE,    act::make("Enable correction file...",  "",       ":/icon/check"));
   add(CORR_REM,       act::make("Remove correction file",     "",       ":/icon/clear"));
 
