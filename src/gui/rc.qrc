@@ -35,6 +35,9 @@
         <file alias="tool_q">rc/tool_q.svg</file>
         <file alias="load">rc/load.svg</file>
         <file alias="save">rc/save.svg</file>
+        <file alias="polefig">rc/polefig.svg</file>
+        <file alias="diagram">rc/diagram.svg</file>
+        <file alias="diffractogram">rc/diffractogram.svg</file>
     </qresource>
     <qresource prefix="/HAL">
         <file alias="good_evening">rc/ge.wav</file>

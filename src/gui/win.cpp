@@ -78,6 +78,11 @@ Win::Win() : hub(*this) {
   tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
   tb->addSpacing(8);
 
+  tb->add(new l_qt::actbtn(a.get(a.OUT_POLEFIG)));
+  tb->add(new l_qt::actbtn(a.get(a.OUT_DIAGRAM)));
+  tb->add(new l_qt::actbtn(a.get(a.OUT_DIFFRGS)));
+  tb->addSpacing(8);
+
   tb->add(new l_qt::actbtn(a.get(a.SESSION_LOAD)));
   tb->add(new l_qt::actbtn(a.get(a.SESSION_SAVE)));
   tb->addSpacing(8);
@@ -217,7 +222,7 @@ void Win::onFirstShow() {
 #ifdef DEVELOPMENT
   hub.addFiles(str_vec{
 //    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
-    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
   });

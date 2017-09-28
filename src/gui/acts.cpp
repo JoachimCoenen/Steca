@@ -55,6 +55,10 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(IMG_SHOW_OVER,  act::make("Show overlay",               "",       ":/icon/crop"));
   add(IMG_SHOW_GAMMA, act::make("Show gamma",                 "",       ":/icon/angle"));
 
+  add(OUT_POLEFIG,    act::make("Pole figure...",             "",       ":/icon/polefig"));
+  add(OUT_DIAGRAM,    act::make("Diagram...",                 "",       ":/icon/diagram"));
+  add(OUT_DIFFRGS,    act::make("DIffractograms...",          "",       ":/icon/diffractogram"));
+
   get(FILES_ADD).onTrigger([&hub]() {
     hub.addFiles();
   });
@@ -96,6 +100,10 @@ str const Acts::IMG_FIX_INTEN   ("imgFixInten");
 str const Acts::IMG_STEP_ZOOM   ("imgStepZoom");
 str const Acts::IMG_SHOW_OVER   ("imgShowOver");
 str const Acts::IMG_SHOW_GAMMA  ("imgShowGamma");
+
+str const Acts::OUT_POLEFIG     ("outPolefig");
+str const Acts::OUT_DIAGRAM     ("outDiagram");
+str const Acts::OUT_DIFFRGS     ("outDiffrgs");
 
 //------------------------------------------------------------------------------
 }

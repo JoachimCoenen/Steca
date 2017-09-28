@@ -49,6 +49,11 @@ dcl_sub_(Acts, l_qt::acts)
   cst_(str, IMG_STEP_ZOOM);
   cst_(str, IMG_SHOW_OVER);
   cst_(str, IMG_SHOW_GAMMA);
+
+  // outputs
+  cst_(str, OUT_POLEFIG);
+  cst_(str, OUT_DIAGRAM);
+  cst_(str, OUT_DIFFRGS);
 dcl_end
 
 //------------------------------------------------------------------------------
