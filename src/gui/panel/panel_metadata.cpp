@@ -33,11 +33,11 @@ ViewMetadata::ViewMetadata(Hub& hub) : base(hub, hub.modelMetadata) {}
 
 PanelMetadata::PanelMetadata(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  vb().add(tabs);
   tabs->addTab(tab = new Panel(), "Metadata");
 
-  tab->vb.add(view = new ViewMetadata(hub));
-  tab->vb.add(mut(*view->model).makeTriChk(str::null));
+  tab->vb().add(view = new ViewMetadata(hub));
+  tab->vb().add(mut(*view->model).makeTriChk(str::null));
 }
 
 //------------------------------------------------------------------------------

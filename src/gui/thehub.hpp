@@ -20,6 +20,7 @@
 #include "options.hpp"
 #include "refhub.hpp"
 #include <core/session.hpp>
+#include <core/calc/reflection.hpp>
 #include <lib/dev/defs.hpp>
 #include <lib/dev/io/path.hpp>
 #include <lib/qt/hub.hpp>
@@ -38,11 +39,11 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
-  dcl_sub2_(Model, RefHub, l_qt::lst_model)
-    Model(Hub&);
+  dcl_sub2_(HubModel, RefHub, l_qt::lst_model)
+    HubModel(Hub&);
   dcl_end
 
-  dcl_sub_(ModelFiles, Model)
+  dcl_sub_(ModelFiles, HubModel)
     friend struct Hub;
     ModelFiles(Hub&);
 
@@ -58,7 +59,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mth_(core::data::File::shp, at, (rw_n));
   dcl_end
 
-  dcl_sub_(ModelDatasets, Model)
+  dcl_sub_(ModelDatasets, HubModel)
     friend struct Hub;
     ModelDatasets(Hub&);
 
@@ -85,7 +86,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mut_(combineSets, ());
   dcl_end
 
-  dcl_sub_(ModelMetadata, Model)
+  dcl_sub_(ModelMetadata, HubModel)
     friend struct Hub;
     ModelMetadata(Hub&);
 
@@ -104,6 +105,24 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
 
   private:
     core::data::CombinedSet::shp set;
+  dcl_end
+
+  dcl_sub_(ModelReflections, l_qt::lst_model)
+    ModelReflections(core::calc::reflection_vec::rc);
+
+    enum { clID, clTYPE };
+
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
+
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
+
+    mth_(str,     name,  (rw_n));
+    mth_(str_vec, names, ());
+
+  private:
+    core::calc::reflection_vec::rc rs;
   dcl_end
 
 //------------------------------------------------------------------------------
@@ -167,6 +186,8 @@ public:
              core::calc::FitParams::shr fp_)
       : sets(sets_), set(set_), fp(fp_) {}
   dcl_end
+
+  mth_(SetsInfo, setsInfo, ());
 
 private:
   void filesModified();

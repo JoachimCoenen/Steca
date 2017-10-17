@@ -44,9 +44,6 @@ struct Hub;
 dcl_sub_(Panel, l_qt::panel)
   Panel();
   Panel(strc title);
-
-public:
-  l_qt::box &vb;
 dcl_end
 
 //------------------------------------------------------------------------------

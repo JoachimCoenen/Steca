@@ -8,8 +8,7 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 static split& _hvs(split* s, split* t) {
-  EXPECT_(s) EXPECT_(t)
-  t->addWidget(s);
+  NEED_(t)->add(NEED_(s));
   return *s;
 }
 
@@ -22,7 +21,7 @@ split& split::vs() {
 }
 
 split& split::add(QWidget* wgt)
-  SET_(addWidget(NEEDED_(wgt)))
+  SET_(addWidget(NEED_(wgt)))
 
 panel& split::addPanel() {
   auto p = new panel;

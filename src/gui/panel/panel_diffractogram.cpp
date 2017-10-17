@@ -98,8 +98,8 @@ dcl_sub2_(Plot, RefHub, QCustomPlot)
   l::vec<QCPGraph*> reflGraph;
 
 protected:
-  core::data::CombinedSets::shr sets;
-  core::data::CombinedSet::shp  set;
+  CombinedSets::shr sets;
+  CombinedSet::shp  set;
   FitParams::shp fp;
   dgram_options dgramOptions;
 dcl_end
@@ -443,17 +443,15 @@ void Plot::resizeEvent(QResizeEvent* e) {
 //------------------------------------------------------------------------------
 
 PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
-  auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  auto&& tabs = new l_qt::tabs;
+  vb().add(tabs);
   tabs->addTab(tab = new Panel(), "Diffractogram");
 
-  tab->vb.add(new Plot(hub));
+  tab->vb().add(new Plot(hub));
+  auto&& hb = tab->vb().hb();
 
-  auto&& hb = tab->vb.hb();
-
-  hb.add(new l_qt::lbl("norm:"));
-  hb.add(new l_qt::cbo(core::normStrLst));
-  hb.add(new l_qt::lbl(" inten:"));
+  hb.add("norm:").add(new l_qt::cbo(core::normStrLst));
+  hb.add(" inten:");
   hb.add(new l_qt::rio("sum"));
   hb.add(new l_qt::rio("avg ×"));
   hb.add(new l_qt::spinReal()); // em4_2, 0.001 setDecimals(3);

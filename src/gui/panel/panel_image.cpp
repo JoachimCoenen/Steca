@@ -77,6 +77,8 @@ void ImageWidget::paintEvent(QPaintEvent*) {
   // paint centered
   auto&& margin = (size() - scaled.size()) / 2;
   QRect rect(QPoint(margin.width(), margin.height()), scaled.size());
+  if (rect.isEmpty())
+    return;
 
   QPainter p(this);
 
@@ -135,13 +137,13 @@ l_qt::spinReal *maxGamma; // TODO
 
 PanelImage::PanelImage(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  vb().add(tabs);
 
   {
     auto&& tab = new Panel;
     tabs->addTab(tabImage = tab, "Image");
 
-    auto&& vb = tab->vb;
+    auto&& vb = tab->vb();
     auto&& hb = vb.hb();
     vb.align(hb, Qt::AlignTop);
 
@@ -153,21 +155,16 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     hb.addStretch();
 
     hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_SHOW_GAMMA)));
-    hb.add(new l_qt::lbl("γ count"));
-    hb.add(numSlices = new l_qt::spinUint);
-    hb.add(new l_qt::lbl("#"));
-    hb.add(sliceNo = new l_qt::spinPint);
+    hb.add("γ count").add(numSlices = new l_qt::spinUint);
+    hb.add("#")      .add(sliceNo   = new l_qt::spinPint);
 
-    hb.add(new l_qt::lbl("min"));
-    hb.add(minGamma = new l_qt::spinReal);
-    hb.add(new l_qt::lbl("max"));
-    hb.add(maxGamma = new l_qt::spinReal);
+    hb.add("min").add(minGamma = new l_qt::spinReal);
+    hb.add("max").add(maxGamma = new l_qt::spinReal);
 
     minGamma->setReadOnly(true);
     maxGamma->setReadOnly(true);
 
-    hb.add(new l_qt::lbl("bin#"));
-    hb.add(binNo = new l_qt::spinPint);
+    hb.add("bin#").add(binNo = new l_qt::spinPint);
 
     vb.addWidget(wgtImage = new ImageWidget(*this));
 
@@ -189,14 +186,18 @@ PanelImage::PanelImage(Hub& hub) : base("") {
   }
 
   {
-    auto tab = new Panel;
-    tabs->addTab(tabImage = tab, "Correction");
+    tabImage = new Panel; // possibly not deleted, if removed on exit
 
-    hub.onSigCorrFileName([this, tab](str name) {
-      tab->setEnabled(!name.isEmpty());
+    hub.onSigCorrFileName([this, tabs](str name) {
+      if (name.isEmpty()) {
+        auto idx = tabs->indexOf(tabImage);
+        tabs->removeTab(idx);
+      } else {
+        tabs->addTab(tabImage, "Correction");
+      }
     });
 
-    auto&& vb = tab->vb;
+    auto&& vb = tabImage->vb();
     auto&& hb = vb.hb();
     vb.align(hb, Qt::AlignTop);
 

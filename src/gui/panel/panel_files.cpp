@@ -30,7 +30,7 @@ dcl_sub_(ViewFile, Panel)
 dcl_end
 
 ViewFile::ViewFile() : lbl(new l_qt::lbl()) {
-  vb.add(mutp(lbl));
+  vb().add(mutp(lbl));
 }
 
 void ViewFile::setInfo(core::data::File const* file) {
@@ -88,7 +88,7 @@ void ViewFiles::removeSelected() const {
 
 PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  vb().add(tabs);
 
   auto& a = hub.acts;
 
@@ -102,13 +102,13 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   tabs->addTab(tab = new Panel(), "Files", p);
 
   auto&& vf = new ViewFile();
-  tab->vb.add(vf);
-  tab->vb.add(view = new ViewFiles(hub, *vf));
+  tab->vb().add(vf);
+  tab->vb().add(view = new ViewFiles(hub, *vf));
 
-  tab->vb.add(mut(*view->model).makeTriChk(str::null));
-  tab->vb.add(new l_qt::lbl("Correction file"));
+  tab->vb().add(mut(*view->model).makeTriChk(str::null));
+  tab->vb().add("Correction file");
 
-  auto&& h = tab->vb.hb();
+  auto&& h = tab->vb().hb();
   auto&& edit = new l_qt::edit(); edit->ro(true);
   h.add(edit);
 

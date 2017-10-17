@@ -39,7 +39,7 @@ dcl_(FitParams) SHARED CLONED
   atr_(Ranges, bgRanges);
   atr_(Image::shp,      corrImage);
   atr_(Ranges, bg);
-  atr_(l::vec<Reflection::shr>, refls);
+  atr_(reflection_vec,  refls);
   atr_(Reflection::shp, currRefl);
   atr_(l::peal,         intenScale);
   atr_(Geometry, geometry);

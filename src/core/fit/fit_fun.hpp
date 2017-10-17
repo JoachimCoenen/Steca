@@ -47,18 +47,19 @@ dcl_end
 //------------------------------------------------------------------------------
 // Abstract peak function
 
-enum class ePeakType {
-  RAW, GAUSSIAN, LORENTZIAN, PSEUDOVOIGT1, PSEUDOVOIGT2,
-  NUM_TYPES
-};
-
 dcl_sub_(PeakFun, SimpleFun) SHARED
-  fry_(l::own<PeakFun>, factory, (ePeakType));
+  enum class eType {
+    RAW, GAUSSIAN, LORENTZIAN, PSEUDOVOIGT1, PSEUDOVOIGT2,
+    NUM_TYPES
+  };
+
+  fry_(l::own<PeakFun>, factory, (eType));
 
   PeakFun();
 
   mth_(l::own<PeakFun>, clone, ());
-  virtual mth_(ePeakType, type, ()) = 0;
+  virtual mth_(eType, type, ()) = 0;
+  mth_(strc, sType, ());
 
   atr_(Range,  range);
   atr_(peak_t, guessedPeak);
@@ -86,7 +87,7 @@ dcl_end
 dcl_sub_(Raw, PeakFun)
   Raw();
 
-  mth_(ePeakType, type, ()) RET_(ePeakType::RAW)
+  mth_(eType, type, ()) RET_(eType::RAW)
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
@@ -116,7 +117,7 @@ dcl_sub_(Gaussian, PeakFun)
 
   Gaussian(real ampl = 1, real xShift = 0, real sigma = 1);
 
-  mth_(ePeakType, type, ()) RET_(ePeakType::GAUSSIAN)
+  mth_(eType, type, ()) RET_(eType::GAUSSIAN)
 
   mut_(setGuess, (peak_t::rc, fwhm_t));
 
@@ -136,7 +137,7 @@ dcl_sub_(Lorentzian, PeakFun)
 
   Lorentzian(real ampl = 1, real xShift = 0, real gamma = 1);
 
-  mth_(ePeakType, type, ()) RET_(ePeakType::LORENTZIAN)
+  mth_(eType, type, ()) RET_(eType::LORENTZIAN)
 
   mut_(setGuess, (peak_t::rc, fwhm_t));
 
@@ -157,7 +158,7 @@ dcl_sub_(PseudoVoigt1, PeakFun)
   PseudoVoigt1(real ampl = 1, real xShift = 0, real sigmaGamma = 1,
                real eta = 0.1);
 
-  mth_(ePeakType, type, ()) RET_(ePeakType::PSEUDOVOIGT1)
+  mth_(eType, type, ()) RET_(eType::PSEUDOVOIGT1)
 
   mut_(setGuess, (peak_t::rc, fwhm_t));
 
@@ -178,7 +179,7 @@ dcl_sub_(PseudoVoigt2, PeakFun)
   PseudoVoigt2(real ampl = 1, real xShift = 0, real sigma = 1,
                real gamma = 1, real eta = 0.1);
 
-  mth_(ePeakType, type, ()) RET_(ePeakType::PSEUDOVOIGT2)
+  mth_(eType, type, ()) RET_(eType::PSEUDOVOIGT2)
 
   mut_(setGuess, (peak_t::rc, fwhm_t));
 

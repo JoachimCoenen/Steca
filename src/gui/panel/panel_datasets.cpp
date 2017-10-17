@@ -40,18 +40,17 @@ void ViewDatasets::onSelected(int row) const {
 
 PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  vb().add(tabs);
   tabs->addTab(tab = new Panel(), "Datasets");
 
-  tab->vb.add(view = new ViewDatasets(hub));
+  tab->vb().add(view = new ViewDatasets(hub));
 
-  auto&& hb = tab->vb.hb();
+  auto&& hb = tab->vb().hb();
   hb.add(mut(*view->model).makeTriChk(str::null));
   hb.addStretch();
-  hb.add(new l_qt::lbl("Combine"));
 
   auto&& spin = new l_qt::spinPint();
-  hb.add(spin);
+  hb.add("Combine").add(spin);
 
   auto&& md = static_cast<Hub::ModelDatasets const*>(view->model);
 

@@ -176,6 +176,7 @@ l::own<Fun> Json::asFun() const may_err {
         mut(f.guessedFWHM) = at(key::FWHM).asFlt();
       };
 
+      // TODO remove, replace with fun-factory
       if (key::RAW == type) {
         auto f = l::scope(new fit::Raw);
         loadPeakFun(*f);

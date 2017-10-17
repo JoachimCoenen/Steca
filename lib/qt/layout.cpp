@@ -2,6 +2,7 @@
 
 #include "layout.hpp"
 #include "inc/defs.inc"
+#include "lbl.hpp"
 #include "split.hpp"
 
 namespace l_qt {
@@ -25,14 +26,43 @@ grid& grid::gr(uint row, uint col) {
   return *gr;
 }
 
+grid::ref grid::addSection(strc tx, uint colSpan) {
+  addWidget(new lbl(tx), rowCount(), 0, 1, int(colSpan));
+  addHline(colSpan);
+  RTHIS;
+}
+
 grid::ref grid::add(QWidget* wgt, uint row, uint col)
-  SET_(addWidget(NEEDED_(wgt), int(row), int(col)))
+  SET_(addWidget(NEED_(wgt), int(row), int(col)))
+
+grid::ref grid::add(strc tx, uint row, uint col)
+  SET_(add(new lbl(tx), row, col))
+
+grid::ref grid::add(l::vec<QWidget*> ws) {
+  auto&& row = rowCount();
+  for_i_(ws.size()) {
+    auto&& w = ws.at(i);
+    add(w, uint(row), i);
+    if (0 == i && dynamic_cast<QLabel*>(w))
+      setAlignment(w, Qt::AlignRight);
+  }
+
+  RTHIS;
+}
+
+grid::ref grid::addHline(uint colSpan) {
+  auto&& line = new QFrame;
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  addWidget(line, rowCount(), 0, 1, int(colSpan));
+  RTHIS;
+}
 
 grid::ref grid::addRowStretch()
-  SET_(setRowStretch(rowCount(), 0))
+  SET_(setRowStretch(rowCount(), 1))
 
 grid::ref grid::addColStretch()
-  SET_(setColumnStretch(columnCount(), 0))
+  SET_(setColumnStretch(columnCount(), 1))
 
 grid::grid() {
   base::setSpacing(2);
@@ -85,12 +115,28 @@ box::ref box::spacing(uint n) {
 }
 
 box::ref box::add(QWidget* wgt) {
-  EXPECT_(wgt)
-  addWidget(wgt); RTHIS
+  addWidget(NEED_(wgt)); RTHIS
+}
+
+box::ref box::add(QLayout* lay) {
+   addLayout(NEED_(lay)); RTHIS
+}
+
+box::ref box::add(strc tx) {
+  add(new lbl(tx)); RTHIS
+}
+
+box::ref box::addHline() {
+  auto&& line = new QFrame;
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  add(line);
+
+  RTHIS
 }
 
 box::ref box::addStretch()
-  SET_(base::addStretch(0))
+  SET_(base::addStretch(1))
 
 box::ref box::align(QLayout& l, Qt::Alignment a)
   SET_(base::setAlignment(&l, a))
@@ -110,31 +156,30 @@ vbox::vbox() {
 
 //------------------------------------------------------------------------------
 
-panel::panel() {}
-
-static void setPanelLayout(panel* p, QLayout *l) {
-  EXPECT_(p) EXPECT_(l)
-  auto *ol = p->layout();
-  check_or_err_(!ol, "panel already has a box");
-  p->setLayout(l);
-}
+panel::panel() : l(nullptr) {}
 
 box& panel::hb() {
-  auto hb = new hbox;
-  setPanelLayout(this, hb);
-  return *hb;
+  if (l)
+    check_or_err_(dynamic_cast<hbox*>(l), "panel already has another layout");
+  else
+    setLayout(l = new hbox);
+  return *static_cast<hbox*>(l);
 }
 
 box& panel::vb() {
-  auto vb = new vbox;
-  setPanelLayout(this, vb);
-  return *vb;
+  if (l)
+    check_or_err_(dynamic_cast<vbox*>(l), "panel already has another layout");
+  else
+    setLayout(l = new vbox);
+  return *static_cast<vbox*>(l);
 }
 
 grid& panel::gr() {
-  auto gr = new grid;
-  setPanelLayout(this, gr);
-  return *gr;
+  if (l)
+    check_or_err_(dynamic_cast<grid*>(l), "panel already has another layout");
+  else
+    setLayout(l = new grid);
+  return *static_cast<grid*>(l);
 }
 
 //------------------------------------------------------------------------------

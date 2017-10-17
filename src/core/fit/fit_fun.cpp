@@ -83,17 +83,17 @@ Polynom Polynom::fromFit(uint degree, Curve::rc curve, Ranges::rc ranges) {
 
 //------------------------------------------------------------------------------
 
-l::own<PeakFun> PeakFun::factory(ePeakType type) {
+l::own<PeakFun> PeakFun::factory(eType type) {
   switch (type) {
-  case ePeakType::RAW:
+  case eType::RAW:
     return l::owned(new Raw());
-  case ePeakType::GAUSSIAN:
+  case eType::GAUSSIAN:
     return l::owned(new Gaussian());
-  case ePeakType::LORENTZIAN:
+  case eType::LORENTZIAN:
     return l::owned(new Lorentzian());
-  case ePeakType::PSEUDOVOIGT1:
+  case eType::PSEUDOVOIGT1:
     return l::owned(new PseudoVoigt1());
-  case ePeakType::PSEUDOVOIGT2:
+  case eType::PSEUDOVOIGT2:
     return l::owned(new PseudoVoigt2());
   default:
     NEVER_RETURN(l::own<PeakFun>(nullptr))
@@ -110,6 +110,14 @@ l::own<PeakFun> PeakFun::clone() const {
 
   return f;
 }
+
+strc PeakFun::sType() const {
+  static str_vec const s = {
+    "Raw", "Gaussian", "Lorentzian", "PseudoVoigt1", "PseudoVoigt2"
+  };
+
+  return s.at(uint(type()));
+};
 
 PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::flt_nan) {}
 

@@ -27,7 +27,7 @@ dcl_end
 
 // runtime check
 #define check_or_err_(cond, msg) \
-  if (!(cond)) l::err(msg)
+  ((cond) || (l::err(msg), true))
 
 #define guard_err_(msg_, ...)       \
   try { __VA_ARGS__ }               \

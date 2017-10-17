@@ -20,6 +20,9 @@
 #include "app.hpp"
 #include "panel/inc.inc"
 #include "settings.hpp"
+#include "calc_dlg/calc_polefigure.hpp"
+#include "calc_dlg/calc_diagram.hpp"
+#include "calc_dlg/calc_diffractograms.hpp"
 
 #include <QApplication>
 #include <QNetworkReply>
@@ -78,9 +81,9 @@ Win::Win() : hub(*this) {
   tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
   tb->addSpacing(8);
 
-  tb->add(new l_qt::actbtn(a.get(a.OUT_POLEFIG)));
-  tb->add(new l_qt::actbtn(a.get(a.OUT_DIAGRAM)));
-  tb->add(new l_qt::actbtn(a.get(a.OUT_DIFFRGS)));
+  tb->add(new l_qt::actbtn(a.get(a.DLG_POLEFIG)));
+  tb->add(new l_qt::actbtn(a.get(a.DLG_DIAGRAM)));
+  tb->add(new l_qt::actbtn(a.get(a.DLG_DIFFRGS)));
   tb->addSpacing(8);
 
   tb->add(new l_qt::actbtn(a.get(a.SESSION_LOAD)));
@@ -104,6 +107,18 @@ Win::Win() : hub(*this) {
 
   a.get(a.SHOW_METADATA).onToggle([this](bool on) {
     panelMetadata->setVisible(on);
+  });
+
+  a.get(a.DLG_POLEFIG).onTrigger([this]() {
+    (new calc_dlg::PoleFigure(this, hub))->show();
+  });
+
+  a.get(a.DLG_DIAGRAM).onTrigger([this]() {
+    (new calc_dlg::Diagram(this, hub))->show();
+  });
+
+  a.get(a.DLG_DIFFRGS).onTrigger([this]() {
+    (new calc_dlg::Diffractograms(this, hub))->show();
   });
 }
 
@@ -149,9 +164,8 @@ QLayout* DlgAbout::extra() const {
   auto vb = new l_qt::vbox;
   auto&& hb = vb->hb();
 
-  hb.addWidget(new l_qt::lbl("at startup: "));
-  hb.addWidget(chkAbout  = new l_qt::chk("&show this dialog"));
-  hb.addWidget(chkUpdate = new l_qt::chk("&check for update"));
+  hb.add("at startup: ").add(chkAbout  = new l_qt::chk("&show this dialog"))
+                        .add(chkUpdate = new l_qt::chk("&check for update"));
   hb.addStretch();
 
   using S = Settings;

@@ -18,17 +18,40 @@
 #include "panel_setup.hpp"
 #include <lib/qt/tabs.hpp>
 #include <lib/qt/inc/defs.inc>
+#include <lib/qt/lbl.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 PanelSetup::PanelSetup() : base("") {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
+  vb().add(tabs);
 
-  tabs->addTab(tabGeometry    = new Panel(), "Geometry");
-  tabs->addTab(tabBackground  = new Panel(), "Background");
-  tabs->addTab(tabReflections = new Panel(), "Reflections");
+
+  {
+    tabs->addTab(tabGeometry    = new Panel(), "Geometry");
+    auto&& gr = tabGeometry->gr();
+
+    gr.addSection("detector", 3);
+    gr.add({new l_qt::lbl("distan"), new l_qt::lbl("disance"), new l_qt::lbl("distance")});
+    gr.add({new l_qt::lbl("disce"), new l_qt::lbl("distance"), new l_qt::lbl("distance")});
+    gr.add({new l_qt::lbl("tace"), new l_qt::lbl("disce"), new l_qt::lbl("die")});
+//      auto&& img = vb.add(new Panel("image"));
+//      auto&& hb = img.hb();
+
+    gr.addColStretch();
+    gr.addRowStretch();
+  }
+
+  {
+    tabs->addTab(tabBackground  = new Panel(), "Background");
+
+  }
+
+  {
+    tabs->addTab(tabReflections = new Panel(), "Reflections");
+
+  }
 }
 
 //------------------------------------------------------------------------------

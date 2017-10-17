@@ -34,13 +34,13 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-using rw_n = Hub::Model::rw_n;
-using cl_n = Hub::Model::cl_n;
+using rw_n = l_qt::lst_model::rw_n;
+using cl_n = l_qt::lst_model::cl_n;
 using namespace core::data;
 
 //------------------------------------------------------------------------------
 
-Hub::Model::Model(Hub& hub) : RefHub(hub) {}
+Hub::HubModel::HubModel(Hub& hub) : RefHub(hub) {}
 
 //------------------------------------------------------------------------------
 
@@ -170,6 +170,47 @@ uint Hub::ModelDatasets::numLeadCols() const {
 void Hub::ModelDatasets::combineSets() {
   hub.currentSets = hub.currentFiles().collectDatasets(groupedBy);
   signalReset();
+}
+
+//------------------------------------------------------------------------------
+
+Hub::ModelReflections::ModelReflections(core::calc::reflection_vec::rc rs_) : rs(rs_) {}
+
+cl_n Hub::ModelReflections::cols() const {
+  return cl_n(2);
+}
+
+rw_n Hub::ModelReflections::rows() const {
+  return rw_n(rs.size());
+}
+
+str Hub::ModelReflections::head(cl_n cl) const {
+  switch (cl) {
+  case clID:   return "#";
+  case clTYPE: return "type";
+  }
+
+  return str::null;
+}
+
+l_qt::var Hub::ModelReflections::cell(rw_n rw, cl_n cl) const {
+  switch (cl) {
+  case clID:   return rw + 1;
+  case clTYPE: return rs.at(rw)().peakFun->sType();
+  }
+
+  return l_qt::var();
+}
+
+str Hub::ModelReflections::name(rw_n rw) const {
+  return rs.at(rw)().peakFun->sType();
+}
+
+str_vec Hub::ModelReflections::names() const {
+  str_vec ns;
+  for_i_(rows())
+    ns.add(name(rw_n(i)));
+  return ns;
 }
 
 //------------------------------------------------------------------------------
@@ -437,13 +478,16 @@ void Hub::setNorm(core::eNorm norm) {
 // TODO emitFit(base::fit);
 }
 
+Hub::SetsInfo Hub::setsInfo() const
+  RET_(SetsInfo(currentSets, currentSet, l::sh(base::fp->clone())))
+
 void Hub::filesModified() {
   modelFiles->signalReset();
   mut(*modelDatasets).combineSets();
 }
 
 void Hub::sendSetsInfo() {
-  emitSetsInfo(SetsInfo(currentSets, currentSet, l::sh(base::fp->clone())));
+  emitSetsInfo(setsInfo());
 }
 
 void Hub::setMetaChecked(KeyBag::shr bag) {

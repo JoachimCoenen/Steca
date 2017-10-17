@@ -241,7 +241,7 @@ using strc  = str const&;
 #include <assert.h>
 #define EXPECT_(cond) assert(cond);
 #define ENSURE_(cond) assert(cond);
-#define NEEDED_(cond) (assert(cond), cond)
+#define NEED_(cond)  (assert(cond), cond)
 
 //------------------------------------------------------------------------------
 // eof

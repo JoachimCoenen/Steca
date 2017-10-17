@@ -20,13 +20,13 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
-Reflection::Reflection(fit::ePeakType type) : peakFun(new fit::Raw) {
+Reflection::Reflection(fit::PeakFun::eType type) : peakFun(new fit::Raw) {
   setType(type);
 }
 
 Reflection::Reflection(l::give_me<fit::PeakFun const> f) : peakFun(f) {}
 
-void Reflection::setType(fit::ePeakType type) {
+void Reflection::setType(fit::PeakFun::eType type) {
   setPeakFun(type);
 }
 
@@ -38,7 +38,7 @@ void Reflection::setGuess(peak_t::rc p, fwhm_t f) {
   mut(*peakFun).setGuess(p, f);
 }
 
-void Reflection::setPeakFun(fit::ePeakType type) {
+void Reflection::setPeakFun(fit::PeakFun::eType type) {
   Range r =   mut(*peakFun).range;
   setPeakFun(fit::PeakFun::factory(type));
   setRange(r);
@@ -47,12 +47,6 @@ void Reflection::setPeakFun(fit::ePeakType type) {
 void Reflection::setPeakFun(l::give_me<fit::PeakFun> f) {
   mut(peakFun).reset(mutp(f.ptr())); // TODO mutp?
 }
-
-//str_vec::rc Reflection::typeStrLst() {
-//  static str_vec types{"Raw", "Gaussian", "Lorentzian", "PseudoVoigt1",
-//                       "PseudoVoigt2"};
-//  return types;
-//}
 
 //rcstr Reflection::typeTag(fit::ePeakType type) {
 //  return typeStrLst().at(uint(type));

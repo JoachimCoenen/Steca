@@ -28,9 +28,9 @@ ViewModelBase::ViewModelBase(Hub& hub) : RefHub(hub) {}
 
 Panel::Panel() : Panel(str::null) {}
 
-Panel::Panel(strc title) : vb(base::vb()) {
+Panel::Panel(strc title){
   if (!title.isEmpty())
-    vb.add(new l_qt::lbl(title));
+    vb().add(title).addHline();
 }
 
 //------------------------------------------------------------------------------

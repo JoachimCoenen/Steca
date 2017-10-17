@@ -55,9 +55,9 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(IMG_SHOW_OVER,  act::make("Show overlay",               "",       ":/icon/crop"));
   add(IMG_SHOW_GAMMA, act::make("Show gamma",                 "",       ":/icon/angle"));
 
-  add(OUT_POLEFIG,    act::make("Pole figure...",             "",       ":/icon/polefig"));
-  add(OUT_DIAGRAM,    act::make("Diagram...",                 "",       ":/icon/diagram"));
-  add(OUT_DIFFRGS,    act::make("DIffractograms...",          "",       ":/icon/diffractogram"));
+  add(DLG_POLEFIG,    act::make("Pole figure...",             "Ctrl+P", ":/icon/polefig"));
+  add(DLG_DIAGRAM,    act::make("Diagram...",                 "Ctrl+D", ":/icon/diagram"));
+  add(DLG_DIFFRGS,    act::make("Diffractograms...",          "Ctrl+F", ":/icon/diffractogram"));
 
   get(FILES_ADD).onTrigger([&hub]() {
     hub.addFiles();
@@ -101,9 +101,9 @@ str const Acts::IMG_STEP_ZOOM   ("imgStepZoom");
 str const Acts::IMG_SHOW_OVER   ("imgShowOver");
 str const Acts::IMG_SHOW_GAMMA  ("imgShowGamma");
 
-str const Acts::OUT_POLEFIG     ("outPolefig");
-str const Acts::OUT_DIAGRAM     ("outDiagram");
-str const Acts::OUT_DIFFRGS     ("outDiffrgs");
+str const Acts::DLG_POLEFIG     ("outPolefig");
+str const Acts::DLG_DIAGRAM     ("outDiagram");
+str const Acts::DLG_DIFFRGS     ("outDiffrgs");
 
 //------------------------------------------------------------------------------
 }

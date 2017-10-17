@@ -112,7 +112,7 @@ struct own_ptr : ptr_base {
 
   // convert to non-null
   own<T> justOwn() const {
-    return own<T>(NEEDED_(ptr()));
+    return own<T>(NEED_(ptr()));
   }
 };
 
