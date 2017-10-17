@@ -46,7 +46,7 @@ TEST_("Range::compare",
   CHECK_NE(r, r2);
 )
 
-Range::Range() : Range(l::flt_nan) {}
+Range::Range() : Range(l::real_nan) {}
 
 TEST_("Range()",
   Range r;
@@ -70,7 +70,7 @@ TEST_("Range(v)",
 Range::Range(rc that) : Range(that.min, that.max) {}
 
 Range Range::inf() {
-  return Range(-l::flt_inf, +l::flt_inf);
+  return Range(-l::real_inf, +l::real_inf);
 }
 
 TEST_("Range::inf",
@@ -100,24 +100,24 @@ TEST_("Range::empty",
 )
 
 Range::rv_t Range::width() const {
-  return isDef() ? max - min : l::flt_nan;
+  return isDef() ? max - min : l::real_nan;
 }
 
 TEST_("Range::width",
   CHECK(l::isnan(Range().width()));
   CHECK_EQ(0, Range(0).width());
-  CHECK(l::isinf(Range(0,l::flt_inf).width()));
+  CHECK(l::isinf(Range(0,l::real_inf).width()));
   CHECK(l::isinf(Range::inf().width()));
 )
 
 Range::rv_t Range::center() const {
-  return isDef() ? (min + max) / 2 : l::flt_nan;
+  return isDef() ? (min + max) / 2 : l::real_nan;
 }
 
 TEST_("Range::center",
   CHECK(l::isnan(Range().center()));
   CHECK_EQ(0, Range(0).center());
-  CHECK(l::isinf(Range(0,l::flt_inf).center()));
+  CHECK(l::isinf(Range(0,l::real_inf).center()));
   CHECK(l::isnan(Range::inf().center()));
 )
 
@@ -130,7 +130,7 @@ Range Range::safeFrom(rv_t v1, rv_t v2) {
 TEST_("Range::safeFrom",
   CHECK_EQ(Range::safeFrom(2,3), Range(2,3));
   CHECK_EQ(Range::safeFrom(3,2), Range(2,3));
-  CHECK_EQ(Range::safeFrom(+l::flt_inf, -l::flt_inf), Range::inf());
+  CHECK_EQ(Range::safeFrom(+l::real_inf, -l::real_inf), Range::inf());
 )
 
 void Range::extendBy(rv_t val) {
@@ -173,8 +173,8 @@ TEST_("Range::contains",
 
   CHECK(!r.contains(Range()));
   CHECK(!r.contains(Range::inf()));
-  CHECK(!r.contains(l::flt_nan));
-  CHECK(!r.contains(l::flt_inf));
+  CHECK(!r.contains(l::real_nan));
+  CHECK(!r.contains(l::real_inf));
 
   CHECK(r.contains(r));
 
@@ -249,24 +249,24 @@ TEST_("Range::intersect",
 Range::rv_t Range::bound(rv_t value) const {
   if (isDef() && !l::isnan(value))
     return l::bound(min, value, max);
-  return l::flt_nan;
+  return l::real_nan;
 }
 
 TEST_("Range::bound",
   auto r = Range(-1, +1);
 
   CHECK(l::isnan(Range().bound(0)));
-  CHECK(l::isnan(Range().bound(l::flt_inf)));
-  CHECK(l::isnan(Range().bound(l::flt_nan)));
+  CHECK(l::isnan(Range().bound(l::real_inf)));
+  CHECK(l::isnan(Range().bound(l::real_nan)));
   CHECK_EQ(0, Range::inf().bound(0));
-  CHECK(l::isinf(Range::inf().bound(l::flt_inf)));
-  CHECK(l::isnan(Range::inf().bound(l::flt_nan)));
+  CHECK(l::isinf(Range::inf().bound(l::real_inf)));
+  CHECK(l::isnan(Range::inf().bound(l::real_nan)));
 
   CHECK_EQ(0,  r.bound(0));
   CHECK_EQ(-1, r.bound(-10));
-  CHECK_EQ(-1, r.bound(-l::flt_inf));
+  CHECK_EQ(-1, r.bound(-l::real_inf));
   CHECK_EQ(+1, r.bound(+10));
-  CHECK_EQ(+1, r.bound(+l::flt_inf));
+  CHECK_EQ(+1, r.bound(+l::real_inf));
 )
 
 Range::ref Range::operator=(rc that) {
@@ -304,7 +304,7 @@ TEST_("Ranges:=",
   CHECK_NE(rs1, rs2);
 //  CHECK_EQ(rs2, rs22);
 //  CHECK_EQ(rs22, rs2);
-  CHECK(rs22.add(Range(-l::flt_inf, -1)));
+  CHECK(rs22.add(Range(-l::real_inf, -1)));
 
   CHECK_NE(rs22, rs2);
 )

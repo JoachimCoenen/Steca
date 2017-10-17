@@ -119,7 +119,7 @@ strc PeakFun::sType() const {
   return s.at(uint(type()));
 };
 
-PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::flt_nan) {}
+PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::real_nan) {}
 
 void PeakFun::reset() {
   base::reset();
@@ -227,7 +227,7 @@ void Raw::prepareY() {
     dx      = range.width() / x_count;
   }
 
-  sum_y = l::flt_nan;
+  sum_y = l::real_nan;
 }
 
 //------------------------------------------------------------------------------

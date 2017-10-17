@@ -9,7 +9,7 @@ namespace l_qt {
 //------------------------------------------------------------------------------
 
 dcl_sub_(spin, QSpinBox)
-  spin();
+  explicit spin(uint digitWidth = 5);
 
   set_(digitWidth, (uint));
   set_(min, (int));
@@ -19,7 +19,7 @@ dcl_sub_(spin, QSpinBox)
 dcl_end
 
 dcl_sub_(spinInt, spin)
-  spinInt();
+  spinInt(uint digitWidth = 5);
 
 signals:
   void valChg(int);
@@ -28,7 +28,7 @@ private:
 dcl_end
 
 dcl_sub_(spinUint, spin)
-  spinUint();
+  explicit spinUint(uint digitWidth = 5);
 
 signals:
   void valChg(uint);
@@ -37,7 +37,7 @@ private:
 dcl_end
 
 dcl_sub_(spinPint, spin)
-  spinPint();
+  explicit spinPint(uint digitWidth = 5);
 
 signals:
   void valChg(l::pint);
@@ -48,7 +48,7 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(spinReal, QDoubleSpinBox)
-  spinReal(uint decimals = 2);
+  explicit spinReal(uint decimals = 2, uint digitWidth = 5);
 
   set_(decimals,   (uint));
   set_(digitWidth, (uint));

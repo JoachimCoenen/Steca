@@ -18,39 +18,87 @@
 #include "panel_setup.hpp"
 #include <lib/qt/tabs.hpp>
 #include <lib/qt/inc/defs.inc>
-#include <lib/qt/lbl.hpp>
+#include <lib/qt/wgt_inc.hpp>
+#include "../thehub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-PanelSetup::PanelSetup() : base("") {
+PanelSetup::PanelSetup(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
 
-
   {
     tabs->addTab(tabGeometry    = new Panel(), "Geometry");
-    auto&& gr = tabGeometry->gr();
+    auto&& vb = tabGeometry->vb();
 
-    gr.addSection("detector", 3);
-    gr.add({new l_qt::lbl("distan"), new l_qt::lbl("disance"), new l_qt::lbl("distance")});
-    gr.add({new l_qt::lbl("disce"), new l_qt::lbl("distance"), new l_qt::lbl("distance")});
-    gr.add({new l_qt::lbl("tace"), new l_qt::lbl("disce"), new l_qt::lbl("die")});
-//      auto&& img = vb.add(new Panel("image"));
-//      auto&& hb = img.hb();
+    vb.addSection("detector");
 
-    gr.addColStretch();
-    gr.addRowStretch();
+    auto&& detDist    = new l_qt::spinReal();
+    auto&& detPixSize = new l_qt::spinReal(3);
+    auto&& detBeamX   = new l_qt::spinInt();
+    auto&& detBeamY   = new l_qt::spinInt();
+
+    {
+      auto&& gr = vb.gr();
+      gr.add({new l_qt::lbl("distance"),      detDist,    new l_qt::lbl("mm")});
+      gr.add({new l_qt::lbl("pixel size"),    detPixSize, new l_qt::lbl("mm")});
+      gr.add({new l_qt::lbl("beam offset X"), detBeamX,   new l_qt::lbl("pix")});
+      gr.add({new l_qt::lbl("Y"),             detBeamY,   new l_qt::lbl("pix")});
+      gr.addStretch();
+    }
+
+    vb.addSection("image");
+
+    {
+      auto&& gr = vb.gr();
+      gr.add({new l_qt::actbtn(hub.acts.get(hub.acts.IMG_ROTATE0)),     new l_qt::lbl("rotate")});
+      gr.add({new l_qt::actbtn(hub.acts.get(hub.acts.IMG_MIRROR_HORZ)), new l_qt::lbl("mirror")});
+    }
+
+    auto&& cutLeft   = new l_qt::spinUint(3);
+    auto&& cutRight  = new l_qt::spinUint(3);
+    auto&& cutTop    = new l_qt::spinUint(3);
+    auto&& cutBottom = new l_qt::spinUint(3);
+
+    {
+      auto&& gr = vb.gr();
+      gr.add({new l_qt::actbtn(hub.acts.get(hub.acts.IMG_LINK_CUT)), new l_qt::lbl("cut"),
+              new l_qt::ico(":/icon/cutLeft"), cutLeft, new l_qt::ico(":/icon/cutRight"), cutRight});
+      gr.add({nullptr, nullptr,
+              new l_qt::ico(":/icon/cutTop"), cutTop, new l_qt::ico(":/icon/cutBottom"), cutBottom});
+      gr.addStretch();
+    }
+
+    vb.addStretch();
   }
 
   {
     tabs->addTab(tabBackground  = new Panel(), "Background");
+    auto&& vb = tabBackground->vb();
 
+    auto&& polDegree = new l_qt::spinUint(1); polDegree->max(4);
+
+    vb.hb().add(new l_qt::actbtn(hub.acts.get(hub.acts.BG_SELECT)))
+           .add(new l_qt::actbtn(hub.acts.get(hub.acts.BG_SHOW)))
+           .add(new l_qt::actbtn(hub.acts.get(hub.acts.BG_CLEAR)))
+           .addStretch();
+    vb.hb().add(new l_qt::lbl("Pol. degree")).add(polDegree)
+           .addStretch();
+
+    vb.addStretch();
   }
 
   {
     tabs->addTab(tabReflections = new Panel(), "Reflections");
+    auto&& vb = tabReflections->vb();
 
+    vb.hb().add(new l_qt::actbtn(hub.acts.get(hub.acts.REFL_SELECT)))
+           .add(new l_qt::actbtn(hub.acts.get(hub.acts.BG_SHOW)))
+           .add(new l_qt::actbtn(hub.acts.get(hub.acts.REFL_CLEAR)))
+           .addStretch();
+
+    vb.addStretch();
   }
 }
 

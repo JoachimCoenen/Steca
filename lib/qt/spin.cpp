@@ -7,10 +7,18 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-spin::spin() {}
+spin::spin(uint digitWidth_) {
+  setAlignment(Qt::AlignRight); digitWidth(digitWidth_);
+  min(l::val_min(val()));
+  max(l::val_max(val()));
+}
 
-spin::ref spin::digitWidth(uint n)
-  SET_(base::setMaximumWidth(mWidth(*this, n)))
+spin::ref spin::digitWidth(uint n) {
+  auto&& w = mWidth(*this, n + 1); // for the spinner
+  base::setMinimumWidth(w);
+  base::setMaximumWidth(w);
+  RTHIS;
+}
 
 spin::ref spin::min(int val)
   SET_(base::setMinimum(val))
@@ -26,20 +34,20 @@ int spin::val() const
 
 //------------------------------------------------------------------------------
 
-spinInt::spinInt() {
+spinInt::spinInt(uint digitWidth) : base(digitWidth) {
   connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
     emit valChg(val());
   });
 }
 
-spinUint::spinUint() {
+spinUint::spinUint(uint digitWidth) : base(digitWidth) {
   min(0);
   connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
     emit valChg(l::to_uint(val()));
   });
 }
 
-spinPint::spinPint() {
+spinPint::spinPint(uint digitWidth) : base(digitWidth) {
   min(1);
   connect(this, static_cast<void (Self::*)(int)>(&Self::valueChanged), [this](int) {
     emit valChg(l::pint(l::to_uint(val())));
@@ -48,8 +56,9 @@ spinPint::spinPint() {
 
 //------------------------------------------------------------------------------
 
-spinReal::spinReal(uint decimals_) {
-  decimals(decimals_);
+spinReal::spinReal(uint decimals_, uint digitWidth_) {
+  decimals(decimals_); min(-l::real_inf); max(+l::real_inf);
+  setAlignment(Qt::AlignRight); digitWidth(digitWidth_);
   connect(this, static_cast<void (Self::*)(double)>(&Self::valueChanged), [this](double) {
     emit valChg(val());
   });
@@ -58,8 +67,12 @@ spinReal::spinReal(uint decimals_) {
 spinReal::ref spinReal::decimals(uint n)
   SET_(base::setDecimals(int(n)))
 
-spinReal::ref spinReal::digitWidth(uint n)
-  SET_(base::setMaximumWidth(mWidth(*this, n)))
+spinReal::ref spinReal::digitWidth(uint n) {
+  auto&& w = mWidth(*this, n + 1); // for the spinner
+  base::setMinimumWidth(w);
+  base::setMaximumWidth(w);
+  RTHIS;
+}
 
 spinReal::ref spinReal::min(real val)
   SET_(base::setMinimum(val))

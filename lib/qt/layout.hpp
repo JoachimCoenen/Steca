@@ -27,6 +27,7 @@ dcl_sub_(grid, QGridLayout)
 
   set_(addRowStretch, ());
   set_(addColStretch, ());
+  set_(addStretch,    ());
 
   grid();
 dcl_end
@@ -44,11 +45,15 @@ dcl_sub_(box, QBoxLayout)
 
   set_(margin,  (uint));
   set_(spacing, (uint));
+
+  set_(addSection, (strc));
   set_(add,     (QWidget*));
   set_(add,     (QLayout*));
   set_(add,     (strc));
   set_(addHline, ());
+
   set_(addStretch, ());
+
   set_(align,   (QLayout&, Qt::Alignment));
   set_(align,   (QWidget*, Qt::Alignment));
 dcl_end

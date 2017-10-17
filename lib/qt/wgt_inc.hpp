@@ -8,6 +8,7 @@
 #include "cbo.hpp"
 #include "chk.hpp"
 #include "edit.hpp"
+#include "ico.hpp"
 #include "layout.hpp"
 #include "lbl.hpp"
 #include "lst.hpp"

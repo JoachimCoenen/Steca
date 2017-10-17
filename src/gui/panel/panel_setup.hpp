@@ -22,7 +22,7 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_sub_(PanelSetup, Panel)
-  PanelSetup();
+  explicit PanelSetup(Hub&);
 
 private:
   Panel *tabGeometry, *tabBackground, *tabReflections;

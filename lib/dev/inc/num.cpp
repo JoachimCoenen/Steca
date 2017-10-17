@@ -39,8 +39,8 @@ flt32 const flt32_inf = std::numeric_limits<flt32>::infinity();
 flt64 const flt64_nan = std::numeric_limits<flt64>::quiet_NaN();
 flt64 const flt64_inf = std::numeric_limits<flt64>::infinity();
 
-real const flt_nan = std::numeric_limits<real>::quiet_NaN();
-real const flt_inf = std::numeric_limits<real>::infinity();
+real  const real_nan = std::numeric_limits<real>::quiet_NaN();
+real  const real_inf = std::numeric_limits<real>::infinity();
 
 bool isnan(flt32 f) {
   return std::isnan(f);
@@ -76,17 +76,17 @@ bool isnormal(flt64 f) {
 
 TEST_("num nan/fin/normal",
   float f;
-  f = float(flt_nan);
+  f = float(real_nan);
     CHECK(isnan(f));  CHECK(!isfin(f)); CHECK(!isinf(f));
-  f = float(flt_inf);
+  f = float(real_inf);
     CHECK(!isnan(f)); CHECK(!isfin(f)); CHECK(isinf(f));
   f = 1.f;
     CHECK(!isnan(f)); CHECK(isfin(f));  CHECK(!isinf(f));
 
   double d;
-  d = double(float(flt_nan));
+  d = double(float(real_nan));
     CHECK(isnan(d));  CHECK(!isfin(d)); CHECK(!isinf(d));
-  d = double(float(flt_inf)); CHECK(isinf(d));
+  d = double(float(real_inf)); CHECK(isinf(d));
     CHECK(!isnan(d)); CHECK(!isfin(d)); CHECK(isinf(d));
   d = 1.0;
     CHECK(!isnan(d)); CHECK(isfin(d));  CHECK(!isinf(d));
@@ -94,7 +94,7 @@ TEST_("num nan/fin/normal",
   CHECK(isnormal(1.f));  CHECK(isnormal(1.));
   CHECK(!isnormal(0.f)); CHECK(!isnormal(0.));
 
-  CHECK(!isnormal(flt_inf)); CHECK(!isnormal(flt_nan));
+  CHECK(!isnormal(real_inf)); CHECK(!isnormal(real_nan));
 
   double subnormal = 1e-323;
   CHECK_NE(0.0, subnormal); CHECK(!isnormal(subnormal));
@@ -139,8 +139,8 @@ TEST_("num floor/ceil/...",
 
   CHECK_EQ(1, bound(1,-3, 2)); CHECK_EQ(2, bound(1,+3, 2));
 
-  CHECK_EQ(1, notnan(1., 2.)); CHECK_EQ(flt_inf, notnan(flt_inf, 2.));
-  CHECK_EQ(2, notnan(flt_nan, 2.));
+  CHECK_EQ(1, notnan(1., 2.)); CHECK_EQ(real_inf, notnan(real_inf, 2.));
+  CHECK_EQ(2, notnan(real_nan, 2.));
 )
 
 flt32 pow(flt32 x, uint n) {

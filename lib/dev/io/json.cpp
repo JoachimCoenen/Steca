@@ -296,7 +296,7 @@ Json Json::loadNum(std::istream& is) may_err {
   }
 
   if (isMatch(is, 'i') && isMatch(is, 'n') && isMatch(is, 'f'))
-    return Json(flt32(neg ? -l::flt_inf : +l::flt_inf));
+    return Json(flt32(neg ? -l::real_inf : +l::real_inf));
 
   l::err("json: bad number");
 }
@@ -372,7 +372,7 @@ l::xy Json::asXY() const {
 
 TEST_("json",
   Json::Obj obj; obj.add("a", Json(2));
-  Json::Vec vec({Json(8), Json(l::flt_inf), Json("f"), Json(8)});
+  Json::Vec vec({Json(8), Json(l::real_inf), Json("f"), Json(8)});
 
   Json::Obj obj2;
   obj2.add("obj", Json(obj)); obj2.add("vec", Json(vec));

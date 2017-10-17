@@ -55,6 +55,23 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(IMG_SHOW_OVER,  act::make("Show overlay",               "",       ":/icon/crop"));
   add(IMG_SHOW_GAMMA, act::make("Show gamma",                 "",       ":/icon/angle"));
 
+  add(IMG_ROTATE0,    act::make("Rotate 90°",                 "",       ":/icon/rotate0"));
+  add(IMG_ROTATE1,    act::make("Rotate 180°",                "",       ":/icon/rotate1"));
+  add(IMG_ROTATE2,    act::make("Rotate 270°",                "",       ":/icon/rotate2"));
+  add(IMG_ROTATE3,    act::make("Rotate 0°",                  "",       ":/icon/rotate3"));
+
+  add(IMG_MIRROR_HORZ,act::make("Mirror horizontally",        "",       ":/icon/mirrorHorz"));
+  add(IMG_MIRROR_VERT,act::make("Mirror vertically",          "",       ":/icon/mirrorVert"));
+
+  add(IMG_LINK_CUT,   act::make("Link cut values",            "",       ":/icon/link"));
+
+  add(BG_SELECT,      act::make("Select regions",             "",       ":/icon/selRegion"));
+  add(BG_SHOW,        act::make("Show fitted background",     "",       ":/icon/showBackground"));
+  add(BG_CLEAR,       act::make("Clear background",           "",       ":/icon/clear"));
+
+  add(REFL_SELECT,    act::make("Select regions",             "",       ":/icon/selRegion"));
+  add(REFL_CLEAR,     act::make("Clear background",           "",       ":/icon/clear"));
+
   add(DLG_POLEFIG,    act::make("Pole figure...",             "Ctrl+P", ":/icon/polefig"));
   add(DLG_DIAGRAM,    act::make("Diagram...",                 "Ctrl+D", ":/icon/diagram"));
   add(DLG_DIFFRGS,    act::make("Diffractograms...",          "Ctrl+F", ":/icon/diffractogram"));
@@ -100,6 +117,23 @@ str const Acts::IMG_FIX_INTEN   ("imgFixInten");
 str const Acts::IMG_STEP_ZOOM   ("imgStepZoom");
 str const Acts::IMG_SHOW_OVER   ("imgShowOver");
 str const Acts::IMG_SHOW_GAMMA  ("imgShowGamma");
+
+str const Acts::IMG_ROTATE0     ("rotate0");
+str const Acts::IMG_ROTATE1     ("rotate1");
+str const Acts::IMG_ROTATE2     ("rotate2");
+str const Acts::IMG_ROTATE3     ("rotate3");
+
+str const Acts::IMG_MIRROR_HORZ ("mirrorHorz");
+str const Acts::IMG_MIRROR_VERT ("mirrorVert");
+
+str const Acts::IMG_LINK_CUT    ("linkCut");
+
+str const Acts::BG_SELECT       ("bgSelect");
+str const Acts::BG_SHOW         ("bgShow");
+str const Acts::BG_CLEAR        ("bgClear");
+
+str const Acts::REFL_SELECT     ("reflSelect");
+str const Acts::REFL_CLEAR      ("reflClear");
 
 str const Acts::DLG_POLEFIG     ("outPolefig");
 str const Acts::DLG_DIAGRAM     ("outDiagram");

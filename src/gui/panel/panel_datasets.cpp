@@ -49,7 +49,7 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
   hb.add(mut(*view->model).makeTriChk(str::null));
   hb.addStretch();
 
-  auto&& spin = new l_qt::spinPint();
+  auto&& spin = new l_qt::spinPint(2);
   hb.add("Combine").add(spin);
 
   auto&& md = static_cast<Hub::ModelDatasets const*>(view->model);

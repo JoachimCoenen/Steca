@@ -11,7 +11,7 @@ template <typename Real>
 dcl_(RealNum)
   atr_(Real, val);
 
-  explicit RealNum(Real val_ = flt_nan) : val(val_) {}
+  explicit RealNum(Real val_ = real_nan) : val(val_) {}
   cop_(Real) RET_(val)
 
 #define REALNUM_DCL_OP(op) \

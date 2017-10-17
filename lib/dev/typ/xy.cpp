@@ -6,7 +6,7 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-xy::xy() : xy(flt_nan, flt_nan) {}
+xy::xy() : xy(real_nan, real_nan) {}
 xy::xy(real x_, real y_) : x(x_), y(y_) {}
 
 COMPARABLE_IMPL(xy) {

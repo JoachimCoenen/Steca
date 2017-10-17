@@ -41,7 +41,7 @@ namespace gui {
 Win::Win() : hub(*this) {
   panelFiles         = new PanelFiles(hub);
   panelDatasets      = new PanelDatasets(hub);
-  panelSetup         = new PanelSetup();
+  panelSetup         = new PanelSetup(hub);
   panelImage         = new PanelImage(hub);
   panelDiffractogram = new PanelDiffractogram(hub);
   panelMetadata      = new PanelMetadata(hub);

@@ -111,7 +111,7 @@ void FitParams::calcIntensCorr() const {
     if (inten > 0) {
       factor = avg / inten;
     } else {
-      factor = l::flt_nan;
+      factor = l::real_nan;
       corrHasNaNs = true;
     }
 

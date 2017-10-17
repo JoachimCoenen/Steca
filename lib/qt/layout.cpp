@@ -42,7 +42,8 @@ grid::ref grid::add(l::vec<QWidget*> ws) {
   auto&& row = rowCount();
   for_i_(ws.size()) {
     auto&& w = ws.at(i);
-    add(w, uint(row), i);
+    if (w)
+      add(w, uint(row), i);
     if (0 == i && dynamic_cast<QLabel*>(w))
       setAlignment(w, Qt::AlignRight);
   }
@@ -63,6 +64,11 @@ grid::ref grid::addRowStretch()
 
 grid::ref grid::addColStretch()
   SET_(setColumnStretch(columnCount(), 1))
+
+grid::ref grid::addStretch() {
+  addRowStretch(); addColStretch();
+  RTHIS;
+}
 
 grid::grid() {
   base::setSpacing(2);
@@ -112,6 +118,12 @@ box::ref box::margin(uint n) {
 
 box::ref box::spacing(uint n) {
   setMargin(int(n)); RTHIS
+}
+
+box::ref box::addSection(strc tx) {
+  add(tx);
+  addHline();
+  RTHIS;
 }
 
 box::ref box::add(QWidget* wgt) {
