@@ -27,7 +27,7 @@ dcl_sub_(ViewMetadata, ViewModel<Hub::ModelMetadata>)
   ViewMetadata(Hub&);
 dcl_end
 
-ViewMetadata::ViewMetadata(Hub& hub) : base(hub, hub.modelMetadata) {}
+ViewMetadata::ViewMetadata(Hub& hub) : base(hub.modelMetadata) {}
 
 //------------------------------------------------------------------------------
 

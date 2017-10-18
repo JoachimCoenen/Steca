@@ -107,24 +107,6 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     core::data::CombinedSet::shp set;
   dcl_end
 
-  dcl_sub_(ModelReflections, l_qt::lst_model)
-    ModelReflections(core::calc::reflection_vec::rc);
-
-    enum { clID, clTYPE };
-
-    mth_(cl_n, cols, ());
-    mth_(rw_n, rows, ());
-
-    mth_(str,       head, (cl_n));
-    mth_(l_qt::var, cell, (rw_n, cl_n));
-
-    mth_(str,     name,  (rw_n));
-    mth_(str_vec, names, ());
-
-  private:
-    core::calc::reflection_vec::rc rs;
-  dcl_end
-
 //------------------------------------------------------------------------------
 
 private:

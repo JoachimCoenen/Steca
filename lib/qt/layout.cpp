@@ -44,8 +44,14 @@ grid::ref grid::add(l::vec<QWidget*> ws) {
     auto&& w = ws.at(i);
     if (w)
       add(w, uint(row), i);
-    if (0 == i && dynamic_cast<QLabel*>(w))
-      setAlignment(w, Qt::AlignRight);
+    QLabel* lbl;
+    if ((lbl = dynamic_cast<QLabel*>(w))) {
+      auto tx = lbl->text();
+      if ("<" == tx.left(1))
+        lbl->setText(tx.mid(1));
+      else
+        setAlignment(w, Qt::AlignRight);
+    }
   }
 
   RTHIS;

@@ -8,7 +8,8 @@ class QWidget;
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-int mWidth(QWidget const&, real n = 1);
+int width_m(QWidget const&, real n = 1);
+int width_0(QWidget const&, real n = 1);
 
 //------------------------------------------------------------------------------
 }

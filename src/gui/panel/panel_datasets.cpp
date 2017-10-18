@@ -25,12 +25,11 @@ namespace gui {
 
 dcl_sub_(ViewDatasets, ViewModel<Hub::ModelDatasets>)
   ViewDatasets(Hub&);
-
 private:
   voi_(onSelected, (int));
 dcl_end
 
-ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {}
+ViewDatasets::ViewDatasets(Hub& hub) : base(hub.modelDatasets) {}
 
 void ViewDatasets::onSelected(int row) const {
   model->setSetAt(row);

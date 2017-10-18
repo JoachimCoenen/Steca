@@ -14,7 +14,7 @@ spin::spin(uint digitWidth_) {
 }
 
 spin::ref spin::digitWidth(uint n) {
-  auto&& w = mWidth(*this, n + 1); // for the spinner
+  auto&& w = width_0(*this, n + 3.33); // adjustment for the spinner
   base::setMinimumWidth(w);
   base::setMaximumWidth(w);
   RTHIS;
@@ -56,7 +56,7 @@ spinPint::spinPint(uint digitWidth) : base(digitWidth) {
 
 //------------------------------------------------------------------------------
 
-spinReal::spinReal(uint decimals_, uint digitWidth_) {
+spinReal::spinReal(uint digitWidth_, uint decimals_) {
   decimals(decimals_); min(-l::real_inf); max(+l::real_inf);
   setAlignment(Qt::AlignRight); digitWidth(digitWidth_);
   connect(this, static_cast<void (Self::*)(double)>(&Self::valueChanged), [this](double) {
@@ -68,7 +68,7 @@ spinReal::ref spinReal::decimals(uint n)
   SET_(base::setDecimals(int(n)))
 
 spinReal::ref spinReal::digitWidth(uint n) {
-  auto&& w = mWidth(*this, n + 1); // for the spinner
+  auto&& w = width_0(*this, n + 3.33); // adjustment for the spinner
   base::setMinimumWidth(w);
   base::setMaximumWidth(w);
   RTHIS;

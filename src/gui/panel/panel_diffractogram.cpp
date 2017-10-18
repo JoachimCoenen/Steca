@@ -454,10 +454,10 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
   hb.add(" inten:");
   hb.add(new l_qt::rio("sum"));
   hb.add(new l_qt::rio("avg ×"));
-  hb.add(new l_qt::spinReal()); // em4_2, 0.001 setDecimals(3);
+  hb.add(new l_qt::spinReal(5, 3));
 
   hb.addStretch();
-  hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.DIFF_ZOOM)));
+  hb.add(btn(hub.acts.get(hub.acts.DIFF_ZOOM)));
   hb.addStretch();
 
   hb.add(new l_qt::chk(hub.acts.get(hub.acts.DIFF_ALL_DSETS)));

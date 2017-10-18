@@ -20,16 +20,19 @@
 #include <lib/qt/lst.hpp>
 #include "../refhub.hpp"
 
+namespace l_qt {
+  struct act;
+  struct actbtn;
+  struct lbl;
+  struct ico;
+}
+
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewModelBase, RefHub, l_qt::lst_view)
-  ViewModelBase(Hub&);
-dcl_end
-
 template <typename Model>
-dcl_sub_(ViewModel, ViewModelBase)
-  ViewModel(Hub& hub, Model const* model_) : base(hub) {
+dcl_sub_(ViewModel, l_qt::lst_view)
+  ViewModel(Model const* model_) {
     setModel(model = model_);
   }
 
@@ -40,6 +43,12 @@ dcl_end
 //------------------------------------------------------------------------------
 
 struct Hub;
+
+l_qt::actbtn* btn(l_qt::act&);
+l_qt::lbl*    lbl(strc);
+l_qt::ico*    ico(strc);
+
+//------------------------------------------------------------------------------
 
 dcl_sub_(Panel, l_qt::panel)
   Panel();

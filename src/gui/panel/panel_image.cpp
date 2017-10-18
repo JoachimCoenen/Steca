@@ -128,16 +128,18 @@ void ImageWidget::paintEvent(QPaintEvent*) {
 
 //------------------------------------------------------------------------------
 
-l_qt::spinPint *spinN; // TODO
-l_qt::spinUint *numSlices; // TODO
-l_qt::spinPint *sliceNo; // TODO
-l_qt::spinPint *binNo; // TODO
-l_qt::spinReal *minGamma; // TODO
-l_qt::spinReal *maxGamma; // TODO
-
 PanelImage::PanelImage(Hub& hub) : base("") {
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
+
+  auto&& as = hub.acts;
+
+  auto&& spinN      = new l_qt::spinPint(5);
+  auto&& numSlices  = new l_qt::spinUint(5);
+  auto&& sliceNo    = new l_qt::spinPint(5);
+  auto&& binNo      = new l_qt::spinPint(5);
+  auto&& minGamma   = new l_qt::spinReal(5, 2); minGamma->setReadOnly(true);
+  auto&& maxGamma   = new l_qt::spinReal(5, 2); maxGamma->setReadOnly(true);
 
   {
     auto&& tab = new Panel;
@@ -147,24 +149,18 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     auto&& hb = vb.hb();
     vb.align(hb, Qt::AlignTop);
 
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_FIX_INTEN)));
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_STEP_ZOOM)));
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_SHOW_OVER)));
+    auto&& lb = hb.vb();
+    lb.hb().add(spinN);
+    lb.hb().add(btn(as.get(as.IMG_FIX_INTEN)))
+           .add(btn(as.get(as.IMG_STEP_ZOOM)))
+           .add(btn(as.get(as.IMG_SHOW_OVER)));
 
-    hb.add(spinN = new l_qt::spinPint);
     hb.addStretch();
 
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_SHOW_GAMMA)));
-    hb.add("γ count").add(numSlices = new l_qt::spinUint);
-    hb.add("#")      .add(sliceNo   = new l_qt::spinPint);
-
-    hb.add("min").add(minGamma = new l_qt::spinReal);
-    hb.add("max").add(maxGamma = new l_qt::spinReal);
-
-    minGamma->setReadOnly(true);
-    maxGamma->setReadOnly(true);
-
-    hb.add("bin#").add(binNo = new l_qt::spinPint);
+    hb.gr().add({btn(as.get(as.IMG_SHOW_GAMMA)),
+                 lbl("γ count"), numSlices, lbl("#"), sliceNo, lbl("bin#"), binNo})
+           .add({nullptr,
+                 lbl("min"), minGamma, lbl("max"), maxGamma});
 
     vb.addWidget(wgtImage = new ImageWidget(*this));
 
@@ -201,9 +197,9 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     auto&& hb = vb.hb();
     vb.align(hb, Qt::AlignTop);
 
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_FIX_INTEN)));
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_STEP_ZOOM)));
-    hb.add(new l_qt::actbtn(hub.acts.get(hub.acts.IMG_SHOW_OVER)));
+    hb.add(btn(as.get(as.IMG_FIX_INTEN)));
+    hb.add(btn(as.get(as.IMG_STEP_ZOOM)));
+    hb.add(btn(as.get(as.IMG_SHOW_OVER)));
     hb.addStretch();
 
     vb.add(wgtCorrection = new ImageWidget(*this));

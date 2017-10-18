@@ -160,7 +160,7 @@ void lst_view::keyPressEvent(QKeyEvent* e) {
 }
 
 int lst_view::sizeHintForColumn(int) const {
-  return mWidth(*this, 1.6);
+  return width_m(*this, 1.6);
 }
 
 void lst_view::currentChanged(QModelIndex const& current, QModelIndex const& previous) {

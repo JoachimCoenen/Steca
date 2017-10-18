@@ -18,11 +18,22 @@
 #include "panel.hpp"
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/lbl.hpp>
+#include <lib/qt/wgt_inc.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-ViewModelBase::ViewModelBase(Hub& hub) : RefHub(hub) {}
+l_qt::actbtn* btn(l_qt::act& act) {
+  return new l_qt::actbtn(act);
+}
+
+l_qt::lbl* lbl(strc tx) {
+  return new l_qt::lbl(tx);
+}
+
+l_qt::ico* ico(strc file) {
+  return new l_qt::ico(file);
+}
 
 //------------------------------------------------------------------------------
 

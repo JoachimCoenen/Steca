@@ -52,7 +52,7 @@ private:
 dcl_end
 
 ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_)
-: base(hub, hub.modelFiles), viewFile(viewFile_)
+: base(hub.modelFiles), viewFile(viewFile_)
 , actRem(hub.acts.get(hub.acts.FILES_REM)) {
   actRem.onTrigger([this]() {
     removeSelected();
@@ -95,8 +95,8 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto&& p = new l_qt::panel;
   auto&& hb = p->hb();
 
-  auto&& btnAdd = new l_qt::actbtn(a.get(a.FILES_ADD));
-  auto&& btnRem = new l_qt::actbtn(a.get(a.FILES_REM));
+  auto&& btnAdd = btn(a.get(a.FILES_ADD));
+  auto&& btnRem = btn(a.get(a.FILES_REM));
 
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab(tab = new Panel(), "Files", p);
@@ -116,8 +116,8 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
     edit->text(name);
   });
 
-  h.add(new l_qt::actbtn(a.get(a.CORR_ENABLE)));
-  h.add(new l_qt::actbtn(a.get(a.CORR_REM)));
+  h.add(btn(a.get(a.CORR_ENABLE)));
+  h.add(btn(a.get(a.CORR_REM)));
 }
 
 //------------------------------------------------------------------------------

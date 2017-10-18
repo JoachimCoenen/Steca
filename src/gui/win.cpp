@@ -76,26 +76,26 @@ Win::Win() : hub(*this) {
   auto tb = new l_qt::hbox; // toolbar
   tw->setLayout(tb);
 
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_FILES)));
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
+  tb->add(btn(a.get(a.SHOW_FILES)));
+  tb->add(btn(a.get(a.SHOW_DATASETS)));
+  tb->add(btn(a.get(a.SHOW_METADATA)));
   tb->addSpacing(8);
 
-  tb->add(new l_qt::actbtn(a.get(a.DLG_POLEFIG)));
-  tb->add(new l_qt::actbtn(a.get(a.DLG_DIAGRAM)));
-  tb->add(new l_qt::actbtn(a.get(a.DLG_DIFFRGS)));
+  tb->add(btn(a.get(a.DLG_POLEFIG)));
+  tb->add(btn(a.get(a.DLG_DIAGRAM)));
+  tb->add(btn(a.get(a.DLG_DIFFRGS)));
   tb->addSpacing(8);
 
-  tb->add(new l_qt::actbtn(a.get(a.SESSION_LOAD)));
-  tb->add(new l_qt::actbtn(a.get(a.SESSION_SAVE)));
+  tb->add(btn(a.get(a.SESSION_LOAD)));
+  tb->add(btn(a.get(a.SESSION_SAVE)));
   tb->addSpacing(8);
 
 #ifndef Q_OS_OSX
-  tb->add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
+  tb->add(btn(a.get(a.FULL_SCREEN)));
 #endif
   tb->addSpacing(8);
-  tb->add(new l_qt::actbtn(a.get(a.ABOUT)));
-  tb->add(new l_qt::actbtn(a.get(a.QUIT)));
+  tb->add(btn(a.get(a.ABOUT)));
+  tb->add(btn(a.get(a.QUIT)));
 
   a.get(a.SHOW_FILES).onToggle([this](bool on) {
     panelFiles->setVisible(on);
