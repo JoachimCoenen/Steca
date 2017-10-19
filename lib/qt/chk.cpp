@@ -16,7 +16,10 @@ chk_base::ref chk_base::text(strc t)
 
 //------------------------------------------------------------------------------
 
-chk::chk(act& act) : base(str::null) {
+chk::chk(strc tx) : base(tx) {
+}
+
+chk::chk(act& act, strc tx) : base(tx) {
   action(&act);
 }
 

@@ -60,8 +60,12 @@ l_qt::rio* rio(strc tx) {
   return new l_qt::rio(tx);
 }
 
-l_qt::chk* chk(l_qt::act& a) {
-  return new l_qt::chk(a);
+l_qt::chk* chk(strc tx) {
+  return new l_qt::chk(tx);
+}
+
+l_qt::chk* chk(l_qt::act& a, strc tx) {
+  return new l_qt::chk(a, tx);
 }
 
 l_qt::edit* edit() {

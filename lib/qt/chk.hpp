@@ -2,6 +2,7 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
+#include <lib/dev/inc/str.hpp>
 #include <QCheckBox>
 
 namespace l_qt {
@@ -17,7 +18,8 @@ dcl_end
 
 dcl_sub_(chk, chk_base)
   using base::base;
-  chk(act&);
+  chk(act&, strc = str::null);
+  chk(strc = str::null);
 
   set_(action, (act*));
   set_(check,  (bool = true));

@@ -23,18 +23,6 @@ namespace gui { namespace calc_dlg {
 
 dcl_sub_(PoleFigure, Frame)
   PoleFigure(QWidget*, Hub::rc);
-
-//protected:
-//  TabGraph           *tabGraph_;
-//  TabPoleFiguresSave *tabSave_;
-
-//  void displayReflection(uint reflIndex, bool interpolated);
-
-//  bool savePoleFigureOutput();
-//  bool writePoleFigureOutputFiles(rcstr filePath, uint index);
-//  void writePoleFile(rcstr filePath,  calc::ReflectionInfos, qreal_vec::rc);
-//  void writeListFile(rcstr filePath,  calc::ReflectionInfos, qreal_vec::rc);
-//  void writeErrorMask(rcstr filePath, calc::ReflectionInfos, qreal_vec::rc);
 dcl_end
 
 //------------------------------------------------------------------------------

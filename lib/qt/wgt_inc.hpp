@@ -33,7 +33,9 @@ l_qt::spinReal* spinReal(uint digitWidth, uint decimals);
 l_qt::cbo*      cbo();
 l_qt::cbo*      cbo(str_vec const&);
 l_qt::rio*      rio(strc);
-l_qt::chk*      chk(l_qt::act&);
+
+l_qt::chk*      chk(strc = str::null);
+l_qt::chk*      chk(l_qt::act&, strc = str::null);
 
 l_qt::edit*     edit();
 

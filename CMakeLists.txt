@@ -16,7 +16,4 @@ add_subdirectory (tests)
 #file (GLOB_RECURSE docs_files docs/*) # TODO
 #add_custom_target (docs SOURCES ${docs_files})
 
-file (GLOB_RECURSE other_files to-add/*) # TODO
-add_custom_target (other SOURCES ${other_files})
-
 # eof
