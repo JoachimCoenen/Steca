@@ -21,6 +21,8 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+struct Hub;
+
 dcl_sub_(PanelDiffractogram, Panel)
   PanelDiffractogram(Hub&);
 

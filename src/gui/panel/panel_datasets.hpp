@@ -17,16 +17,19 @@
 
 #pragma once
 #include "panel.hpp"
+#include <lib/qt/lst.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
+
+struct Hub;
 
 dcl_sub_(PanelDatasets, Panel)
   PanelDatasets(Hub&);
 
 private:
   Panel *tab;
-  ViewModelBase *view;
+  l_qt::lst_view *view;
 dcl_end
 
 //------------------------------------------------------------------------------

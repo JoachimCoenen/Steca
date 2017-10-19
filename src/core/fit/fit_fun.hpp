@@ -59,6 +59,8 @@ dcl_sub_(PeakFun, SimpleFun) SHARED
 
   mth_(l::own<PeakFun>, clone, ());
   virtual mth_(eType, type, ()) = 0;
+
+  cst_(str_vec, sTypes);
   mth_(strc, sType, ());
 
   atr_(Range,  range);

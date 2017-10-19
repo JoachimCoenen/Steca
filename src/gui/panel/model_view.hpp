@@ -16,20 +16,42 @@
  ******************************************************************************/
 
 #pragma once
-#include "panel.hpp"
-#include "model_view.hpp"
+#include <lib/qt/lst.hpp>
+#include <lib/qt/model.hpp>
+#include <core/calc/reflection.hpp>
+#include "../refhub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-struct Hub;
+dcl_sub_(ModelReflections, l_qt::lst_model)
+  ModelReflections();
 
-dcl_sub_(PanelSetup, Panel)
-  explicit PanelSetup(Hub&);
+  enum { clID, clTYPE };
+
+  mth_(cl_n, cols, ());
+  mth_(rw_n, rows, ());
+
+  mth_(str,       head, (cl_n));
+  mth_(l_qt::var, cell, (rw_n, cl_n));
+
+  mth_(str,     name,  (rw_n));
+  mth_(str_vec, names, ());
 
 private:
-  Panel *tabGeometry, *tabBackground, *tabReflections;
-  ModelReflections modelReflections;
+  core::calc::reflection_vec const* rs;
+dcl_end
+
+//------------------------------------------------------------------------------
+
+template <typename Model>
+dcl_sub2_(HubView, RefHub, l_qt::lst_view)
+  HubView(Hub& hub, Model const* model_) : RefHub(hub) {
+    setModel(model = model_);
+  }
+
+protected:
+  Model const* model;
 dcl_end
 
 //------------------------------------------------------------------------------

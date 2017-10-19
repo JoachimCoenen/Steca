@@ -69,6 +69,8 @@ Acts::Acts(Hub& hub, Win& win) : base(win) {
   add(BG_SHOW,        act::make("Show fitted background",     "",       ":/icon/showBackground"));
   add(BG_CLEAR,       act::make("Clear background",           "",       ":/icon/clear"));
 
+  add(REFL_ADD,       act::make("Add reflection",             "Ins",    ":/icon/add"));
+  add(REFL_REM,       act::make("Remove reflection",          "Del",    ":/icon/rem"));
   add(REFL_SELECT,    act::make("Select regions",             "",       ":/icon/selRegion"));
   add(REFL_CLEAR,     act::make("Clear background",           "",       ":/icon/clear"));
 
@@ -132,6 +134,8 @@ str const Acts::BG_SELECT       ("bgSelect");
 str const Acts::BG_SHOW         ("bgShow");
 str const Acts::BG_CLEAR        ("bgClear");
 
+str const Acts::REFL_ADD        ("reflAdd");
+str const Acts::REFL_REM        ("reflRem");
 str const Acts::REFL_SELECT     ("reflSelect");
 str const Acts::REFL_CLEAR      ("reflClear");
 

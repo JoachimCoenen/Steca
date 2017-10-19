@@ -111,12 +111,12 @@ l::own<PeakFun> PeakFun::clone() const {
   return f;
 }
 
-strc PeakFun::sType() const {
-  static str_vec const s = {
-    "Raw", "Gaussian", "Lorentzian", "PseudoVoigt1", "PseudoVoigt2"
-  };
+str_vec const PeakFun::sTypes = {
+  "Raw", "Gaussian", "Lorentzian", "PseudoVoigt1", "PseudoVoigt2"
+};
 
-  return s.at(uint(type()));
+strc PeakFun::sType() const {
+  return sTypes.at(uint(type()));
 };
 
 PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::real_nan) {}

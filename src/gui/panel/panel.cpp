@@ -23,20 +23,6 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-l_qt::actbtn* btn(l_qt::act& act) {
-  return new l_qt::actbtn(act);
-}
-
-l_qt::lbl* lbl(strc tx) {
-  return new l_qt::lbl(tx);
-}
-
-l_qt::ico* ico(strc file) {
-  return new l_qt::ico(file);
-}
-
-//------------------------------------------------------------------------------
-
 Panel::Panel() : Panel(str::null) {}
 
 Panel::Panel(strc title){

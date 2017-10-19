@@ -129,17 +129,18 @@ void ImageWidget::paintEvent(QPaintEvent*) {
 //------------------------------------------------------------------------------
 
 PanelImage::PanelImage(Hub& hub) : base("") {
+  using namespace l_qt::make_widgets;
+  auto&& as = hub.acts;
+
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
 
-  auto&& as = hub.acts;
-
-  auto&& spinN      = new l_qt::spinPint(5);
-  auto&& numSlices  = new l_qt::spinUint(5);
-  auto&& sliceNo    = new l_qt::spinPint(5);
-  auto&& binNo      = new l_qt::spinPint(5);
-  auto&& minGamma   = new l_qt::spinReal(5, 2); minGamma->setReadOnly(true);
-  auto&& maxGamma   = new l_qt::spinReal(5, 2); maxGamma->setReadOnly(true);
+  auto&& spinN      = spinPint(5);
+  auto&& numSlices  = spinUint(5);
+  auto&& sliceNo    = spinPint(5);
+  auto&& binNo      = spinPint(5);
+  auto&& minGamma   = spinReal(5, 2); minGamma->setReadOnly(true);
+  auto&& maxGamma   = spinReal(5, 2); maxGamma->setReadOnly(true);
 
   {
     auto&& tab = new Panel;
@@ -236,14 +237,13 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     }
   });
 
-  auto&& a = hub.acts;
-  a.get(a.IMG_SHOW_OVER).onToggle([this](bool on) {
+  as.get(as.IMG_SHOW_OVER).onToggle([this](bool on) {
     imageShowOver = on;
     wgtImage->update();
     wgtCorrection->update();
   });
 
-  a.get(a.IMG_STEP_ZOOM).onToggle([this](bool on) {
+  as.get(as.IMG_STEP_ZOOM).onToggle([this](bool on) {
     imageStepScale = on;
     wgtImage->update();
     wgtCorrection->update();

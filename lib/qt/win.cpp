@@ -59,8 +59,8 @@ void win::fullScreen(bool on) {
     showNormal();
 
 #ifndef Q_OS_OSX
-  auto&& a = getActs();
-  a.get(a.FULL_SCREEN).check(on);
+  auto&& as = getActs();
+  as.get(as.FULL_SCREEN).check(on);
 #endif
 }
 

@@ -22,6 +22,7 @@
 
 namespace gui {
 //------------------------------------------------------------------------------
+struct Hub;
 struct ImageWidget;
 
 dcl_sub_(PanelImage, Panel)

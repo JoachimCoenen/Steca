@@ -19,6 +19,7 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include "model_view.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
@@ -39,7 +40,7 @@ void ViewFile::setInfo(core::data::File const* file) {
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(ViewFiles, ViewModel<Hub::ModelFiles>)
+dcl_sub_(ViewFiles, HubView<Hub::ModelFiles>)
   ViewFiles(Hub&, ViewFile&);
 
 private:
@@ -52,7 +53,7 @@ private:
 dcl_end
 
 ViewFiles::ViewFiles(Hub& hub, ViewFile& viewFile_)
-: base(hub.modelFiles), viewFile(viewFile_)
+: base(hub, hub.modelFiles), viewFile(viewFile_)
 , actRem(hub.acts.get(hub.acts.FILES_REM)) {
   actRem.onTrigger([this]() {
     removeSelected();
@@ -87,16 +88,18 @@ void ViewFiles::removeSelected() const {
 //------------------------------------------------------------------------------
 
 PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
+  using namespace l_qt::make_widgets;
+  auto& as = hub.acts;
+
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
 
-  auto& a = hub.acts;
 
   auto&& p = new l_qt::panel;
   auto&& hb = p->hb();
 
-  auto&& btnAdd = btn(a.get(a.FILES_ADD));
-  auto&& btnRem = btn(a.get(a.FILES_REM));
+  auto&& btnAdd = btn(as.get(as.FILES_ADD));
+  auto&& btnRem = btn(as.get(as.FILES_REM));
 
   hb.margin(0).add(btnAdd).add(btnRem);
   tabs->addTab(tab = new Panel(), "Files", p);
@@ -109,15 +112,15 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   tab->vb().add("Correction file");
 
   auto&& h = tab->vb().hb();
-  auto&& edit = new l_qt::edit(); edit->ro(true);
-  h.add(edit);
+  auto&& e = edit(); e->ro(true);
+  h.add(e);
 
-  hub.onSigCorrFileName([edit](str name) {
-    edit->text(name);
+  hub.onSigCorrFileName([e](str name) {
+    e->text(name);
   });
 
-  h.add(btn(a.get(a.CORR_ENABLE)));
-  h.add(btn(a.get(a.CORR_REM)));
+  h.add(btn(as.get(as.CORR_ENABLE)));
+  h.add(btn(as.get(as.CORR_REM)));
 }
 
 //------------------------------------------------------------------------------

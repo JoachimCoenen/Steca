@@ -15,22 +15,50 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
-#include "panel.hpp"
 #include "model_view.hpp"
+#include <lib/qt/inc/defs.inc>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-struct Hub;
+ModelReflections::ModelReflections() : rs(nullptr) {}
 
-dcl_sub_(PanelSetup, Panel)
-  explicit PanelSetup(Hub&);
+ModelReflections::cl_n ModelReflections::cols() const {
+  return cl_n(2);
+}
 
-private:
-  Panel *tabGeometry, *tabBackground, *tabReflections;
-  ModelReflections modelReflections;
-dcl_end
+ModelReflections::rw_n ModelReflections::rows() const {
+  return rw_n(rs ? rs->size() : 0);
+}
+
+str ModelReflections::head(cl_n cl) const {
+  switch (cl) {
+  case clID:   return "#";
+  case clTYPE: return "type";
+  }
+
+  return str::null;
+}
+
+l_qt::var ModelReflections::cell(rw_n rw, cl_n cl) const {
+  switch (cl) {
+  case clID:   return rw + 1;
+  case clTYPE: return name(rw);
+  }
+
+  return l_qt::var();
+}
+
+str ModelReflections::name(rw_n rw) const {
+  return rs ? rs->at(rw)().peakFun->sType() : str::null;
+}
+
+str_vec ModelReflections::names() const {
+  str_vec ns;
+  for_i_(rows())
+    ns.add(name(rw_n(i)));
+  return ns;
+}
 
 //------------------------------------------------------------------------------
 }

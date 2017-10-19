@@ -174,47 +174,6 @@ void Hub::ModelDatasets::combineSets() {
 
 //------------------------------------------------------------------------------
 
-Hub::ModelReflections::ModelReflections(core::calc::reflection_vec::rc rs_) : rs(rs_) {}
-
-cl_n Hub::ModelReflections::cols() const {
-  return cl_n(2);
-}
-
-rw_n Hub::ModelReflections::rows() const {
-  return rw_n(rs.size());
-}
-
-str Hub::ModelReflections::head(cl_n cl) const {
-  switch (cl) {
-  case clID:   return "#";
-  case clTYPE: return "type";
-  }
-
-  return str::null;
-}
-
-l_qt::var Hub::ModelReflections::cell(rw_n rw, cl_n cl) const {
-  switch (cl) {
-  case clID:   return rw + 1;
-  case clTYPE: return rs.at(rw)().peakFun->sType();
-  }
-
-  return l_qt::var();
-}
-
-str Hub::ModelReflections::name(rw_n rw) const {
-  return rs.at(rw)().peakFun->sType();
-}
-
-str_vec Hub::ModelReflections::names() const {
-  str_vec ns;
-  for_i_(rows())
-    ns.add(name(rw_n(i)));
-  return ns;
-}
-
-//------------------------------------------------------------------------------
-
 Hub::ModelMetadata::ModelMetadata(Hub& hub) : base(hub), checked(new KeyBag) {
   setCheckable(true);
   hub.onSigSetsInfo([this](Hub::SetsInfo info) {

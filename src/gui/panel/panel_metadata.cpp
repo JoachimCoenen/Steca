@@ -19,15 +19,16 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include "model_view.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub_(ViewMetadata, ViewModel<Hub::ModelMetadata>)
+dcl_sub_(ViewMetadata, HubView<Hub::ModelMetadata>)
   ViewMetadata(Hub&);
 dcl_end
 
-ViewMetadata::ViewMetadata(Hub& hub) : base(hub.modelMetadata) {}
+ViewMetadata::ViewMetadata(Hub& hub) : base(hub, hub.modelMetadata) {}
 
 //------------------------------------------------------------------------------
 

@@ -66,6 +66,8 @@ dcl_sub_(Acts, l_qt::acts)
   cst_(str, BG_CLEAR);
 
   // reflection
+  cst_(str, REFL_ADD);
+  cst_(str, REFL_REM);
   cst_(str, REFL_SELECT);
   cst_(str, REFL_CLEAR);
 

@@ -20,32 +20,25 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include <core/calc/reflection.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
-//dcl_sub2_(ViewModelBase, RefHub, l_qt::lst_view)
-//  ViewModelBase(Hub&);
-//dcl_end
-
-//template <typename Model>
-//dcl_sub_(ViewModel, ViewModelBase)
-//  ViewModel(Hub& hub, Model const* model_) : base(hub) {
-//    setModel(model = model_);
-//  }
-
-//protected:
-//  Model const* model;
-//dcl_end
 
 dcl_sub_(ViewReflections, l_qt::lst_view)
   ViewReflections(ModelReflections&);
 dcl_end
 
-ViewReflections::ViewReflections(Hub& hub) : base(hub, hub.modelMetadata) {}
+ViewReflections::ViewReflections(ModelReflections& model) {
+  setModel(&model);
+}
 
 //------------------------------------------------------------------------------
 
 PanelSetup::PanelSetup(Hub& hub) : base("") {
+  using namespace l_qt::make_widgets;
+  auto&& as = hub.acts;
+
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
 
@@ -53,10 +46,10 @@ PanelSetup::PanelSetup(Hub& hub) : base("") {
     tabs->addTab(tabGeometry    = new Panel(), "Geometry");
     auto&& vb = tabGeometry->vb();
 
-    auto&& detDist    = new l_qt::spinReal(7, 2);
-    auto&& detPixSize = new l_qt::spinReal(7, 3);
-    auto&& detBeamX   = new l_qt::spinInt(7);
-    auto&& detBeamY   = new l_qt::spinInt(7);
+    auto&& detDist    = spinReal(7, 2);
+    auto&& detPixSize = spinReal(7, 3);
+    auto&& detBeamX   = spinInt(7);
+    auto&& detBeamY   = spinInt(7);
 
     {
       auto&& gr = vb.gr();
@@ -73,18 +66,18 @@ PanelSetup::PanelSetup(Hub& hub) : base("") {
 
     {
       auto&& gr = vb.gr();
-      gr.add({btn(hub.acts.get(hub.acts.IMG_ROTATE0)),     lbl("<rotate")});
-      gr.add({btn(hub.acts.get(hub.acts.IMG_MIRROR_HORZ)), lbl("<mirror")});
+      gr.add({btn(as.get(as.IMG_ROTATE0)),     lbl("<rotate")});
+      gr.add({btn(as.get(as.IMG_MIRROR_HORZ)), lbl("<mirror")});
     }
 
-    auto&& cutLeft   = new l_qt::spinUint(3);
-    auto&& cutRight  = new l_qt::spinUint(3);
-    auto&& cutTop    = new l_qt::spinUint(3);
-    auto&& cutBottom = new l_qt::spinUint(3);
+    auto&& cutLeft   = spinUint(3);
+    auto&& cutRight  = spinUint(3);
+    auto&& cutTop    = spinUint(3);
+    auto&& cutBottom = spinUint(3);
 
     {
       auto&& gr = vb.gr();
-      gr.add({btn(hub.acts.get(hub.acts.IMG_LINK_CUT)), lbl("cut"),
+      gr.add({btn(as.get(as.IMG_LINK_CUT)), lbl("cut"),
               ico(":/icon/cutLeft"), cutLeft, ico(":/icon/cutRight"), cutRight});
       gr.add({nullptr, nullptr,
               ico(":/icon/cutTop"), cutTop, ico(":/icon/cutBottom"), cutBottom});
@@ -98,11 +91,11 @@ PanelSetup::PanelSetup(Hub& hub) : base("") {
     tabs->addTab(tabBackground  = new Panel(), "Background");
     auto&& vb = tabBackground->vb();
 
-    auto&& polDegree = new l_qt::spinUint(1); polDegree->max(4);
+    auto&& polDegree = spinUint(1); polDegree->max(4);
 
-    vb.hb().add(btn(hub.acts.get(hub.acts.BG_SELECT)))
-           .add(btn(hub.acts.get(hub.acts.BG_SHOW)))
-           .add(btn(hub.acts.get(hub.acts.BG_CLEAR)))
+    vb.hb().add(btn(as.get(as.BG_SELECT)))
+           .add(btn(as.get(as.BG_SHOW)))
+           .add(btn(as.get(as.BG_CLEAR)))
            .addStretch();
     vb.hb().add(lbl("Pol. degree")).add(polDegree)
            .addStretch();
@@ -114,55 +107,30 @@ PanelSetup::PanelSetup(Hub& hub) : base("") {
     tabs->addTab(tabReflections = new Panel(), "Reflections");
     auto&& vb = tabReflections->vb();
 
-    vb.hb().add(btn(hub.acts.get(hub.acts.REFL_SELECT)))
-           .add(btn(hub.acts.get(hub.acts.BG_SHOW)))
-           .add(btn(hub.acts.get(hub.acts.REFL_CLEAR)))
-           .addStretch();
+    vb.hb()
+      .add(btn(as.get(as.REFL_SELECT)))
+      .add(btn(as.get(as.BG_SHOW)))
+      .add(btn(as.get(as.REFL_CLEAR)))
+      .addStretch();
 
-    box.addWidget((reflectionView_ = new ReflectionView(hub_)));
+    auto&& view = new ViewReflections(modelReflections);
 
-    hb = hbox();
-    box.addLayout(hb);
+    vb.add(view);
 
-    hb->addWidget((comboReflType_ = comboBox(calc::Reflection::typeStrLst())));
-    hb->addStretch();
-    hb->addWidget(iconButton(actions.addReflection));
-    hb->addWidget(iconButton(actions.remReflection));
+    auto&& cb = cbo(core::fit::PeakFun::sTypes);
+    vb.hb()
+      .add(cb)
+      .add(btn(as.get(as.REFL_ADD))).add(btn(as.get(as.REFL_REM)))
+      .addStretch();
 
-    auto vb = vbox();
-    box.addLayout(vb);
-
-    auto gb = gridLayout();
-    vb->addLayout(gb);
-
-    gb->addWidget(label("min"), 0, 0);
-    gb->addWidget((spinRangeMin_ = spinDoubleCell(gui_cfg::em4_2, .0)), 0, 1);
-    spinRangeMin_->setSingleStep(.1);
-    gb->addWidget(label("max"), 0, 2);
-    gb->addWidget((spinRangeMax_ = spinDoubleCell(gui_cfg::em4_2, .0)), 0, 3);
-    spinRangeMax_->setSingleStep(.1);
-
-    gb->addWidget(label("guess x"), 1, 0);
-    gb->addWidget((spinGuessPeakX_ = spinDoubleCell(gui_cfg::em4_2, .0)), 1, 1);
-    spinGuessPeakX_->setSingleStep(.1);
-    gb->addWidget(label("y"), 1, 2);
-    gb->addWidget((spinGuessPeakY_ = spinDoubleCell(gui_cfg::em4_2, .0)), 1, 3);
-    spinGuessPeakY_->setSingleStep(.1);
-
-    gb->addWidget(label("fwhm"), 2, 0);
-    gb->addWidget((spinGuessFWHM_ = spinDoubleCell(gui_cfg::em4_2, .0)), 2, 1);
-    spinGuessFWHM_->setSingleStep(.1);
-
-    gb->addWidget(label("fit x"), 3, 0);
-    gb->addWidget((readFitPeakX_ = readCell(gui_cfg::em4_2)), 3, 1);
-    gb->addWidget(label("y"), 3, 2);
-    gb->addWidget((readFitPeakY_ = readCell(gui_cfg::em4_2)), 3, 3);
-
-    gb->addWidget(label("fwhm"), 4, 0);
-    gb->addWidget((readFitFWHM_ = readCell(gui_cfg::em4_2)), 4, 1);
-
-    gb->setColumnStretch(4, 1);
-
+    vb.gr()
+      .addSection("guess", 4)
+      .add({lbl("min x"), spinReal(6, 2), lbl("y"), spinReal(6, 2)})
+      .add({lbl("fwhm"),  spinReal(6, 2)})
+      .addSection("fit", 4)
+      .add({lbl("min x"), spinReal(6, 2), lbl("y"), spinReal(6, 2)})
+      .add({lbl("fwhm"),  spinReal(6, 2)})
+      .addStretch();
 
     vb.addStretch();
   }

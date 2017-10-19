@@ -443,6 +443,9 @@ void Plot::resizeEvent(QResizeEvent* e) {
 //------------------------------------------------------------------------------
 
 PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
+  using namespace l_qt::make_widgets;
+  auto& as = hub.acts;
+
   auto&& tabs = new l_qt::tabs;
   vb().add(tabs);
   tabs->addTab(tab = new Panel(), "Diffractogram");
@@ -450,18 +453,18 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
   tab->vb().add(new Plot(hub));
   auto&& hb = tab->vb().hb();
 
-  hb.add("norm:").add(new l_qt::cbo(core::normStrLst));
+  hb.add("norm:").add(cbo(core::normStrLst));
   hb.add(" inten:");
-  hb.add(new l_qt::rio("sum"));
-  hb.add(new l_qt::rio("avg ×"));
-  hb.add(new l_qt::spinReal(5, 3));
+  hb.add(rio("sum"));
+  hb.add(rio("avg ×"));
+  hb.add(spinReal(5, 3));
 
   hb.addStretch();
-  hb.add(btn(hub.acts.get(hub.acts.DIFF_ZOOM)));
+  hb.add(btn(as.get(as.DIFF_ZOOM)));
   hb.addStretch();
 
-  hb.add(new l_qt::chk(hub.acts.get(hub.acts.DIFF_ALL_DSETS)));
-  hb.add(new l_qt::chk(hub.acts.get(hub.acts.DIFF_FIX_INTEN)));
+  hb.add(chk(as.get(as.DIFF_ALL_DSETS)));
+  hb.add(chk(as.get(as.DIFF_FIX_INTEN)));
 }
 
 //------------------------------------------------------------------------------
