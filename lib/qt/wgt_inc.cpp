@@ -20,8 +20,12 @@
 namespace l_qt { namespace make_widgets {
 //------------------------------------------------------------------------------
 
-l_qt::actbtn* btn(l_qt::act& act) {
-  return new l_qt::actbtn(act);
+l_qt::btn* btn(l_qt::act& act) {
+  return new l_qt::btn(act);
+}
+
+l_qt::pushbtn* pushbtn(strc tx) {
+  return new l_qt::pushbtn(tx);
 }
 
 l_qt::lbl* lbl(strc tx) {

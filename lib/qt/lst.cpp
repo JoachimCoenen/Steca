@@ -15,7 +15,7 @@ namespace l_qt {
 dcl_sub_(lst_view_itemDelegate, QStyledItemDelegate)
   using base::base;
 
-  void paint(QPainter* painter, QStyleOptionViewItem const& option, QModelIndex const& index ) const {
+  void paint(QPainter* painter, QStyleOptionViewItem const& option, QModelIndex const& index) const {
     painter->save();
 
     auto clr = option.widget->palette().color(QPalette::Midlight);
@@ -37,7 +37,7 @@ lst_view::lst_view(bool hasHeader_)
   setItemDelegate(styleDelegeate.reset(new lst_view_itemDelegate));
   showHeader(hasHeader);
 
-  connect(this, &Self::clicked, [this](QModelIndex const& idx) {
+  connect(this, &Self::clicked, [this](rcIndex idx) {
     if (model && 1 == idx.column())
       checkRow(idx.row());
   });
@@ -163,7 +163,7 @@ int lst_view::sizeHintForColumn(int) const {
   return width_m(*this, 1.6);
 }
 
-void lst_view::currentChanged(QModelIndex const& current, QModelIndex const& previous) {
+void lst_view::currentChanged(rcIndex current, rcIndex previous) {
   base::currentChanged(current, previous);
   currRow = current.row();
 }

@@ -16,6 +16,9 @@ dcl_sub_(lst_view, QTreeView)
   using cl_n_vec = lst_model::cl_n_vec;
   using rw_n_vec = lst_model::rw_n_vec;
 
+  using Index    = lst_model::Index;
+  using rcIndex  = lst_model::rcIndex;
+
   atr_(bool, hasHeader);
   set_(showHeader, (bool = true));
 
@@ -40,7 +43,7 @@ dcl_sub_(lst_view, QTreeView)
 private:
   void keyPressEvent(QKeyEvent*);
   int  sizeHintForColumn(int) const; // make narrow columns
-  void currentChanged(QModelIndex const&, QModelIndex const&);
+  void currentChanged(rcIndex, rcIndex);
   void selectionChanged(QItemSelection const&, QItemSelection const&);
 
   int  currRow;

@@ -234,18 +234,18 @@ bool Hub::ModelMetadata::isChecked(rw_n rw) const {
 
 //------------------------------------------------------------------------------
 
-using idx_rc = QModelIndex const&;
+using rcIndex = QModelIndex const&;
 
 dcl_sub_(FileProxyModel, QSortFilterProxyModel)
-  int columnCount(idx_rc) const;
+  int columnCount(rcIndex) const;
   QVariant headerData(int, Qt::Orientation, int = Qt::DisplayRole) const;
-  QVariant data(idx_rc, int = Qt::DisplayRole) const;
+  QVariant data(rcIndex, int = Qt::DisplayRole) const;
 
 private:
   mutable l::hash<str,str> memInfo;
 dcl_end
 
-int FileProxyModel::columnCount(idx_rc) const {
+int FileProxyModel::columnCount(rcIndex) const {
   return 2;
 }
 
@@ -255,7 +255,7 @@ QVariant FileProxyModel::headerData(int section, Qt::Orientation o, int role) co
   return base::headerData(section, o, role);
 }
 
-QVariant FileProxyModel::data(idx_rc idx, int role) const {
+QVariant FileProxyModel::data(rcIndex idx, int role) const {
   if (idx.isValid() && 1 == idx.column()) {
     switch (role) {
     case Qt::TextAlignmentRole:

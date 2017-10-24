@@ -15,57 +15,45 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
-#include <lib/dev/defs.hpp>
-#include <lib/qt/layout.hpp>
-#include "../thehub.hpp"
-#include <QFrame>
+#include "dlg_diagrams.hpp"
+#include <lib/qt/inc/defs.inc>
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
+using namespace l_qt::make_widgets;
 
-dcl_sub_(PanelReflection, l_qt::panel)
-  PanelReflection();
+dcl_sub_(TabDiagram, l_qt::panel)
+  TabDiagram();
 dcl_end
+
+TabDiagram::TabDiagram() {}
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(PanelGammaSlices, l_qt::panel)
-  PanelGammaSlices();
+dcl_sub_(TabDiagramSave, TabSave)
+  TabDiagramSave();
 dcl_end
+
+TabDiagramSave::TabDiagramSave() {}
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(PanelGammaRange, l_qt::panel)
-  PanelGammaRange();
-dcl_end
+Diagrams::Diagrams(QWidget* parent, Hub::rc hub)
+: base("Diagrams", parent, hub)
+{
+  groups->add(new GroupReflection)
+         .add(new GroupGammaSlices)
+         .add(new GroupGammaRange)
+         .add(new GroupDiagram);
 
-//------------------------------------------------------------------------------
+  tabs->addTab(new TabPoints,      "Points")
+       .addTab(new TabDiagram,     "Diagram")
+       .addTab(new TabDiagramSave, "Save");
 
-dcl_sub_(PanelPoints, l_qt::panel)
-  PanelPoints();
-dcl_end
+  auto&& calcBtn = pushbtn("Calculate");
 
-//------------------------------------------------------------------------------
-
-dcl_sub_(PanelInterpolation, l_qt::panel)
-  PanelInterpolation();
-dcl_end
-
-//------------------------------------------------------------------------------
-
-dcl_sub_(PanelDiagram, l_qt::panel)
-  PanelDiagram();
-dcl_end
-
-//------------------------------------------------------------------------------
-
-dcl_sub_(Frame, QFrame)
-  Frame(strc title, QWidget*, Hub::rc);
-
-  atr_(core::data::CombinedSets::shr, sets);
-  atr_(core::calc::FitParams::shr,    fp);
-dcl_end
+  btns->add(calcBtn).add(calcBtn);
+}
 
 //------------------------------------------------------------------------------
 }}

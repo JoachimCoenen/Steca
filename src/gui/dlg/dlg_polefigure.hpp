@@ -15,14 +15,15 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "calc_diffractograms.hpp"
-#include <lib/qt/inc/defs.inc>
+#pragma once
+#include "dlg_dialog.hpp"
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
 
-Diffractograms::Diffractograms(QWidget* parent, Hub::rc hub)
-: base("", parent, hub) {}
+dcl_sub_(PoleFigure, Frame)
+  PoleFigure(QWidget*, Hub::rc);
+dcl_end
 
 //------------------------------------------------------------------------------
 }}

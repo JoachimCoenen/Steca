@@ -15,14 +15,29 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "calc_polefigure.hpp"
+#include "dlg_diffractograms.hpp"
 #include <lib/qt/inc/defs.inc>
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
+using namespace l_qt::make_widgets;
 
-PoleFigure::PoleFigure(QWidget* parent, Hub::rc hub)
-: base("", parent, hub) {}
+dcl_sub_(TabDiffractogramSave, TabSave)
+  TabDiffractogramSave();
+dcl_end
+
+TabDiffractogramSave::TabDiffractogramSave() {}
+
+//------------------------------------------------------------------------------
+
+Diffractograms::Diffractograms(QWidget* parent, Hub::rc hub)
+: base("", parent, hub)
+{
+  groups->add(new GroupGammaSlices)
+         .add(new GroupGammaRange);
+
+  tabs->addTab(new TabDiffractogramSave, "Save");
+}
 
 //------------------------------------------------------------------------------
 }}

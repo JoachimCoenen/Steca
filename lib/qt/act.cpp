@@ -69,21 +69,6 @@ act::ref act::check(bool on) {
 
 //------------------------------------------------------------------------------
 
-actbtn::actbtn() {
-  base::setToolButtonStyle(Qt::ToolButtonIconOnly);
-}
-
-actbtn::actbtn(act& a) {
-  base::setToolButtonStyle(Qt::ToolButtonIconOnly);
-  action(&a);
-}
-
-actbtn::ref actbtn::action(act *a) {
-  base::setDefaultAction(a); RTHIS
-}
-
-//------------------------------------------------------------------------------
-
 acts::acts(win& w_) : w(w_)  {
   auto mb = w.menuBar();
   mb->setNativeMenuBar(false);

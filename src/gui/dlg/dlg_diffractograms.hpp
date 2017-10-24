@@ -16,13 +16,14 @@
  ******************************************************************************/
 
 #pragma once
-#include "calc_dialog.hpp"
+#include "dlg_dialog.hpp"
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
 
-dcl_sub_(Diagram, Frame)
-  Diagram(QWidget*, Hub::rc);
+dcl_sub_(Diffractograms, Frame)
+  Diffractograms(QWidget*, Hub::rc);
+
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -40,6 +40,10 @@ dcl_reimpl_(vec, std::vector<T>)
 
   mth_mut_(T&, refAt, (uint i))     RET_(base::operator[](i))
 
+  mut_(swap, (uint i, uint j)) {
+    auto _ = at(i); setAt(i, at(j)); setAt(j, _);
+  }
+
   bol_(operator==, (rc that)) RET_(base_rc() == that.base_rc())
   bol_(operator!=, (rc that)) RET_(base_rc() != that.base_rc())
 dcl_end

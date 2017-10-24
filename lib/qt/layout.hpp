@@ -6,6 +6,7 @@
 #include <QBoxLayout>
 #include <QGridLayout>
 #include <QWidget>
+#include <QGroupBox>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -70,6 +71,19 @@ dcl_end
 
 dcl_sub_(panel, QWidget)
   panel();
+
+  box&  hb() may_err;
+  box&  vb() may_err;
+  grid& gr() may_err;
+
+private:
+  QLayout *l;
+dcl_end
+
+//------------------------------------------------------------------------------
+
+dcl_sub_(group, QGroupBox)
+  group(strc tx);
 
   box&  hb() may_err;
   box&  vb() may_err;

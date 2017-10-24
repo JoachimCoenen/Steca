@@ -26,12 +26,14 @@ dcl_sub_(var, QVariant)
   mth_(str,  toStr,  ());
   mth_(real, toReal, ()) may_err;
   mth_(tim,  toTim,  ());
-dcl_end
 
-int cmp_int(var::rc,  var::rc);
-int cmp_str(var::rc,  var::rc);
-int cmp_real(var::rc, var::rc);
-int cmp_tim(var::rc,  var::rc);
+  using cmpFun = int(rc, rc);
+
+  static int cmp_int(var::rc,  var::rc);
+  static int cmp_str(var::rc,  var::rc);
+  static int cmp_real(var::rc, var::rc);
+  static int cmp_tim(var::rc,  var::rc);
+dcl_end
 
 //------------------------------------------------------------------------------
 }

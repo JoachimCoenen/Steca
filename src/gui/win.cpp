@@ -20,9 +20,9 @@
 #include "app.hpp"
 #include "panel/inc.inc"
 #include "settings.hpp"
-#include "calc_dlg/calc_polefigure.hpp"
-#include "calc_dlg/calc_diagram.hpp"
-#include "calc_dlg/calc_diffractograms.hpp"
+#include "dlg/dlg_polefigure.hpp"
+#include "dlg/dlg_diagrams.hpp"
+#include "dlg/dlg_diffractograms.hpp"
 
 #include <QApplication>
 #include <QNetworkReply>
@@ -115,7 +115,7 @@ Win::Win() : hub(*this) {
   });
 
   as.get(as.DLG_DIAGRAM).onTrigger([this]() {
-    (new calc_dlg::Diagram(this, hub))->show();
+    (new calc_dlg::Diagrams(this, hub))->show();
   });
 
   as.get(as.DLG_DIFFRGS).onTrigger([this]() {
@@ -241,6 +241,9 @@ void Win::onFirstShow() {
 //    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
 //    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
   });
+
+//  auto&& as = hub.acts;
+//  as.get(as.DLG_POLEFIG).trigger();
 #endif
 }
 

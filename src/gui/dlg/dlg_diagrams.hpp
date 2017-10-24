@@ -15,14 +15,15 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "calc_diagram.hpp"
-#include <lib/qt/inc/defs.inc>
+#pragma once
+#include "dlg_dialog.hpp"
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
 
-Diagram::Diagram(QWidget* parent, Hub::rc hub)
-: base("", parent, hub) {}
+dcl_sub_(Diagrams, Frame)
+  Diagrams(QWidget*, Hub::rc);
+dcl_end
 
 //------------------------------------------------------------------------------
 }}

@@ -128,6 +128,7 @@ struct give_me : own<T> { using base = own<T>;
 
 //------------------------------------------------------------------------------
 // scoped (auto-destruct)
+
 template <typename T>
 struct scoped : ptr_base {
   scoped(T* p = nullptr): ptr_base(p) {}
@@ -135,6 +136,11 @@ struct scoped : ptr_base {
   scoped(own_ptr<T> p)  : ptr_base(p) {}
   scoped(scoped&& that) : ptr_base(that.take()) {}
   scoped(scoped const&) = delete;
+
+  scoped& operator=(scoped&& that) {
+    reset(that.take());
+    return *this;
+  }
 
  ~scoped() {
     drop();

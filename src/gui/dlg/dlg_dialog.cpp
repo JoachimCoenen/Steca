@@ -15,21 +15,20 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#include "calc_dialog.hpp"
+#include "dlg_dialog.hpp"
 #include <lib/qt/inc/defs.inc>
-#include <lib/qt/wgt_inc.hpp>
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
 using namespace l_qt::make_widgets;
 
-PanelReflection::PanelReflection() {
+GroupReflection::GroupReflection() : base("Reflection") {
   vb().add(cbo()).addStretch();
 }
 
 //------------------------------------------------------------------------------
 
-PanelGammaSlices::PanelGammaSlices() {
+GroupGammaSlices::GroupGammaSlices() : base("Gamma slices") {
   gr().add({lbl("count"),   spinUint(5)})
       .add({lbl("degrees"), spinReal(5, 2)})
       .addRowStretch();
@@ -37,7 +36,7 @@ PanelGammaSlices::PanelGammaSlices() {
 
 //------------------------------------------------------------------------------
 
-PanelGammaRange::PanelGammaRange() {
+GroupGammaRange::GroupGammaRange() : base("Gamma range") {
   gr().add({chk("limit")})
       .add({lbl("min"), spinReal(5, 2)})
       .add({lbl("max"), spinReal(5, 2)})
@@ -46,13 +45,13 @@ PanelGammaRange::PanelGammaRange() {
 
 //------------------------------------------------------------------------------
 
-PanelPoints::PanelPoints() {
+GroupPoints::GroupPoints() : base("Points") {
   vb().add(rio("calculated")).add(rio("interpolated")).addStretch();
 }
 
 //------------------------------------------------------------------------------
 
-PanelInterpolation::PanelInterpolation() {
+GroupInterpolation::GroupInterpolation() : base("Interpolation") {
   gr().add({lbl("step α"), spinReal(5, 2), lbl("avg. α max"), spinReal(5, 2)})
       .add({lbl("β"), spinReal(5, 2), lbl("radius"), spinReal(5, 2)})
       .add({lbl("idw radius"), spinReal(5, 2), lbl("inclusion %"), spinReal(5, 2)})
@@ -61,15 +60,27 @@ PanelInterpolation::PanelInterpolation() {
 
 //------------------------------------------------------------------------------
 
-PanelDiagram::PanelDiagram() {
+GroupDiagram::GroupDiagram() : base("Diagram") {
   gr().add({lbl("y"), cbo(), lbl("x"), cbo()})
       .addRowStretch();
 }
 
 //------------------------------------------------------------------------------
 
+TabPoints::ShowCols::ShowCols() {}
+
+TabPoints::TabPoints() {}
+
+//------------------------------------------------------------------------------
+
+TabSave::TabSave() {}
+
+//------------------------------------------------------------------------------
+
 Frame::Frame(strc title, QWidget* parent, Hub::rc hub)
-: base(parent, Qt::Dialog), sets(), fp() {
+: base(parent, Qt::Dialog), sets(), fp()
+, groups(new l_qt::hbox), tabs(new l_qt::tabs), btns(new l_qt::hbox)
+{
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -78,6 +89,17 @@ Frame::Frame(strc title, QWidget* parent, Hub::rc hub)
   auto&& info = hub.setsInfo();
   mut(sets) = info.sets;
   mut(fp)   = info.fp;
+
+  auto&& vb = new l_qt::vbox();
+  setLayout(vb);
+  vb->add(groups).add(tabs).add(btns);
+
+  auto&& closeBtn = pushbtn("Close");
+  btns->add(closeBtn).addStretch();
+
+  vb->setStretch(1, 1);
+
+  closeBtn->onClick([this]() { close(); });
 }
 
 //------------------------------------------------------------------------------

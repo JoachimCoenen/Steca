@@ -15,16 +15,47 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
-#pragma once
-#include "calc_dialog.hpp"
+#include "dlg_polefigure.hpp"
+#include <lib/qt/inc/defs.inc>
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------
+using namespace l_qt::make_widgets;
 
-dcl_sub_(Diffractograms, Frame)
-  Diffractograms(QWidget*, Hub::rc);
-
+dcl_sub_(TabGraph, l_qt::panel)
+  TabGraph();
 dcl_end
+
+TabGraph::TabGraph() {}
+
+//------------------------------------------------------------------------------
+
+dcl_sub_(TabPointsSave, TabSave)
+  TabPointsSave();
+dcl_end
+
+TabPointsSave::TabPointsSave() {}
+
+//------------------------------------------------------------------------------
+
+PoleFigure::PoleFigure(QWidget* parent, Hub::rc hub)
+: base("Pole Figure", parent, hub)
+{
+  groups->add(new GroupReflection)
+         .add(new GroupGammaSlices)
+         .add(new GroupGammaRange)
+         .add(new GroupPoints)
+         .add(new GroupInterpolation);
+
+  tabs->addTab(new TabPoints,     "Points")
+       .addTab(new TabGraph,      "Graph")
+       .addTab(new TabPointsSave, "Save");
+
+  auto&& calcBtn = pushbtn("Calculate");
+  auto&& ipolBtn = pushbtn("Interpolate");
+
+  btns->add(calcBtn).add(ipolBtn);
+}
 
 //------------------------------------------------------------------------------
 }}
