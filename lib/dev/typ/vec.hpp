@@ -12,12 +12,9 @@ template <typename T>
 dcl_reimpl_(vec, std::vector<T>)
   UB8_(base, begin, end, reserve, resize, erase, clear, at)
 
-#ifdef _WIN32
-  mth_(T const*, data, ())    RET_(&(base::operator[](0)))
-  mth_mut_(T*, data, ())      RET_(&(base::operator[](0)))
-#else
-  using base::data;
-#endif
+  // Win/Mac do not (yet?) have base::data;
+  mth_mut_(T*, data, ())      RET_(isEmpty() ? nullptr : &(base::operator[](0)))
+  mth_(T const*, data, ())    RET_(mut(*this).data())
 
   bol_(isEmpty, ())           RET_(base::empty())
   mth_(sz_t,     size, ())    RET_(sz_t(base::size()))

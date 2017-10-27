@@ -1,90 +1,105 @@
 #!/usr/bin/php
 <?php
-// ensure cwd
-chdir(dirname(__FILE__).'/');
+/*
+generates js toc (table-of-content) by scanning the file tree, looking for
+'.docs_toc' files; those are made of lines that are:
+- id | title | source-files ...         (the first line, generates _index.html)
+- id | title | out-file.html | source-files ...   (on subsequent lines)
+- subdir/                               (descend, and search for .docs_toc)
+- # comment
+*/
 
-// ensure output directory
-@mkdir($pg = './docs/pg/');
+chdir(dirname(__FILE__).'/');   // ensure cwd
+@mkdir($pg = './docs/pg/');     // ensure (make) output directory for pages
 
-// warning
 $FILE = ''; $LINE = 0;
-function error($s) {
+function error ($s) {           // report error and stop
   global $FILE, $LINE;
   echo "** error in $FILE, line $LINE: $s **\n"; die;
 }
 
-// generate one level of docs
-function docsLevel ($cwd) {
-  global $FILE, $LINE;
-echo ($cwd);
-  if (! ($f = @file($docs = $cwd.'.docs')))
-    error('bad file ' . $docs);
+$tocJs = '';
 
-  $lineNo = 0;
+function docsLevel ($cwd) {     // generate one level of docs
+  global $FILE, $LINE;
+  if (false === ($f = @file($dt = $cwd.'.docs_toc')))
+    error('bad file ' . $dt);
+
+  global $tocJs;
+
+  $lineNo = 0; $firstLine = true;
   foreach ($f as $line) {
-    $FILE = $docs; $LINE = ++$lineNo;
-    if (! ($line = trim($line)))
+    $FILE = $dt; $LINE = ++$lineNo;
+    // trimmed line content, of the part before '#', or of the whole line
+    if (! ($line = trim(strstr($line.'#', '#', true))))
       continue;
 
+    // separate and trim
     $ps = array_map('trim', explode("|", $line));
-    if (1 == count($ps)) {  // sublevel
+
+    if ($firstLine && 3 == count($ps)) {
+      $firstLine = false;
+      @list ($id, $title, $srcFiles) = $ps;
+      $tocJs .= "['$id', '${cwd}_index.html', '$title'], ";
+      generate($cwd, $id, $title, '_index.html', $srcFiles);
+      continue;
+    }
+
+    if ($firstLine)
+      error('bad first line');
+
+    if (4 == count($ps)) {
+      @list ($id, $title, $outFile, $srcFiles) = $ps;
+      $tocJs .= "['$id', '${cwd}${outFile}', '$title'], ";
+      generate($cwd, $id, $title, $outFile, $srcFiles);
+      continue;
+    }
+
+    if (1 == count($ps)) {  // subdir
       list ($dir) = $ps;
       if (strlen($dir) < 2 || '/' != substr($dir, -1))
         error('bad dir ' . $dir);
-
-      docsLevel($cwd.$dir);
-    } else {
-      @list ($tag, $outFile, $title, $srcFiles) = $ps;
-      $fs = array_map('trim', explode(",", $srcFiles));
-      if (!$fs)
-        error('no source files');
+      $tocJs .= '[';
+      docsLevel($cwd . $dir);
+      $tocJs .= '], ';
+      continue;
     }
-    print_r($ps);
+
+    error('bad line');
   }
-  // if (! ($s = @file_get_contents($cwd.'.docs')))
-  //   return;
-  // echo "[$s]";
 }
 
-docsLevel('');
+$ids = [];  // a set of all $id's
+function generate($cwd, $id, $title, $outFile, $srcFiles) {
+  global $ids, $pg;
+  if (@$ids[$id])
+    error('duplicate id');
+  $ids[$id] = true;
 
-/*
+  if (! ($sfs = array_map('trim', explode(",", $srcFiles))))
+    error('bad source file list');
 
-// source data definition
-// [prefix, output file, toc entry, [source files...]]
-$pgSrc = [
-  ['about', '', 'About Steca',
-    ['manifest.cpp']],
-  ['docs', 'docs.html', 'Documentation',
-    []],
-];
+  foreach ($sfs as $sf) {
+    if (false === ($src = @file_get_contents($cwd.$sf)))
+      error('bad source file ' . $sf);
+    if ('.cm' != substr($sf, -3))
+      $src = extractCm($src);
+    @mkdir($pg.$cwd);
+    saveHtmlFile($pg.$cwd.$outFile, $src);
+  }
+}
 
 // extract text between /*(begMark) or //(begMark) and (endMark)* / or //(endMark)
-function extractCm ($f) {
+function extractCm ($s) {
   $begMark = '::>'; $endMark = '<::';
-
-  $s = file_get_contents($f);
   preg_match_all("~(/\*$begMark|//$begMark)(.*?)($endMark\* /|//$endMark)~s", $s, $res);
-
   return join("\n", $res[2]);
 }
 
-// toc js code
-$toc = '';
-
-// create html pages
-foreach ($pgSrc as $src) {
-  list($id, $file, $tx, $fs) = $src;
-
-  $toc .= "    ['$id', '$file', '$tx'],\n";
-  if (!$file)
-    $file = '_index.html';
-
-  $cm = '';
-  foreach ($fs as $f)
-    $cm .= htmlentities(extractCm($f));
-
-  $html = <<<HEREDOC
+function saveHtmlFile($fs, $s) {
+  $s = htmlentities($s);
+  file_put_contents($fs,
+<<<HEREDOC
 <!DOCTYPE html><html lang="en">
 <head>
 
@@ -96,24 +111,15 @@ foreach ($pgSrc as $src) {
 </head>
 
 <body><pre>
-$cm
+$s
 <pre></body>
 </html>
-HEREDOC;
-
-  file_put_contents($pg.$file, $html);
+HEREDOC
+  );
 }
 
-$toc = <<<HEREDOC
-book.toc = {
-  simple: false,
-  src: [
-$toc  ],
-};
-HEREDOC;
-
-// output toc
-file_put_contents($pg.'toc.js', $toc);
-*/
+// top level - go!
+docsLevel('./');
+error_log("[$tocJs]");
 
 // eof

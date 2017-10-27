@@ -1,0 +1,4 @@
+about | About Steca | about.cm
+txt/    # more steca documentation
+lib/    # developers' library
+src/    # Steca source code
