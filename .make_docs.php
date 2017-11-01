@@ -9,68 +9,68 @@ generates js toc (table-of-content) by scanning the file tree, looking for
 - # comment
 */
 
-chdir(dirname(__FILE__).'/');   // ensure cwd
-@mkdir($pg = './docs/pg/');     // ensure (make) output directory for pages
+chdir(dirname(__FILE__).'/');       // ensure cwd
+$pg = 'docs/pg/';                   // output directory for pages
+@exec("rm -rf $pg"); mkdir($pg);    // make it empty
 
 $FILE = ''; $LINE = 0;
-function error ($s) {           // report error and stop
+function error ($s) {               // report error and stop
   global $FILE, $LINE;
   echo "** error in $FILE, line $LINE: $s **\n"; die;
 }
 
-$tocJs = '';
-
-function docsLevel ($cwd) {     // generate one level of docs
+function docsLevel ($cwd, $dir) {   // generate one level of docs
+  $cwd .= $dir;
   global $FILE, $LINE;
   if (false === ($f = @file($dt = $cwd.'.docs_toc')))
     error('bad file ' . $dt);
 
-  global $tocJs;
+  $res = '';
 
-  $lineNo = 0; $firstLine = true;
+  $lineNo = 0; $first = true;
   foreach ($f as $line) {
     $FILE = $dt; $LINE = ++$lineNo;
-    // trimmed line content, of the part before '#', or of the whole line
+    // trimmed content before '#' (# comment ...)
     if (! ($line = trim(strstr($line.'#', '#', true))))
       continue;
 
-    // separate and trim
+    // split by '|' and trim
     $ps = array_map('trim', explode("|", $line));
 
-    if ($firstLine && 3 == count($ps)) {
-      $firstLine = false;
+    if (3 == count($ps)) {
       @list ($id, $title, $srcFiles) = $ps;
-      $tocJs .= "['$id', '${cwd}_index.html', '$title'], ";
-      generate($cwd, $id, $title, '_index.html', $srcFiles);
+      if ($first) {
+        $res .= "['$id', '$dir', '$title'], ";
+        genHtml($cwd, $id, $title, '_index.html', $srcFiles);
+        $first = false;
+      } else {
+        $outFile = $id.'.html';
+        $res .= "['$id', '$outFile', '$title'], ";
+        genHtml($cwd, $id, $title, $outFile, $srcFiles);
+        $first = false;
+      }
       continue;
     }
 
-    if ($firstLine)
+    if ($first)
       error('bad first line');
-
-    if (4 == count($ps)) {
-      @list ($id, $title, $outFile, $srcFiles) = $ps;
-      $tocJs .= "['$id', '${cwd}${outFile}', '$title'], ";
-      generate($cwd, $id, $title, $outFile, $srcFiles);
-      continue;
-    }
 
     if (1 == count($ps)) {  // subdir
       list ($dir) = $ps;
       if (strlen($dir) < 2 || '/' != substr($dir, -1))
         error('bad dir ' . $dir);
-      $tocJs .= '[';
-      docsLevel($cwd . $dir);
-      $tocJs .= '], ';
+      $res .= docsLevel($cwd, $dir);
       continue;
     }
 
     error('bad line');
   }
+
+  return "[$res], ";
 }
 
 $ids = [];  // a set of all $id's
-function generate($cwd, $id, $title, $outFile, $srcFiles) {
+function genHtml($cwd, $id, $title, $outFile, $srcFiles) {
   global $ids, $pg;
   if (@$ids[$id])
     error('duplicate id');
@@ -85,7 +85,7 @@ function generate($cwd, $id, $title, $outFile, $srcFiles) {
     if ('.cm' != substr($sf, -3))
       $src = extractCm($src);
     @mkdir($pg.$cwd);
-    saveHtmlFile($pg.$cwd.$outFile, $src);
+    saveHtml($pg.$cwd.$outFile, $src);
   }
 }
 
@@ -96,7 +96,7 @@ function extractCm ($s) {
   return join("\n", $res[2]);
 }
 
-function saveHtmlFile($fs, $s) {
+function saveHtml($fs, $s) {
   $s = htmlentities($s);
   file_put_contents($fs,
 <<<HEREDOC
@@ -119,7 +119,16 @@ HEREDOC
 }
 
 // top level - go!
-docsLevel('./');
-error_log("[$tocJs]");
+$tocJs = docsLevel('', '');
+error_log("$tocJs");
+
+file_put_contents($pg.'toc.js',
+  <<<HEREDOC
+book.toc = {
+  simple: false,
+  src: $tocJs
+};
+HEREDOC
+);
 
 // eof
