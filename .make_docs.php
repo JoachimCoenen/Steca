@@ -16,10 +16,14 @@ class TocCompiler {
     throw new Exception($msg);
   }
 
+  private static function log ($msg) {
+    error_log(' : ' . $msg);
+  }
+
   public function compile () {
     try {
       $i = -1;
-      $this->traverse(null, '', $i);
+      $this->traverse(null, '', $i, 0);
       file_put_contents($this->out.PRE_TOC,
         "book.toc = {lst:[$this->lst], ids:{{$this->ids}}, sec:{{$this->sec}}, pnt:{{$this->pnt}}, fil:{{$this->fil}}};",
         LOCK_EX);
@@ -54,7 +58,8 @@ class TocCompiler {
     return false;
   }
 
-  private function traverse ($pntNo, $path, &$i) {
+  private function traverse ($pntNo, $path, &$i, $level) {
+    self::log($path);
     $index = $path._INDEX_CM;
     if (!($f = @fopen($index, 'r')))
       self::error('bad index: ' . $index);
@@ -69,7 +74,7 @@ class TocCompiler {
     $indNo = ++$i;
 
     $pf = $path._INDEX_HTML;
-    $this->saveHtml($this->out.$pf, file_get_contents($index));
+    $this->saveHtml($this->out.$pf, file_get_contents($index), $level);
 
     $this->lst .= "['$id','$pf','".htmlentities($title)."'],";
     $this->ids .= "'$id':$i,";
@@ -85,14 +90,14 @@ class TocCompiler {
       list($idOrSub, $file, $title, $srcFiles) = $l;
       if ($idOrSub && !$file && !$title && !$srcFiles) {
         if ('/' === substr($idOrSub, -1)) {
-          $this->traverse($indNo, $path.$idOrSub, $i);
+          $this->traverse($indNo, $path.$idOrSub, $i, $level+1);
           continue;
         }
       } else if ($idOrSub && $file && $title && $srcFiles) {
         $id = $idOrSub; ++$i; $file .= '.html';
         self::checkUniqueId($id);
         $pf = $path.$file;
-        $this->genHtml($this->out.$pf, $path, $srcFiles);
+        $this->genHtml($this->out.$pf, $path, $srcFiles, $level);
         $this->lst .= "['$id','$pf','".htmlentities($title)."'],";
         $this->ids .= "'$id':$i,";
         $this->sec .= "$i:$indNo,";
@@ -107,7 +112,7 @@ class TocCompiler {
     fclose($f);
   }
 
-  private function genHtml($fname, $path, $srcFiles) {
+  private function genHtml($fname, $path, $srcFiles, $level) {
     if (! ($srcFiles = array_map('trim', explode(",", $srcFiles))))
       self::error('bad source file list');
 
@@ -116,7 +121,7 @@ class TocCompiler {
         self::error('bad source file ' . $sf);
       if ('.cm' != substr($sf, -3))
         $src = $this->extractCm($src);
-      $this->saveHtml($fname, $src);
+      $this->saveHtml($fname, $src, $level);
     }
   }
 
@@ -127,8 +132,10 @@ class TocCompiler {
     return join("\n", $res[2]);
   }
 
-  private function saveHtml ($fname, $tx) {
+  private function saveHtml ($fname, $tx, $level) {
+    self::log('=> ' . $fname . $level);
     $tx = htmlentities($tx);
+    $toRoot = str_repeat('../', $level);
     file_put_contents($fname,
 <<<HEREDOC
 <!DOCTYPE html><html lang="en">
@@ -136,8 +143,8 @@ class TocCompiler {
 
 <meta charset="utf-8">
 <style>body>pre{display:none;}</style>
-<script>tocjs = '../pg/toc.js'</script>
-<script src ="../CM/load.js"></script>
+<script>tocjs = '${toRoot}toc.js'</script>
+<script src ="${toRoot}../CM/load.js"></script>
 
 </head>
 
