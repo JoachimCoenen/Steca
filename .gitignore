@@ -3,3 +3,4 @@ CMakeLists.txt.user
 *.pro.user
 to-add/
 .idea/
+docs/pg

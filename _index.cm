@@ -1,3 +1,8 @@
+@toc about ; About Steca
+@toc txt/    # more steca documentation
+@toc lib/    # developers' library
+@toc src/    # Steca source code
+
 = STeCa2 {img: img/icon.png}
 
 This is the homepage off
