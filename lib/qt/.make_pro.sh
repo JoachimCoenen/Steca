@@ -1,4 +1,4 @@
-PRO=qt_lib.pro
+PRO=qt.pro
 echo -e '# generated project\n' > $PRO
 
 cat >> $PRO <<EOT
@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG  += static c++11 silent
 QT      += widgets
 
-INCLUDEPATH += \$\$PWD/..
+INCLUDEPATH += \$\$PWD/../..
 EOT
 
 function files {
@@ -17,6 +17,7 @@ function files {
 
 echo -e '\nHEADERS += \\' >> $PRO
 files . h >> $PRO
+files . hpp >> $PRO
 
 echo -e '\nSOURCES += \\' >> $PRO
 files . cpp >> $PRO

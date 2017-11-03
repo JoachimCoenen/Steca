@@ -16,9 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/defs.hpp>
-#include <lib/dev/typ/vec.hpp>
-#include "../typ/def.hpp"
 #include "reflection_info.hpp"
 
 namespace core { namespace calc {

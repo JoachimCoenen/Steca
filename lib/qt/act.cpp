@@ -22,7 +22,7 @@ l::own<act> act::make(strc tx, strc key) {
 }
 
 l::own<act> act::make(strc tx, strc key, strc ic) {
-  auto a = make(tx, key); mutp(a)->icon(ic);
+  auto a = make(tx, key); mut(*a).icon(ic);
   return a;
 }
 
@@ -59,27 +59,12 @@ bool act::isCheckable() const {
 }
 
 act::ref act::check(bool on) {
-  if (isCheckable())
-    base::setChecked(on);
-  else
+  if (isCheckable()) {
+    if (base::isChecked() != on)
+      base::setChecked(on);
+  } else
     base::trigger();
-
   RTHIS
-}
-
-//------------------------------------------------------------------------------
-
-actbtn::actbtn() {
-  base::setToolButtonStyle(Qt::ToolButtonIconOnly);
-}
-
-actbtn::actbtn(act& a) {
-  base::setToolButtonStyle(Qt::ToolButtonIconOnly);
-  action(&a);
-}
-
-actbtn::ref actbtn::action(act *a) {
-  base::setDefaultAction(a); RTHIS
 }
 
 //------------------------------------------------------------------------------

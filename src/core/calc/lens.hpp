@@ -16,53 +16,38 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/defs.hpp>
 #include "../data/sets.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"
-#include "../typ/image.hpp"
+#include "../typ/options.hpp"
 
-namespace core {
-
-//struct Session;
-enum class eNorm {
-  NONE,
-  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
-};
-
-namespace calc {
+namespace core { namespace calc {
 //------------------------------------------------------------------------------
 // View the dataset through a lens (thanks, Antti!)
 
 dcl_base_(LensBase)
-  LensBase(Session const&, data::CombinedSets::rc,
-           ImageTransform::rc, ImageCut::rc,
-           bool trans, bool cut);
-
+  LensBase(FitParams const&, data::CombinedSets::rc, bool trans, bool cut);
   virtual mth_(l::sz2, size, ()) = 0;
 
 protected:
   mth_(l::sz2, transCutSize, (l::sz2));
 
-  act_(doTrans, (uint& i, uint& j));
-  act_(doCut,   (uint& i, uint& j));
+  voi_(doTrans, (uint& i, uint& j));
+  voi_(doCut,   (uint& i, uint& j));
 
-  ref_(Session,            session);
+  atr_(bool, trans); // TODO remove ?
+  atr_(bool, cut);
+
+  ref_(FitParams,          fp);
   ref_(data::CombinedSets, datasets);
-  ref_(ImageTransform,     imageTransform);
-  ref_(ImageCut,           imageCut);
-
-  atr_(bool, trans); atr_(bool, cut);
-  ptr_(Image, intensCorr);
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_sub_(ImageLens, LensBase) SHARED
-  ImageLens(Session const&, Image::rc, data::CombinedSets::rc,
-            bool trans, bool cut);
+  ImageLens(FitParams const&, Image::rc, data::CombinedSets::rc, bool trans, bool cut);
 
-  mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()));
+  mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()))
   mth_(inten_t, imageInten, (uint i, uint j));
 
   inten_rge::rc rgeInten(bool fixed) const;
@@ -75,8 +60,8 @@ dcl_end
 //------------------------------------------------------------------------------
 
 dcl_sub_(DatasetLens, LensBase) SHARED
-  DatasetLens(Session const&, data::CombinedSet::rc, data::CombinedSets::rc,
-              eNorm, bool trans, bool cut, ImageTransform::rc, ImageCut::rc);
+  DatasetLens(FitParams const&, data::CombinedSets::rc, data::CombinedSet::rc,
+              eNorm, bool trans, bool cut);
 
   mth_(l::sz2, size, ());
 
@@ -91,7 +76,7 @@ dcl_sub_(DatasetLens, LensBase) SHARED
 //  data::Dataset::rc dataset()  const { return dataset_;   }
 
 private:
-  act_mut_(setNorm, (eNorm));
+  mut_(setNorm, (eNorm));
   inten_t normFactor;
   data::CombinedSet::rc dataset;
 dcl_end

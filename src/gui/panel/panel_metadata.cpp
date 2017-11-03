@@ -19,27 +19,26 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include "model_view.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewMetadata, RefHub, l_qt::lst_view)
+dcl_sub_(ViewMetadata, HubView<Hub::ModelMetadata>)
   ViewMetadata(Hub&);
 dcl_end
 
-ViewMetadata::ViewMetadata(Hub& hub) : RefHub(hub) {}
+ViewMetadata::ViewMetadata(Hub& hub) : base(hub, hub.modelMetadata) {}
 
 //------------------------------------------------------------------------------
 
-PanelMetadata::PanelMetadata(Hub& hub) : base("", hub), view(nullptr) {
+PanelMetadata::PanelMetadata(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
-  tabs->addTab((tab = new Panel(hub)), "Metadata");
+  vb().add(tabs);
+  tabs->addTab(tab = new Panel(), "Metadata");
 
-  tab->vb.add((view = new ViewMetadata(hub)));
-  view->setModel(hub.modelMetadata);
-
-  tab->vb.add(mutp(hub.modelMetadata)->makeTriChk(str::null));
+  tab->vb().add(view = new ViewMetadata(hub));
+  tab->vb().add(mut(*view->model).makeTriChk(str::null));
 }
 
 //------------------------------------------------------------------------------

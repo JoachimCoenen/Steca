@@ -22,6 +22,8 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+struct Hub;
+
 dcl_sub_(PanelDatasets, Panel)
   PanelDatasets(Hub&);
 

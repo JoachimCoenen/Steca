@@ -17,7 +17,6 @@
 
 #pragma once
 #include <lib/dev/inc/vecs.hpp>
-#include "def.hpp"
 #include "fun.hpp"
 #include "range.hpp"
 
@@ -38,7 +37,7 @@ dcl_(Curve)
   void clear();
 
   bol_(isEmpty, ());
-  mth_(uint, size, ());
+  mth_(sz_t, size, ());
   bol_(isSorted, ());
 
   set_(add, (real x, real y));

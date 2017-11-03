@@ -32,33 +32,11 @@ Angles::ref Angles::operator=(rc that) {
   return *this;
 }
 
-AngleMap::Key0::Key0()
-: geometry(), size(), cut(), midPix() {}
-
-AngleMap::Key0::Key0(Geometry::rc geometry_, l::sz2::rc size_,
-                     ImageCut::rc cut_, l::ij::rc midPix_)
-  : geometry(geometry_), size(size_), cut(cut_), midPix(midPix_) {}
-
-COMPARABLE_IMPL(AngleMap::Key0) {
-  RET_COMPARABLES_IF_NE(geometry)
-  RET_COMPARABLES_IF_NE(size)
-  RET_COMPARABLES_IF_NE(cut)
-  RET_COMPARABLES_IF_NE(midPix)
-  return 0;
-}
-
-EQ_NE_IMPL(AngleMap::Key0)
-
-AngleMap::Key::Key(Geometry::rc geometry_, l::sz2::rc size_,
-                   ImageCut::rc cut_, l::ij::rc midPix_, tth_t midTth_)
-: base(geometry_, size_, cut_, midPix_), midTth(midTth_) {}
-
-AngleMap::Key::Key(Key0 k, tth_t midTth)
-: Key(k.geometry, k.size, k.cut, k.midPix, midTth) {}
+AngleMap::Key::Key(Geometry::rc geometry_, tth_t midTth_)
+: geometry(geometry_), midTth(midTth_) {}
 
 COMPARABLE_IMPL(AngleMap::Key) {
-  for (int cmp = base::compare(that); cmp; )
-    return cmp;
+  RET_COMPARABLES_IF_NE(geometry)
   RET_COMPARE_IF_NE_THAT(midTth)
   return 0;
 }
@@ -106,26 +84,24 @@ static uint upperBound(l::vec<gma_t> const& vec, gma_t x, uint i1, uint i2) {
 void AngleMap::getGmaIndexes(gma_rge::rc rgeGma,
                              uint_vec const*& indexes, uint& minIndex, uint& maxIndex) const {
   indexes = &gmaIndexes;
-  minIndex = lowerBound(gmas, gma_t(rgeGma.min), 0, l::to_uint(gmas.size()));
-  maxIndex = upperBound(gmas, gma_t(rgeGma.max), 0, l::to_uint(gmas.size()));
+  minIndex = lowerBound(gmas, gma_t(rgeGma.min), 0, gmas.size());
+  maxIndex = upperBound(gmas, gma_t(rgeGma.max), 0, gmas.size());
 }
 
 void AngleMap::calculate() {
-  auto&& geometry = key.geometry;
-  auto&& size     = key.size;
-  auto&& cut      = key.cut;
-  auto&& midPix   = key.midPix;
-  auto&& midTth   = key.midTth;
+  auto&& pixSize = key.geometry.pixSize;
+  auto&& d_z     = key.geometry.detectorDistance;
+  auto&& midPix  = key.geometry.midPixOffset;
+  auto&& midTth  = key.midTth;
 
-  real pixSize = geometry.pixSize,
-       detDist = geometry.detectorDistance;
-
+  auto&& size = key.geometry.imageSize;
   angles.reset(new angle_arr(size));
 
   mut(rgeTth) = Range();
   mut(rgeGma) = Range();
   mut(rgeGmaFull) = Range();
 
+  auto&& cut = key.geometry.imageCut;
   EXPECT_(size.i > cut.left + cut.right)
   EXPECT_(size.j > cut.top  + cut.bottom)
 
@@ -139,7 +115,6 @@ void AngleMap::calculate() {
   real d_midTth   = midTth.toRad(),
        cos_midTth = cos(d_midTth), sin_midTth = sin(d_midTth);
 
-  real& d_z = detDist;
   real b_x1 = d_z * sin_midTth;
   real b_z1 = d_z * cos_midTth;
 
@@ -180,7 +155,7 @@ void AngleMap::calculate() {
   }
 
   uint_vec is(countWithoutCut);
-  for_i_(l::to_uint(is.size()))
+  for_i_(is.size())
     is.setAt(i, i);
 
   std::sort(is.begin(), is.end(), [this](uint i1,uint i2) {

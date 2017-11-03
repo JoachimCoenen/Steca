@@ -19,9 +19,9 @@
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/typ/arr2.hpp>
-#include <lib/dev/typ/sz2.hpp>
-#include "geometry.hpp"
-#include "range.hpp"
+#include "../typ/geometry.hpp"
+#include "../typ/range.hpp"
+#include "../types.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -41,21 +41,11 @@ dcl_(AngleMap) SHARED
     using base::base;
   dcl_end
 
-  dcl_(Key0) COMPARABLE EQ_NE
+  dcl_(Key) COMPARABLE EQ_NE LGTE
     atr_(Geometry, geometry);
-    atr_(l::sz2, size);
-    atr_(ImageCut, cut);
-    atr_(l::ij, midPix);
+    atr_(tth_t,    midTth);
 
-    Key0();
-    Key0(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix);
-  dcl_end
-
-  dcl_sub_(Key, Key0) COMPARABLE COMP_OPS
-    atr_(tth_t, midTth);
-
-    Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
-    Key(Key0, tth_t midTth);
+    Key(Geometry::rc, tth_t midTth);
   dcl_end
 
   atr_(Key, key);
@@ -68,11 +58,11 @@ dcl_(AngleMap) SHARED
   mth_(Angles::rc, at, (uint i, uint j));
   mth_(Angles::rc, at, (uint i));
 
-  act_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
+  voi_(getGmaIndexes, (gma_rge::rc, uint_vec const*&, uint&, uint&));
 
 private:
-  act_mut_(calculate, ());
-  angle_arr::sh angles;
+  mut_(calculate, ());
+  angle_arr::shp angles;
 
   // sorted
   l::vec<gma_t> gmas;

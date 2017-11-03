@@ -84,7 +84,7 @@ void Json::ValVec::saveTo(std::ostream& os, indent_t indent) const {
   for (auto&& v : val) {
     if (0 < i++)
       os << ",";
-    v.val->saveTo(os, indent.next(true));
+    v.val().saveTo(os, indent.next(true));
   }
 
   space(os, indent, true);
@@ -114,38 +114,35 @@ void Json::ValObj::saveTo(std::ostream& os, indent_t indent) const {
 
 Json::~Json() {}
 
-Json::Json(Typ typ) : val(nullptr) {
-  Val *v;
+static Json::Val* Json_Json(Json::Typ typ) {
   switch (typ) {
-  case NUM:
-    v = new ValNum(0);
-    break;
-  case STR:
-    v = new ValStr(str::null);
-    break;
-  case VEC:
-    v = new ValVec(Vec());
-    break;
-  case OBJ:
-    v = new ValObj(Obj());
-    break;
+  case Json::NUM:
+    return new Json::ValNum(0);
+  case Json::STR:
+    return new Json::ValStr(str::null);
+  case Json::VEC:
+    return new Json::ValVec(Json::Vec());
+  case Json::OBJ:
+    return new Json::ValObj(Json::Obj());
   }
-
-  mut(val).reset(v);
 }
 
-Json::Json(flt32 v)   : val(new ValNum(v)) {}
-Json::Json(strc v)    : val(new ValStr(v)) {}
-Json::Json(Vec::rc v) : val(new ValVec(v)) {}
-Json::Json(Obj::rc v) : val(new ValObj(v)) {}
+Json::Json(Typ typ)   : val(Json_Json(typ)) {}
 
-Json::Json(strc key, Json::rc val_) : val() {
-  Obj obj; obj.add(key, val_);
-  mut(val).reset(new ValObj(obj));
+Json::Json(flt32 v)   : val(new ValNum(v))  {}
+Json::Json(strc v)    : val(new ValStr(v))  {}
+Json::Json(Vec::rc v) : val(new ValVec(v))  {}
+Json::Json(Obj::rc v) : val(new ValObj(v))  {}
+
+static Json::Obj Json_obj(strc key, Json::rc val_) {
+  Json::Obj obj; obj.add(key, val_);
+  return obj;
 }
+
+Json::Json(strc key, Json::rc val_) : val(new ValObj(Json_obj(key, val_))) {}
 
 Json::ref Json::add(strc key, rc that) {
-  check_or_err_(OBJ == val->typ, "json: bad type");
+  check_or_err_(OBJ == val().typ, "json: bad type");
   auto&& thisObj = (*static_cast<ValObj const*>(val.ptr())).val;
   mut(thisObj).add(key, that);
 
@@ -153,7 +150,7 @@ Json::ref Json::add(strc key, rc that) {
 }
 
 Json::ref Json::add(rc that) may_err {
-  check_or_err_(VEC == val->typ, "json: bad type");
+  check_or_err_(VEC == val().typ, "json: bad type");
   auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   mut(vec).add(that);
   RTHIS
@@ -162,9 +159,9 @@ Json::ref Json::add(rc that) may_err {
 Json Json::operator+(rc that) const may_err {
   Json plus(*this);
 
-  check_or_err_(OBJ == plus.val->typ, "json: bad type");
+  check_or_err_(OBJ == plus.val().typ, "json: bad type");
 
-  check_or_err_(OBJ == that.val->typ, "json: bad type");
+  check_or_err_(OBJ == that.val().typ, "json: bad type");
   auto&& thatObj = (*static_cast<ValObj const*>(that.val.ptr())).val;
 
   for (auto it = thatObj.begin(); it != thatObj.end(); ++it)
@@ -173,26 +170,26 @@ Json Json::operator+(rc that) const may_err {
   return plus;
 }
 
-uint Json::size() const may_err {
-  check_or_err_(VEC == val->typ, "json: bad type");
+sz_t Json::size() const may_err {
+  check_or_err_(VEC == val().typ, "json: bad type");
   auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.size();
 }
 
 Json::rc Json::at(uint i) const may_err {
-  check_or_err_(VEC == val->typ, "json: bad type");
+  check_or_err_(VEC == val().typ, "json: bad type");
   auto&& vec = (*static_cast<ValVec const*>(val.ptr())).val;
   return vec.at(i);
 }
 
 Json::rc Json::at(strc key) const may_err {
-  check_or_err_(OBJ == val->typ, "json: bad type");
+  check_or_err_(OBJ == val().typ, "json: bad type");
   auto&& obj = (*static_cast<ValObj const*>(val.ptr())).val;
   return obj.at(key);
 }
 
 int Json::asInt() const may_err {
-  check_or_err_(NUM == val->typ, "json: bad type");
+  check_or_err_(NUM == val().typ, "json: bad type");
   return l::to_int(l::round((*static_cast<ValNum const*>(val.ptr())).val));
 }
 
@@ -203,32 +200,32 @@ uint Json::asUint() const may_err {
 }
 
 flt32 Json::asFlt() const may_err {
-  check_or_err_(NUM == val->typ, "json: bad type");
+  check_or_err_(NUM == val().typ, "json: bad type");
   return (*static_cast<ValNum const*>(val.ptr())).val;
 }
 
 strc Json::asStr() const may_err {
-  check_or_err_(STR == val->typ, "json: bad type");
+  check_or_err_(STR == val().typ, "json: bad type");
   return (*static_cast<ValStr const*>(val.ptr())).val;
 }
 
 Json::Vec::rc Json::asVec() const may_err {
-  check_or_err_(VEC == val->typ, "json: bad type");
+  check_or_err_(VEC == val().typ, "json: bad type");
   return (*static_cast<ValVec const*>(val.ptr())).val;
 }
 
 Json::Obj::rc Json::asObj() const may_err {
-  check_or_err_(OBJ == val->typ, "json: bad type");
+  check_or_err_(OBJ == val().typ, "json: bad type");
   return (*static_cast<ValObj const*>(val.ptr())).val;
 }
 
 void Json::saveTo(std::ostream& os) const {
-  val->saveTo(os, indent_t());
+  val().saveTo(os, indent_t());
   os << "\n";
 }
 
 void Json::saveTo(std::ostream& os, indent_t indent) const {
-  val->saveTo(os, indent);
+  val().saveTo(os, indent);
 }
 
 static void check(std::istream& is) may_err {
@@ -299,7 +296,7 @@ Json Json::loadNum(std::istream& is) may_err {
   }
 
   if (isMatch(is, 'i') && isMatch(is, 'n') && isMatch(is, 'f'))
-    return Json(flt32(neg ? -l::flt_inf : +l::flt_inf));
+    return Json(flt32(neg ? -l::real_inf : +l::real_inf));
 
   l::err("json: bad number");
 }
@@ -354,8 +351,8 @@ Json Json::loadObj(std::istream& is) may_err {
 //------------------------------------------------------------------------------
 
 Json::Json(l::ij::rc v) : Self(OBJ) {
-  add(key::I, Json(v.i));
-  add(key::J, Json(v.j));
+  add(key::I, Json(flt32(v.i)));
+  add(key::J, Json(flt32(v.j)));
 }
 
 l::ij Json::asIJ() const {
@@ -363,19 +360,19 @@ l::ij Json::asIJ() const {
 }
 
 Json::Json(l::xy::rc v) : Self(OBJ) {
-  add(key::X, Json(v.x));
-  add(key::Y, Json(v.y));
+  add(key::X, Json(flt32(v.x)));
+  add(key::Y, Json(flt32(v.y)));
 }
 
 l::xy Json::asXY() const {
-  return l::xy(at(key::X).asFlt(), at(key::Y).asFlt());
+  return l::xy(real(at(key::X).asFlt()), real(at(key::Y).asFlt()));
 }
 
 //------------------------------------------------------------------------------
 
 TEST_("json",
   Json::Obj obj; obj.add("a", Json(2));
-  Json::Vec vec({Json(8), Json(l::flt_inf), Json("f"), Json(8)});
+  Json::Vec vec({Json(8), Json(l::real_inf), Json("f"), Json(8)});
 
   Json::Obj obj2;
   obj2.add("obj", Json(obj)); obj2.add("vec", Json(vec));

@@ -17,16 +17,19 @@
 
 #pragma once
 #include "panel.hpp"
+#include "model_view.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
+struct Hub;
+
 dcl_sub_(PanelSetup, Panel)
-  PanelSetup(Hub&);
+  explicit PanelSetup(Hub&);
 
 private:
   Panel *tabGeometry, *tabBackground, *tabReflections;
-
+  ModelReflections modelReflections;
 dcl_end
 
 //------------------------------------------------------------------------------

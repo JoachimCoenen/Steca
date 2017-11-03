@@ -16,39 +16,47 @@
  ******************************************************************************/
 
 #pragma once
-#include "../typ/def.hpp"
 #include "sets.hpp"
-#include <lib/dev/io/path.hpp>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
 struct Files;
 
-dcl_(File) SHARED  // one file
-  atr_(FileIdx::sh,idx);      // the number within files, 0 = not
+dcl_(File) SHARED CLONED // one file
+  atr_(FileSrc::shp,src);      // the number within files, 0 = not
   atr_(bool,       isActive); // included in calculations
-  atr_(l_io::path, path);
-  atr_(str,        name);
-  atr_(str,        comment);
   atr_(Sets,       sets);
-  atr_(MetaDict::sh, dict); // for all sets
+  atr_(MetaDict::shp, dict); // for all sets
 
   File(l_io::path::rc);
 
-  set_(addSet, (Set::sh)) may_err;
+  set_(addSet, (Set::shr)) may_err;
   mth_(l::sz2, imageSize, ());
+
+private:
+  File(rc) = default;
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(Files, l::vec<File::sh>) SHARED // the whole file group
-  atr_(FilesMetaDict::sh, dict);
+// the whole file group
+dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
+  UB4_(begin, end, size, at)
+
+  atr_(FilesMetaDict::shr, dict);
 
   Files();
+  virtual ~Files() {}
 
-  set_(addFile, (data::File::sh));
-  set_(remFile, (uint));
+  bol_(hasPath, (l_io::path::rc));
+  mut_(addFile, (data::File::shp));
+  mut_(remFileAt, (uint));
+
+  mth_(CombinedSets::shr, collectDatasets, (l::pint groupedBy));
+
+private:
+  Files(rc);
 dcl_end
 
 //------------------------------------------------------------------------------

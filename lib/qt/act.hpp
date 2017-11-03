@@ -6,7 +6,6 @@
 #include <lib/dev/inc/str.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <QAction>
-#include <QToolButton>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
@@ -63,18 +62,6 @@ dcl_(acts)
 protected:
   win& w;
   l::hash<str, act const*> as;
-dcl_end
-
-//------------------------------------------------------------------------------
-
-dcl_sub_(actbtn, QToolButton)
-  actbtn();
-  actbtn(act&);
-
-  set_(action, (act*));
-
-  template <typename L>
-  set_(onAct, (L l)) SET_(connect(this, &QAction::triggered, l))
 dcl_end
 
 //------------------------------------------------------------------------------

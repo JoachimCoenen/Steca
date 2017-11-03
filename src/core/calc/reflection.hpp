@@ -23,32 +23,33 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
-dcl_(Reflection)
-  atr_(l::scoped<fit::PeakFun const>, peakFun);
+dcl_(Reflection) SHARED // TODO rename -> Peak ?
+  atr_(l::scoped<fit::PeakFun>, peakFun);
 
-//  static str_vec::rc typeStrLst();
+  Reflection(fit::PeakFun::eType);
+  Reflection(l::give_me<fit::PeakFun const>);
+
+  mut_(setType,  (fit::PeakFun::eType)); // TODO r/o remove ?
+  mut_(setRange, (Range::rc));
+  mut_(setGuess, (peak_t::rc = peak_t(), fwhm_t = fwhm_t()));
+
+private:
+  void setPeakFun(fit::PeakFun::eType);
+  void setPeakFun(l::give_me<fit::PeakFun>);
+
 //  static rcstr       typeTag(fit::ePeakType);
 
-//  Reflection(fit::ePeakType = fit::ePeakType::RAW);
 
 //  fit::ePeakType type() const;
-//  void setType(fit::ePeakType);
 
 //  fit::PeakFunction::rc peakFunction() const;  // REMOVE
 
 //  typ::Range::rc range() const;
-//  void setRange(typ::Range::rc);
 
-//  void invalidateGuesses();
-
-//  void setGuessPeak(peak_t::rc peak) { peakFunction_->setGuessedPeak(peak); }
-//  void setGuessFWHM(fwhm_t fwhm)     { peakFunction_->setGuessedFWHM(fwhm); }
 
 //  void fit(typ::Curve::rc);
 
 //_private
-//  void setPeakFunction(fit::ePeakType);
-//  void setPeakFunction(fit::PeakFunction*);
 
 
 //public:
@@ -56,7 +57,7 @@ dcl_(Reflection)
 //  void loadJson(typ::JsonObj::rc) THROWS;
 dcl_end
 
-//typedef typ::vec<shp_Reflection> Reflections;
+using reflection_vec = l::vec<Reflection::shr>;
 
 //------------------------------------------------------------------------------
 }}

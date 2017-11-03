@@ -7,12 +7,12 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-int mWidth(QWidget const& w, real n) {
+int width_m(QWidget const& w, real n) {
   return l::to_int(l::round(n * w.fontMetrics().width('m')));
 }
 
-int oWidth(QWidget const& w, uint n) {
-  return int(n) * w.fontMetrics().width('0');
+int width_0(QWidget const& w, real n) {
+  return l::to_int(l::round(n * w.fontMetrics().width('0')));
 }
 
 //------------------------------------------------------------------------------

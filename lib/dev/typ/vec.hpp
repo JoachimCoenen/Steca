@@ -10,26 +10,14 @@ namespace l {
 
 template <typename T>
 dcl_reimpl_(vec, std::vector<T>)
-  using base::base;
+  UB8_(base, begin, end, reserve, resize, erase, clear, at)
 
-  using base::begin;
-  using base::end;
-  using base::cbegin;
-  using base::cend;
-  using base::reserve;
-  using base::resize;
-  using base::erase;
-  using base::clear;
-  using base::at;
-#ifdef _WIN32
-  mth_(T const*, data, ())    RET_(&(base::operator[](0)))
-  mth_mut_(T*, data, ())      RET_(&(base::operator[](0)))
-#else
-  using base::data;
-#endif
+  // Win/Mac do not (yet?) have base::data;
+  mth_mut_(T*, data, ())      RET_(isEmpty() ? nullptr : &(base::operator[](0)))
+  mth_(T const*, data, ())    RET_(mut(*this).data())
 
   bol_(isEmpty, ())           RET_(base::empty())
-  mth_(uint,     size, ())    RET_(base::size())
+  mth_(sz_t,     size, ())    RET_(sz_t(base::size()))
   mth_(T const&, first, ())   RET_(base::front())
   mth_(T const&, last,  ())   RET_(base::back())
 
@@ -48,6 +36,10 @@ dcl_reimpl_(vec, std::vector<T>)
   set_(setAt, (uint i, T const& t)) SET_(base::operator[](i) = t)
 
   mth_mut_(T&, refAt, (uint i))     RET_(base::operator[](i))
+
+  mut_(swap, (uint i, uint j)) {
+    auto _ = at(i); setAt(i, at(j)); setAt(j, _);
+  }
 
   bol_(operator==, (rc that)) RET_(base_rc() == that.base_rc())
   bol_(operator!=, (rc that)) RET_(base_rc() != that.base_rc())

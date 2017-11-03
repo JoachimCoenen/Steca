@@ -88,7 +88,7 @@ TEST_("scoped",
   typedef scoped<cnt> sco_ptr;
   {
     cnt *c;
-    sco_ptr p((c = new cnt));
+    sco_ptr p(c = new cnt);
     CHECK_EQ(1, cnt::cnt);
     CHECK(bool(p));
     CHECK_EQ(c, p);
@@ -119,11 +119,11 @@ TEST_("scoped",
   CHECK_EQ(0, cnt::cnt);
 )
 
-TEST_("shared",
+TEST_("shr",
   typedef uint t;
   auto n = new t(8);
-  shared<t> s1(n);
-  shared<t> s2(s1);
+  shr<t> s1(n);
+  shr<t> s2(s1);
   CHECK_EQ(*s1, *s2);
   CHECK_EQ(8,   *s2);
 )

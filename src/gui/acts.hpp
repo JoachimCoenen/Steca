@@ -39,9 +39,42 @@ dcl_sub_(Acts, l_qt::acts)
   cst_(str, CORR_ENABLE);
   cst_(str, CORR_REM);
 
+  // diffractogram
   cst_(str, DIFF_ZOOM);
   cst_(str, DIFF_ALL_DSETS);
   cst_(str, DIFF_FIX_INTEN);
+
+  // image
+  cst_(str, IMG_FIX_INTEN);
+  cst_(str, IMG_STEP_ZOOM);
+  cst_(str, IMG_SHOW_OVER);
+  cst_(str, IMG_SHOW_GAMMA);
+
+  cst_(str, IMG_ROTATE0);
+  cst_(str, IMG_ROTATE1);
+  cst_(str, IMG_ROTATE2);
+  cst_(str, IMG_ROTATE3);
+
+  cst_(str, IMG_MIRROR_HORZ);
+  cst_(str, IMG_MIRROR_VERT);
+
+  cst_(str, IMG_LINK_CUT);
+
+  // background
+  cst_(str, BG_SELECT);
+  cst_(str, BG_SHOW);
+  cst_(str, BG_CLEAR);
+
+  // reflection
+  cst_(str, REFL_ADD);
+  cst_(str, REFL_REM);
+  cst_(str, REFL_SELECT);
+  cst_(str, REFL_CLEAR);
+
+  // outputs
+  cst_(str, DLG_POLEFIG);
+  cst_(str, DLG_DIAGRAM);
+  cst_(str, DLG_DIFFRGS);
 dcl_end
 
 //------------------------------------------------------------------------------

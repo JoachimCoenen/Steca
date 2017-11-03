@@ -16,15 +16,18 @@
  ******************************************************************************/
 
 #pragma once
-#include "refhub.hpp"
+#include <lib/qt/lst.hpp>
 #include <lib/qt/model.hpp>
-#include <core/data/sets.hpp>
+#include <core/calc/reflection.hpp>
+#include "../refhub.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
-  ModelFiles(Hub&);
+dcl_sub_(ModelReflections, l_qt::lst_model)
+  ModelReflections();
+
+  enum { clID, clTYPE };
 
   mth_(cl_n, cols, ());
   mth_(rw_n, rows, ());
@@ -32,48 +35,23 @@ dcl_sub2_(ModelFiles, RefHub, l_qt::lst_model)
   mth_(str,       head, (cl_n));
   mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(check, (rw_n, bool));
-  bol_(isChecked, (rw_n));
-
-  dcl_end
-
-dcl_sub2_(ModelDatasets, RefHub, l_qt::lst_model)
-  ModelDatasets(Hub&);
-
-  mth_(cl_n, cols, ());
-  mth_(rw_n, rows, ());
-
-  mth_(str,       head, (cl_n));
-  mth_(l_qt::var, cell, (rw_n, cl_n));
-
-  act_(fixColumns,  (l_qt::lst_view&));
-  bol_(rightAlign,  (cl_n));
-
-  set_(check, (rw_n, bool));
-  bol_(isChecked, (rw_n));
+  mth_(str,     name,  (rw_n));
+  mth_(str_vec, names, ());
 
 private:
-  uint_vec metaCols;  // shown metadata
-  bol_(grouped, ());
-  mth_(uint, numLeadCols, ());
+  core::calc::reflection_vec const* rs;
 dcl_end
 
-dcl_sub2_(ModelMetadata, RefHub, l_qt::lst_model)
-  ModelMetadata(Hub&);
+//------------------------------------------------------------------------------
 
-  enum { clTAG, clVAL };
+template <typename Model>
+dcl_sub2_(HubView, RefHub, l_qt::lst_view)
+  HubView(Hub& hub, Model const* model_) : RefHub(hub) {
+    setModel(model = model_);
+  }
 
-  mth_(cl_n, cols, ());
-  mth_(rw_n, rows, ());
-
-  mth_(str,       head, (cl_n));
-  mth_(l_qt::var, cell, (rw_n, cl_n));
-
-  set_(check, (rw_n, bool));
-  bol_(isChecked, (rw_n));
-
-private:
-  core::data::CombinedSet::sh dataset;
+protected:
+  Model const* model;
 dcl_end
 
 //------------------------------------------------------------------------------

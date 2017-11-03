@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 #pragma once
-#include "def.hpp"
+#include <lib/dev/typ/vec.hpp>
 
 namespace core {
+//------------------------------------------------------------------------------
 
 dcl_(Range) COMPARABLE EQ_NE
   using rv_t = real;
@@ -55,14 +56,12 @@ dcl_(Range) COMPARABLE EQ_NE
   ref   operator=(rc);
 dcl_end
 
-dcl_(Ranges) EQ_NE
+//------------------------------------------------------------------------------
+
+dcl_reimpl_(Ranges, l::vec<Range>) EQ_NE
+  UB7_(base, clear, isEmpty, size, at, begin, end)
+
   Ranges();
-
-  void clear()         { rs.clear();          }
-  bool isEmpty() const RET_(rs.isEmpty())
-  uint size()    const RET_(rs.size())
-
-  Range::rc at(uint i) const RET_(rs.at(i))
 
   // collapses overlapping ranges into one; true if there was a change
   bool add(Range::rc);
@@ -75,5 +74,6 @@ private:
   l::vec<Range> rs;
 dcl_end
 
+//------------------------------------------------------------------------------
 }
 // eof

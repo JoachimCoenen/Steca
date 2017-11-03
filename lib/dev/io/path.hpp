@@ -3,6 +3,7 @@
 #pragma once
 #include "../defs.hpp"
 #include "../inc/str.hpp"
+#include "../typ/vec.hpp"
 
 namespace l_io {
 //------------------------------------------------------------------------------
@@ -15,7 +16,12 @@ dcl_sub_(path, str)
   mth_(path, absolute, ());
 
   fry_(str,  cwd, ());
-  act_(cd,  ());
+  voi_(cd,  ());
+dcl_end
+
+dcl_sub_(path_vec, l::vec<path>)
+  using base::base;
+  path_vec(str_vec const&);
 dcl_end
 
 //------------------------------------------------------------------------------

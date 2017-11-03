@@ -46,7 +46,7 @@ void log::modal(strc msg) {
 static l::vec<log::handler_t> logHandlers;
 
 void log::set(handler_t handler) {
-  logHandlers.add((logHandler = handler));
+  logHandlers.add(logHandler = handler);
 }
 
 void log::unset() {
@@ -70,7 +70,7 @@ busy::~busy() {
 static l::vec<busy::handler_t> busyHandlers;
 
 void busy::set(handler_t handler) {
-  busyHandlers.add((busyHandler = handler));
+  busyHandlers.add(busyHandler = handler);
 }
 
 void busy::unset() {
@@ -89,7 +89,7 @@ void progress::step(uint val, uint total) {
 static l::vec<progress::handler_t> progressHandlers;
 
 void progress::set(handler_t handler) {
-  progressHandlers.add((progressHandler = handler));
+  progressHandlers.add(progressHandler = handler);
 }
 
 void progress::unset() {

@@ -25,7 +25,7 @@ namespace core { namespace io {
 using data::Files;
 using data::File;
 using data::Set;
-using data::FileIdx;
+using data::FileSrc;
 using data::Meta;
 
 using l_io::path;
@@ -33,14 +33,14 @@ using l_io::path;
 //------------------------------------------------------------------------------
 // Code taken from the original STeCa, only slightly modified.
 
-File::sh loadMar(path::rc path) may_err {
-  File::sh file(new File(path));
+l::own<File> loadMar(path::rc path) may_err {
+  auto&& file = l::scope(new File(path));
 
   using WORD = short;
 
   FILE *fpIn;
 
-  check_or_err_((fpIn = fopen(path.c_str(), "rb")),
+  check_or_err_(fpIn = fopen(path.c_str(), "rb"),
                 CAT("Cannot open data file: ", path));
 
   struct CloseFile { // TODO remove, replace with QFile etc.
@@ -233,14 +233,14 @@ File::sh loadMar(path::rc path) may_err {
 
   mut(*file).addSet(
     l::sh(new Set(
-      file->idx,
+      file->src,
       l::sh(md.take().ptr()),
       l::sh(new Image(convertedIntens)))));
 
   delete[] i2_image;
   delete[] i4_image;
 
-  return file;
+  return file.takeOwn();
 }
 
 TEST_("loadMar",

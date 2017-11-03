@@ -34,13 +34,14 @@ dcl_sub_(Win, l_qt::win)
   Win();
   Hub hub;
 
+  mut_(init, ());
   mth_(l_qt::acts const&, getActs, ());
 
-  act_mut_(about, ());
-  act_mut_(onFirstShow, ());
+  mut_(about, ());
+  mut_(onFirstShow, ());
   bol_mut_(onClose, ());
 
-  act_(checkUpdate, (bool completeReport = true));
+  voi_(checkUpdate, (bool completeReport = true));
 
   PanelFiles         *panelFiles;
   PanelDatasets      *panelDatasets;
@@ -50,7 +51,7 @@ dcl_sub_(Win, l_qt::win)
   PanelMetadata      *panelMetadata;
 
 private:
-  act_mut_(checkActions, ());
+  mut_(checkActions, ());
   mutable QNetworkAccessManager netMan;
 dcl_end
 

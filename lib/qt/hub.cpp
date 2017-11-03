@@ -19,9 +19,8 @@ void Task::set(Hub& hub_) {
 
 Worker::Worker(Hub& hub_) : hub(hub_) {}
 
-void Worker::doWork(Task::sh task) {
-  EXPECT_(task)
-  mutp(task)->work();
+void Worker::doWork(Task::shr task) {
+  mut(task()).work();
   emit workDone(task);
 }
 
@@ -46,14 +45,13 @@ void Hub::post(Task* event) {
   QApplication::postEvent(this, event);
 }
 
-void Hub::workDone(Task::sh task) {
-  EXPECT_(task)
-  mutp(task)->done();
+void Hub::workDone(Task::shr task) {
+  mut(task()).done();
 }
 
 void Hub::registerMetaTypes() {
   ONLY_ONCE
-  qRegisterMetaType<Task::sh>("Task::sh");
+  qRegisterMetaType<Task::shr>("Task::sh");
 }
 
 bool Hub::event(QEvent* e) {
@@ -61,8 +59,8 @@ bool Hub::event(QEvent* e) {
   if (!task)
     return QObject::event(e);
 
-  Task::sh sh(task->clone());
-  mutp(sh)->set(*this);
+  auto&& sh = l::sh(task->clone());
+  mut(*sh).set(*this);
 
   emit doWork(sh);
   return true;

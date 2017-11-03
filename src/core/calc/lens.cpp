@@ -18,27 +18,21 @@
 #include "lens.hpp"
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
-#include "../session.hpp"
+#include "../calc/fit_params.hpp"
 
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
-LensBase::LensBase(Session::rc session_, data::CombinedSets::rc datasets_,
-                   ImageTransform::rc imageTransform_, ImageCut::rc imageCut_,
-                   bool trans_, bool cut_)
-: session(session_), datasets(datasets_)
-, imageTransform(imageTransform_), imageCut(imageCut_)
-, trans(trans_), cut(cut_)
-, intensCorr(session.intensCorr()) {
-}
+LensBase::LensBase(FitParams::rc fp_, data::CombinedSets::rc datasets_, bool trans_, bool cut_)
+: trans(trans_), cut(cut_), fp(fp_), datasets(datasets_){}
 
 LensBase::~LensBase() {}
 
 l::sz2 LensBase::transCutSize(l::sz2 size) const {
-  if (trans && imageTransform.isTransposed())
+  if (trans && fp.geometry.imageTransform.isTransposed())
     size = size.transposed();
   if (cut)
-    size = size - imageCut.marginSize();
+    size = size - fp.geometry.imageCut.marginSize();
 
   return size;
 }
@@ -48,7 +42,7 @@ void LensBase::doTrans(uint& i, uint& j) const {
   uint w = s.i;
   uint h = s.j;
 
-  switch (imageTransform.val) {
+  switch (fp.geometry.imageTransform.val) {
   case ImageTransform::ROTATE_0:
     break;
   case ImageTransform::ROTATE_1:
@@ -81,32 +75,31 @@ void LensBase::doTrans(uint& i, uint& j) const {
 }
 
 void LensBase::doCut(uint& i, uint& j) const {
-  i += imageCut.left; j += imageCut.top;
+  i += fp.geometry.imageCut.left;
+  j += fp.geometry.imageCut.top;
 }
 
 //------------------------------------------------------------------------------
 
-ImageLens::ImageLens(Session::rc session,
-                     Image::rc image_, data::CombinedSets::rc datasets,
+ImageLens::ImageLens(FitParams::rc fp, Image::rc image_,
+                     data::CombinedSets::rc datasets,
                      bool trans, bool cut)
-: base(session, datasets, session.imageTransform, session.imageCut, trans, cut)
-, image(image_)
-{}
+: base(fp, datasets, trans, cut) , image(image_) {}
 
 inten_t ImageLens::imageInten(uint i, uint j) const {
   if (trans) doTrans(i, j);
   if (cut)   doCut(i, j);
 
-  auto inten = image.inten(i, j);
+  auto&& inten = image.inten(i, j);
+  auto&& intensCorr = fp.intensCorr();
   if (intensCorr)
     inten *= intensCorr->inten(i, j);
-
   return inten;
 }
 
 inten_rge::rc ImageLens::rgeInten(bool fixed) const {
   if (fixed)
-    return datasets.rgeFixedInten(session, trans, cut);
+    return datasets.rgeFixedInten(fp, trans, cut);
 
   if (!lazyRgeInten.isDef()) {
     auto sz = size();
@@ -119,10 +112,10 @@ inten_rge::rc ImageLens::rgeInten(bool fixed) const {
 
 //------------------------------------------------------------------------------
 
-DatasetLens::DatasetLens(Session::rc session,
-   data::CombinedSet::rc dataset_, data::CombinedSets::rc datasets, eNorm norm,
-   bool trans, bool cut, ImageTransform::rc imageTransform, ImageCut::rc imageCut)
-: base(session, datasets, imageTransform, imageCut, trans, cut)
+DatasetLens::DatasetLens(FitParams::rc fp,
+   data::CombinedSets::rc datasets, data::CombinedSet::rc dataset_,
+   eNorm norm, bool trans, bool cut)
+: base(fp, datasets, trans, cut)
 , normFactor(1), dataset(dataset_) {
   setNorm(norm);
 }
@@ -132,15 +125,15 @@ l::sz2 DatasetLens::size() const {
 }
 
 gma_rge DatasetLens::rgeGma() const {
-  return dataset.rgeGma(session);
+  return dataset.rgeGma(fp);
 }
 
 gma_rge DatasetLens::rgeGmaFull() const {
-  return dataset.rgeGmaFull(session);
+  return dataset.rgeGmaFull(fp);
 }
 
 tth_rge DatasetLens::rgeTth() const {
-  return dataset.rgeTth(session);
+  return dataset.rgeTth(fp);
 }
 
 inten_rge DatasetLens::rgeInten() const {
@@ -154,13 +147,13 @@ Curve DatasetLens::makeCurve() const {
 }
 
 Curve DatasetLens::makeCurve(gma_rge::rc rgeGma) const {
-  inten_vec intens = dataset.collectIntens(session, intensCorr, rgeGma);
+  inten_vec intens = dataset.collectIntens(fp, rgeGma);
 
   Curve res;
   uint size = intens.size();
 
   if (size) {
-    auto rgeTth   = dataset.rgeTth(session);
+    auto rgeTth   = dataset.rgeTth(fp);
     auto minTth   = tth_t(rgeTth.min);
     auto deltaTth = tth_t(rgeTth.width() / size);
     for_i_(size)
@@ -187,14 +180,14 @@ void DatasetLens::setNorm(eNorm norm) {
     den = dataset.dTim();
     break;
   case eNorm::BACKGROUND:
-    num = session.calcAvgBackground(datasets);
-    den = session.calcAvgBackground(datasets, dataset);
+    num = fp.calcAvgBackground(datasets);
+    den = fp.calcAvgBackground(datasets, dataset);
     break;
   case eNorm::NONE:
     break;
   }
 
-  normFactor = inten_t((num > 0 && den > 0) ? num / den : l::flt_nan);
+  normFactor = inten_t((num > 0 && den > 0) ? num / den : l::real_nan);
   if (l::isnan(normFactor))
     l_io::log::warn("Bad normalisation value");
 }

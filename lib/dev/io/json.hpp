@@ -56,7 +56,7 @@ dcl_base_(Json)
   dcl_base_(Val)
     atr_(Typ, typ);
     Val(Typ);
-    virtual act_(saveTo, (std::ostream&, indent_t)) = 0;
+    virtual voi_(saveTo, (std::ostream&, indent_t)) = 0;
   dcl_end
 
   template <Typ Ttyp, typename Tval>
@@ -67,30 +67,30 @@ dcl_base_(Json)
 
   dcl_sub_(ValNum, TypVal<NUM COMMA flt32>)
     using base::base;
-    act_(saveTo, (std::ostream&, indent_t));
+    voi_(saveTo, (std::ostream&, indent_t));
   dcl_end
 
   dcl_sub_(ValStr, TypVal<STR COMMA str>)
     using base::base;
-    act_(saveTo, (std::ostream&, indent_t));
+    voi_(saveTo, (std::ostream&, indent_t));
   dcl_end
 
   using Vec = l::vec<Json>;
 
   dcl_sub_(ValVec, TypVal<VEC COMMA Vec>)
     using base::base;
-    act_(saveTo, (std::ostream&, indent_t));
+    voi_(saveTo, (std::ostream&, indent_t));
   dcl_end
 
   using Obj = l::map<str, Json>;
 
   dcl_sub_(ValObj, TypVal<OBJ COMMA Obj>)
     using base::base;
-    act_(saveTo, (std::ostream&, indent_t));
+    voi_(saveTo, (std::ostream&, indent_t));
   dcl_end
 
   // data
-  atr_(l::shared<Val>, val);
+  atr_(l::shr<Val>, val);
 
   Json(Typ);
   Json(rc) = default;
@@ -107,7 +107,7 @@ dcl_base_(Json)
 
   mth_(Self, operator+, (rc that)) may_err;
 
-  mth_(uint, size, ())   may_err;
+  mth_(sz_t, size, ())   may_err;
   mth_(rc,   at, (uint)) may_err;
   mth_(rc,   at, (strc)) may_err;
 
@@ -118,8 +118,8 @@ dcl_base_(Json)
   mth_(Vec::rc, asVec,  ()) may_err;
   mth_(Obj::rc, asObj,  ()) may_err;
 
-  act_(saveTo, (std::ostream&));
-  act_(saveTo, (std::ostream&, indent_t));
+  voi_(saveTo, (std::ostream&));
+  voi_(saveTo, (std::ostream&, indent_t));
 
   fry_(Self, loadFrom, (std::istream&)) may_err;
 

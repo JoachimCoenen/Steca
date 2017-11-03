@@ -22,19 +22,19 @@ namespace core { namespace calc {
 
 ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta)
 : ReflectionInfo(alpha, beta, Range(),
-                 inten_t(l::flt_nan), inten_t(l::flt_nan),
-                 tth_t(l::flt_nan), tth_t(l::flt_nan),
-                 fwhm_t(l::flt_nan), fwhm_t(l::flt_nan))
+                 inten_t(l::real_nan), inten_t(l::real_nan),
+                 tth_t(l::real_nan), tth_t(l::real_nan),
+                 fwhm_t(l::real_nan), fwhm_t(l::real_nan))
 {}
 
 ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta, gma_rge rgeGma,
     inten_t inten, inten_t intenError, tth_t tth, tth_t tthError, fwhm_t fwhm, fwhm_t fwhmError)
-  : ReflectionInfo(data::Meta::sh(), alpha, beta, rgeGma,
+  : ReflectionInfo(data::Meta::shp(), alpha, beta, rgeGma,
                    inten, intenError, tth, tthError, fwhm, fwhmError)
 {
 }
 
-ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
+ReflectionInfo::ReflectionInfo(data::Meta::shp md_,
     l::deg alpha_, l::deg beta_, gma_rge rgeGma_,
     inten_t inten_, inten_t intenError_,
     tth_t   tth_,   tth_t   tthError_,
@@ -109,10 +109,10 @@ ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
 
 //ReflectionInfo::ReflectionInfo()
 //: ReflectionInfo(shp_Metadata(),
-//                 l::flt_nan, l::flt_nan, Range(),
-//                 inten_t(l::flt_nan), inten_t(l::flt_nan),
-//                 tth_t(l::flt_nan),   tth_t(l::flt_nan),
-//                 l::flt_nan, l::flt_nan)
+//                 l::real_nan, l::real_nan, Range(),
+//                 inten_t(l::real_nan), inten_t(l::real_nan),
+//                 tth_t(l::real_nan),   tth_t(l::real_nan),
+//                 l::real_nan, l::real_nan)
 //{
 //}
 
@@ -120,9 +120,9 @@ ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
 //ReflectionInfo::ReflectionInfo(shp_Metadata md, deg alpha, deg beta,
 //                               gma_rge rgeGma)
 //: ReflectionInfo(md, alpha, beta, rgeGma,
-//                 inten_t(l::flt_nan), inten_t(l::flt_nan),
-//                 tth_t(l::flt_nan),   tth_t(l::flt_nan),
-//                 fwhm_t(l::flt_nan),  fwhm_t(l::flt_nan))
+//                 inten_t(l::real_nan), inten_t(l::real_nan),
+//                 tth_t(l::real_nan),   tth_t(l::real_nan),
+//                 fwhm_t(l::real_nan),  fwhm_t(l::real_nan))
 //{
 //}
 
@@ -179,7 +179,7 @@ ReflectionInfo::ReflectionInfo(data::Meta::sh md_,
 //}
 
 //void ReflectionInfos::invalidate() {
-//  avgInten_ = inten_t(l::flt_nan);
+//  avgInten_ = inten_t(l::real_nan);
 //  rgeInten_.invalidate();
 //}
 

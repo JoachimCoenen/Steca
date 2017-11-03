@@ -8,33 +8,34 @@ namespace l {
 
 // number type aliases; string type in debug mode
 #ifndef NDEBUG
-  #define use_int_(T, Base, ...) struct T {       \
+  #define use_int_(T, Base, ...)                  \
+  struct T {                                      \
     explicit T(Base val_) : val(val_) __VA_ARGS__ \
     operator Base() const RET_(val)               \
     T& operator++()    SET_(++val)                \
     T& operator--()    SET_(--val)                \
-    T& operator++(int) SET_(val++)                \
-    T& operator--(int) SET_(val--)                \
+    T  operator++(int) RET_(T(val++))             \
+    T  operator--(int) RET_(T(val--))             \
   protected:                                      \
     Base val;                                     \
   };
 
-  #define use_flt_(T, Base, ...) struct T {       \
+  #define use_flt_(T, Base, ...)                  \
+  struct T {                                      \
     explicit T(Base val_) : val(val_) __VA_ARGS__ \
     operator Base() const RET_(val)               \
-    protected:                                    \
+  protected:                                      \
     Base val;                                     \
   };
 
-  #define use_vec_(T, Base)                       \
-  dcl_sub_(T##_vec, l::vec<T>)                    \
+  #define use_typ_(T, Base)                       \
+  dcl_sub_(T, Base)                               \
     using base::base;                             \
-    operator Base##_vec&() RET_(reinterpret_cast<Base##_vec&>(*this)) \
   dcl_end
 #else
   #define use_int_(T, Base, ...) using T = Base;
   #define use_flt_(T, Base, ...) using T = Base;
-  #define use_vec_(T, Base)      using T##_vec = Base##_vec;
+  #define use_typ_(T, Base)      using T = Base;
 #endif
 
 use_int_(pint,  uint,  { EXPECT_(0 <  val) }) // (p)ositive (int)eger
@@ -176,6 +177,16 @@ inline uint to_uint(N n) {
   return to_num<uint>(n);
 }
 
+template <typename T>
+inline T val_min(T const&) {
+  return __num_trait<T>::min;
+}
+
+template <typename T>
+inline T val_max(T const&) {
+  return __num_trait<T>::max;
+}
+
 //------------------------------------------------------------------------------
 
 extern flt32 const flt32_nan; // quiet nan
@@ -184,8 +195,8 @@ extern flt32 const flt32_inf;
 extern flt64 const flt64_nan; // quiet nan
 extern flt64 const flt64_inf;
 
-extern real  const flt_nan;   // quiet nan
-extern real  const flt_inf;
+extern real  const real_nan;   // quiet nan
+extern real  const real_inf;
 
 bool isnan(flt32);
 bool isfin(flt32);
@@ -237,7 +248,11 @@ template <typename T> T const& notnan(T const& a, T const& b) {
   return !isnan(a) ? a : b;
 }
 
-real pow(real x, uint n);
+flt32 pow(flt32 x, uint n);
+flt64 pow(flt64 x, uint n);
+
+flt32 pow(flt32 x, flt32 y);
+flt64 pow(flt64 x, flt64 y);
 
 //------------------------------------------------------------------------------
 }

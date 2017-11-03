@@ -18,8 +18,8 @@ dcl_sub_(lst_model, QAbstractTableModel)
   use_int_(cl_n, uint, {}) // col number
   use_int_(rw_n, uint, {}) // row number
 
-  use_vec_(cl_n, uint)
-  use_vec_(rw_n, uint)
+  use_typ_(cl_n_vec, uint_vec)
+  use_typ_(rw_n_vec, uint_vec)
 
   lst_model();
 
@@ -34,7 +34,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   dcl_end
 
   mth_mut_(triChk*, makeTriChk, (strc));
-  set_(changeState, (triChk::eState));
+  mut_(changeTriState, (triChk::eState));
 
   atr_(uint, isNumbered);
   set_(setNumbered, (uint));
@@ -47,17 +47,28 @@ dcl_sub_(lst_model, QAbstractTableModel)
   virtual mth_(var,  cell, (rw_n, cl_n));
 
   virtual set_(check, (rw_n));
-  virtual set_(check, (rw_n, bool));
+  virtual set_(check, (rw_n, bool, bool done = true));
   virtual bol_(isChecked, (rw_n));
 
-  act_(signalReset, ()) emits;
-  act_(updateState, ()) emits;
+  voi_(updateTriState, ()) emits;
 
-  virtual act_(fixColumns,  (lst_view&));
+  voi_(fixColumns,  (lst_view&));
   virtual bol_(rightAlign, (cl_n)) RET_(false)
 
 signals:
-  void stateChanged(triChk::eState) const;
+  void triStateChanged(triChk::eState) const;
+  void columnsToFix() const;
+
+public:
+  template <typename Lambda>
+  QMetaObject::Connection onSigReset(Lambda slot) const {
+    return QObject::connect(this, &Self::modelReset, slot);
+  }
+
+protected:
+  voi_(signalReset, ())           emits;
+  voi_(signalRowChanged, (rw_n))  emits;
+
 private:
   mutable triChk::eState state;
 
@@ -70,6 +81,7 @@ protected:
 
   QVariant headerData(int, Qt::Orientation, int) const;
   QVariant data(rcIndex, int)                    const;
+  var displayData(rw_n, int col) const;
 
   uint colOff() const;
   friend struct lst_view;

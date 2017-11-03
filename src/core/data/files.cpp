@@ -21,11 +21,11 @@
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-File::File(l_io::path::rc path_)
-: idx(new FileIdx()), isActive(true)
-, path(path_), name(path.filename()), comment(), sets(), dict(new MetaDict) {}
+File::File(l_io::path::rc path)
+: src(new FileSrc(path, str::null)), isActive(true)
+, sets(), dict(new MetaDict) {}
 
-File::ref File::addSet(Set::sh set) may_err {
+File::ref File::addSet(Set::shr set) may_err {
   mut(sets).add(set);
   return *this;
 }
@@ -38,74 +38,97 @@ l::sz2 File::imageSize() const {
 //------------------------------------------------------------------------------
 
 Files::Files() : dict(new FilesMetaDict) {}
+Files::Files(rc that) : base(that), dict(that.dict().clone()) {}
 
-static l::set<str> metaKeys(Files::rc files) {
-  l::set<str> keys;
-
-  for (auto&& f : files)
-    for (auto&& k : f->dict->keys)
-      keys.add(k);
-
-  return keys;
+bool Files::hasPath(l_io::path::rc path) const {
+  for (auto&& file : *this)
+    if (file->src->path == path)
+      return true;
+  return false;
 }
 
-Files::ref Files::addFile(data::File::sh file) {
-  EXPECT_(! // not there
-    ([&]() {
-      for_i_(size())
-        if (file == at(i))
-          return true;
-      return false;
-     }())
-  )
 
+void Files::addFile(data::File::shp file) {
+  EXPECT_(file && !hasPath(file->src->path))
   add(file);
-  mut(file->idx->val) = size();
-
-  mutp(dict)->update(metaKeys(*this));
-
-  return *this;
+  mut(*dict).enter(file->dict->keys);
 }
 
-Files::ref Files::remFile(uint i) {
-  File::sh file = at(i);
+void Files::remFileAt(uint i) {
+  File::shp file = at(i);
   rem(i);
 
-  // renumber
-  mut(file->idx->val) = 0;
-  for_i_(size())
-    mut(at(i)->idx->val) = i + 1;
+  auto&& md = mut(*dict);
+  md.clear();
 
-  mutp(dict)->update(metaKeys(*this));
+  for (auto&& file : *this)
+    for (auto&& key : file->dict->keys)
+      md.enter(key);
+}
 
-  return *this;
+CombinedSets::shr Files::collectDatasets(l::pint groupedBy) const {
+  auto css = l::sh(new data::CombinedSets);
+
+  uint i = 0, fileNo = 1;
+  l::scoped<data::CombinedSet> cs;
+
+  auto appendCs = [&]() {
+    auto sz = cs->size();
+    if (!sz)
+      return;
+
+    str tag = str::num(i + 1); i += sz;
+    if (groupedBy > 1)
+      tag += '-' + str::num(i);
+    mut(cs->tag)    = tag;
+
+    mut(*css).add(cs.takeOwn());
+  };
+
+  auto gb = groupedBy;
+  for (auto&& file : *this) {
+    if (file->isActive)
+      for (auto&& set : file->sets) {
+        if (!cs)
+          cs.reset(new data::CombinedSet(fileNo));
+        cs->add(set);
+        if (0 == --gb) {
+          appendCs();
+          gb = groupedBy;
+        }
+      }
+    ++fileNo;
+  }
+
+  // the potentially remaining ones
+  cs.reset(new data::CombinedSet(fileNo));
+  appendCs();
+
+  return css;
 }
 
 //------------------------------------------------------------------------------
 
-TEST_("data::sh",
-  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
+TEST_("data::shp",
+  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
   f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
-  CHECK_EQ(0, f1->idx->val);
-  CHECK_EQ(0, f2->idx->val);
+  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
+  CHECK_EQ("a", f1->src->path);
+  CHECK_EQ("b", f2->src->path);
 
   Files fs;
   fs.addFile(l::sh(f1));
   fs.addFile(l::sh(f2));
-  CHECK_EQ(1, f1->idx->val);
-  CHECK_EQ(2, f2->idx->val);
 
   f1->addSet(l::sh(new Set(
-    l::sh(new FileIdx),
+    f1->src,
     l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
     l::sh(new Image))));
 
-  fs.remFile(0);
-  CHECK_EQ(1, f2->idx->val);
+  fs.remFileAt(0);
 )
 
 //------------------------------------------------------------------------------

@@ -103,7 +103,7 @@ static bool inQuadrant(eQuadrant quadrant, l::deg deltaAlpha, l::deg deltaBeta) 
     return deltaAlpha < 0 && deltaBeta >= 0;
   }
 
-  NEVER return false;
+  NEVER_RETURN(false)
 }
 
 // Search quadrant remapping in case no point was found.
@@ -119,7 +119,7 @@ eQuadrant remapQuadrant(eQuadrant q) {
     return eQuadrant::SOUTHEAST;
   }
 
-  NEVER return eQuadrant::NORTHEAST;
+  NEVER_RETURN(eQuadrant::NORTHEAST)
 }
 
 // Checks if (alpha,beta) is inside radius from (centerAlpha,centerBeta).
@@ -149,7 +149,7 @@ static void searchInQuadrants(Quadrants::rc quadrants,
   // Take only reflection infos with beta within +/- BETA_LIMIT degrees into
   // account. Original STeCa used something like +/- 1.5*36 degrees.
   real const BETA_LIMIT = 30;
-  distances  = real_vec(quadrants.size(), l::flt_inf);
+  distances  = real_vec(quadrants.size(), l::real_inf);
   foundInfos = info_vec(quadrants.size(), nullptr);
   // Find infos closest to given alpha and beta in each quadrant.
   for (auto&& info : infos) {
@@ -314,7 +314,7 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
 
           interpolatedInfos.add(ReflectionInfo(alpha, beta, infos.first().rgeGma,
               inten_t(avg.inten / flt32(n)), inten_t(),
-              avg.tth   / real(n), tth_t(l::flt_nan),
+              avg.tth   / real(n), tth_t(l::real_nan),
               fwhm_t(avg.fwhm  / flt32(n)), fwhm_t()));
           continue;
         }
@@ -331,9 +331,9 @@ ReflectionInfos interpolate(ReflectionInfos::rc infos,
       itf_t itf = interpolateValues(idwRadius, infos, alpha, beta);
       interpolatedInfos.add(
         ReflectionInfo(alpha, beta, infos.first().rgeGma,
-                       itf.inten, inten_t(l::flt_nan),
-                       itf.tth,   tth_t(l::flt_nan),
-                       itf.fwhm,  fwhm_t(l::flt_nan)));
+                       itf.inten, inten_t(l::real_nan),
+                       itf.tth,   tth_t(l::real_nan),
+                       itf.fwhm,  fwhm_t(l::real_nan)));
     }
   }
 

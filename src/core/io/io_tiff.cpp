@@ -64,7 +64,7 @@ str_vec FileTiffDat::FileTiffDat::getRow() may_err {
 using data::Files;
 using data::File;
 using data::Set;
-using data::FileIdx;
+using data::FileSrc;
 using data::Meta;
 
 //------------------------------------------------------------------------------
@@ -228,20 +228,20 @@ static void loadTiff(File& file, l_io::path::rc path,
 
   file.addSet(
     l::sh(new Set(
-      file.idx,
+      file.src,
       l::sh(md.take().ptr()),
       l::sh(new Image(intens)))));
 }
 
 TEST_("loadTiff",
-  File::sh file(new File(l_io::path("")));
+  File::shp file(new File(l_io::path("")));
   loadTiff(mut(*file), l_io::path("testdata.tif"), phi_t(0.), 0, 0);
 )
 
 //------------------------------------------------------------------------------
 
-File::sh loadTiffDat(l_io::path::rc path) may_err {
-  File::sh file(new File(path));
+l::own<File> loadTiffDat(l_io::path::rc path) may_err {
+  auto&& file = l::scope(new File(path));
 
   FileTiffDat fin(path);
 
@@ -277,7 +277,7 @@ File::sh loadTiffDat(l_io::path::rc path) may_err {
     )
   }
 
-  return file;
+  return file.takeOwn();
 }
 
 TEST_("loadTiffDat",

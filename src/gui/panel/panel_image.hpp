@@ -17,15 +17,29 @@
 
 #pragma once
 #include "panel.hpp"
+#include <core/data/sets.hpp>
+#include <core/calc/fit_params.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
+struct Hub;
+struct ImageWidget;
 
 dcl_sub_(PanelImage, Panel)
-  PanelImage(Hub&);
+  friend struct ImageWidget;
+  explicit PanelImage(Hub&);
 
 private:
   Panel *tabImage, *tabCorrection;
+  ImageWidget *wgtImage, *wgtCorrection;
+  core::data::CombinedSets::shr sets;
+  core::data::CombinedSet::shp  set;
+  core::calc::FitParams::shr    fp;
+  core::Image::shp              corrImage;
+
+  bool  imageStepScale = false, imageShowOver = false;
+
+  void renderTabs();
 dcl_end
 
 //------------------------------------------------------------------------------

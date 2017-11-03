@@ -19,61 +19,50 @@
 #include <lib/qt/inc/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
+#include "model_view.hpp"
 
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_sub2_(ViewDatasets, RefHub, l_qt::lst_view)
+dcl_sub_(ViewDatasets, HubView<Hub::ModelDatasets>)
   ViewDatasets(Hub&);
-
-protected:
-  void selectionChanged(QItemSelection const&, QItemSelection const&);
-  void selUpdate();
+private:
+  voi_(onSelected, (int));
 dcl_end
 
-ViewDatasets::ViewDatasets(Hub& hub) : RefHub(hub) {
-  hub.onSigDatasetsReset([this]() {
-    selectRows({});
-    selUpdate();
-  });
-}
+ViewDatasets::ViewDatasets(Hub& hub) : base(hub, hub.modelDatasets) {}
 
-void ViewDatasets::selectionChanged(QItemSelection const& selected,
-                                    QItemSelection const& deselected) {
-  base::selectionChanged(selected, deselected);
-  selUpdate();
-}
-
-void ViewDatasets::selUpdate() {
-  auto sel = selectedRows(); bool isEmpty = sel.isEmpty();
-  hub.selectDatasetAt(isEmpty ? -1 : int(sel.first()));
+void ViewDatasets::onSelected(int row) const {
+  model->setSetAt(row);
 }
 
 //------------------------------------------------------------------------------
 
-PanelDatasets::PanelDatasets(Hub& hub) : base("", hub), view(nullptr) {
+PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
+  using namespace l_qt::make_widgets;
+
   auto tabs = new l_qt::tabs;
-  vb.add(tabs);
-  tabs->addTab((tab = new Panel(hub)), "Datasets");
+  vb().add(tabs);
+  tabs->addTab(tab = new Panel(), "Datasets");
 
-  tab->vb.add((view = new ViewDatasets(hub)));
-  view->setModel(hub.modelDatasets);
+  tab->vb().add(view = new ViewDatasets(hub));
 
-  auto&& h = tab->vb.hb();
-  h.add(mutp(hub.modelDatasets)->makeTriChk(str::null));
-  h.addStretch();
-  h.add(new l_qt::lbl("Combine"));
+  auto&& hb = tab->vb().hb();
+  hb.add(mut(*view->model).makeTriChk(str::null));
+  hb.addStretch();
 
-  auto spin = new l_qt::spinPint();
-  h.add(spin);
+  auto&& spin = spinPint(2);
+  hb.add("Combine").add(spin);
+
+  auto&& md = static_cast<Hub::ModelDatasets const*>(view->model);
 
   spin->min(1);
-  connect(spin, &l_qt::spinPint::valChg, [&hub](l::pint val) {
-    hub.groupDatasetsBy(val);
+  connect(spin, &l_qt::spinPint::valChg, [md](l::pint val) {
+    mut(*md).groupBy(val);
   });
 
-  hub.onSigDatasetsReset([spin, &hub]() {
-    spin->setValue(l::to_int(hub.groupedBy()));
+  md->onSigReset([spin, md](){
+    spin->setValue(int(md->groupedBy));
   });
 }
 

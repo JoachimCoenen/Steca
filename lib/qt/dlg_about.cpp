@@ -35,7 +35,7 @@ void DlgAbout::construct() {
   auto&& vbLogo = hbLogoInfo.vb();
 
   auto logo = new l_qt::lbl();
-  vbLogo.addWidget(logo);
+  vbLogo.add(logo);
   vbLogo.addStretch();
   logo->setPixmap(QPixmap(":/icon/logo"));
 
@@ -47,25 +47,17 @@ void DlgAbout::construct() {
   info->setFont(QToolTip::font());
 #endif
 
-  hbLogoInfo.addWidget(info);
-
-  auto hline = []() {
-    auto frame = new QFrame;
-    frame->setFrameShape(QFrame::HLine);
-    frame->setFrameShadow(QFrame::Sunken);
-    return frame;
-  };
+  hbLogoInfo.add(info);
 
   auto ex = extra();
   if (ex) {
-    vbLayout->addWidget(hline());
-    vbLayout->addLayout(ex);
+    vbLayout->addHline().add(ex);
   }
 
-  vbLayout->addWidget(hline());
+  vbLayout->addHline();
 
   auto bb = new QDialogButtonBox(QDialogButtonBox::Ok);
-  vbLayout->addWidget(bb);
+  vbLayout->add(bb);
 
   connect(bb, &QDialogButtonBox::accepted, this, &QDialog::accept);
 }

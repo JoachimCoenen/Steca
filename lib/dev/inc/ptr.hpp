@@ -2,6 +2,7 @@
 
 #pragma once
 #include "../defs.hpp"
+#include <type_traits>
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
@@ -10,6 +11,9 @@ typedef void const* pcvoid;
 // parts adapted from https://github.com/Microsoft/GSL.git
 
 namespace l {
+
+[[noreturn]] void err(pcstr);
+
 //------------------------------------------------------------------------------
 
 dcl_(ptr_base)
@@ -34,10 +38,10 @@ struct jp : ptr_base {
 
   // from another type jp
   template <typename O>
-  jp (jp<O> const& that) : ptr_base(static_cast<O const*>(that.p)) {}
+  jp (jp<O> const& that) : ptr_base(static_cast<O const*>(that.ptr())) {}
 
   template <typename O>
-  jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.p)))
+  jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.ptr())))
 
   T const* ptr()        const RET_(static_cast<T const*>(p))
   operator T const*()   const RET_(ptr())
@@ -108,7 +112,7 @@ struct own_ptr : ptr_base {
 
   // convert to non-null
   own<T> justOwn() const {
-    return own<T>(NEEDED_(ptr()));
+    return own<T>(NEED_(ptr()));
   }
 };
 
@@ -116,7 +120,7 @@ struct own_ptr : ptr_base {
 // expecting an owning over; will take ownership
 // only a hint, ownership not enforced
 
-template <typename T>
+template <typename T> // TODO implicit T const ?
 struct give_me : own<T> { using base = own<T>;
   explicit give_me(T* p) : base(p) {}
   give_me(own<T> p)      : base(p) {}
@@ -124,14 +128,19 @@ struct give_me : own<T> { using base = own<T>;
 
 //------------------------------------------------------------------------------
 // scoped (auto-destruct)
+
 template <typename T>
 struct scoped : ptr_base {
   scoped(T* p = nullptr): ptr_base(p) {}
   scoped(jp<T> p)       : ptr_base(p) {}
   scoped(own_ptr<T> p)  : ptr_base(p) {}
-  scoped(own<T> p)      : ptr_base(p) {}
   scoped(scoped&& that) : ptr_base(that.take()) {}
   scoped(scoped const&) = delete;
+
+  scoped& operator=(scoped&& that) {
+    reset(that.take());
+    return *this;
+  }
 
  ~scoped() {
     drop();
@@ -142,9 +151,10 @@ struct scoped : ptr_base {
   template <typename O>
   scoped& operator=(own<O>& that)    SET_(reset(that.take()))
 
-  void reset(T* p_) {
+  T* reset(T* p_) {
     delete static_cast<T*>(mutp(p));
     mut(p) = mut(p_);
+    return p_;
   }
 
   void drop() {
@@ -169,7 +179,7 @@ struct scoped : ptr_base {
 // a handy way to make a scoped pointer
 template <typename T> scoped<T> scope(T* p)             RET_(scoped<T>(p))
 template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
-template <typename T> scoped<T> scope(own<T> p)         RET_(scope(p))
+template <typename T> scoped<T> scope(own<T> p)         RET_(scoped<T>(p.ptr()))
 
 //------------------------------------------------------------------------------
 // shared - for reference-counted data
@@ -187,33 +197,22 @@ protected:
   void cleanup();
 };
 
-// non-mutable
 template <typename T>
-struct shared : protected _shared_base_ {
-  explicit shared(T const* p = nullptr) : _shared_base_(p)    {}
-  shared(shared const& that) : _shared_base_(that) {}
- ~shared() { _drop(); }
+struct sh_base : protected _shared_base_ {
+ ~sh_base() { _drop(); }
 
-  T const* ptr()        const RET_(static_cast<T const*>(p()))
-  operator T const*()   const RET_(ptr())
-  T const* operator->() const RET_(ptr())
+  T const* ptr()      const RET_(static_cast<T const*>(p()))
+  operator T const*() const RET_(ptr())
 
-  shared& operator=(shared const& that) {
+protected:
+  using _shared_base_::_shared_base_;
+
+  void _set(sh_base const& that) {
     if (ptr_base::p != that.ptr_base::p) {
       _drop(); mut(ptr_base::p) = that.ptr_base::p; inc();
     }
-    RTHIS
   }
 
-  act_mut_(reset, (T* p)) {
-    *this = shared(p);
-  }
-
-  void drop() {
-    reset(nullptr);
-  }
-
-private:
   void _drop() {
      if (dec()) {
        delete static_cast<T*>(mutp(p()));
@@ -222,14 +221,144 @@ private:
    }
 };
 
-// a handy way to make a shared pointer
-template <typename T> shared<T> sh(T* p)             RET_(shared<T>(p))
-template <typename T> shared<T const> sh(T const* p) RET_(shared<T>(p))
-template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
+template <typename T> struct shp;
 
-// declare struct as shared
+template <typename T, bool constructible> struct T_maybe_maker;
+
+template <typename T> struct T_maybe_maker<T, false> {
+  T* make() {
+    static_assert(std::is_abstract<T>::value || std::is_default_constructible<T>::value, "cannot make T");
+    err("cannot make T");
+  }
+};
+
+template <typename T> struct T_maybe_maker<T, true> {
+  T* make() {
+    static_assert(std::is_default_constructible<T>::value, "");
+    return new T;
+  }
+};
+
+template <typename T> struct T_maker {
+  T_maybe_maker<T, std::is_default_constructible<T>::value> maker;
+  T* make() {
+    return maker.make();
+  }
+};
+
+// non-mutable shared pointer and reference
+template <typename T>
+struct shr : sh_base<T> {
+  // default () forced by Qt metasystem, but quite useful, too
+  explicit shr() : sh_base<T>(maker.make()) {}
+  explicit shr(T const* p) : sh_base<T>(p)  {}
+
+  shr(shr const& that) : sh_base<T>(that) {}
+  T const& operator()() const {
+    EXPECT_(sh_base<T>::ptr())
+    return *sh_base<T>::ptr();
+  }
+
+  void construct() {
+    *this = shr(maker.make());
+  }
+
+  void clone() {
+    *this = shr(this().clone());
+  }
+
+  shr& operator=(shr const& that) {
+    sh_base<T>::_set(that);
+    RTHIS
+  }
+
+  bool operator==(shr<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator==(shp<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator!=(shr<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+  bool operator!=(shp<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+private:
+  operator bool() const;  // not to be used
+  static T_maker<T> maker;
+};
+
+template <typename T> T_maker<T> shr<T>::maker;
+
+template <typename T>
+struct shp : sh_base<T> {
+  explicit shp(T const* p = nullptr) : sh_base<T>(p) {}
+
+  shp(shp const& that)    : sh_base<T>(that) {}
+  shp(shr<T> const& that) : sh_base<T>(that) {}
+
+  T const* operator->() const {
+    EXPECT_(sh_base<T>::ptr())
+    return sh_base<T>::ptr();
+  }
+
+  T const& operator*() const {
+    EXPECT_(sh_base<T>::ptr())
+    return *sh_base<T>::ptr();
+  }
+
+  shp& operator=(shp const& that) {
+    sh_base<T>::_set(that);
+    RTHIS
+  }
+
+  bool operator==(shp<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator==(shr<T> const& that) {
+    return this->ptr() == that.ptr();
+  }
+
+  bool operator!=(shp<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+  bool operator!=(shr<T> const& that) {
+    return this->ptr() != that.ptr();
+  }
+
+  shr<T> sh() const {
+    return shr<T>(*reinterpret_cast<l::shr<T> const*>(this));
+  }
+
+  void reset(T const* p) {
+    *this = shp(p);
+  }
+
+  void drop() {
+    *this = shp(nullptr);
+  }
+};
+
+// a handy way to make a shr
+template <typename T> shr<T> sh(T* p)             RET_(shr<T>(p))
+template <typename T> shr<T const> sh(T const* p) RET_(shr<T>(p))
+template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
+
+// declare struct as shr
 #define SHARED \
-  using sh     = l::shared<Self>;
+  using shr = l::shr<Self>; \
+  using shp = l::shp<Self>;
+
+// clone it
+#define CLONED \
+  virtual mth_(Self*, clone, ()) RET_(new Self(*this))
 
 //------------------------------------------------------------------------------
 }
@@ -238,7 +367,7 @@ template <typename T> shared<T> sh(own<T> p)         RET_(shared<T>(p.ptr()))
 template <typename T> T* mutp(l::jp<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
-template <typename T> T* mutp(l::shared<T> const& p) \
+template <typename T> T* mutp(l::shr<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------

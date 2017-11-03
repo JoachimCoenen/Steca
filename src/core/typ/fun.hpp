@@ -16,8 +16,8 @@
  ******************************************************************************/
 
 #pragma once
-#include "def.hpp"
 #include <lib/dev/inc/ptr.hpp>
+#include <lib/dev/typ/vec.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ dcl_sub_(SumFuns, Fun)
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
   // summed funs
-  l::vec<Fun::sh> funs;
+  l::vec<Fun::shp> funs;
 
 protected:
   // the aggregate par list

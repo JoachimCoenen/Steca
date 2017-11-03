@@ -13,12 +13,12 @@ dcl_base_(cache_base)
 
   cache_base(pint maxItems);
 
-  virtual act_mut_(trim, (uint))  = 0;
-  virtual mth_(uint, size, ())          = 0;
+  virtual mut_(trim, (uint))  = 0;
+  virtual mth_(sz_t, size, ())          = 0;
 
-  act_mut_(prepAdd, ());
+  mut_(prepAdd, ());
   mth_mut_(mru_t, next, ());
-  act_mut_(touch, (mru_t&));
+  mut_(touch, (mru_t&));
 
 protected:
   atr_(pint,  maxItems);
@@ -30,7 +30,7 @@ template <typename Key, typename T>
 dcl_sub_(cache, cache_base)
 private:
   using rcKey = Key const&;
-  using Tsh   = shared<T>;
+  using Tsh   = shp<T>;
   using tsh_mru = std::pair<Tsh, mru_t>;
 
   using cash_t  = map<Key,tsh_mru>;
@@ -41,9 +41,9 @@ private:
 public:
   cache(pint n) : base(n) {}
 
-  mth_(uint, size, ())      RET_(cash.size())
+  mth_(sz_t, size, ())      RET_(cash.size())
   bol_(isEmpty,    ())      RET_(cash.isEmpty())
-  act_mut_(clear, ()) { trim(0); }
+  mut_(clear, ()) { trim(0); }
 
   void trim(uint n) { // TODO to cache_base (with adapter)
     if (size() > n) {

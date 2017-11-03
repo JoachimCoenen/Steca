@@ -17,15 +17,17 @@ dcl_sub_(exc, std::exception)
 dcl_end
 
 // throw an exception
-[[noreturn]] void err()     will_err;
-[[noreturn]] void err(strc) will_err;
+[[noreturn]] void err()      will_err;
+[[noreturn]] void err(strc)  will_err;
+[[noreturn]] void err(pcstr) will_err;
 
-[[noreturn]] void errSilent()     will_err;
-[[noreturn]] void errSilent(strc) will_err;
+[[noreturn]] void errSilent()      will_err;
+[[noreturn]] void errSilent(strc)  will_err;
+[[noreturn]] void errSilent(pcstr) will_err;
 
 // runtime check
 #define check_or_err_(cond, msg) \
-  if (!(cond)) l::err(msg)
+  ((cond) || (l::err(msg), true))
 
 #define guard_err_(msg_, ...)       \
   try { __VA_ARGS__ }               \

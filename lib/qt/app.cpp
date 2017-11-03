@@ -6,19 +6,12 @@
 #include "dlg_msg.hpp"
 #include "win.hpp"
 #include <QStatusBar>
-#include <QStyleFactory>
 
 namespace l_qt {
 //------------------------------------------------------------------------------
 
 app::app(int& argc, char* argv[]) : base(argc, argv) {
-  #if defined(Q_OS_OSX)
-    setStyle(QStyleFactory::create("Macintosh"));
-  #elif defined(Q_OS_WIN)
-    setStyle(QStyleFactory::create("Fusion"));
-  #else
-    setStyle(QStyleFactory::create("Fusion"));
-#endif
+  setStyle("Fusion");
 }
 
 static QtMessageHandler oldHandler;

@@ -16,66 +16,78 @@
  ******************************************************************************/
 
 #pragma once
-#include "../typ/def.hpp"
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
+#include <lib/dev/io/path.hpp>
+#include <lib/dev/typ/bag.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
 #include <lib/dev/typ/set.hpp>
 
-namespace core {
-
-struct Session;
-
-namespace data {
+namespace core { namespace data {
 //------------------------------------------------------------------------------
 // attribute dictionaries
 
-dcl_(MetaDict) SHARED
+dcl_(MetaDictBase)
+  using idx = uint;
+
   atr_(str_vec, keys);
 
-  MetaDict();
-  virtual ~MetaDict() {}
+  MetaDictBase();
+  virtual ~MetaDictBase();
 
-  virtual mth_mut_(uint, enter, (strc));  // adds if necessary
+  virtual mut_(clear, ());
 
-  mth_(uint, index, (strc key)) RET_(idxs.at(key))
-  mth_(uint, size,  ())         RET_(idxs.size())
-  mth_(strc, key,   (uint i))   RET_(keys.at(i))
+  mth_(sz_t, size, ())      RET_(sz_t(keys.size()))
+  mth_(strc, key,  (idx i)) RET_(keys.at(i))
 
-  mth_(int,  safeIndex, (strc key));
-
-private:
-  // key->index
-  atr_(l::hash<str COMMA uint>, idxs);
+protected:
+  l::set<str> keySet;
+  mut_(enter, (strc key));
+  mut_(enter, (str_vec::rc keys));
+  MetaDictBase(rc);
 dcl_end
 
-// attribute dictionary
-dcl_sub_(FilesMetaDict, MetaDict) SHARED
+dcl_sub_(KeyBag, l::bag<str>) SHARED
+dcl_end
+
+//------------------------------------------------------------------------------
+
+dcl_sub_(FilesMetaDict, MetaDictBase) SHARED CLONED
+  UB1_(enter)
   FilesMetaDict();
+private:
+  FilesMetaDict(rc);
+dcl_end
 
-  mth_mut_(uint, enter, (strc));
+dcl_sub_(MetaDict, MetaDictBase) SHARED
+  atr_(l::hash<str COMMA idx>, idxs);
 
-  set_(update, (l::set<str>::rc));
+  MetaDict();
 
-  bol_(checked, (strc))       may_err;
-  set_(check,   (strc, bool)) may_err;
+  mut_(clear, ());
+  mut_(enter, (strc key));
+  mut_(enter, (str_vec::rc keys));
+
+  mth_mut_(idx, idxEnter, (strc key));
+  mth_(idx, index,     (strc key)) RET_(idxs.at(key))
+  mth_(int, safeIndex, (strc key));
 
 private:
-  // key->checked
-  atr_(l::hash<str COMMA bool>, checks);
+  MetaDict(rc);
 dcl_end
+
+//------------------------------------------------------------------------------
 
 // attribute values
-dcl_reimpl_(MetaVals, l::hash<uint COMMA flt32>)
-  using base::begin;
-  using base::end;
-  using base::clear;
-  using base::isEmpty;
+dcl_reimpl_(MetaVals, l::hash<MetaDictBase::idx COMMA flt32>)
+  UB4_(begin, end, clear, isEmpty)
 
-  mth_(flt32, valAt, (uint)) may_err;
-  set_(setAt, (uint, flt32));
-  set_(addAt, (uint, flt32));
+  using idx = MetaDictBase::idx;
+
+  mth_(flt32, valAt, (idx)) may_err;
+  set_(setAt, (idx, flt32));
+  set_(addAt, (idx, flt32));
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -84,7 +96,7 @@ dcl_(Meta) SHARED // metadata
   atr_(str, comment);
   atr_(str, date);
 
-  atr_(MetaDict::sh, dict); // other than the values stored explicitly below
+  atr_(MetaDict::shp, dict); // other than the values stored explicitly below
   atr_(MetaVals,     vals); // their values
 
   atr_(tth_t,  tth);    // *mid* tth
@@ -97,26 +109,28 @@ dcl_(Meta) SHARED // metadata
   atr_(flt32, dTim);   // delta time, may be nan
   atr_(flt32, dMon);   // delta mon. count, may be nan
 
-  Meta(MetaDict::sh);
-  Meta(MetaDict::sh, MetaVals::rc, flt32, flt32, flt32, flt32,
+  Meta(MetaDict::shp);
+  Meta(MetaDict::shp, MetaVals::rc, flt32, flt32, flt32, flt32,
                                    flt32, flt32, flt32, flt32);
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(FileIdx) SHARED
-  atr_(uint, val);
-  FileIdx(uint = 0);
+dcl_(FileSrc) SHARED
+  atr_(l_io::path, path);
+  atr_(str, comment);
+
+  FileSrc(l_io::path::rc path, strc comment);
 dcl_end
 
 //------------------------------------------------------------------------------
 
 dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(FileIdx::sh, idx);
-  atr_(Meta::sh,    meta);
-  atr_(Image::sh,   image);
+  atr_(FileSrc::shp, src);
+  atr_(Meta::shp,    meta);
+  atr_(Image::shp,   image);
 
-  Set(FileIdx::sh, Meta::sh, Image::sh);
+  Set(FileSrc::shp, Meta::shp, Image::shp);
 
   mth_(l::sz2, imageSize, ());
 
@@ -130,34 +144,30 @@ dcl_(Set) SHARED   // one dataset, as acquired
   mth_(flt32,    dTim, ()) RET_(meta->dTim)
   mth_(flt32,    dMon, ()) RET_(meta->dMon)
 
-  mth_(gma_rge,   rgeGma,     (Session const&));
-  mth_(gma_rge,   rgeGmaFull, (Session const&));
-  mth_(tth_rge,   rgeTth,     (Session const&));
+  mth_(gma_rge,   rgeGma,     (calc::FitParams const&));
+  mth_(gma_rge,   rgeGmaFull, (calc::FitParams const&));
+  mth_(tth_rge,   rgeTth,     (calc::FitParams const&));
 
   mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
-  act_(collect, (Session const&, Image const* corr,
+  voi_(collect, (calc::FitParams const&,
                  core::inten_vec&, uint_vec&, gma_rge::rc,
                  tth_t minTth, tth_t deltaTth));
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Sets, l::vec<Set::sh>)
-  using base::first;
-  using base::begin;
-  using base::end;
-  using base::isEmpty;
-  using base::size;
+dcl_reimpl_(Sets, l::vec<Set::shr>)
+  UB5_(first, begin, end, isEmpty, size)
 
   Sets();
 
   mth_(l::sz2,    imageSize, ());
-  mth_(Image::sh, foldImage, ());
-  set_(add, (Set::sh)) may_err;
+  mth_(Image::shp, foldImage, ());
+  set_(add, (Set::shr)) may_err;
 
 private:
-  mutable Image::sh lazyFoldImage;
+  mutable Image::shp lazyFoldImage;
 dcl_end
 
 //------------------------------------------------------------------------------
@@ -165,11 +175,13 @@ dcl_end
 struct CombinedSets;
 
 dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
-  atr_(bool,      isActive); // included in calculations
+  atr_(uint, fileNo);
+  atr_(str,  tag);
+  atr_(bool, isActive); // included in calculations
 
-  CombinedSet();
+  CombinedSet(uint fileNo);
 
-  mth_(Meta::sh,  meta, (core::data::FilesMetaDict::sh));
+  mth_(Meta::shp,  meta, ());
 
   // no tth
   mth_(omg_t::rc, omg, ());
@@ -181,15 +193,14 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
   mth_(flt32,    dTim, ());
   mth_(flt32,    dMon, ());
 
-  mth_(gma_rge,   rgeGma,     (Session const&));
-  mth_(gma_rge,   rgeGmaFull, (Session const&));
-  mth_(tth_rge,   rgeTth,     (Session const&));
+  mth_(gma_rge,   rgeGma,     (calc::FitParams const&));
+  mth_(gma_rge,   rgeGmaFull, (calc::FitParams const&));
+  mth_(tth_rge,   rgeTth,     (calc::FitParams const&));
 
   mth_(inten_rge, rgeInten, ());
-  mth_(inten_vec, collectIntens, (Session const&,
-                                  Image const* intensCorr, gma_rge::rc));
+  mth_(inten_vec, collectIntens, (calc::FitParams const&, gma_rge::rc));
 private:
-  mutable Meta::sh lazyMeta;
+  mutable Meta::shp lazyMeta;
 
   mutable omg_t    lazyOmg;
   mutable phi_t    lazyPhi;
@@ -200,12 +211,12 @@ private:
   mutable flt32    lazyDTim;
   mutable flt32    lazyDMon;
 
-  mth_(inten_vec, collect, (Session const&, Image const* corr, gma_rge::rc));
+  mth_(inten_vec, collect, (calc::FitParams const&, gma_rge::rc));
 dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
+dcl_sub_(CombinedSets, l::vec<CombinedSet::shr>) SHARED
   CombinedSets();
 
   set_(add, (l::give_me<CombinedSet>));
@@ -216,7 +227,8 @@ dcl_sub_(CombinedSets, l::vec<CombinedSet::sh>) SHARED
   mth_(flt32, dTim, ());
   mth_(flt32, dMon, ());
 
-  mth_(inten_rge::rc, rgeFixedInten, (Session const&, bool trans, bool cut));
+  mth_(inten_rge::rc, rgeFixedInten, (calc::FitParams const&, bool trans, bool cut));
+  mth_(core::data::CombinedSet::shr, combineAll, ());
 
 private:
   mutable flt32 lazyMon;

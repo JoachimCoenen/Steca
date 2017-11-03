@@ -20,24 +20,21 @@
 #include <lib/dev/io/log.hpp>
 #include "fit/fit_methods.hpp"
 #include "io/io.hpp"
+#include <algorithm>
 
 namespace core {
 //------------------------------------------------------------------------------
 
 str_vec const normStrLst({"none", "monitor", "Δ monitor", "Δ time", "background"});
 
-Session::Session()
-: angleMapKey0()
-, imageTransform(), imageCut(), imageSize()
-, avgScaleIntens(), intenScale(1)
-, corrEnabled(false), corrFile(), corrImage()
-, collectedDatasets(), collectedDatasetsTags(), collectedFromFiles(), groupedBy(1)
-, bgPolyDegree(0), bgRanges()
-, angleMapCache(l::pint(12)), intensCorrImage(), corrHasNaNs()
-{}
+Session::Session() : files(), corrFile(), fp() {
+  clear();
+}
 
-Session::ref Session::clear() {
-  RTHIS
+void Session::clear() {
+  mut(files).reset(new data::Files);
+  mut(corrFile).drop();
+  mut(fp).reset(new calc::FitParams);
   //TODO
 //  while (0 < numFiles())
 //    remFile(0);
@@ -52,14 +49,15 @@ Session::ref Session::clear() {
 
 //  norm_ = eNorm::NONE;
 
+
 //  angleMapCache_.clear();
 
 //  intenScaledAvg_ = true;
 //  intenScale_ = preal(1);
 }
 
-Session::ref Session::load(io::Json::rc) may_err {
-  RTHIS
+void Session::load(io::Json::rc) may_err {
+  clear();
 //  QJsonParseError parseError;
 //  QJsonDocument   doc(QJsonDocument::fromJson(json, &parseError));
 //  RUNTIME_CHECK(QJsonParseError::NoError == parseError.error,
@@ -121,7 +119,7 @@ Session::ref Session::load(io::Json::rc) may_err {
 
 //  auto reflectionsObj = top.loadArr(config_key::REFLECTIONS);
 //  for_i (reflectionsObj.count()) {
-//    calc::shp_Reflection reflection(new calc::Reflection);
+//    calc::shpp_Reflection reflection(new calc::Reflection);
 //    reflection->loadJson(reflectionsObj.objAt(i));
 //    session_->addReflection(reflection);
 //  }
@@ -189,224 +187,103 @@ io::Json Session::save() const {
 //  return QJsonDocument(top.sup()).toJson();
 }
 
-AngleMap::sh Session::angleMap(data::Set::rc set) const {
-  AngleMap::Key key(angleMapKey0, set.tth());
-  auto map = angleMapCache.get(key);
-  if (!map)
-    map = angleMapCache.add(key, AngleMap::sh(new AngleMap(key)));
-  return map;
-}
-
-Image::sh Session::intensCorr() const {
-  if (!corrEnabled)
-    return Image::sh();
-
-  if (!intensCorrImage)
-    calcIntensCorr();
-
-  return intensCorrImage;
-}
-
-bool Session::hasFile(l_io::path::rc path) const {
-  for (auto&& file : files)
-    if (file->path == path)
-      return true;
-
-  return false;
-}
-
-Session::ref Session::addFile(l_io::path::rc path) may_err {
-  if (!path.isEmpty()) {
-    auto file = io::load(path);
-    setImageSize(file->imageSize());
-    mut(files).addFile(file);
-  }
-  RTHIS
-}
-
-Session::ref Session::remFile(uint i) {
-  mut(files).remFile(i);
-  updateImageSize();
-  RTHIS
-}
-
-Session::ref Session::activateFileAt(uint i, bool on) {
-  mut(files.at(i)->isActive) = on;
-  RTHIS
-}
-
-bool Session::isActiveFileAt(uint i) const {
-  return files.at(i)->isActive;
-}
-
-Session::ref Session::activateDatasetAt(uint i, bool on) {
-  mut(collectedDatasets.at(i)->isActive) = on;
-  RTHIS
-}
-
-bool Session::isActiveDatasetAt(uint i) const {
-  return collectedDatasets.at(i)->isActive;
-}
-
-Session::ref Session::setCorrFile(l_io::path::rc path) may_err {
-  if (path.isEmpty()) {
-    remCorrFile();
-  } else {
-    l_io::busy __;
-
-    auto file = io::load(path);
-    auto&& sets = file->sets;
-
-    setImageSize(sets.imageSize());
-    mut(corrImage) = sets.foldImage();
-    intensCorrImage.drop();
-
-    // all ok
-    mut(corrFile)    = file;
-    mut(corrEnabled) = true;
-  }
-  RTHIS
-}
-
-Session::ref Session::remCorrFile() {
-  mut(corrFile).drop();
-  mut(corrImage).drop();
-  mut(intensCorrImage).drop();
-  mut(corrEnabled) = false;
-  updateImageSize();
-  RTHIS
-}
-
-Session::ref Session::tryEnableCorr(bool on) {
-  mut(corrEnabled) = on && corrFile;
-  RTHIS
-}
-
-Session::ref Session::collectDatasetsFromFiles(uint_vec::rc is, l::pint by) {
-  mut(collectedFromFiles) = is;
-  mut(collectedDatasets).clear();
-  mut(collectedDatasetsTags).clear();
-  mut(groupedBy) = by;
-
-  auto cs = l::scope(new data::CombinedSet);
-  uint i = 0;
-
-  auto appendCs = [this, &cs, &i]() {
-    auto sz = cs->size();
-    if (!sz)
-      return;
-
-    str tag = str::num(i + 1); i += sz;
-    if (groupedBy > 1)
-      tag += '-' + str::num(i);
-
-    mut(collectedDatasets).add(cs.takeOwn());
-    mut(collectedDatasetsTags).add(tag);
-    cs.reset(new data::CombinedSet);
-  };
-
-  auto gb = groupedBy;
-  for (uint i : collectedFromFiles)
-    for (auto&& set : files.at(i)->sets) { // Set::sh
-      cs->add(set);
-      if (0 == --gb) {
-        appendCs();
-        gb = groupedBy;
-      }
+bool Session::addFiles(l_io::path_vec::rc ps) may_err {
+  l_io::busy __;
+  bool res = false;
+  for (auto&& path : ps)
+    if (!files->hasPath(path)) {
+      auto&& file = l::scope(io::load(path));
+      setImageSize(file->imageSize());
+      mut(*files).addFile(l::sh(file.takeOwn()));
+      res = true;
     }
 
-  appendCs();  // the potentially remaining ones
+  return res;
+}
 
-  RTHIS
+bool Session::remFilesAt(uint_vec::rc is) {
+  if (is.isEmpty())
+    return false;
+
+  uint_vec iis = is;
+  std::sort(iis.begin(), iis.end());
+
+  for_i_down_(uint(iis.size()))
+    mut(*files).remFileAt(iis.at(i));
+
+  return true;
+}
+
+bool Session::activateFileAt(uint i, bool on) {
+  if (i >= files->size() || files->at(i)->isActive == on)
+    return false;
+
+  mut(files->at(i)->isActive) = on;
+  return true;
+}
+
+void Session::setCorrFile(l_io::path::rc path) may_err {
+  EXPECT_(!path.isEmpty())
+
+  l_io::busy __;
+
+  auto&& file = l::scope(io::load(path));
+  auto&& sets = file->sets;
+
+  setImageSize(sets.imageSize());
+
+  mut(fp->corrImage)   = sets.foldImage();
+  mut(fp->intensCorrImage).drop();
+  mut(fp->corrEnabled) = true;
+  mut(corrFile).reset(file.takeOwn());
+}
+
+void Session::remCorrFile() {
+  if (!corrFile)
+    return;
+
+  mut(corrFile).drop();
+  mut(fp->corrImage).drop();
+  mut(fp->intensCorrImage).drop();
+  mut(fp->corrEnabled) = false;
+
+  updateImageSize();
+}
+
+void Session::tryEnableCorr(bool on) {
+  mut(fp->corrEnabled) = on && corrFile;
+}
+
+void Session::setBg(Ranges::rc rs) {
+  mut(fp->bg) = rs;
+}
+
+void Session::addBg(Range::rc r) {
+  mut(fp->bg).add(r);
+}
+
+void Session::remBg(Range::rc r) {
+  mut(fp->bg).rem(r);
+}
+
+void Session::setRefl(Range::rc r) {
+  auto&& refl = fp->currRefl;
+  if (refl)
+    mut(*refl).setRange(r);
 }
 
 Session::ref Session::setImageSize(l::sz2 size) may_err {
-  if (imageSize.isEmpty())
-    mut(imageSize) = size;  // the first one
-  else if (imageSize != size)
+  auto&& g = fp->geometry;
+  if (g.imageSize.isEmpty())
+    mut(g.imageSize) = size;  // the first one
+  else if (g.imageSize != size)
     l::err("inconsistent image size");
   RTHIS
 }
 
-
-calc::ImageLens::sh Session::imageLens(
-  Image::rc image, data::CombinedSets::rc datasets, bool trans, bool cut) const
-{
-  return l::sh(new calc::ImageLens(*this, image, datasets, trans, cut));
-}
-
-Curve Session::makeCurve(calc::DatasetLens::rc lens, gma_rge::rc rgeGma) const {
-  Curve curve = lens.makeCurve(rgeGma);
-  curve.subtract(fit::Polynom::fromFit(bgPolyDegree, curve, bgRanges));
-
-  return curve;
-}
-
-calc::DatasetLens::sh Session::datasetLens(
-    data::CombinedSets::rc datasets, data::CombinedSet::rc dataset,
-    eNorm norm, bool trans, bool cut) const {
-  return l::sh(new calc::DatasetLens(*this, dataset, datasets, norm,
-                         trans, cut, imageTransform, imageCut));
-}
-
-real Session::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
-  auto lens = datasetLens(datasets, dataset, eNorm::NONE, true, true);
-
-  Curve gmaCurve = lens->makeCurve(true); // REVIEW averaged?
-  auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);
-  return bgPolynom.avgY(lens->rgeTth());
-}
-
-real Session::calcAvgBackground(data::CombinedSets::rc datasets) const {
-  if (datasets.isEmpty())
-    return 0;
-
-  l_io::busy __;
-
-  real bg = 0;
-
-  for (auto&& dataset : datasets)
-    bg += calcAvgBackground(datasets, *dataset);
-
-  return bg / datasets.size();
-}
-
 void Session::updateImageSize() {
-  if (0 == files.size() && !corrFile)
-    mut(imageSize) = l::sz2(0, 0);
-}
-
-void Session::calcIntensCorr() const {
-  corrHasNaNs = false;
-
-  EXPECT_(corrImage)
-  l::sz2 size = corrImage->size() - imageCut.marginSize();
-  ENSURE_(!size.isEmpty())
-
-  uint w = size.i, h = size.j,
-       di = imageCut.left, dj = imageCut.top;
-
-  real sum = 0;
-  for_ij_(w, h)
-    sum += corrImage->inten(i + di, j + dj);
-
-  real avg = sum / (w * h);
-
-  intensCorrImage = l::sh(new Image(corrImage->size(), inten_t(1)));
-
-  for_ij_(w, h) {
-    auto inten = corrImage->inten(i + di, j + dj);
-    real factor;
-
-    if (inten > 0) {
-      factor = avg / inten;
-    } else {
-      factor = l::flt_nan;
-      corrHasNaNs = true;
-    }
-
-    mutp(intensCorrImage)->setInten(i + di, j + dj, inten_t(factor));
-  }
+  if (0 == files->size() && !corrFile)
+    mut(fp->geometry.imageSize) = l::sz2(0, 0);
 }
 
 //------------------------------------------------------------------------------

@@ -58,15 +58,15 @@ bool couldBeTiffDat(l_io::path::rc path) may_err {
 
 //------------------------------------------------------------------------------
 
-data::File::sh load(l_io::path::rc path) may_err {
-  data::File::sh file;
+l::own<data::File> load(l_io::path::rc path) may_err {
+  l::scoped<data::File const> file;
 
   if (couldBeCaress(path))
-    file = loadCaress(path);
+    file.reset(loadCaress(path).ptr());
   else if (couldBeMar(path))
-    file = loadMar(path);
+    file.reset(loadMar(path).ptr());
   else if (couldBeTiffDat(path))
-    file = loadTiffDat(path);
+    file.reset(loadTiffDat(path).ptr());
   else
     l::err(CAT("unknown file type: ", path));
 
@@ -74,12 +74,12 @@ data::File::sh load(l_io::path::rc path) may_err {
                 CAT("File contains no datasets: ", path));
 
   // ensure that all datasets have images of the same size
-  auto size = file->sets.first()->image->size();
+  auto size = file->sets.first()().image->size();
   for (auto&& set : file->sets)
-    if (set->image->size() != size)
+    if (set().image->size() != size)
       l::err(CAT("Inconsistent image size in file: ", path));
 
-  return file;
+  return file.takeOwn();
 }
 
 //------------------------------------------------------------------------------

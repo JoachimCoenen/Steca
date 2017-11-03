@@ -91,8 +91,8 @@ static buf getPartition(uint n, uint sz, int32 d_type) {
     buf buf(MAXNUMBEROFCHANNELS * sz);
     int32 n = l::min(ni, MAXNUMBEROFCHANNELS);
     check_or_err_(0 == get_data_partition(buf.data(), &section, &start, &n, &d_type), "bad data partition");
-    EXPECT_(n == l::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth is it passed by * ?
-    memmove(data.data() + l::to_u(start-1)*sz, buf.data(), l::to_u(n));
+    EXPECT_(n == l::min(ni, MAXNUMBEROFCHANNELS)) // Why on Earth was it passed by * ?
+    memmove(data.data() + l::to_u(start-1)*sz, buf.data(), l::to_u(n) * sz);
     ni -= n; start += n;
   }
 

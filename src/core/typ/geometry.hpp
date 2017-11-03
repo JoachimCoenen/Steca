@@ -16,23 +16,43 @@
  ******************************************************************************/
 
 #pragma once
-#include "def.hpp"
+#include <lib/dev/inc/ptr.hpp>
+#include <lib/dev/typ/ij.hpp>
 #include <lib/dev/typ/sz2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_(Geometry) COMPARABLE EQ_NE
-  cst_(real, MIN_DETECTOR_DISTANCE);
-  cst_(real, MIN_DETECTOR_PIXEL_SIZE);
-  cst_(real, DEF_DETECTOR_DISTANCE);
-  cst_(real, DEF_DETECTOR_PIXEL_SIZE);
+dcl_(ImageTransform)
+  enum eTransform {
+    ROTATE_0        = 0,  // no transform
+    ROTATE_1        = 1,  // one quarter
+    ROTATE_2        = 2,  // two quarters
+    ROTATE_3        = 3,  // three quarters
+    MIRROR          = 4,
+    MIRROR_ROTATE_0 = MIRROR | ROTATE_0,
+    MIRROR_ROTATE_1 = MIRROR | ROTATE_1,
+    MIRROR_ROTATE_2 = MIRROR | ROTATE_2,
+    MIRROR_ROTATE_3 = MIRROR | ROTATE_3,
+  };
 
-  Geometry();
+  atr_(eTransform, val);
 
-  atr_(real,  detectorDistance);
-  atr_(real,  pixSize);
-  atr_(l::ij, midPixOffset);
+  // clamps val appropriately
+  ImageTransform(uint val = ROTATE_0);
+
+  // adds/removes the mirror flag
+  ImageTransform mirror(bool on) const;
+
+  // rotates only; keeps the mirror flag
+  ImageTransform rotateTo(rc) const;
+
+  // rotates by one quarter-turn
+  ImageTransform nextRotate() const;
+
+  bol_(isTransposed, ()) RET_(0 != (val & 1))
+
+  bol_(operator==, (rc that)) RET_(val == that.val)
 dcl_end
 
 dcl_(ImageCut) COMPARABLE EQ_NE
@@ -47,6 +67,22 @@ dcl_(ImageCut) COMPARABLE EQ_NE
   l::sz2 marginSize() const;
 };
 
+dcl_(Geometry) COMPARABLE EQ_NE SHARED
+  cst_(real, MIN_DETECTOR_DISTANCE);
+  cst_(real, MIN_DETECTOR_PIXEL_SIZE);
+  cst_(real, DEF_DETECTOR_DISTANCE);
+  cst_(real, DEF_DETECTOR_PIXEL_SIZE);
+
+  Geometry();
+
+  atr_(real,  detectorDistance);
+  atr_(real,  pixSize);
+  atr_(l::ij, midPixOffset);
+
+  atr_(ImageTransform,  imageTransform);
+  atr_(ImageCut,        imageCut);
+  atr_(l::sz2,          imageSize);
+dcl_end
+
 //------------------------------------------------------------------------------
 }
-// eof

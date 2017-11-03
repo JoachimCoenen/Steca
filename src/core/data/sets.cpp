@@ -16,72 +16,82 @@
  ******************************************************************************/
 
 #include "sets.hpp"
+#include "../calc/fit_params.hpp"
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
-#include "../session.hpp"
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
 
-MetaDict::MetaDict() : idxs() {}
+MetaDictBase::MetaDictBase() : keys() {}
+MetaDictBase::MetaDictBase(rc that) : keys(that.keys) {}
 
-uint MetaDict::enter(strc key) {
-  auto it = idxs.find(key);
-  if (idxs.end() != it)
-    return it->second;
+MetaDictBase::~MetaDictBase() {}
 
-  uint idx = idxs.size();
-  mut(idxs).add(key, idx);
-  mut(keys).add(key);
-  ENSURE_(idxs.size() == keys.size())
-
-  return idx;
+void MetaDictBase::clear() {
+  mut(keys).clear();
+  keySet.clear();
 }
+
+void MetaDictBase::enter(strc key) {
+  if (keySet.contains(key))
+    return;
+  mut(keys).add(key);
+  keySet.add(key);
+}
+
+void MetaDictBase::enter(str_vec::rc keys) {
+  for (auto&& key : keys)
+    enter(key);
+}
+
+//------------------------------------------------------------------------------
+
+FilesMetaDict::FilesMetaDict() : base() {}
+FilesMetaDict::FilesMetaDict(rc that) : base(that) {}
+
+//------------------------------------------------------------------------------
+
+MetaDict::MetaDict() : base(), idxs() {}
+MetaDict::MetaDict(rc that) : base(that), idxs(that.idxs) {}
 
 int MetaDict::safeIndex(strc key) const {
   return idxs.contains(key) ? int(idxs.at(key)) : -1;
 }
 
-//------------------------------------------------------------------------------
-
-FilesMetaDict::FilesMetaDict() : checks() {}
-
-uint FilesMetaDict::enter(strc key) {
-  if (!checks.contains(key))
-    mut(checks).add(key, false);
-
-  uint idx = base::enter(key);
-  ENSURE_(checks.size() == base::size())
-  return idx;
+void MetaDict::clear() {
+  base::clear();
+  mut(idxs).clear();
 }
 
-FilesMetaDict::ref FilesMetaDict::update(l::set<str>::rc keys) {
-  for (auto it = checks.begin(); it != checks.end(); ++it)
-    if (!keys.contains(it->first))
-      mut(checks).erase(it);
-
-  for (auto&& key : keys)
-    enter(key);
-
-  RTHIS
+void MetaDict::enter(strc key) {
+  idxEnter(key);
 }
 
-bool FilesMetaDict::checked(strc key) const may_err {
-  return checks.at(key);
+void MetaDict::enter(str_vec::rc keys) {
+  base::enter(keys);
 }
 
-FilesMetaDict::ref FilesMetaDict::check(strc key, bool on) may_err {
-  mut(checks).at(key) = on;
-  RTHIS
+MetaDict::idx MetaDict::idxEnter(strc key) {
+  auto it = idxs.find(key);
+  if (idxs.end() != it)
+    return it->second;
+
+  auto i = idxs.size();
+  mut(idxs).add(key, i);
+  base::enter(key);
+  ENSURE_(idxs.size() == keys.size())
+
+  return i;
 }
 
 //------------------------------------------------------------------------------
 
-flt32 MetaVals::valAt(uint i) const may_err {
+flt32 MetaVals::valAt(idx i) const may_err {
   return at(i);
 }
 
-MetaVals::ref MetaVals::setAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::setAt(idx i, flt32 val) {
   if (contains(i))
     at(i) = val;
   else
@@ -89,7 +99,7 @@ MetaVals::ref MetaVals::setAt(uint i, flt32 val) {
   RTHIS
 }
 
-MetaVals::ref MetaVals::addAt(uint i, flt32 val) {
+MetaVals::ref MetaVals::addAt(idx i, flt32 val) {
   if (contains(i))
     val += at(i);
   setAt(i, val);
@@ -98,12 +108,12 @@ MetaVals::ref MetaVals::addAt(uint i, flt32 val) {
 
 //------------------------------------------------------------------------------
 
-Meta::Meta(MetaDict::sh dict_)
+Meta::Meta(MetaDict::shp dict_)
 : comment()
 , dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
 , tim(0), mon(0) , dTim(0), dMon(0) {}
 
-Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
+Meta::Meta(MetaDict::shp dict_, MetaVals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
@@ -113,10 +123,10 @@ Meta::Meta(MetaDict::sh dict_, MetaVals::rc vals_,
 
 TEST_("dict",
   MetaDict dict;
-  CHECK_EQ(0, dict.enter("0"));
-  CHECK_EQ(1, dict.enter("1"));
-  CHECK_EQ(0, dict.enter("0"));
-  CHECK_EQ(2, dict.enter("2"));
+  CHECK_EQ(0, dict.idxEnter("0"));
+  CHECK_EQ(1, dict.idxEnter("1"));
+  CHECK_EQ(0, dict.idxEnter("0"));
+  CHECK_EQ(2, dict.idxEnter("2"));
 )
 
 #ifndef _WIN32 // CDB has some trouble with this
@@ -128,34 +138,37 @@ TEST_("dict-throw",
 
 //------------------------------------------------------------------------------
 
-FileIdx::FileIdx(uint val_) : val(val_) {}
+FileSrc::FileSrc(l_io::path::rc path_, strc comment_)
+: path(path_), comment(comment_) {}
 
 //------------------------------------------------------------------------------
 
-Set::Set(FileIdx::sh idx_, Meta::sh meta_, Image::sh image_)
-: idx(idx_), meta(meta_), image(image_) {}
+using FitParams = calc::FitParams;
+
+Set::Set(FileSrc::shp src_, Meta::shp meta_, Image::shp image_)
+: src(src_), meta(meta_), image(image_) {}
 
 l::sz2 Set::imageSize() const {
   EXPECT_(image)
   return image->size();
 }
 
-gma_rge Set::rgeGma(Session::rc s) const {
-  return s.angleMap(*this)->rgeGma;
+gma_rge Set::rgeGma(FitParams::rc fp) const {
+  return fp.angleMap(*this)->rgeGma;
 }
 
-gma_rge Set::rgeGmaFull(Session::rc s) const {
-  return s.angleMap(*this)->rgeGmaFull;
+gma_rge Set::rgeGmaFull(FitParams::rc fp) const {
+  return fp.angleMap(*this)->rgeGmaFull;
 }
 
-tth_rge Set::rgeTth(Session::rc s)const {
-  return s.angleMap(*this)->rgeTth;
+tth_rge Set::rgeTth(FitParams::rc fp)const {
+  return fp.angleMap(*this)->rgeTth;
 }
 
-void Set::collect(Session::rc s, Image const* corr,
+void Set::collect(FitParams::rc fp,
                 core::inten_vec& intens, uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
-  auto&& map = *s.angleMap(*this);
+  auto&& map = *fp.angleMap(*this);
 
   uint_vec const* gmaIndexes = nullptr;
   uint gmaIndexMin = 0, gmaIndexMax = 0;
@@ -170,13 +183,14 @@ void Set::collect(Session::rc s, Image const* corr,
 
   EXPECT_(0 < deltaTth)
 
+  auto* corrImg = fp.corrEnabled ? fp.corrImage.ptr() : nullptr;
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
     auto inten = image->inten(ind);
     if (l::isnan(inten))
       continue;
 
-    inten_t ci = corr ? corr->inten(ind) : inten_t(1);
+    inten_t ci = corrImg ? corrImg->inten(ind) : inten_t(1);
     if (l::isnan(ci))
       continue;
 
@@ -201,10 +215,10 @@ Sets::Sets() : lazyFoldImage() {}
 l::sz2 Sets::imageSize() const {
   EXPECT_(!isEmpty())
   // all images have the same size; simply take the first one
-  return first()->imageSize();
+  return first()().imageSize();
 }
 
-Image::sh Sets::foldImage() const {
+Image::shp Sets::foldImage() const {
   if (lazyFoldImage)
     return lazyFoldImage;
 
@@ -215,13 +229,13 @@ Image::sh Sets::foldImage() const {
 
   Image::ref d = mut(*lazyFoldImage);
   for_i_(n)
-    d.addIntens(*(at(i)->image));
+    d.addIntens(*(at(i)().image));
 
   return lazyFoldImage;
 }
 
-Sets::ref Sets::add(Set::sh set) may_err {
-  check_or_err_(isEmpty() || first()->imageSize() == set->imageSize(),
+Sets::ref Sets::add(Set::shr set) may_err {
+  check_or_err_(isEmpty() || first()().imageSize() == set().imageSize(),
                 "Inconsistent image size");
   base::add(set);
   RTHIS;
@@ -229,13 +243,13 @@ Sets::ref Sets::add(Set::sh set) may_err {
 
 //------------------------------------------------------------------------------
 
-CombinedSet::CombinedSet()
-: isActive(true)
+CombinedSet::CombinedSet(uint fileNo_)
+: fileNo(fileNo_), tag(), isActive(true)
 , lazyMeta()
 , lazyOmg(l::flt64_nan), lazyPhi(l::flt64_nan), lazyChi(l::flt64_nan)
 , lazyTim(l::flt32_nan), lazyMon(l::flt32_nan), lazyDTim(l::flt32_nan), lazyDMon(l::flt32_nan) {}
 
-Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
+Meta::shp CombinedSet::meta() const {
   if (lazyMeta)
     return lazyMeta;
 
@@ -243,12 +257,12 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
   EXPECT_(0 < n)
 
   if (1==n)
-    return (lazyMeta = first()->meta);
+    return (lazyMeta = first()().meta);
 
-  lazyMeta.reset(new Meta(*reinterpret_cast<core::data::MetaDict::sh*>(&fullDict)));
+  lazyMeta.reset(new Meta(l::sh(new MetaDict)));
 
   Meta::ref lm = mut(*lazyMeta);
-  MetaDict::rc ld = *lm.dict;
+  MetaDict::ref ld = mut(*lm.dict);
   MetaVals::rc lv = lm.vals;
 
   // max tim, mon
@@ -256,7 +270,7 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
   // avg all else
 
   for_i_(n) {
-    Meta::rc im = *(at(i)->meta);
+    Meta::rc im = *(at(i)().meta);
 
     mut(lm.tth) = lm.tth + im.tth;
     mut(lm.omg) = lm.omg + im.omg;
@@ -272,8 +286,12 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
     MetaDict::rc id = *im.dict;
     MetaVals::rc iv = im.vals;
 
-    for (auto&& k : id.keys)
-      mut(lv).addAt(ld.index(k), iv.valAt(id.index(k)));
+    for (auto&& k : id.keys) {
+      auto&& idx = id.index(k);
+      auto&& val = iv.valAt(idx);
+      auto&& idl = ld.idxEnter(k);
+      mut(lv).addAt(idl, val);
+    }
   }
 
   real fac = 1.0 / n;
@@ -290,11 +308,11 @@ Meta::sh CombinedSet::meta(core::data::FilesMetaDict::sh fullDict) const {
 }
 
 #define AVG_SETS_VAL(lazyVal, fun)  \
-  if (l::isnan(lazyVal)) {            \
-    EXPECT_(!isEmpty())        \
-    for (auto&& set: *this)           \
-      mut(lazyVal) += set->fun();   \
-    mut(lazyVal) /= size();    \
+  if (l::isnan(lazyVal)) {          \
+    EXPECT_(!isEmpty())             \
+    for (auto&& set: *this)         \
+      mut(lazyVal) += set().fun();  \
+    mut(lazyVal) /= size();         \
   }
 
 omg_t::rc CombinedSet::omg() const {
@@ -323,10 +341,10 @@ flt32 CombinedSet::mon() const {
 }
 
 #define SUM_SETS_VAL(lazyVal, fun)  \
-  if (l::isnan(lazyVal)) {            \
-    EXPECT_(!isEmpty())        \
-    for (auto&& set: *this)           \
-      mut(lazyVal) += set->fun();   \
+  if (l::isnan(lazyVal)) {          \
+    EXPECT_(!isEmpty())             \
+    for (auto&& set: *this)         \
+      mut(lazyVal) += set().fun();  \
   }
 
 flt32 CombinedSet::dTim() const {
@@ -339,22 +357,22 @@ flt32 CombinedSet::dMon() const {
   return lazyDMon;
 }
 
-#define RGE_SETS_COMBINE(op, fun)   \
-  EXPECT_(!isEmpty())          \
-  Range rge;                        \
-  for (auto&& set : *this)            \
-    rge.op(set->fun);               \
+#define RGE_SETS_COMBINE(op, fun) \
+  EXPECT_(!isEmpty())             \
+  Range rge;                      \
+  for (auto&& set : *this)        \
+    rge.op(set().fun);            \
   return rge;
 
-gma_rge CombinedSet::rgeGma(Session const& s) const {
+gma_rge CombinedSet::rgeGma(calc::FitParams::rc s) const {
   RGE_SETS_COMBINE(extendBy, rgeGma(s))
 }
 
-gma_rge CombinedSet::rgeGmaFull(Session const& s) const {
+gma_rge CombinedSet::rgeGmaFull(FitParams const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeGmaFull(s))
 }
 
-tth_rge CombinedSet::rgeTth(Session const& s) const {
+tth_rge CombinedSet::rgeTth(FitParams const& s) const {
   RGE_SETS_COMBINE(extendBy, rgeTth(s))
 }
 
@@ -362,19 +380,17 @@ inten_rge CombinedSet::rgeInten() const {
   RGE_SETS_COMBINE(intersect, rgeInten())
 }
 
-inten_vec CombinedSet::collectIntens(
-    Session::rc session, Image const* intensCorr, gma_rge::rc rgeGma) const
-{
-  auto tthRge = rgeTth(session);
+inten_vec CombinedSet::collectIntens(FitParams::rc fp, gma_rge::rc rgeGma) const {
+  auto tthRge = rgeTth(fp);
   auto tthWdt = tth_t(tthRge.width());
 
-  auto cut = session.imageCut;
-  uint pixWidth = session.imageSize.i - cut.left - cut.right;
+  auto cut = fp.geometry.imageCut;
+  uint pixWidth = fp.geometry.imageSize.i - cut.left - cut.right;
 
   uint numBins;
   if (1 < size()) {  // combined datasets
     auto one   = first();
-    auto delta = tth_t(one->rgeTth(session).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(fp).width() / pixWidth);
     numBins    = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins    = pixWidth; // simply match the number of pixels
@@ -387,11 +403,11 @@ inten_vec CombinedSet::collectIntens(
   auto deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one->collect(session, intensCorr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
-  if (session.avgScaleIntens) {
-    auto scale = session.intenScale;
+  if (fp.avgScaleIntens) {
+    auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
@@ -402,17 +418,17 @@ inten_vec CombinedSet::collectIntens(
   return intens;
 }
 
-inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rgeGma) const {
-  tth_rge tthRge = rgeTth(s);
+inten_vec CombinedSet::collect(FitParams::rc fp, gma_rge::rc rgeGma) const {
+  tth_rge tthRge = rgeTth(fp);
   tth_t   tthWdt = tth_t(tthRge.width());
 
-  auto cut = s.imageCut;
-  uint pixWidth = s.imageSize.i - cut.left - cut.right;
+  auto cut = fp.geometry.imageCut;
+  uint pixWidth = fp.geometry.imageSize.i - cut.left - cut.right;
 
   uint numBins;
   if (1 < size()) {
     auto one   = first();
-    auto delta = tth_t(one->rgeTth(s).width() / pixWidth);
+    auto delta = tth_t(one().rgeTth(fp).width() / pixWidth);
     numBins = l::to_uint(l::ceil(tthWdt / delta));
   } else {
     numBins = pixWidth; // simply match the pixel resolution
@@ -424,11 +440,11 @@ inten_vec CombinedSet::collect(Session::rc s, Image const* corr, gma_rge::rc rge
   auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);
 
   for (auto&& one : *this)
-    one->collect(s, corr, intens, counts, rgeGma, minTth, deltaTth);
+    one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
-  if (s.avgScaleIntens) {
-    auto scale = s.intenScale;
+  if (fp.avgScaleIntens) {
+    auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
       if (cnt > 0)
@@ -456,7 +472,7 @@ l::sz2 CombinedSets::imageSize() const {
     return l::sz2(0,0);
 
   // all images have the same size; simply take the first one
-  return first()->imageSize();
+  return first()().imageSize();
 }
 
 flt32 CombinedSets::mon() const {
@@ -474,22 +490,30 @@ flt32 CombinedSets::dMon() const {
   return lazyDMon;
 }
 
-inten_rge::rc CombinedSets::rgeFixedInten(Session::rc session, bool trans, bool cut) const {
+inten_rge::rc CombinedSets::rgeFixedInten(calc::FitParams const& fp, bool trans, bool cut) const {
   if (!lazyRgeFixedInten.isDef()) {
     l_io::busy __;
 
     for (auto&& set: *this)
       for (auto&& one : *set) {
-        if (one->image) {
-          auto&& image = *one->image;
-          auto imageLens = session.imageLens(image,*this,trans,cut);
-          lazyRgeFixedInten.extendBy(imageLens->rgeInten(false));
+        if (one().image) {
+          auto&& image = *one().image;
+          auto&& lens = fp.imageLens(image,*this,trans,cut);
+          lazyRgeFixedInten.extendBy(lens().rgeInten(false));
         }
       }
   }
 
   return lazyRgeFixedInten;
 }
+
+CombinedSet::shr CombinedSets::combineAll() const {
+  auto&& set = l::sh(new CombinedSet(0));
+  for (auto&& cs : *this)
+    for (auto&& s : cs())
+      mut(set()).add(s);
+  return set;
+};
 
 void CombinedSets::resetLazies() {
   lazyMon = lazyDTim = lazyDMon = l::flt32_nan;
@@ -498,29 +522,24 @@ void CombinedSets::resetLazies() {
 
 //------------------------------------------------------------------------------
 
-TEST_("data::sh",
-  File::sh f1(new File(l_io::path(""))), f2(new File(l_io::path("")));
-  f2 = f2; f1 = f2; f2 = f1; f1 = f1;
+TEST_("data::shp",
+//  File::shp f1(new File(l_io::path("a"))), f2(new File(l_io::path("b")));
+//  f2 = f2; f1 = f2; f2 = f1; f1 = f1;
 )
 
 TEST_("data",
-  File *f1 = new File(l_io::path("")), *f2 = new File(l_io::path(""));
-  CHECK_EQ(0, f1->idx->val);
-  CHECK_EQ(0, f2->idx->val);
+//  File *f1 = new File(l_io::path("a")), *f2 = new File(l_io::path("b"));
 
-  Files fs;
-  fs.addFile(l::sh(f1));
-  fs.addFile(l::sh(f2));
-  CHECK_EQ(1, f1->idx->val);
-  CHECK_EQ(2, f2->idx->val);
+//  Files fs;
+//  fs.addFile(l::sh(f1));
+//  fs.addFile(l::sh(f2));
 
-  f1->addSet(l::sh(new Set(
-    l::sh(new FileIdx),
-    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
-    l::sh(new Image))));
+//  f1->addSet(l::sh(new Set(
+//    f1->src,
+//    l::sh(new Meta(f1->dict, MetaVals(), 0, 0, 0, 0, 0, 0, 0, 0)),
+//    l::sh(new Image))));
 
-  fs.remFile(0);
-  CHECK_EQ(1, f2->idx->val);
+//  fs.remFileAt(0);
 )
 
 //------------------------------------------------------------------------------

@@ -7,12 +7,10 @@
 //------------------------------------------------------------------------------
 
 dcl_sub_(str, std::string)
-  using base::base;
+  UB3_(base, c_str, length)
+
   str() {}
   str(base const& that) : base(that) {}
-
-  using base::c_str;
-  using base::length;
 
   bol_(isEmpty, ()) RET_(base::empty())
 

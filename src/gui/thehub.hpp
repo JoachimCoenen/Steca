@@ -17,12 +17,14 @@
 
 #pragma once
 #include "acts.hpp"
+#include "options.hpp"
 #include "refhub.hpp"
-#include "models.hpp"
 #include <core/session.hpp>
+#include <core/calc/reflection.hpp>
 #include <lib/dev/defs.hpp>
 #include <lib/dev/io/path.hpp>
 #include <lib/qt/hub.hpp>
+#include <lib/qt/model.hpp>
 
 /* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
  * names (hub & thehub) *must* differ, because that's how MOC operates: on base
@@ -37,98 +39,164 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
-  ptr_(ModelFiles,    modelFiles);
-  ptr_(ModelDatasets, modelDatasets);
-  ptr_(ModelMetadata, modelMetadata);
+  dcl_sub2_(HubModel, RefHub, l_qt::lst_model)
+    HubModel(Hub&);
+  dcl_end
 
-  Hub(Win&);
- ~Hub();
+  dcl_sub_(ModelFiles, HubModel)
+    friend struct Hub;
+    ModelFiles(Hub&);
 
-  set_(sessionClear, ())          emits;
-  set_(sessionLoad, (l_io::path)) emits may_err;
-  mth_(void, sessionSave, (l_io::path)) may_err;
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
 
-  mth_(uint, numFiles, ())        RET_(base::files.size())
-  mth_(str,  fileName, (uint i))  RET_(base::files.at(i)->name)
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  set_(addFiles, (str_vec::rc))   emits;
-  set_(addFiles, ())              emits;
-  set_(remFile,  (uint))          emits;
+    set_(check,     (rw_n, bool, bool));
+    bol_(isChecked, (rw_n));
 
-  set_(activateFileAt, (uint, bool)) emits;
-  using base::isActiveFileAt;
-  set_(selectFileAt, (int))       emits;
+    mth_(core::data::File::shp, at, (rw_n));
+  dcl_end
 
-  set_(activateDatasetAt, (uint, bool)) emits;
-  using base::isActiveDatasetAt;
-  set_(selectDatasetAt, (int))    emits;
+  dcl_sub_(ModelDatasets, HubModel)
+    friend struct Hub;
+    ModelDatasets(Hub&);
 
-  set_(corrEnable, (bool))        emits;
-  set_(corrRem,    ())            emits;
+    enum eMdLeadCols { clFNO, clTAG };
 
-  bol_(corrEnabled, ())           RET_(base::corrEnabled)
-  mth_(str, corrName, ())         RET_(base::corrFile ? base::corrFile->name : str::null)
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
 
-  set_(collectDatasetsFromFiles, (uint_vec::rc, l::pint));
-  set_(collectDatasetsFromFiles, (uint_vec::rc));
-  set_(groupDatasetsBy,          (l::pint));
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
 
-  mth_(uint,    numSets,   ())    RET_(base::collectedDatasets.size())
-  mth_(l::pint, groupedBy, ())    RET_(base::groupedBy)
+    bol_(rightAlign,  (cl_n));
 
-  mth_(core::data::CombinedSet::rc, setAt, (uint i)) RET_(*base::collectedDatasets.at(i))
-  mth_(strc,                        tagAt, (uint i)) RET_(base::collectedDatasetsTags.at(i))
+    set_(check, (rw_n, bool, bool));
+    bol_(isChecked, (rw_n));
 
-  mth_(core::data::FilesMetaDict::sh, dict, ()) RET_(files.dict)
-  mth_(uint, dictSize, ());
-  mth_(str,  dictKey,     (uint));
-  mth_(bool, dictChecked, (uint));
-  set_(dictCheck, (uint, bool));
+    atr_(l::pint, groupedBy);
+    mut_(groupBy, (l::pint));
 
-signals:
-  void sigFilesReset();     // a major change in files
-  void sigFilesActive();    // changed active files
+    voi_(setSetAt, (int));
 
-  void sigFileSelected(core::data::File::sh); // file selected (or not)
+  private:
+    mth_(uint, numLeadCols, ());
+    mut_(combineSets, ());
+  dcl_end
 
-  void sigCorr();           // add/rem/on/off correction file
+  dcl_sub_(ModelMetadata, HubModel)
+    friend struct Hub;
+    ModelMetadata(Hub&);
 
-  void sigDatasetsReset();  // a major change in datasets
-  void sigDatasetsActive(); // changed active datasets
+    enum { clTAG, clVAL };
 
-  void sigDatasetSelected(core::data::CombinedSet::sh); // dataset selected (or not)
+    mth_(cl_n, cols, ());
+    mth_(rw_n, rows, ());
+
+    mth_(str,       head, (cl_n));
+    mth_(l_qt::var, cell, (rw_n, cl_n));
+
+    set_(check, (rw_n, bool, bool));
+    bol_(isChecked, (rw_n));
+
+    core::data::KeyBag::shr checked;
+
+  private:
+    core::data::CombinedSet::shp set;
+  dcl_end
+
+//------------------------------------------------------------------------------
+
+private:
+  atr_(dgram_options, dgramOptions);
+  atr_(image_options, imageOptions);
+
+  mth_(core::data::Files::rc, currentFiles, ())
+    RET_(*base::files)
+  mth_(core::data::FilesMetaDict::rc, currentDict, ())
+    RET_(base::files->dict())
+  core::data::CombinedSets::shr currentSets;
+  core::data::CombinedSet::shp  currentSet;
+  void setSet(core::data::CombinedSet::shp);
+  str_vec currentMetaKeys; // shown metadata
 
 public:
-  template <typename Signal, typename Lambda>
-  void onSignal(Signal signal, Lambda slot) {
-    QObject::connect(this, signal, slot);
+  friend struct ModelFiles;
+  friend struct ModelDatasets;
+  friend struct ModelMetadata;
+  atr_(l::scoped<ModelFiles>,    modelFiles);
+  atr_(l::scoped<ModelDatasets>, modelDatasets);
+  atr_(l::scoped<ModelMetadata>, modelMetadata);
+
+  Hub(Win&);
+
+  mut_(init, ());
+
+  mut_(sessionClear, ())          emits;
+  mut_(sessionLoad, (l_io::path)) emits may_err;
+  mth_(void, sessionSave, (l_io::path)) may_err;
+
+  mut_(addFiles,   (l_io::path_vec::rc))  emits;
+  mut_(addFiles,   ())                    emits;
+  mut_(remFilesAt, (uint_vec::rc))        emits;
+
+  mut_(activateFileAt, (uint, bool)) emits;
+
+  mut_(corrEnable, (bool)) emits;
+  mut_(corrRem,    ())     emits;
+
+  mut_(setBg, (core::Ranges::rc)) emits;
+  mut_(addBg, (core::Range::rc))  emits;
+  mut_(remBg, (core::Range::rc))  emits;
+
+  mut_(setRefl, (Range::rc r)) emits;
+
+  mut_(setNorm, (core::eNorm))   emits;
+
+  voi_(makeDgram, (core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
+                   core::data::CombinedSets::rc, core::data::CombinedSet const*,
+                   core::calc::FitParams::rc, bool combined));
+
+  dcl_(SetsInfo)
+    atr_(core::data::CombinedSets::shr, sets);
+    atr_(core::data::CombinedSet::shp,  set);
+    atr_(core::calc::FitParams::shr,    fp);
+
+    SetsInfo(core::data::CombinedSets::shr sets_, core::data::CombinedSet::shp set_,
+             core::calc::FitParams::shr fp_)
+      : sets(sets_), set(set_), fp(fp_) {}
+  dcl_end
+
+  mth_(SetsInfo, setsInfo, ());
+
+private:
+  void filesModified();
+  void sendSetsInfo();
+  void setMetaChecked(core::data::KeyBag::shr);
+
+signals:
+  // a new set of combined sets, opt. the selected one, fit params
+  void sigSetsInfo(SetsInfo) const;
+  // add/rem/on/off correction file
+  void sigCorrFileName(str) const;
+
+private:
+  mut_(newFiles, ());
+
+#define DCL_HUB_SIG_ETC(name, par)  \
+private:                            \
+  voi_(emit##name, (par p)) {       \
+    emit sig##name(p);              \
+  }                                 \
+public:                             \
+  template <typename Lambda> void onSig##name(Lambda slot) const { \
+    QObject::connect(this, &Hub::sig##name, slot);                 \
   }
 
-#define DCL_HUB_SIGNAL_ETC(name)      \
-private:                              \
-  set_(emit##name, ());               \
-public:                               \
-  template <typename Lambda> void onSig##name(Lambda slot) { \
-    onSignal(&Hub::sig##name, slot);  \
-  }
-
-#define DCL_HUB_SIGNAL_ETC2(name, par)  \
-private:                                \
-  set_(emit##name, (par p));            \
-public:                                 \
-  template <typename Lambda> void onSig##name(Lambda slot) { \
-    onSignal(&Hub::sig##name, slot);  \
-  }
-
-  DCL_HUB_SIGNAL_ETC(FilesReset)
-  DCL_HUB_SIGNAL_ETC(FilesActive)
-  DCL_HUB_SIGNAL_ETC2(FileSelected, core::data::File::sh)
-
-  DCL_HUB_SIGNAL_ETC(Corr)
-
-  DCL_HUB_SIGNAL_ETC(DatasetsReset)
-  DCL_HUB_SIGNAL_ETC(DatasetsActive)
-  DCL_HUB_SIGNAL_ETC2(DatasetSelected, core::data::CombinedSet::sh)
+  DCL_HUB_SIG_ETC(SetsInfo,     SetsInfo)
+  DCL_HUB_SIG_ETC(CorrFileName, str)
 
 private:
   Q_OBJECT

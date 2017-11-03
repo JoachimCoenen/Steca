@@ -96,7 +96,7 @@ private:
 // WaTch
 #define WT(what) TR(#what ">" << what)
 // do not go here
-#define NEVER    EXPECT_(false)
+#define NEVER_RETURN(what) EXPECT_(false) return what;
 
 //------------------------------------------------------------------------------
 // loops
@@ -106,7 +106,7 @@ private:
 #define for_var_(i, n)   \
   for (int i = 0, i##End = (n); i < i##End; ++i)
 #define for_var_down_(i, n) \
-  for (int i = (num); i-- > 0; )
+  for (int i = (n); i-- > 0; )
 
 #else
 

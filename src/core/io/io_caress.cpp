@@ -51,12 +51,12 @@ str loadCaressComment(l_io::path::rc path) {
 using data::Files;
 using data::File;
 using data::Set;
-using data::FileIdx;
+using data::FileSrc;
 using data::Meta;
 using data::MetaVals;
 
-static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
-  File::sh file(new File(path));
+static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
+  auto&& file = l::scope(new File(path));
 
   enum class eAxes  { NONE, ROBOT, TABLE }
     axes = eAxes::NONE;
@@ -82,7 +82,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
   };
 
   auto addValTo = [&](MetaVals& vs, strc ns, flt32 val) -> uint {
-    auto idx = mut(*file->dict).enter(ns);
+    auto idx = mut(*file->dict).idxEnter(ns);
     setVal(vs, idx, val);
     return idx;
   };
@@ -166,7 +166,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
     flt32 dTim = tim - lastTim, dMon = mon - lastMon;
     mut(*file).addSet(
       l::sh(new Set(
-        file->idx,
+        file->src,
         l::sh(new Meta(file->dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
         l::sh(image.take().ptr()))));
 
@@ -199,7 +199,6 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
       addVal(vals);
 
     } else if (elem == "MASTER1V") {
-
       // scan data
       block = eBlock::MASTER1V;
 
@@ -225,7 +224,7 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
       if (node.isEmpty()) { // file-level info
         str s(getAsString(dt, n));
         if (elem == "COM")
-          mut(file->comment) = s;
+          mut(file->src->comment) = s;
 //        else // ignore other strings
 //          mut(file->strs).add(std::make_pair(elem, s));
       }
@@ -235,10 +234,10 @@ static File::sh loadOpenCaressFile(l_io::path::rc path) may_err {
 
   endDataset();
 
-  return file;
+  return file.takeOwn();
 }
 
-File::sh loadCaress(l_io::path::rc path) may_err {
+l::own<File> loadCaress(l_io::path::rc path) may_err {
   check_or_err_(openFile(path), CAT("Cannot open ", path));
   struct __ { ~__() { closeFile(); } } autoClose;
 

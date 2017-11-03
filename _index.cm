@@ -1,13 +1,11 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="utf-8">
-  <script src ="../CM/common.js"></script>
-</head>
-<body><pre>
+@toc about ; About      # entry page
+@toc steca_text/        # about steca (general)
+@toc lib/               # developers' library
+@toc src/               # Steca source code
 
 = STeCa2 {img: img/icon.png}
 
-This is the homepage of
+This is the homepage off
 {*STeCa2}: {/StressTextureCalculator version 2}.
 ----
 {:[Download latest code & Windows executable]|https://github.com/scgmlz/STeCa2/releases}
@@ -57,9 +55,3 @@ of JCNS at MLZ Garching.
 
 The current version of Steca2 is 2.0.4.
 It is in daily use at STRESS-SPEC.
-
-----
-{next:}
-
-<pre></body>
-</html>

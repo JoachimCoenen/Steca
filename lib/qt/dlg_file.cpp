@@ -8,7 +8,7 @@
 namespace l_qt {
 //------------------------------------------------------------------------------
 
-str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
+l_io::path dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
   QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
@@ -26,7 +26,7 @@ str dlgOpenFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
   return str::null;
 }
 
-str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
+l_io::path_vec  dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
   QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
@@ -44,7 +44,7 @@ str_vec dlgOpenFiles(QWidget* parent, strc caption, strc dir, strc filter, QAbst
   return str_vec();
 }
 
-str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
+l_io::path dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractProxyModel* model) {
   QFileDialog dlg(parent, toQt(caption), toQt(dir), toQt(filter));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);
@@ -62,7 +62,7 @@ str dlgSaveFile(QWidget* parent, strc caption, strc dir, strc filter, QAbstractP
   return str::null;
 }
 
-str dlgSaveDir(QWidget* parent, strc caption, strc dir) {
+l_io::path dlgSaveDir(QWidget* parent, strc caption, strc dir) {
   QFileDialog dlg(parent, toQt(caption), toQt(dir));
 
   dlg.setOption(QFileDialog::DontUseNativeDialog);

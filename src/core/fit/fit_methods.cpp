@@ -40,8 +40,8 @@ void Method::fit(Fun& f, Curve::rc curve) const {
   for_i_(parCount) {
     auto par = fun->parAt(i);
     parVal.setAt(i, par.val);
-    parMin.setAt(i, -l::flt_inf); // it is possible to extend Par by allowed range
-    parMax.setAt(i, l::flt_inf);  // and retrieve from there
+    parMin.setAt(i, -l::real_inf); // it is possible to extend Par by allowed range
+    parMax.setAt(i, +l::real_inf);  // and retrieve from there
   }
 
   approximate(parVal.data(), parMin.data(), parMax.data(),

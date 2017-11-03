@@ -20,6 +20,9 @@
 #include "app.hpp"
 #include "panel/inc.inc"
 #include "settings.hpp"
+#include "dlg/dlg_polefigure.hpp"
+#include "dlg/dlg_diagrams.hpp"
+#include "dlg/dlg_diffractograms.hpp"
 
 #include <QApplication>
 #include <QNetworkReply>
@@ -36,6 +39,9 @@ namespace gui {
 //------------------------------------------------------------------------------
 
 Win::Win() : hub(*this) {
+  using namespace l_qt::make_widgets;
+  auto&& as = hub.acts;
+
   panelFiles         = new PanelFiles(hub);
   panelDatasets      = new PanelDatasets(hub);
   panelSetup         = new PanelSetup(hub);
@@ -61,8 +67,6 @@ Win::Win() : hub(*this) {
   auto&& rs  = sp.vs();  // right
   rs.add(panelMetadata);
 
-  auto&& a = hub.acts;
-
   // status & tool bars
   auto bar = statusBar(); // make one
   bar->setSizeGripEnabled(false);
@@ -73,33 +77,54 @@ Win::Win() : hub(*this) {
   auto tb = new l_qt::hbox; // toolbar
   tw->setLayout(tb);
 
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_FILES)));
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_DATASETS)));
-  tb->add(new l_qt::actbtn(a.get(a.SHOW_METADATA)));
+  tb->add(btn(as.get(as.SHOW_FILES)));
+  tb->add(btn(as.get(as.SHOW_DATASETS)));
+  tb->add(btn(as.get(as.SHOW_METADATA)));
   tb->addSpacing(8);
 
-  tb->add(new l_qt::actbtn(a.get(a.SESSION_LOAD)));
-  tb->add(new l_qt::actbtn(a.get(a.SESSION_SAVE)));
+  tb->add(btn(as.get(as.DLG_POLEFIG)));
+  tb->add(btn(as.get(as.DLG_DIAGRAM)));
+  tb->add(btn(as.get(as.DLG_DIFFRGS)));
+  tb->addSpacing(8);
+
+  tb->add(btn(as.get(as.SESSION_LOAD)));
+  tb->add(btn(as.get(as.SESSION_SAVE)));
   tb->addSpacing(8);
 
 #ifndef Q_OS_OSX
-  tb->add(new l_qt::actbtn(a.get(a.FULL_SCREEN)));
+  tb->add(btn(as.get(as.FULL_SCREEN)));
 #endif
   tb->addSpacing(8);
-  tb->add(new l_qt::actbtn(a.get(a.ABOUT)));
-  tb->add(new l_qt::actbtn(a.get(a.QUIT)));
+  tb->add(btn(as.get(as.ABOUT)));
+  tb->add(btn(as.get(as.QUIT)));
 
-  a.get(a.SHOW_FILES).onToggle([this](bool on) {
+  as.get(as.SHOW_FILES).onToggle([this](bool on) {
     panelFiles->setVisible(on);
   });
 
-  a.get(a.SHOW_DATASETS).onToggle([this](bool on) {
+  as.get(as.SHOW_DATASETS).onToggle([this](bool on) {
     panelDatasets->setVisible(on);
   });
 
-  a.get(a.SHOW_METADATA).onToggle([this](bool on) {
+  as.get(as.SHOW_METADATA).onToggle([this](bool on) {
     panelMetadata->setVisible(on);
   });
+
+  as.get(as.DLG_POLEFIG).onTrigger([this]() {
+    (new calc_dlg::PoleFigure(this, hub))->show();
+  });
+
+  as.get(as.DLG_DIAGRAM).onTrigger([this]() {
+    (new calc_dlg::Diagrams(this, hub))->show();
+  });
+
+  as.get(as.DLG_DIFFRGS).onTrigger([this]() {
+    (new calc_dlg::Diffractograms(this, hub))->show();
+  });
+}
+
+void Win::init() {
+  hub.init();
 }
 
 l_qt::acts const& Win::getActs() const {
@@ -140,9 +165,8 @@ QLayout* DlgAbout::extra() const {
   auto vb = new l_qt::vbox;
   auto&& hb = vb->hb();
 
-  hb.addWidget(new l_qt::lbl("at startup: "));
-  hb.addWidget((chkAbout  = new l_qt::chk("&show this dialog")));
-  hb.addWidget((chkUpdate = new l_qt::chk("&check for update")));
+  hb.add("at startup: ").add(chkAbout  = new l_qt::chk("&show this dialog"))
+                        .add(chkUpdate = new l_qt::chk("&check for update"));
   hb.addStretch();
 
   using S = Settings;
@@ -211,10 +235,15 @@ void Win::onFirstShow() {
     about();
 
 #ifdef DEVELOPMENT
-  hub.addFiles({
-    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
-    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
+  hub.addFiles(str_vec{
+//    "/home/jan/C/+dev/fz/data/Robot/Data/m240588.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280578.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280579.dat",
+//    "/home/jan/C/+dev/fz/data/SS15/m280580.dat",
   });
+
+//  auto&& as = hub.acts;
+//  as.get(as.DLG_POLEFIG).trigger();
 #endif
 }
 
@@ -254,13 +283,13 @@ void Win::checkUpdate(bool completeReport) const {
 }
 
 void Win::checkActions() {
-  auto&& a = hub.acts;
+  auto&& as = hub.acts;
 #ifndef Q_OS_OSX
-  a.get(a.FULL_SCREEN).check(isFullScreen());
+  as.get(as.FULL_SCREEN).check(isFullScreen());
 #endif
-  a.get(a.SHOW_FILES).check(panelFiles->isVisible());
-  a.get(a.SHOW_DATASETS).check(panelDatasets->isVisible());
-  a.get(a.SHOW_METADATA).check(panelMetadata->isVisible());
+  as.get(as.SHOW_FILES).check(panelFiles->isVisible());
+  as.get(as.SHOW_DATASETS).check(panelDatasets->isVisible());
+  as.get(as.SHOW_METADATA).check(panelMetadata->isVisible());
 }
 
 //------------------------------------------------------------------------------

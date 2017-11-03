@@ -16,35 +16,23 @@
  ******************************************************************************/
 
 #pragma once
+#include <core/typ/options.hpp>
+#include <core/typ/range.hpp>
 
-#include <lib/dev/defs.hpp>
-#include <lib/dev/inc/flt.hpp>
-#include <lib/dev/typ/trg.hpp>
-#include <lib/dev/typ/vec.hpp>
-#include <lib/dev/typ/ij.hpp>
-#include <lib/dev/typ/xy.hpp>
-
-namespace core {
+namespace gui {
 //------------------------------------------------------------------------------
 
-using tth_t = l::deg;
-using omg_t = l::deg;
-using phi_t = l::deg;
-using chi_t = l::deg;
+dcl_(dgram_options) EQ_NE
+  atr_(bool, isCombined)        = false;
+  atr_(bool, isFixedIntenScale) = false;
+  atr_(core::Range, gammaRange) = core::Range();
+  mut_(set, (rc));
+dcl_end
 
-using gma_t = l::deg;
-
-struct Range;
-
-using tth_rge = Range;
-using gma_rge = Range;
-
-using peak_t = l::xy;
-using fwhm_t = l::Flt32;
-
-using inten_t   = l::Flt32;
-using inten_vec = l::vec<inten_t>;
-using inten_rge = Range;
+dcl_(image_options) EQ_NE
+  atr_(bool, isFixedIntenScale) = false;
+  mut_(set, (rc));
+dcl_end
 
 //------------------------------------------------------------------------------
 }

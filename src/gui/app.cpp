@@ -32,7 +32,7 @@ App::App(int& argc, char* argv[]) : base(argc, argv) {
 }
 
 int App::exec() {
-  Win w;
+  Win w; w.init();
   return base::safeExec(&w);
 }
 

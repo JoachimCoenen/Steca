@@ -1,4 +1,4 @@
-PRO=steca.pro
+PRO=src.pro
 echo -e '# generated project\n' > $PRO
 
 DATE=`date +%y%m%d_%H%M`
@@ -17,14 +17,15 @@ function files {
   find $where -type f -name \*.$ext -exec echo ' ' {} \\ \;
 }
 
-MODULES='core gui'
+MODULES='core core_legacy gui'
 echo -e '\nHEADERS += \\' >> $PRO
 for m in $MODULES ; do files $m h >> $PRO ; done
 for m in $MODULES ; do files $m hpp >> $PRO ; done
 
 echo -e '\nSOURCES += \\' >> $PRO
 for m in $MODULES ; do files $m cpp >> $PRO ; done
-echo ' ' main.cpp >> $PRO
+echo ' ' main.cpp \\ >> $PRO
+echo ' ' manifest.cpp >> $PRO
 
 cat >> $PRO <<EOT
 
@@ -32,7 +33,7 @@ RESOURCES += \
   gui/rc.qrc
 
 # for Windoze & Linux
-win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../qt_lib/release/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/release/ -ldev_lib
-else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../qt_lib/debug/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/debug/ -ldev_lib
-else:unix:!macx: LIBS += -L\$\$OUT_PWD/../qt_lib/ -lqt_lib -L\$\$OUT_PWD/../dev_lib/ -ldev_lib
+win32:CONFIG(release, debug|release): LIBS += -L\$\$OUT_PWD/../lib/qt/release/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/release/ -ldev_lib
+else:win32:CONFIG(debug, debug|release): LIBS += -L\$\$OUT_PWD/../lib/qt/debug/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/debug/ -ldev_lib
+else:unix:!macx: LIBS += -L\$\$OUT_PWD/../lib/qt/ -lqt_lib -L\$\$OUT_PWD/../lib/dev/ -ldev_lib
 EOT
