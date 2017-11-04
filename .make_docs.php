@@ -92,7 +92,7 @@ function traverse ($relPath) {
   msg(': ' . $relPath);
   @mkdir($docDir.$relPath);
 
-  if (!($f = @fopen($relPath.$index, 'r')))
+  if (!($f = @fopen($srcDir.$relPath.$index, 'r')))
     error('bad index ' . $relPath);
 
   // first @toc entry -> index
