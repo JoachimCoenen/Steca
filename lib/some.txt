@@ -1,0 +1,10 @@
+on /*::>*/the line/*<::*/
+//::>
+linee
+//<::
+
+/*::> block
+block
+block <::*/
+
+on /*::>*/the line/*<::*/

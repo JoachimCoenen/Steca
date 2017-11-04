@@ -1,4 +1,4 @@
 @toc lib ; lib/
 @toc dev/
-@toc some1 ; some ; Some1 ; some.txt
+@toc some1 ; some.cm ; Some1 ; some.txt
 @toc qt/
