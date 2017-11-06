@@ -19,7 +19,7 @@ function msg ($msg) {
 }
 
 function error ($msg) {
-  msg($msg); die;
+  msg($msg); exit(-1);
 }
 
 function getTocLine ($f, $n) { // split by ';' into $n parts
@@ -79,7 +79,7 @@ function genFile ($relPath, $file, $srcFiles) {
       if (false === ($src = @file_get_contents($srcDir.$relPath.$sf)))
         error('bad source file ' . $relPath.$sf);
       else
-        $s .= extractCm($src);
+        $s .= '.cm' == substr($sf, -3) ? $src : extractCm($src);
 
   if (!$s)  // no read nor generated content
     error('cannot make ' . $relFile);

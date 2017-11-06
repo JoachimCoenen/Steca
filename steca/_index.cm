@@ -1,43 +1,32 @@
-<!DOCTYPE html><html lang="en">
-<head>
+@toc steca ; Steca
+@toc some ; some.cm ; Some ; some.txt, another.txt
 
-<meta charset="utf-8">
-<style>body>pre{display:none;}</style>
-<script>tocjs = '../pg/toc.js'</script>
-<script src ="../CM/load.js"></script>
+@chr em /
+@chr b  *
 
-</head>
+= STeCa2 {img: /img/icon.png}
 
-<body><pre>
-
-= STeCa2 {img: img/icon.png}
-
-This is the homepage of
-{*STeCa2}: {/StressTextureCalculator version 2}.
-----
-{:[Download latest code & Windows executable]|https://github.com/scgmlz/STeCa2/releases}
-----
-.
-
-{img: img/image_ex1.png|detector image} \
-{=>} {img: img/diffractogram.png|diffractogram} \
-{=>} {img: img/stier.png|pole figure}
+{img: /img/image_ex1.png|detector image}    {=>}
+{img: /img/diffractogram.png|diffractogram} {=>}
+{img: /img/stier.png|pole figure}
 
 == Overview
 
-. Steca2 is a software tool for analysis of histogram data collected by area detectors.
-It is developed primarily to support the {:STRESS-SPEC diffractometer|http://www.mlz-garching.de/stress-spec} at FRM-II.
+Steca2 is a software tool for analysis of histogram data collected by area detectors.
+It is developed primarily to support the
+{:STRESS-SPEC diffractometer|http://www.mlz-garching.de/stress-spec} at FRM-II.
 
-. The main functions of Steca2 are:
+The main functions of Steca2 are:
 
 * Import of histograms and associated metadata from data files.
 * Variable grouping of multiple data sets.
 * Correction of unequal detector pixel sensitivity.
-* Calculation of diffractograms, either from complete images or from image "slices" \
-  with specified range of {/γ}.
+* Calculation of diffractograms, either from complete images or from image
+  "slices" with specified range of /γ/.
 * Semi-automatic diffractogram peak fitting.
 * Calculation of pole figure points and their interpolation.
-* Calculation of diagrams that show dependencies between imported metadata and calculated data.
+* Calculation of diagrams that show dependencies between imported metadata and
+  calculated data.
 * Export of results in various data formats for further processing.
 
 {img:.right img/labs_stier.png} {img:.right img/labs_loop.png}
@@ -63,8 +52,3 @@ of JCNS at MLZ Garching.
 The current version of Steca2 is 2.0.4.
 It is in daily use at STRESS-SPEC.
 
-----
-{next:}
-
-<pre></body>
-</html>
