@@ -1,8 +1,8 @@
 # Steca2
-StressTextureCalculator, version 2. (`Steca2`, `Steca2`, or simply `Steca`)
+StressTextureCalculator, version 2.
 
 * [[Online Steca user documentation (GitHub pages)]](https://scgmlz.github.io/Steca2/)
-* [[Developers' navigation through the source tree]](nav.md)
+* [[Developers' navigation through the source tree]](.nav.md)
 
 ## Branches
 
