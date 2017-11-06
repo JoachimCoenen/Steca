@@ -7,12 +7,12 @@
 @chr em /
 @chr b  *
 
-= About STeCa2 {img: /img/icon.png}
+= About Steca2 {img: /img/icon.png}
 
-This is the documentation home of {*STeCa2}: {/StressTextureCalculator version 2}.
+This is the documentation home of {*Steca2}: {/StressTextureCalculator version 2}.
 
 The source code and compiled Windows binaries are available at
-{:GitHub|https://github.com/scgmlz/STeCa2/releases}.
+{:GitHub|https://github.com/scgmlz/Steca2/releases}.
 
 ----
 The documentation is divided into sections:

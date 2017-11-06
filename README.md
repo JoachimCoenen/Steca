@@ -1,7 +1,7 @@
-# STeCa2
-StressTextureCalculator, version 2. (`STeCa2`, `Steca2`, or simply `Steca`)
+# Steca2
+StressTextureCalculator, version 2. (`Steca2`, `Steca2`, or simply `Steca`)
 
-* [[Online Steca user documentation (GitHub pages)]](https://scgmlz.github.io/STeCa2/)
+* [[Online Steca user documentation (GitHub pages)]](https://scgmlz.github.io/Steca2/)
 * [[Developers' navigation through the source tree]](nav.md)
 
 ## Branches
@@ -14,13 +14,13 @@ StressTextureCalculator, version 2. (`STeCa2`, `Steca2`, or simply `Steca`)
 
 ### master:
 
-[![Travis-CI Build Status](https://travis-ci.org/scgmlz/STeCa2.svg?branch=master)](https://travis-ci.org/scgmlz/STeCa2)
+[![Travis-CI Build Status](https://travis-ci.org/scgmlz/Steca2.svg?branch=master)](https://travis-ci.org/scgmlz/Steca2)
 [![AppVeyor-CI Build Status](https://ci.appveyor.com/api/projects/status/github/scgmlz/steca2?branch=master&svg=true)](https://ci.appveyor.com/project/jburle/steca2)
 
 ### develop:
 
-[![Travis-CI Build Status](https://travis-ci.org/scgmlz/STeCa2.svg?branch=develop)](https://travis-ci.org/scgmlz/STeCa2)
+[![Travis-CI Build Status](https://travis-ci.org/scgmlz/Steca2.svg?branch=develop)](https://travis-ci.org/scgmlz/Steca2)
 [![AppVeyor-CI Build Status](https://ci.appveyor.com/api/projects/status/github/scgmlz/steca2?branch=develop&svg=true)](https://ci.appveyor.com/project/jburle/steca2)
-[![Coverage Status](https://coveralls.io/repos/github/scgmlz/STeCa2/badge.svg?branch=develop)](https://coveralls.io/github/scgmlz/STeCa2?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/scgmlz/Steca2/badge.svg?branch=develop)](https://coveralls.io/github/scgmlz/Steca2?branch=develop)
 
 ◆

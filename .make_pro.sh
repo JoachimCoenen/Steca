@@ -1,4 +1,4 @@
-PRO=STeCa2.pro
+PRO=Steca2.pro
 echo -e '# generated project\n' > $PRO
 
 cat >> $PRO <<EOT

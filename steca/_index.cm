@@ -4,7 +4,7 @@
 @chr em /
 @chr b  *
 
-= STeCa2 {img: /img/icon.png}
+= Steca2 {img: /img/icon.png}
 
 {img: /img/image_ex1.png|detector image}    {=>}
 {img: /img/diffractogram.png|diffractogram} {=>}
