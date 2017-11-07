@@ -1,17 +1,18 @@
 #!/usr/bin/php
 <?php
-/* Traverses the source tree $srcDir and creates the doc tree $docDir:
-- reads _index.cm
-- copies *.cm files over
-- makes *.cm files from specified sources
-*/
 
-$srcDir = dirname(__FILE__).'/';
-$docDir = $srcDir . 'docs/pg/';
+$rootDir = dirname(__FILE__).'/';
+$srcDir  = $rootDir . 'docs_src/';
+$docDir  = $rootDir . 'docs/pg/';
 
-// make destination directory empty
-@exec('rm -rf ' . $docDir);
-mkdir($docDir);
+const INDEX  = '_index.cm';
+const PROLOG = '_prolog';
+
+function initDocDir () {
+  $prolog = PROLOG; global $docDir;
+  exec("rm -rf $docDir");
+  exec("rsync -r --exclude=\*.cm --exclude=$prolog docs_src/* $docDir");
+}
 
 // helpers
 function msg ($msg) {
@@ -68,14 +69,17 @@ function extractCm (&$s) {
   return $res;
 }
 
-function genFile ($relPath, $file, $srcFiles) {
-  global $srcDir, $docDir;
+function genFile ($create, $relPath, $file, $rootFiles = '') {
+  global $rootDir, $srcDir, $docDir;
   $relFile = $relPath.$file;
-  msg('> '.$relFile);
-  $s = @file_get_contents($srcDir.$relFile); // can non-exist
+  if (!file_exists($srcDir.$relFile) && !$create)
+    return;
 
-  if ($srcFiles)
-    foreach (array_map('trim', explode(",", $srcFiles)) as $sf)
+  msg('> '.$relFile);
+  $s = @file_get_contents($srcDir.$relFile); // can not-exist
+
+  if ($rootFiles)
+    foreach (array_map('trim', explode(",", $rootFiles)) as $sf)
       if (false === ($src = @file_get_contents($srcDir.$relPath.$sf)))
         error('bad source file ' . $relPath.$sf);
       else
@@ -88,19 +92,20 @@ function genFile ($relPath, $file, $srcFiles) {
 
 // traverse source tree
 function traverse ($relPath) {
-  global $srcDir, $docDir; $index = '_index.cm';
+  global $rootDir, $srcDir, $docDir;
   msg(': ' . $relPath);
   @mkdir($docDir.$relPath);
 
-  if (!($f = @fopen($srcDir.$relPath.$index, 'r')))
+  if (!($f = @fopen($srcDir.$relPath.INDEX, 'r')))
     error('bad index ' . $relPath);
 
   // first @toc entry -> index
   list ($id, $title, $srcFiles) = getTocLine($f, 3);
   if (!$id || !$title)
-    error('bad toc line in: ' . $index);
+    error('bad toc line');
 
-  genFile($relPath, $index, $srcFiles);
+  genFile(false, $relPath, PROLOG, '');
+  genFile(true,  $relPath, INDEX, $srcFiles);
 
   // other @toc entries
   for (;;) {
@@ -114,17 +119,18 @@ function traverse ($relPath) {
         continue;
       }
     } else if ($idOrSub && $file) {
-      genFile($relPath, $file, $srcFiles);
+      genFile(true, $relPath, $file, $srcFiles);
       continue;
     }
 
-    error('bad toc line in: ' . $index);
+    error('bad toc line');
   }
 
   fclose($f);
 }
 
 // do it
+initDocDir();
 traverse('');
 
 // eof
