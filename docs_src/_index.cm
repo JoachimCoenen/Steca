@@ -1,7 +1,6 @@
 @toc about ; About
-@toc steca20/                     # Steca 2.0 user manual
-@toc steca21/                     # Steca 2.1 user manual
-@toc coding ; coding.cm ; Coding  # coding notes
+@toc steca/
+@toc coding ; coding.cm ; Coding
 @toc lib/
 @toc src/
 

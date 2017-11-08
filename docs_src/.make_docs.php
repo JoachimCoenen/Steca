@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-$rootDir = dirname(__FILE__).'/';
-$srcDir  = $rootDir . 'docs_src/';
-$docDir  = $rootDir . 'docs/pg/';
+chdir(dirname(__FILE__).'/../');
+$srcDir  = 'docs_src/';
+$docDir  = 'docs/pg/';
 
 const INDEX  = '_index.cm';
 const PROLOG = '_prolog';
@@ -70,18 +70,23 @@ function extractCm (&$s) {
 }
 
 function genFile ($create, $relPath, $file, $rootFiles = '') {
-  global $rootDir, $srcDir, $docDir;
+  global $srcDir, $docDir;
   $relFile = $relPath.$file;
-  if (!file_exists($srcDir.$relFile) && !$create)
+  if (!file_exists($relFile) && !file_exists($srcDir.$relFile) && !$create)
     return;
 
+  @mkdir($docDir.$relPath);
   msg('> '.$relFile);
-  $s = @file_get_contents($srcDir.$relFile); // can not-exist
+
+  // can not-exist
+  $s = @file_get_contents($relFile);
+  if (!$s)
+    $s = @file_get_contents($srcDir.$relFile);
 
   if ($rootFiles)
     foreach (array_map('trim', explode(",", $rootFiles)) as $sf)
-      if (false === ($src = @file_get_contents($srcDir.$relPath.$sf)))
-        error('bad source file ' . $relPath.$sf);
+      if (false === ($src = @file_get_contents($relPath.$sf)))
+        error('bad source (root) file ' . $relPath.$sf);
       else
         $s .= '.cm' == substr($sf, -3) ? $src : extractCm($src);
 
@@ -91,13 +96,14 @@ function genFile ($create, $relPath, $file, $rootFiles = '') {
 }
 
 // traverse source tree
+// files can be either under root or srcDir
 function traverse ($relPath) {
-  global $rootDir, $srcDir, $docDir;
+  global $srcDir;
   msg(': ' . $relPath);
-  @mkdir($docDir.$relPath);
 
-  if (!($f = @fopen($srcDir.$relPath.INDEX, 'r')))
-    error('bad index ' . $relPath);
+  if (!($f = @fopen($relPath.INDEX, 'r')))
+    if (!($f = @fopen($srcDir.$relPath.INDEX, 'r')))
+      error('bad index ' . $relPath);
 
   // first @toc entry -> index
   list ($id, $title, $srcFiles) = getTocLine($f, 3);
