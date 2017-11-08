@@ -13,8 +13,7 @@ add_subdirectory (lib)
 add_subdirectory (src)
 add_subdirectory (tests)
 
-file (GLOB_RECURSE docs_files *.cm txt/* docs/pg/*)
-set (docs_files ${docs_files} .make_docs.php)
+file (GLOB_RECURSE docs_files lib/*.cm src/*.cm docs_src/*)
 add_custom_target (docs SOURCES ${docs_files})
 
 # eof
