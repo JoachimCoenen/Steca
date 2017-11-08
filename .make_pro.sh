@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 PRO=Steca2.pro
 echo -e '# generated project\n' > $PRO
 
