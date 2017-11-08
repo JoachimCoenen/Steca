@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel.hpp"
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 #include <lib/qt/lbl.hpp>
 #include <lib/qt/wgt_inc.hpp>
 

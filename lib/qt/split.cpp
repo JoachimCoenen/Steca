@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "split.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include "layout.hpp"
 
 namespace l_qt {

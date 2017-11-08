@@ -1,4 +1,6 @@
-## [↩](..) development library
+# development library
+
+Nothing here is Steca-specific. The library can be reused for other projects.
 
 folder/file | purpose
 ---         | ---

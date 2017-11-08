@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "rio.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

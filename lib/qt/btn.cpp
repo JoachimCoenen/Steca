@@ -2,7 +2,7 @@
 
 #include "btn.hpp"
 #include "act.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 
 namespace l_qt {
 //------------------------------------------------------------------------------

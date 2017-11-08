@@ -17,7 +17,7 @@
 
 #include "panel_setup.hpp"
 #include <lib/qt/tabs.hpp>
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
 #include <core/calc/reflection.hpp>

@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "hub.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include <QApplication>
 
 namespace l_qt {

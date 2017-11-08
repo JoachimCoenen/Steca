@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "tabs.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include "layout.hpp"
 #include <QTabBar>
 

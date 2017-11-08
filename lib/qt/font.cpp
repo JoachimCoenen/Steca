@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "font.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include <QWidget>
 
 namespace l_qt {

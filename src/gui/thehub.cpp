@@ -26,7 +26,7 @@
 #include <lib/dev/typ/hash.hpp>
 #include <lib/qt/dlg_file.hpp>
 #include <lib/qt/dlg_msg.hpp>
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 
 #include <QFileSystemModel>
 #include <QSortFilterProxyModel>

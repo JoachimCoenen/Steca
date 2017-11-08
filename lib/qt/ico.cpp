@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "ico.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include <QIcon>
 
 namespace l_qt {

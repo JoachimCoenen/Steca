@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "dlg_msg.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include <QMessageBox>
 
 namespace l_qt {

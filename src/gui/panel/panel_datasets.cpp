@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_datasets.hpp"
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
 #include "model_view.hpp"

@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "chk.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include "act.hpp"
 
 namespace l_qt {

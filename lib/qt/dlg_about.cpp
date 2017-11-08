@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "dlg_about.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include "wgt_inc.hpp"
 #include <QApplication>
 #include <QDialogButtonBox>

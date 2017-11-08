@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_image.hpp"
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
 #include <QPainter>

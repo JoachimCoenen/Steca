@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "dlg_dialog.hpp"
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 
 namespace gui { namespace calc_dlg {
 //------------------------------------------------------------------------------

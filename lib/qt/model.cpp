@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #include "model.hpp"
-#include "inc/defs.inc"
+#include "defs.inc"
 #include "font.hpp"
 #include "lst.hpp"
 #include <QHeaderView>

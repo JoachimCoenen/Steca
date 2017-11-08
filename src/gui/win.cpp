@@ -30,7 +30,7 @@
 #include <QStatusBar>
 #include <QtMultimedia/QSound>
 
-#include <lib/qt/inc/defs.inc>
+#include <lib/qt/defs.inc>
 #include <lib/qt/dlg_about.hpp>
 #include <lib/qt/dlg_msg.hpp>
 #include <lib/qt/wgt_inc.hpp>
