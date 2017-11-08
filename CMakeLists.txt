@@ -13,7 +13,7 @@ add_subdirectory (lib)
 add_subdirectory (src)
 add_subdirectory (tests)
 
-file (GLOB_RECURSE docs_files lib/*.cm src/*.cm docs_src/*)
+file (GLOB_RECURSE docs_files lib/*.cm src/*.cm docs_src/* *.md)
 add_custom_target (docs SOURCES ${docs_files})
 
 # eof
