@@ -39,34 +39,59 @@ function getTocLine ($f, $n) { // split by ';' into $n parts
   return false;
 }
 
-// extract text between /*(begMark) and (endMark)*/
-// or BETWEEN //(begMark) and //(endMark)
-function findMark($s, $marks) {
-  $pos = false;
-  foreach ($marks as $i => $m) {
-    if (false !== ($p = strpos($s, $m)))
-      if (false === $pos || $p < $pos) {
-        $pos = $p; $mi = $i;  // find the first match in $s
-      }
+// extract cm text
+function extractCmBlock ($s, &$res, $at, &$end) {
+  if (false === ($beg = strpos($s, '/*[[[', $at)))
+    return false;
+  if (false === ($end = strpos($s, ']]]*/', $beg)))
+    error('no end mark');
+
+  $res = substr($s, $beg + 5, $end - $beg - 5);
+
+  // remove leftover (if any) */
+  if (false !== ($pos = strpos($res, '*/'))) {
+    $p = strpos($res, '/*');
+    if (false === $p || $pos < $p)
+      $res = substr_replace($res, '', $pos, 2);
   }
-  return false === $pos ? false : [$pos, strlen($marks[$mi])];
+
+  // remove leftover (if any) /*
+  if (false !== ($pos = strrpos($res, '/*'))) {
+    $p = strrpos($res, '*/');
+    if (false === $p || $pos > $p)
+      $res = substr_replace($res, '', $pos, 2);
+  }
+
+  return $beg;
 }
 
-function extractCm (&$s) {
-  $begMarks = ['/*::>*/', '/*::>', '//::>'];  // from longer to shorter
-  $endMarks = ['/*<::*/', '<::*/', '//<::'];
+function extractCmCode ($s, &$res, $at, &$end) {
+  if (false === ($beg = strpos($s, '//[[[', $at)))
+    return false;
+  if (false === ($end = strpos($s, '//]]]', $beg)))
+    error('no end mark');
 
-  $res = '';
-  while (false !== ($found = findMark($s, $begMarks))) {
-    list ($pos, $len) = $found;
-    $s = substr($s, $pos + $len);
-    if (false === ($found = findMark($s, $endMarks)))
-      error('no end mark');
-    list ($pos, $len) = $found;
-    $res .= substr($s, 0, $pos); $s = substr($s, $pos + $len);
+  $res = substr($s, $beg + 5, $end - $beg - 5);
+  $res = "\n~~~.cpp${res}~~~\n";
+
+  return $beg;
+}
+
+function extractCm ($s) {
+  $res = ''; $beg = 0; $endBlock = $endCode = 0;
+  for (;;) {
+    $begBlock = extractCmBlock($s, $resBlock, $beg, $endBlock);
+    $begCode  = extractCmCode($s, $resCode, $beg, $endCode);
+
+    if (false === $begBlock && false === $begCode)
+      return $res;
+
+    if (false !== $begBlock || (false === $begCode && $begBlock < $begCode)) {
+      $res .= $resBlock; $beg = $endBlock;
+    } else {
+      $res .= $resCode; $beg = $endCode;
+    }
   }
-
-  return $res;
 }
 
 function genFile ($create, $relPath, $file, $rootFiles = '') {
