@@ -29,8 +29,7 @@ folder/file | purpose
 [docs_src/](docs_src/)  | documentation source files
 [docs/](docs/)          | documentation
 [tests/](tests/)        | subproject with tests
-[.make_docs.sh](.make_docs.sh) | builds documentation; docs_src/ + lib/ + src/ ➡ docs/pg
+[.make_docs.sh](.make_docs.sh) | builds documentation; docs_src/ + lib/ + src/ ⇨ docs/pg
 [.make_pro.sh](.make_pro.sh) | makes qmake (.pro) project files; we use those for Windows builds
 [.pull.sh](.pull.sh) | git pull with submodules
 
-◆
