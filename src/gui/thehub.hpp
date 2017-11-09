@@ -23,8 +23,8 @@
 #include <core/calc/reflection.hpp>
 #include <lib/dev/defs.hpp>
 #include <lib/dev/io/path.hpp>
-#include <lib/qt/hub.hpp>
-#include <lib/qt/model.hpp>
+#include <lib/qt/app/hub.hpp>
+#include <lib/qt/view/lst.hpp>
 
 /* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
  * names (hub & thehub) *must* differ, because that's how MOC operates: on base
@@ -153,7 +153,7 @@ public:
 
   mut_(setRefl, (Range::rc r)) emits;
 
-  mut_(setNorm, (core::eNorm))   emits;
+  mut_(setNorm, (core::calc::eNorm))   emits;
 
   voi_(makeDgram, (core::Curve& dgram, core::Curve& bgFitted, core::Curve& bg, core::curve_vec& refls,
                    core::data::CombinedSets::rc, core::data::CombinedSet const*,

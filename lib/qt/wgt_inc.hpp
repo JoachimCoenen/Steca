@@ -3,19 +3,15 @@
 #pragma once
 
 // gui widgets
-#include "act.hpp"
-#include "btn.hpp"
-#include "cbo.hpp"
-#include "chk.hpp"
-#include "edit.hpp"
-#include "ico.hpp"
-#include "layout.hpp"
-#include "lbl.hpp"
-#include "lst.hpp"
-#include "rio.hpp"
-#include "spin.hpp"
-#include "split.hpp"
-#include "tabs.hpp"
+#include "wgt/btn.hpp"
+#include "wgt/cbo.hpp"
+#include "wgt/chk.hpp"
+#include "wgt/edit.hpp"
+#include "wgt/font.hpp"
+#include "wgt/ico.hpp"
+#include "wgt/lbl.hpp"
+#include "wgt/rio.hpp"
+#include "wgt/spin.hpp"
 
 namespace l_qt { namespace make_widgets {
 //------------------------------------------------------------------------------

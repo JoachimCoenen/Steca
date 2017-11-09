@@ -1,12 +1,17 @@
-# dev_lib/inc [↩](../nav.md)
+# some types for specific purposes
 
-* `sz2.h`:    2-d (uint) size
-* `ij.h`:     2-d (int) coordinates
-* `xy.h`:     2-d (real) coordinates
-* `trg.h`:    degrees and radians (trigonometry)
-* `vec.h`:    vector (container)
-* `hash.h`:   hash (container)
-* `map.h`:    map (container)
-* `arr2.h`:   2-d array (container)
-* `cache.h`:  cache (container)
-* `thread.h`:  parallelism
+folder/file               | purpose
+---                       | ---
+[arr2.hpp](arr2.hpp)      | 2-dimensional array
+[buf.hpp](buf.hpp)        | a simple buffer
+[cache.hpp](cache.hpp)    | a MRU cache
+[gon.hpp](gon.hpp)        | γωνία (degrees and radians)
+[hash.hpp](hash.hpp)      | hash (from std::unordered_map)
+[ij.hpp](ij.hpp)          | 2D integral coordinates
+[map.hpp](map.hpp)        | map (from std::map)
+[set.hpp](set.hpp)        | set (from std::set)
+[uset.hpp](uset.hpp)      | unordered set (from std::unordered_set)
+[sz2.hpp](sz2.hpp)        | 2D integral size
+[thread.hpp](thread.hpp)  | thread(s) (from std::thread)
+[vec.hpp](vec.hpp)        | vector (from std::vector<T>)
+[xy.hpp](xy.hpp)          | 2D real coordinates

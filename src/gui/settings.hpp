@@ -17,7 +17,7 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
-#include <lib/qt/settings.hpp>
+#include <lib/qt/app/settings.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

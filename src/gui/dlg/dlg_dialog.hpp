@@ -17,8 +17,9 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
-#include <lib/qt/layout.hpp>
+#include <lib/qt/win/layout.hpp>
 #include <lib/qt/wgt_inc.hpp>
+#include <lib/qt/win/tabs.hpp>
 #include "../thehub.hpp"
 #include <QFrame>
 

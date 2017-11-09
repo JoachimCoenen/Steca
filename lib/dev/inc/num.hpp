@@ -6,7 +6,7 @@
 namespace l {
 //------------------------------------------------------------------------------
 
-// number type aliases; string type in debug mode
+// number type aliases; strong type in debug mode
 #ifndef NDEBUG
   #define use_int_(T, Base, ...)                  \
   struct T {                                      \

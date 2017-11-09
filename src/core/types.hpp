@@ -17,7 +17,7 @@
 
 #pragma once
 #include <lib/dev/inc/flt.hpp>
-#include <lib/dev/typ/trg.hpp>
+#include <lib/dev/typ/gon.hpp>
 #include <lib/dev/typ/vec.hpp>
 #include <lib/dev/typ/xy.hpp>
 

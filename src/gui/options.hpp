@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-#include <core/typ/options.hpp>
 #include <core/typ/range.hpp>
 
 namespace gui {

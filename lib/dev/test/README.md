@@ -1,3 +1,7 @@
-# dev_lib/test [↩](../nav.md)
+# support for unit tests
 
-Support for unit tests.
+folder/file               | purpose
+---                       | ---
+[test.inc](test.inc)      | to include in a source file
+[doctest.sh](doctest.sh)  | Viktor Kirilov's single-header testing framework
+[tests_main.cpp](tests_main.cpp) | main()

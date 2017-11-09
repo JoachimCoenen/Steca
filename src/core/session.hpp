@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 #pragma once
-#include "typ/options.hpp"
 #include "data/files.hpp"
 #include "io/json.hpp"
 #include "typ/curve.hpp"

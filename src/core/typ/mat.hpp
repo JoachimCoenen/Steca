@@ -17,7 +17,7 @@
 
 #pragma once
 #include <lib/dev/defs.hpp>
-#include <lib/dev/typ/trg.hpp>
+#include <lib/dev/typ/gon.hpp>
 
 namespace core {
 

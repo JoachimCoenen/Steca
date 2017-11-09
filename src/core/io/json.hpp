@@ -17,7 +17,6 @@
 
 #pragma once
 #include <lib/dev/io/json.hpp>
-#include <lib/dev/typ/factory.hpp>
 
 namespace core {
 

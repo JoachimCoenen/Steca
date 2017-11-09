@@ -18,6 +18,7 @@
 #include "panel_diffractogram.hpp"
 #include <lib/qt/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
+#include <lib/qt/win/tabs.hpp>
 #include <core/calc/fit_params.hpp>
 #include "../QCP/qcustomplot.h"
 #include "../thehub.hpp"

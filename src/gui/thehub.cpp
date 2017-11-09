@@ -24,8 +24,8 @@
 #include <lib/dev/io/log.hpp>
 #include <lib/dev/io/path.hpp>
 #include <lib/dev/typ/hash.hpp>
-#include <lib/qt/dlg_file.hpp>
-#include <lib/qt/dlg_msg.hpp>
+#include <lib/qt/dlg/dlg_file.hpp>
+#include <lib/qt/dlg/dlg_msg.hpp>
 #include <lib/qt/defs.inc>
 
 #include <QFileSystemModel>
@@ -432,7 +432,7 @@ void Hub::setRefl(Range::rc r) emits {
 // TODO emitFit(base::fit);
 }
 
-void Hub::setNorm(core::eNorm norm) {
+void Hub::setNorm(core::calc::eNorm norm) {
 // ... base::remBg(r);
 // TODO emitFit(base::fit);
 }

@@ -16,8 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/qt/lst.hpp>
-#include <lib/qt/model.hpp>
+#include <lib/qt/view/lst.hpp>
 #include <core/calc/reflection.hpp>
 #include "../refhub.hpp"
 

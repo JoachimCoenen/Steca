@@ -17,7 +17,7 @@
 
 #pragma once
 #include "panel.hpp"
-#include <lib/qt/lst.hpp>
+#include <lib/qt/view/lst.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

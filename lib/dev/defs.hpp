@@ -21,7 +21,8 @@
   #define _if_clang_(...)
 #endif
 
-#include "inc/macros.inc"
+// needed in macros with templates
+#define COMMA ,
 
 //------------------------------------------------------------------------------
 // fabulous macros for declarations of structures, under these assumptions:

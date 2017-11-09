@@ -16,7 +16,8 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/qt/layout.hpp>
+#include <lib/qt/win/layout.hpp>
+#include <lib/qt/win/tabs.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

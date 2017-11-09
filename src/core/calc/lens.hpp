@@ -19,9 +19,15 @@
 #include "../data/sets.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"
-#include "../typ/options.hpp"
 
 namespace core { namespace calc {
+//------------------------------------------------------------------------------
+
+enum class eNorm {
+  NONE,
+  MONITOR, DELTA_MONITOR, DELTA_TIME, BACKGROUND,
+};
+
 //------------------------------------------------------------------------------
 // View the dataset through a lens (thanks, Antti!)
 

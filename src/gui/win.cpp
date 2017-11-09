@@ -18,7 +18,12 @@
 #include "win.hpp"
 #include "../manifest.h"
 #include "app.hpp"
-#include "panel/inc.inc"
+#include "panel/panel_datasets.hpp"
+#include "panel/panel_diffractogram.hpp"
+#include "panel/panel_files.hpp"
+#include "panel/panel_image.hpp"
+#include "panel/panel_metadata.hpp"
+#include "panel/panel_setup.hpp"
 #include "settings.hpp"
 #include "dlg/dlg_polefigure.hpp"
 #include "dlg/dlg_diagrams.hpp"
@@ -31,9 +36,11 @@
 #include <QtMultimedia/QSound>
 
 #include <lib/qt/defs.inc>
-#include <lib/qt/dlg_about.hpp>
-#include <lib/qt/dlg_msg.hpp>
+#include <lib/qt/dlg/dlg_about.hpp>
+#include <lib/qt/dlg/dlg_msg.hpp>
 #include <lib/qt/wgt_inc.hpp>
+#include <lib/qt/win/layout.hpp>
+#include <lib/qt/win/split.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------

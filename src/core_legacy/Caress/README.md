@@ -1,1 +1,0 @@
-Original Caress-handling code.

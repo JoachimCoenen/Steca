@@ -34,7 +34,7 @@ dcl_(FitParams) SHARED CLONED
 
   FitParams();
 
-  atr_(core::eNorm, norm)       = core::eNorm::NONE;
+  atr_(core::calc::eNorm, norm) = core::calc::eNorm::NONE;
   atr_(uint,   bgPolyDegree);
   atr_(Ranges, bgRanges);
   atr_(Image::shp,      corrImage);

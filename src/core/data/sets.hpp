@@ -19,10 +19,10 @@
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/io/path.hpp>
-#include <lib/dev/typ/bag.hpp>
 #include <lib/dev/typ/hash.hpp>
 #include <lib/dev/typ/map.hpp>
 #include <lib/dev/typ/set.hpp>
+#include <lib/dev/typ/uset.hpp>
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ protected:
   MetaDictBase(rc);
 dcl_end
 
-dcl_sub_(KeyBag, l::bag<str>) SHARED
+dcl_sub_(KeyBag, l::uset<str>) SHARED
 dcl_end
 
 //------------------------------------------------------------------------------

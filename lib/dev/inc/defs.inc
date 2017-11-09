@@ -152,7 +152,7 @@ template <typename T> void mut_swap(T& t1, T& t2) {
 #include "num.hpp"
 #include "ptr.hpp"
 #include "str.hpp"
-#include "str_fmt.hpp"
+#include "str_cat.hpp"
 #include "vecs.hpp"
 #include <cmath>
 #include <cctype>

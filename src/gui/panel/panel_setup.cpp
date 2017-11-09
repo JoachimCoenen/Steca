@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #include "panel_setup.hpp"
-#include <lib/qt/tabs.hpp>
+#include <lib/qt/win/tabs.hpp>
 #include <lib/qt/defs.inc>
 #include <lib/qt/wgt_inc.hpp>
 #include "../thehub.hpp"
