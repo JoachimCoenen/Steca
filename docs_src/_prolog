@@ -2,6 +2,8 @@
 @chr b  *
 @chr code ~
 
-@chr macro $
+@chr squote '
+@chr dquote "
 
+@chr macro $
 @def S2 Steca2

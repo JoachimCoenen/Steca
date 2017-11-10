@@ -1,5 +1,8 @@
 // (dev_lib)
-// common definitions, include in a *header* file
+/*[[
+This file contains common definitions and should be included, directly or
+indirectly probably into every /header/ file in the project.
+]]*/
 
 #pragma once
 
@@ -8,21 +11,42 @@
 #pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
-// clang-special code guard
+//[[- Macro ~_if_clang_~ guards clang-specific code:
 #ifdef __clang__
   #define _if_clang_(...) __VA_ARGS__
 #else
   #define _if_clang_(...)
 #endif
+//]]
 
-// needed in macros with templates
+/*[[
+Example:
+~~~.cpp
+int v = 1;
+...
+switch (v) {
+case 0:
+  ... // do something and fall through (no break)
+  _if_clang_([[clang::fallthrough]];) // suppress clang warning
+default:
+  ...
+}
+~~~
+]]*/
+
+//[[- Macros with templates need a non-comma comma:
 #define COMMA ,
+//]]
+
+/*[[
+Most data structures (TODO see Coding)
+]]*/
 
 //------------------------------------------------------------------------------
 // fabulous macros for declarations of structures, under these assumptions:
 // default access to data: public, unless there is a reason to hide
 //                         therefore no need to have getters
-// default ro mode:        all is immutable, unless explicitely sated otherwise
+// default ro mode:        all is immutable, unless explicitly sated otherwise
 
 // declaration of self-referencing types, very useful:
 // Self: this very type; rc: const reference, ref: reference; rval: r-value

@@ -45,9 +45,9 @@ function getTocLine ($f, $n) {
 
 // extract cm text from string $s
 function extractCmBlock ($s, &$res, $at, &$end) {
-  if (false === ($beg = strpos($s, '/*[[[', $at)))
+  if (false === ($beg = strpos($s, "\n/*[[", $at)))
     return false;
-  if (false === ($end = strpos($s, ']]]*/', $beg)))
+  if (false === ($end = strpos($s, "\n]]*/", $beg)))
     error('no end mark');
 
   $res = substr($s, $beg + 5, $end - $beg - 5);
@@ -70,13 +70,15 @@ function extractCmBlock ($s, &$res, $at, &$end) {
 }
 
 function extractCmCode ($s, &$res, $at, &$end) {
-  if (false === ($beg = strpos($s, '//[[[', $at)))
+  if (false === ($beg = strpos($s, "\n//[[", $at)))
     return false;
-  if (false === ($end = strpos($s, '//]]]', $beg)))
+  if (false === ($end = strpos($s, "\n//]]", $beg)))
     error('no end mark');
 
-  $res = substr($s, $beg + 5, $end - $beg - 5);
-  $res = "\n~~~.cpp${res}~~~\n";
+  $endLine = strpos($s, "\n", $beg + 1);
+  $head = substr($s, $beg + 5, $endLine - $beg - 5);
+  $body = substr($s, $endLine + 1, $end - $endLine);
+  $res = "\n$head\n~~~.cpp\n${body}~~~\n";
 
   return $beg;
 }
@@ -90,7 +92,7 @@ function extractCm ($s) {
     if (false === $begBlock && false === $begCode)
       return $res;
 
-    if (false !== $begBlock || (false === $begCode && $begBlock < $begCode)) {
+    if (false !== $begBlock && (false === $begCode || $begBlock < $begCode)) {
       $res .= $resBlock; $beg = $endBlock;
     } else {
       $res .= $resCode; $beg = $endCode;
@@ -99,7 +101,7 @@ function extractCm ($s) {
 }
 
 // generate a file in $docDir, from a corresponding one in root or $srcDir
-function genFile ($create, $relPath, $file, $extra, $srcFiles) {
+function genFile ($create, $relPath, $file, $before, $after, $srcFiles) {
   global $srcDir, $docDir;
   $relFile = $relPath.$file;
   if (!file_exists($relFile) && !file_exists($srcDir.$relFile) && !$create)
@@ -110,8 +112,7 @@ function genFile ($create, $relPath, $file, $extra, $srcFiles) {
   if (!$s)
     $s = @file_get_contents($srcDir.$relFile);
 
-  $s .= $extra;
-
+  $s = $before . $s . $after;
   if ($srcFiles)
     foreach (array_map('trim', explode(",", $srcFiles)) as $sf)
       if (false === ($src = @file_get_contents($relPath.$sf)))
@@ -138,7 +139,7 @@ function traverseDocs ($relPath = '') {
 
   @mkdir($docDir.$relPath);
 
-  genFile(false, $relPath, PROLOG, '', '');
+  genFile(false, $relPath, PROLOG, '', '', '');
   $tocCodeFiles = $codeFileList = '';
 
   // other @toc entries
@@ -153,8 +154,8 @@ function traverseDocs ($relPath = '') {
           $fileId = str_replace('/', '_', $relPath) . "_$file";
           $tocCodeFiles .= "\n@toc $fileId ; $file.cm ; $file ; $file";
           $ghUrl = "https://github.com/scgmlz/Steca2/blob/develop/$relPath$file";
-          $codeFileList .= "* {:{img:/ico/github.png}|$ghUrl} {:$fileId}\n";
-          genFile(true, $relPath, "$file.cm", '', $file);
+          $codeFileList .= "- {:{img:/ico/github.png}|$ghUrl} {:$fileId}\n";
+          genFile(true, $relPath, "$file.cm", "= $file\n", '', $file);
         }
       }
 
@@ -165,7 +166,7 @@ function traverseDocs ($relPath = '') {
         continue;
       }
     } else if ($id && $file) {        // a regular toc entry
-      genFile(true, $relPath, $file, '', $srcFiles);
+      genFile(true, $relPath, $file, '', '', $srcFiles);
       continue;
     }
 
@@ -173,8 +174,9 @@ function traverseDocs ($relPath = '') {
   }
 
   if ($codeFileList)
-    $codeFileList = "\n==Files:\n$codeFileList\n";
-  genFile(true,  $relPath, INDEX, $tocCodeFiles.$codeFileList, $indexSrcFiles);
+    $codeFileList = "\n== Files:\n$codeFileList\n";
+
+  genFile(true,  $relPath, INDEX, '', $tocCodeFiles.$codeFileList, $indexSrcFiles);
   fclose($f);
 }
 

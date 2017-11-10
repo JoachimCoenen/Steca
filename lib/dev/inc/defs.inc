@@ -1,12 +1,12 @@
 // (qt_lib)
 // common definitions, include in a *source* file
 
-/*[[[
+/*[[
 Into each header file in your project, include (directly or indirectly) ~defs.inc~
 ~~~
 #include <lib/dev/inc/defs.inc>
 ~~~
-]]]*/
+]]*/
 
 #ifdef DEV_LIB_DEFS_INC
   #error inlude only once
@@ -139,11 +139,10 @@ private:
 // ad-hoc mutability
 
 #include <utility>
-//[[[
 template <typename T> void mut_swap(T& t1, T& t2) {
   std::swap(mut(t1), mut(t2));
 }
-//]]]
+
 //------------------------------------------------------------------------------
 // includes
 
