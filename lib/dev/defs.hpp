@@ -3,12 +3,6 @@
 
 #pragma once
 
-// compiler-dependent diagnostic messages
-#if defined(__clang__) || defined(__GNUC__)
-  #pragma GCC diagnostic ignored "-Wswitch-enum"
-  #pragma GCC diagnostic ignored "-Wpadded"
-#endif
-
 #ifdef __clang__
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wreserved-id-macro"

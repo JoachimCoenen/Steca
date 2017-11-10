@@ -376,19 +376,19 @@ typedef struct {
   Range::rv_t min, max;
 } min_max;
 
-static bool RANGES_EQ(Ranges::rc rs, l::vec<min_max> mm) {
-  if (rs.size() != mm.size())
-    return false;
+//static bool RANGES_EQ(Ranges::rc rs, l::vec<min_max> mm) {
+//  if (rs.size() != mm.size())
+//    return false;
 
-  for_i_(rs.size()) {
-    auto r = rs.at(i);
-    auto m = mm.at(i);
-    if (r.min != m.min || r.max != m.max)
-      return false;
-  }
+//  for_i_(rs.size()) {
+//    auto r = rs.at(i);
+//    auto m = mm.at(i);
+//    if (r.min != m.min || r.max != m.max)
+//      return false;
+//  }
 
-  return true;
-}
+//  return true;
+//}
 
 static bool RANGES_EQ(Ranges::rc rs1, Ranges::rc rs2) {
   if (rs1.size() != rs2.size())

@@ -513,7 +513,7 @@ CombinedSet::shr CombinedSets::combineAll() const {
     for (auto&& s : cs())
       mut(set()).add(s);
   return set;
-};
+}
 
 void CombinedSets::resetLazies() {
   lazyMon = lazyDTim = lazyDMon = l::flt32_nan;

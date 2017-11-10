@@ -432,7 +432,7 @@ void Hub::setRefl(Range::rc r) emits {
 // TODO emitFit(base::fit);
 }
 
-void Hub::setNorm(core::calc::eNorm norm) {
+void Hub::setNorm(core::calc::eNorm) {
 // ... base::remBg(r);
 // TODO emitFit(base::fit);
 }

@@ -23,7 +23,8 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 FitParams::FitParams()
-: corrEnabled(false), bgPolyDegree(0), bgRanges(), bg(), refls(), intenScale(1), geometry(), avgScaleIntens(false), angleMapCache(l::pint(12)) {}
+: bgPolyDegree(0), bgRanges(), bg(), refls(), intenScale(1), geometry()
+, corrEnabled(false), avgScaleIntens(false), angleMapCache(l::pint(12)) {}
 
 AngleMap::shp FitParams::angleMap(data::Set::rc set) const {
 //  Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);

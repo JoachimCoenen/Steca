@@ -117,7 +117,7 @@ str_vec const PeakFun::sTypes = {
 
 strc PeakFun::sType() const {
   return sTypes.at(uint(type()));
-};
+}
 
 PeakFun::PeakFun() : guessedPeak(), guessedFWHM(l::real_nan) {}
 

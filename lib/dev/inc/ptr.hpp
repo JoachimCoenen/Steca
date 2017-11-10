@@ -358,7 +358,7 @@ template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
 
 // clone it
 #define CLONED \
-  virtual mth_(Self*, clone, ()) RET_(new Self(*this))
+  mth_(Self*, clone, ()) RET_(new Self(*this))
 
 //------------------------------------------------------------------------------
 }

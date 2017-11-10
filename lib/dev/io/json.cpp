@@ -125,6 +125,8 @@ static Json::Val* Json_Json(Json::Typ typ) {
   case Json::OBJ:
     return new Json::ValObj(Json::Obj());
   }
+
+  NEVER_RETURN(0) // keep gcc quiet
 }
 
 Json::Json(Typ typ)   : val(Json_Json(typ)) {}
