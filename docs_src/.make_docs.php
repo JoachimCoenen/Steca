@@ -115,12 +115,10 @@ function genFile ($create, $relPath, $file, $extra, $srcFiles) {
   if ($srcFiles)
     foreach (array_map('trim', explode(",", $srcFiles)) as $sf)
       if (false === ($src = @file_get_contents($relPath.$sf)))
-        error('bad source (root) file ' . $relPath.$sf);
+        error('bad source file ' . $relPath.$sf);
       else
         $s .= '.cm' == substr($sf, -3) ? $src : extractCm($src);
 
-  if (!$s)  // no read nor generated content
-    error('cannot make ' . $relFile);
   file_put_contents($docDir.$relFile, $s);
 }
 
@@ -141,7 +139,7 @@ function traverseDocs ($relPath = '') {
   @mkdir($docDir.$relPath);
 
   genFile(false, $relPath, PROLOG, '', '');
-  $extraIndex1 = $extraIndex2 = '';
+  $tocCodeFiles = $codeFileList = '';
 
   // other @toc entries
   for (;;) {
@@ -151,10 +149,11 @@ function traverseDocs ($relPath = '') {
     list ($id, $file, $title, $srcFiles) = $l;
     if ('@code' === $id) {            // automatic toc for code files
       foreach (scandir($relPath) as $_ => $file) {
-        if (in_array(substr($file, -4), ['.hppx', '.cppx', '.inc'])) {
+        if (in_array(substr($file, -4), ['.hpp', '.cpp', '.inc'])) {
           $fileId = str_replace('/', '_', $relPath) . "_$file";
-          $extraIndex1 .= "\n@toc $fileId ; $file.cm ; $file ; $file";
-          $extraIndex2 .= " {:$fileId}";
+          $tocCodeFiles .= "\n@toc $fileId ; $file.cm ; $file ; $file";
+          $ghUrl = "https://github.com/scgmlz/Steca2/blob/develop/$relPath$file";
+          $codeFileList .= "* {:{img:/ico/github.png}|$ghUrl} {:$fileId}\n";
           genFile(true, $relPath, "$file.cm", '', $file);
         }
       }
@@ -173,9 +172,9 @@ function traverseDocs ($relPath = '') {
     error('bad toc line');
   }
 
-  if ($extraIndex2)
-    $extraIndex2 = "\nFiles: $extraIndex2\n\n";
-  genFile(true,  $relPath, INDEX, $extraIndex1.$extraIndex2, $indexSrcFiles);
+  if ($codeFileList)
+    $codeFileList = "\n==Files:\n$codeFileList\n";
+  genFile(true,  $relPath, INDEX, $tocCodeFiles.$codeFileList, $indexSrcFiles);
   fclose($f);
 }
 
