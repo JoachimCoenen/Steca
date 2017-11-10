@@ -1,19 +1,6 @@
 #!/usr/bin/php
 <?php
 
-chdir(dirname(__FILE__).'/../');
-$srcDir  = 'docs_src/';
-$docDir  = 'docs/pg/';
-
-const INDEX  = '_index.cm';
-const PROLOG = '_prolog';
-
-function initDocDir () {
-  $prolog = PROLOG; global $docDir;
-  exec("rm -rf $docDir");
-  exec("rsync -r --exclude=\*.cm --exclude=$prolog docs_src/* $docDir");
-}
-
 // helpers
 function msg ($msg) {
   error_log($msg);
@@ -23,7 +10,24 @@ function error ($msg) {
   msg($msg); exit(-1);
 }
 
-function getTocLine ($f, $n) { // split by ';' into $n parts
+// cwd to root
+chdir(dirname(__FILE__).'/../');
+$srcDir  = 'docs_src/';
+$docDir  = 'docs/pg/';
+
+const INDEX  = '_index.cm';
+const PROLOG = '_prolog';
+const CODE   = '_code';
+
+// $docDir as a copy of auxiliary files (not .cm nor prolog) from $srcDir
+function initDocDir () {
+  $prolog = PROLOG; global $srcDir, $docDir;
+  exec("rm -rf $docDir");
+  exec("rsync -r --exclude=\*.cm --exclude=$prolog $srcDir* $docDir");
+}
+
+// get the next toc line from file $f, split by ';' into $n parts
+function getTocLine ($f, $n) {
   $l = '';
   while (!feof($f)) {
     $l = fgets($f);
@@ -39,7 +43,7 @@ function getTocLine ($f, $n) { // split by ';' into $n parts
   return false;
 }
 
-// extract cm text
+// extract cm text from string $s
 function extractCmBlock ($s, &$res, $at, &$end) {
   if (false === ($beg = strpos($s, '/*[[[', $at)))
     return false;
@@ -94,22 +98,22 @@ function extractCm ($s) {
   }
 }
 
-function genFile ($create, $relPath, $file, $rootFiles = '') {
+// generate a file in $docDir, from a corresponding one in root or $srcDir
+function genFile ($create, $relPath, $file, $extra, $srcFiles) {
   global $srcDir, $docDir;
   $relFile = $relPath.$file;
   if (!file_exists($relFile) && !file_exists($srcDir.$relFile) && !$create)
     return;
-
-  @mkdir($docDir.$relPath);
-  msg('> '.$relFile);
 
   // can not-exist
   $s = @file_get_contents($relFile);
   if (!$s)
     $s = @file_get_contents($srcDir.$relFile);
 
-  if ($rootFiles)
-    foreach (array_map('trim', explode(",", $rootFiles)) as $sf)
+  $s .= $extra;
+
+  if ($srcFiles)
+    foreach (array_map('trim', explode(",", $srcFiles)) as $sf)
       if (false === ($src = @file_get_contents($relPath.$sf)))
         error('bad source (root) file ' . $relPath.$sf);
       else
@@ -120,48 +124,64 @@ function genFile ($create, $relPath, $file, $rootFiles = '') {
   file_put_contents($docDir.$relFile, $s);
 }
 
-// traverse source tree
-// files can be either under root or srcDir
-function traverse ($relPath) {
-  global $srcDir;
-  msg(': ' . $relPath);
+// traverse source tree in (root ∪ $srcDir)
+function traverseDocs ($relPath = '') {
+  global $srcDir, $docDir;
+  msg('. ' . $relPath);
 
   if (!($f = @fopen($relPath.INDEX, 'r')))
     if (!($f = @fopen($srcDir.$relPath.INDEX, 'r')))
       error('bad index ' . $relPath);
 
   // first @toc entry -> index
-  list ($id, $title, $srcFiles) = getTocLine($f, 3);
+  list ($id, $title, $indexSrcFiles) = getTocLine($f, 3);
   if (!$id || !$title)
     error('bad toc line');
 
-  genFile(false, $relPath, PROLOG, '');
-  genFile(true,  $relPath, INDEX, $srcFiles);
+  @mkdir($docDir.$relPath);
+
+  genFile(false, $relPath, PROLOG, '', '');
+  $extraIndex1 = $extraIndex2 = '';
 
   // other @toc entries
   for (;;) {
     if (false === ($l = getTocLine($f, 4)))
       break;
 
-    list ($idOrSub, $file, $title, $srcFiles) = $l;
-    if ($idOrSub && !$file) {
-      if ('/' === substr($idOrSub, -1)) {
-        traverse($relPath.$idOrSub);
+    list ($id, $file, $title, $srcFiles) = $l;
+    if ('@code' === $id) {            // automatic toc for code files
+      foreach (scandir($relPath) as $_ => $file) {
+        if (in_array(substr($file, -4), ['.hppx', '.cppx', '.inc'])) {
+          $fileId = str_replace('/', '_', $relPath) . "_$file";
+          $extraIndex1 .= "\n@toc $fileId ; $file.cm ; $file ; $file";
+          $extraIndex2 .= " {:$fileId}";
+          genFile(true, $relPath, "$file.cm", '', $file);
+        }
+      }
+
+      continue;
+    } else if ($id && !$file) {
+      if ('/' === substr($id, -1)) {  // subdir
+        traverseDocs($relPath.$id);
         continue;
       }
-    } else if ($idOrSub && $file) {
-      genFile(true, $relPath, $file, $srcFiles);
+    } else if ($id && $file) {        // a regular toc entry
+      genFile(true, $relPath, $file, '', $srcFiles);
       continue;
     }
 
     error('bad toc line');
   }
 
+  if ($extraIndex2)
+    $extraIndex2 = "\nFiles: $extraIndex2\n\n";
+  genFile(true,  $relPath, INDEX, $extraIndex1.$extraIndex2, $indexSrcFiles);
   fclose($f);
 }
 
 // do it
+msg('-- docs --');
 initDocDir();
-traverse('');
+traverseDocs();
 
 // eof
