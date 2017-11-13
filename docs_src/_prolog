@@ -1,9 +1,0 @@
-@chr em /
-@chr b  *
-@chr code ~
-
-@chr squote '
-@chr dquote "
-
-@chr macro $
-@def S2 Steca2

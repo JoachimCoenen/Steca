@@ -1,12 +1,9 @@
 // (qt_lib)
 // common definitions, include in a *source* file
 
-/*[[
-Into each header file in your project, include (directly or indirectly) ~defs.inc~
-~~~
-#include <lib/dev/inc/defs.inc>
-~~~
-]]*/
+/*
+Include this file, directly or indirectly, into each header file in your project.
+*/
 
 #ifdef DEV_LIB_DEFS_INC
   #error inlude only once

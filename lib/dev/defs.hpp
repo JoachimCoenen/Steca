@@ -1,8 +1,8 @@
 // (dev_lib)
-/*[[
+/*
 This file contains common definitions and should be included, directly or
 indirectly probably into every /header/ file in the project.
-]]*/
+*/
 
 #pragma once
 
@@ -11,36 +11,16 @@ indirectly probably into every /header/ file in the project.
 #pragma GCC diagnostic ignored "-Wreserved-id-macro"
 #endif
 
-//[[- Macro ~_if_clang_~ guards clang-specific code:
+// clang-specific code
 #ifdef __clang__
   #define _if_clang_(...) __VA_ARGS__
 #else
   #define _if_clang_(...)
 #endif
-//]]
 
-/*[[
-Example:
-~~~.cpp
-int v = 1;
-...
-switch (v) {
-case 0:
-  ... // do something and fall through (no break)
-  _if_clang_([[clang::fallthrough]];) // suppress clang warning
-default:
-  ...
-}
-~~~
-]]*/
 
-//[[- Macros with templates need a non-comma comma:
+// macros with templates need a non-comma comma:
 #define COMMA ,
-//]]
-
-/*[[
-Most data structures (TODO see Coding)
-]]*/
 
 //------------------------------------------------------------------------------
 // fabulous macros for declarations of structures, under these assumptions:
