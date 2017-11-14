@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <lib/dev/defs.hpp>
+#include <lib/qt/defs.hpp>
 #include <QObject>
 
 namespace gui {
@@ -33,4 +33,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

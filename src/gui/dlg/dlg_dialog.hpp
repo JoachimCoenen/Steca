@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include <lib/qt/defs.hpp>
 #include <lib/qt/win/layout.hpp>
 #include <lib/qt/wgt_inc.hpp>
 #include <lib/qt/win/tabs.hpp>
@@ -91,4 +91,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof
+// eof DOCS

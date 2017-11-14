@@ -27,8 +27,8 @@ dcl_reimpl2_(fin, fio, std::fstream)
   fin();
   fin(path::rc, bool binary);
 
-  bol_mut_(hasMore, ());
-  mth_mut_(pos_type, tell, ());
+  bol_(hasMore, ());
+  mth_(pos_type, tell, ());
 
   mth_mut_(std::istream&, asStream, ());
 
@@ -89,4 +89,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

@@ -21,7 +21,7 @@
 #include "refhub.hpp"
 #include <core/session.hpp>
 #include <core/calc/reflection.hpp>
-#include <lib/dev/defs.hpp>
+#include <lib/qt/defs.hpp>
 #include <lib/dev/io/path.hpp>
 #include <lib/qt/app/hub.hpp>
 #include <lib/qt/view/lst.hpp>
@@ -204,4 +204,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

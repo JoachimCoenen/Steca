@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include <lib/qt/defs.hpp>
 #include <lib/qt/app/settings.hpp>
 
 namespace gui {
@@ -34,4 +34,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

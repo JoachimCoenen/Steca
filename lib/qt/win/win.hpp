@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <QMainWindow>
 
 namespace l_qt {
@@ -36,4 +36,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

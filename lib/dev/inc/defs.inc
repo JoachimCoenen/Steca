@@ -1,7 +1,7 @@
-// (qt_lib)
+// (dev_lib)
 // common definitions, include in a *source* file
 
-/*
+/**
 Include this file, directly or indirectly, into each header file in your project.
 */
 

@@ -68,4 +68,4 @@ PanelDatasets::PanelDatasets(Hub& hub) : base(""), view(nullptr) {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

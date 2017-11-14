@@ -7,4 +7,6 @@ CMakeLists.txt.user
 *.pro
 *.pro.user
 
-docs/pg
+# Doxygen
+*.tmp
+html/

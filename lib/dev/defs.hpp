@@ -1,127 +1,251 @@
 // (dev_lib)
-/*
+
+/** @file
+
 This file contains common definitions and should be included, directly or
 indirectly probably into every /header/ file in the project.
+
+Specifically, here find you a set of macros for declarations of structures.
+They are based on a number of fundamental assumptions and choices:
+
+- @b Public visibility, therefore the preference to use @c struct over @c
+class. Both are equivalent in C++, except for the default visibility of members
+(@c public resp. @c private). Public visibility should be the default.
+- @b Immutability. If data members are publicly visible, they should be
+read-only (marked as @c const) and mutated after creation only in exceptional,
+explicitely allowed circumstances.
+- @b Access methods. Since data members are publicly visible and immutable,
+there is no need for 'getters'.
+- @b Sharing. Immutable data are shared (passed around) by const references and
+shared (reference counted) pointers. Use of move semantics is therefore discouraged.
+
+Since most types are immutable, it is necessary to make them mutable in cases
+when a value needs to be changed. That, of course, must be done judiciously,
+above all it is necessary to ensure that the modifying agent is the sole one
+that has access to the data, or that changing the data has no unexpected impact
+to others that may have access to the data. Typically, one would modify:
+- data members in a constructor
+- local data that are not shared
+
+There are a set of macros that help with and also enforce the above rules in
+declarations of data types. The macrost inject @c const modifiers. They are:
+- @c dcl_, @c dcl_base_, @c dcl_sub_, @c dcl_sub2_, @c  dcl_reimpl_,
+  @c dcl_reimpl2_, @c dcl_end: delimit each declaration
+- @c atr_, @c ptr_, @c ref_, @c cst_: these declare data members
+- @c fry_, @c mth_, @c mth_mut_, @c bol_, @c bol_mut_, @c cop_, @c voi_,
+  @c mut_, @c set_ - declare methods
+
+The following templates allow lifting (casting away) the const-ness of a type
+or a data element: @c mut_typ, @c mut, @c mutp.
+
+A few very useful types are defined or forward-declared here:
+- @c uint, @c uint8, @c int8, @c uint16, @c int16, @c uint32, @c int32, @c
+uint64, @c int64 - signed and unsigned integers of various sizes
+- @c sz_t - a size type
+- @c flt32, @c flt64, @c real - floating point numbers (real ~ flt64)
+- @c bol_vec, @c int_vec, @c uint_vec, @c real_vec - vectors
+- @c str, @c str_vec - a string type and a string vector
+- @c strc, @c pcstr - a const reference to str (read: (str)c / st(rc)) and a
+  C-style string pointer
+
+Finally, a few macros:
+- @c may_err, @c will_err - exception annotation
+- @c EXPECT_, @c ENSURE_, @c NEED_(cond)  (assert(cond), cond)
+
+
+Note: Yoda want we to be, prefer we thus <code>type const</code> over
+<code>const type</code>.
+
+Note: Yoda wants you to be brief. Therefore well-known and oft-used names are
+used in their three-letter form. Some even have a one-letter form. And a few
+are two-letter. Zusammengestzte Wörter können aus diesen Partikel gebildet
+werden.
+
+Here is a vocabulary:
+
+- @b arg argument
+- @b atr attribute
+- @b beg begin
+- @b bol boolean
+- @b col, @b cl column
+- @b cst, @b c const
+- @b dbl double
+- @b dcl declare / declaration
+- @b def define / definition
+- @b end end
+- @b err error / to err
+- @b exc exception
+- @b flt float
+- @b fry factory
+- @b int integer
+- @b mth method
+- @b mut mutable / mutate
+- @b no, number (ordinal)
+- @b num, @b n number (how many)
+- @b pos position
+- @b ptr, @b p pointer
+- @b row, @b rw row
+- @b set set / setter
+- @b str string
+- @b res result
+- @b ret return
+- @b sub sub(structure, etc.)
+- @b sz  size
+- @b typ type
+- @b val, @b v value
+- @b voi void
+
 */
 
 #pragma once
 
 #ifdef __clang__
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wreserved-id-macro"
+// TODO #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+// TODO #pragma GCC diagnostic ignored "-Wreserved-id-macro"
+
+// allow Doxygen @file annotations
+#pragma GCC diagnostic ignored "-Wdocumentation-unknown-command"
+
 #endif
 
-// clang-specific code
+/** Delimit a clang-specific source text, for example:
+ * @code
+ * switch (...) {
+ * case ...:
+ *   dlgInfo(mainWin, msg);
+ *   _if_clang_([[clang::fallthrough]];)
+ * default:
+ *   ...
+ * }
+ * @endcode
+ */
 #ifdef __clang__
   #define _if_clang_(...) __VA_ARGS__
 #else
   #define _if_clang_(...)
 #endif
 
-
-// macros with templates need a non-comma comma:
+/// Macros with templates may need a "non-comma" comma.
 #define COMMA ,
 
 //------------------------------------------------------------------------------
-// fabulous macros for declarations of structures, under these assumptions:
-// default access to data: public, unless there is a reason to hide
-//                         therefore no need to have getters
-// default ro mode:        all is immutable, unless explicitly sated otherwise
 
-// declaration of self-referencing types, very useful:
-// Self: this very type; rc: const reference, ref: reference; rval: r-value
+/**
+ * Declared structures have these, very useful, self-referencing types:
+ * - @c Self: an alias for its own type.
+ * - @c rc: a const reference to @Self (@rc = (r)eference (c)onst)
+ * - @c ref: a mutable reference to @c Self
+ */
 #define _self_types_(s)     \
   using Self = s;           \
   using rc   = Self const&; \
-  using ref  = Self&;       \
-  using rval = Self&&;
+  using ref  = Self&;
 
-// begin declaration of struct
+/// A @c struct declaration begins with <code>dcl_(name)</code>.
 #define dcl_(s) \
   struct s { _self_types_(s)
 
+/// A polymorphic base @c struct declaration begins with <code>dcl_base_(name)</code>.
 // begin declaration of polymorphic struct (the base type)
 #define dcl_base_(s) \
   dcl_(s) virtual ~s();
 
-// begin declaration of sub-struct
+/** A derived ("sub") structure declaration begins with <code>dcl_sub_(name, base)</code>.
+- The inheritance has public visibility.
+- @c base is an alias to the super-structure type.
+*/
 #define dcl_sub_(s, b) \
-  struct s : b { _self_types_(s) using base = b; \
-    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
+  struct s : b { _self_types_(s) using base = b;
 
+/**
+ * Multiple inheritance is discouraged, for known reasons. But inheriting from
+ * two structures is, in specific circumstances, useful and necessarys. Such
+ * declaration begins with <code>dcl_sub2_(name, other_base, base)</code>.
+ * - The inheritance has public visibility.
+ * - @c base is an alias to the (second) super-structure type.
+ */
 // begin a declaration of sub-struct from two bases
 #define dcl_sub2_(s, b1, b2) \
-  struct s : b1, b2 { _self_types_(s) using base = b2; \
-    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
+  struct s : b1, b2 { _self_types_(s) using base = b2;
 
-// begin declaration of a sub-struct that reimplements another:
-// the base structure is hidden (protected, so subclasses also can access it)
-// base_rc() allows deliberate access to base
+/** "Reimplementation" is inheritance with protected visibility. The reimplementor
+ * decides which methods from the base struct to simply re-export (@c using) and
+ * which to re-implement (that allows, for example, type conversion).
+ * A reimplmented structure declaration begins with <code>dcl_reimpl_(name, base)</code>.
+ * - @c base_rc() provides (immutable) access to the base object.
+ */
 #define dcl_reimpl_(s, b) \
   struct s : protected b { _self_types_(s) using base = b; \
-    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
+    base const& base_rc() const { return *static_cast<base const*>(this); }
 
-// from two bases
+/** Reimplementing from two bases. */
 #define dcl_reimpl2_(s, b1, b2) \
   struct s : b1, protected b2 { _self_types_(s) using base = b2; \
-    base const& base_rc() const { return *static_cast<base const*>(this); } // access to base, instead of 'friend'
+    base const& base_rc() const { return *static_cast<base const*>(this); }
 
-// end of declaration - either one of the above
+/** Each declaration ends with <code>dcl_end_</code>. */
 #define dcl_end \
   };
 
-// structure attributes (data members)
-#define atr_(typ, name) typ const name          // immutable attribute
-#define ptr_(typ, name) typ const * const name  // imm. pointer to imm. attr.
-#define ref_(typ, name) typ const &       name  // immutable reference
+/// immutable attribute
+#define atr_(typ, name) typ const name
+/// immutable pointer to immutable data
+#define ptr_(typ, name) typ const * const name
+/// reference to immutable data
+#define ref_(typ, name) typ const &       name
 
-// static constant
+/// a static constant
 #define cst_(typ, name) static atr_(typ, name)
 
-// factory
+/// a factory
 #define fry_(typ, mth, args) static typ mth args
 
-// a method that does not mutate the state
+/// a method that does not mutate the object's state
 #define mth_(typ, mth, args)              typ mth args const
 
-// a method that mutates the state
+/// a method that may mutate the object's state
 #define mth_mut_(typ, mth, args)          typ mth args
 
-// a predicate
+/// a predicate (@c bool non-mutating method)
 #define bol_(mth, args)                   mth_(bool, mth, args)
+/// a mutating method that returns a truth value (i.e. a success indicator)
 #define bol_mut_(mth, args)               mth_mut_(bool, mth, args)
 
-// conversion operator
+/// a conversion operator
 #define cop_(op)                          operator op() const
 
-// void methods
+/// a void, non-mutating method
 #define voi_(mth, args)                   mth_(void, mth, args)
+/// a mutating void method
 #define mut_(mth, args)                   mth_mut_(void, mth, args)
 
-// setters: allow chaining; useful for reimplementation
+/// a "setter" method: allows chaining of calls (returns <code>*this</code>)
 #define set_(mth, args)                   mth_mut_(ref, mth, args)
+
+/// a <code>return *this</code> helper; used in @c set_ methods
 #define RTHIS return *this;
 
-// declare struct as comparable ...
+/// make a structure three-way comparable ...
 #define COMPARABLE  int compare(rc) const;
-// ... with equality ops
+/// ... with equality ops ...
 #define EQ_NE       bool operator==(rc) const; \
                     bool operator!=(rc) const;
-// ... inequality ops
+/// ... withe inequality ops
 #define LGTE        bool operator< (rc) const; \
                     bool operator<=(rc) const; \
                     bool operator> (rc) const; \
                     bool operator>=(rc) const;
-// simple return
+/// a helper to implement a body of non-mutating method
 #define RET_(expr) { return expr; }
 
-// simple return
+/// a helper to implement a body of @set_
 #define SET_(...) { __VA_ARGS__; RTHIS }
 
-// using base::
+/** These are helpers to generate <code>using base::...</code> directives.
+ * A better solution would use variadic macros, but those fail on Windows 7,
+ * which we still must support
+ */
 #define UB_(mth) using base::mth;
-//#define USING_BASE_(...) FOR_(USING_BASE_METHOD_, __VA_ARGS__)
-// using base:: (cannot use variadic macros on Win7)
 #define UB9_(a, b, c, d, e, f, g, h, i) UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g) UB_(h) UB_(i)
 #define UB8_(a, b, c, d, e, f, g, h)    UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g) UB_(h)
 #define UB7_(a, b, c, d, e, f, g)       UB_(a) UB_(b) UB_(c) UB_(d) UB_(e) UB_(f) UB_(g)
@@ -133,28 +257,22 @@ indirectly probably into every /header/ file in the project.
 #define UB1_(a)                         UB_(a)
 
 //------------------------------------------------------------------------------
-// request ad-hoc mutability
 
-// make a type mutable
+/// makes a type mutable
 template <typename T> struct mut_typ            { using typ = T; };
 template <typename T> struct mut_typ<T const>   { using typ = T; };
 
-// make a pointer value mutable
+/// makes a pointer mutable
 template <typename T> T const*& mut(T const*const& t) \
   RET_(const_cast<T const*&>(t))
 
-// make a value mutable
+/// makes a value mutable
 template <typename T> T& mut(T const& t) \
   RET_(const_cast<T&>(t))
 
-// make a pointed-to value mutable
+/// makes a pointed-to value mutable
 template <typename T> T* mutp(T const* t) \
   RET_(const_cast<T*>(t))
-
-// take & null a pointer value
-template <typename T> T const* take_p(T const*const& p) {
-  auto _ = p; mut(p) = nullptr; return _;
-}
 
 //------------------------------------------------------------------------------
 // primitive numeric types (there is a utility to having our own)
@@ -181,27 +299,27 @@ typedef   signed int    int32;
   typedef   signed long   int64;
 #endif
 
-// size type
+/// size type
 #ifndef NDEBUG
-  struct sz_t {                             \
-    explicit sz_t(uint val_) : val(val_) {} \
-    operator uint() const RET_(val)         \
-    sz_t& operator++()    SET_(++val)       \
-    sz_t& operator--()    SET_(--val)       \
-    sz_t  operator++(int) RET_(sz_t(val++)) \
-    sz_t  operator--(int) RET_(sz_t(val--)) \
-  protected:                                \
-    uint val;                               \
+  struct sz_t {
+    explicit sz_t(uint val_) : val(val_) {}
+    operator uint() const RET_(val)
+    sz_t& operator++()    SET_(++val)
+    sz_t& operator--()    SET_(--val)
+    sz_t  operator++(int) RET_(sz_t(val++))
+    sz_t  operator--(int) RET_(sz_t(val--))
+  protected:
+    uint val;
   };
 #else
   using sz_t = uint;
 #endif
 
-// explicitely stated sizes of floats
+/// 32 and 64 bit floating-point numbers
 typedef float  flt32;
 typedef double flt64;
 
-// a default float type
+/// a default floating-point type
 using real = flt64;
 
 // make <math.h> behave the same on Windows
@@ -215,31 +333,35 @@ struct uint_vec;
 struct real_vec;
 
 //------------------------------------------------------------------------------
-// exception annotations
-
-#define may_err  noexcept(false)
-#define will_err noexcept(false)
-
-//------------------------------------------------------------------------------
-// signalling annotation
-
-#define emits
-
-//------------------------------------------------------------------------------
 // strings
 
 struct str;
 struct str_vec;
 
-using pcstr = char const*;
 using strc  = str const&;
+using pcstr = char const*;
+
+//------------------------------------------------------------------------------
+// exception annotations
+
+/// annotation for a method that may throw an exception
+#define may_err  noexcept(false)
+
+/// annotation for a method that always throws an exception
+#define will_err noexcept(false)
 
 //------------------------------------------------------------------------------
 // debug support
 
 #include <assert.h>
+
+/// a (debug time) pre-condition assertion
 #define EXPECT_(cond) assert(cond);
+
+/// a (debug time) invariant or a post-condition assertion
 #define ENSURE_(cond) assert(cond);
+
+/// an assertion that passes on its value
 #define NEED_(cond)  (assert(cond), cond)
 
 //------------------------------------------------------------------------------

@@ -116,4 +116,4 @@ void ModelTable::moveColumn(uint from, uint to) {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

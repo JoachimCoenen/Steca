@@ -400,4 +400,4 @@ void lst_view::selectionChanged(QItemSelection const& selected,
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

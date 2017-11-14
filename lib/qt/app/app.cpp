@@ -114,4 +114,4 @@ bool app::notify(QObject* receiver, QEvent* event) {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

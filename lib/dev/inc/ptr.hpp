@@ -162,7 +162,9 @@ struct scoped : ptr_base {
   }
 
   own_ptr<T> take() {
-    return own_ptr<T>(static_cast<T*>(mutp(take_p(p))));
+    auto res = ptr();
+    mut(p) = nullptr;
+    return res;
   }
 
   own<T> takeOwn() {
@@ -371,4 +373,4 @@ template <typename T> T* mutp(l::shr<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------
-// eof
+// eof DOCS

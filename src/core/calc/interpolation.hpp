@@ -127,4 +127,4 @@ ReflectionInfos interpolate(ReflectionInfos::rc,
 
 //------------------------------------------------------------------------------
 }}
-// eof
+// eof DOCS

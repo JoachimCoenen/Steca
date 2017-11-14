@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include "tim.hpp"
 #include <QVariant>
 
@@ -37,4 +37,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

@@ -79,4 +79,4 @@ l_io::path dlgSaveDir(QWidget* parent, strc caption, strc dir) {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

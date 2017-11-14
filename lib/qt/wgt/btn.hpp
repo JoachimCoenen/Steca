@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <QPushButton>
 #include <QToolButton>
 
@@ -28,4 +28,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

@@ -3,8 +3,12 @@
 #pragma once
 
 #include "../defs.hpp"
-#include "str_cat.hpp"  // who needs err(), needs CAT alse
+#include "str_cat.hpp"  // who needs err(), needs CAT also
 #include <exception>
+
+/** @file aa
+ * Exceptions and runtime checks.
+*/
 
 namespace l {
 //------------------------------------------------------------------------------
@@ -39,4 +43,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

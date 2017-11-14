@@ -36,13 +36,13 @@ void fin::seek2(pos_type pos) may_err {
   check_or_err_(good(), CAT("cannot seek: ", basename));
 }
 
-bool fin::hasMore() {
-  base::peek();
+bool fin::hasMore() const {
+  mut(*this).base::peek();
   return base::good();
 }
 
-fin::pos_type fin::tell() {
-  return base::tellg();
+fin::pos_type fin::tell() const {
+  return mut(*this).base::tellg();
 }
 
 std::istream& fin::asStream() {
@@ -152,4 +152,4 @@ ftout::ftout(path::rc path) : base(path, true) {}
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

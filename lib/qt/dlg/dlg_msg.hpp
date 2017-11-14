@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 
 class QWidget;
 
@@ -14,4 +14,4 @@ bool dlgYes(QWidget*,  strc);
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

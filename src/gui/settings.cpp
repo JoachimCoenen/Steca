@@ -28,4 +28,4 @@ pcstr const Settings::CURRENT_VERSION = "current version";
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

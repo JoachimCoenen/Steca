@@ -41,4 +41,4 @@ Diffractograms::Diffractograms(QWidget* parent, Hub::rc hub)
 
 //------------------------------------------------------------------------------
 }}
-// eof
+// eof DOCS

@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <lib/dev/inc/ptr.hpp>
 #include <QEvent>
 #include <QObject>
@@ -63,4 +63,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

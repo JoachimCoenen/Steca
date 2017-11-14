@@ -142,4 +142,4 @@ real SumFuns::dy(real x, uint i, real const* parVals) const {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

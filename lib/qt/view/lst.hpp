@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <lib/dev/inc/num.hpp>
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/inc/vecs.hpp>
@@ -135,4 +135,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

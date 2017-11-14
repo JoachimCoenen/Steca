@@ -42,4 +42,4 @@ size_t hash<::str>::operator()(::strc s) const {
 str const str::null;
 
 //------------------------------------------------------------------------------
-// eof
+// eof DOCS

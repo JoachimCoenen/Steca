@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 
 class QWidget;
 
@@ -13,4 +13,4 @@ int width_0(QWidget const&, real n = 1);
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

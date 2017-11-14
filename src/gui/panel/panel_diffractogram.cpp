@@ -346,7 +346,7 @@ void Plot::plot(Curve::rc dgram, Curve::rc bgFitted, Curve::rc bg, curve_vec::rc
     yAxis->setVisible(true);
 
     auto qv = [](real_vec::rc rs) {
-      return QVector<real>::fromStdVector(rs.base_rc().base_rc());
+      return QVector<real>::fromStdVector(rs.base_rc());
     };
 
     if (showBgFit)
@@ -470,4 +470,4 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

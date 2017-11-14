@@ -130,4 +130,4 @@ void LevenbergMarquardt::callbackJacobianLM(
 
 //------------------------------------------------------------------------------
 }}
-// eof
+// eof DOCS

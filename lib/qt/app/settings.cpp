@@ -69,4 +69,4 @@ Settings::ref Settings::saveStr(strc key, strc val) {
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

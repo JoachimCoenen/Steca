@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/inc/str.hpp>
 #include <lib/dev/typ/hash.hpp>
@@ -66,4 +66,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS

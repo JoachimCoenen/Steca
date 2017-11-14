@@ -1,7 +1,7 @@
 // (qt_lib)
 
 #pragma once
-#include <lib/dev/defs.hpp>
+#include "../defs.hpp"
 #include <lib/dev/io/path.hpp>
 
 class QAbstractProxyModel;
@@ -17,4 +17,4 @@ l_io::path     dlgSaveDir(QWidget*,  strc caption, strc dir);
 
 //------------------------------------------------------------------------------
 }
-// eof
+// eof DOCS
