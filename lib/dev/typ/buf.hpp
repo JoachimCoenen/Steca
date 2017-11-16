@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * a data buffer
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "vec.hpp"
 
@@ -16,4 +21,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,8 +1,7 @@
-// (dev_lib)
-// common definitions, include in a *source* file
-
-/**
-Include this file, directly or indirectly, into each header file in your project.
+// (lib/dev)
+/*
+Include this file, directly or indirectly, into each source file that uses the
+library.
 */
 
 #ifdef DEV_LIB_DEFS_INC
@@ -11,52 +10,59 @@ Include this file, directly or indirectly, into each header file in your project
 #define DEV_LIB_DEFS_INC
 
 //------------------------------------------------------------------------------
-// struct implementation helpers
 
-// comparable
+// a helper to implement COMPARABLE
 #define COMPARABLE_IMPL(s) \
   int s::compare(rc that) const
 
+// a helper to implement COMPARABLE
 #define RET_COMPARE_IF_NE(v1,v2) \
   if (v1 < v2) return -1;        \
   if (v1 > v2) return +1;
 
+// a helper to implement COMPARABLE
 #define RET_BOOL_IF_LT_GT(v1,v2) \
   if (v1 < v2) return true;      \
   if (v1 > v2) return false;
 
+// a helper to implement COMPARABLE
 #define RET_COMPARE_IF_NE_THAT(v) \
   RET_COMPARE_IF_NE(v, that.v)
 
+// a helper to implement COMPARABLE
 #define RET_COMPARABLES_IF_NE(o)   \
   for (int cmp = o.compare(that.o); cmp; ) \
     return cmp;
 
-// (in)equality ops
+// a helper to implement EQNE
 #define EQ_NE_IMPL(T) \
 bool T::operator==(rc that) const RET_(0 == compare(that)) \
 bool T::operator!=(rc that) const RET_(0 != compare(that))
 
+// a helper to implement LGTE
 #define LGTE_IMPL(T) \
 bool T::operator< (rc that) const RET_(0 >  compare(that)) \
 bool T::operator<=(rc that) const RET_(0 >= compare(that)) \
 bool T::operator> (rc that) const RET_(0 <  compare(that)) \
 bool T::operator>=(rc that) const RET_(0 <= compare(that))
 
+// a helper to implement EQNE and LGTE
 #define COMP_OPS_IMPL(T) EQ_NE_IMPL(T) LGTE_IMPL(T)
 
-// (in)equality ops for types that may be undefined
-#define DEF_EQ_NE_IMPL(T) \
+// a helper to implement EQNE for types that may be undefined
+#define DEF_EQNE_IMPL(T) \
 bool T::operator==(rc that) const RET_(isDef() && that.isDef() && 0 == compare(that)) \
 bool T::operator!=(rc that) const RET_(isDef() && that.isDef() && 0 != compare(that))
 
+// a helper to implement LGTE for types that may be undefined
 #define DEF_LGTE_IMPL(T) \
 bool T::operator< (rc that) const RET_(isDef() && that.isDef() && 0 >  compare(that)) \
 bool T::operator<=(rc that) const RET_(isDef() && that.isDef() && 0 >= compare(that)) \
 bool T::operator> (rc that) const RET_(isDef() && that.isDef() && 0 <  compare(that)) \
 bool T::operator>=(rc that) const RET_(isDef() && that.isDef() && 0 <= compare(that))
 
-#define DEF_COMP_OPS_IMPL(T) DEF_EQ_NE_IMPL(T) DEF_LGTE_IMPL(T)
+// a helper to implement EQNE and LGTE for types that may be undefined
+#define DEF_COMP_OPS_IMPL(T) DEF_EQNE_IMPL(T) DEF_LGTE_IMPL(T)
 
 //------------------------------------------------------------------------------
 // debug support
@@ -82,10 +88,13 @@ private:
   bool first = true;
 };
 
-// TRace
+// TRace for debug
 #define TR(what) { _DebugOut_() << what; }
 
+// preconditon with trace
 #define EXPECT_TR_(cond, what) { if (!(cond)) TR(what); EXPECT_(cond) }
+
+// postconditon with trace
 #define ENSURE_TR_(cond, what) { if (!(cond)) TR(what); ENSURE_(cond) }
 
 #else
@@ -97,8 +106,10 @@ private:
 
 #endif
 
-// WaTch
+// WaTch for debug
+
 #define WT(what) TR(#what ">" << what)
+
 // do not go here
 #define NEVER_RETURN(what) EXPECT_(false) return what;
 
@@ -107,22 +118,31 @@ private:
 
 #ifdef _MSC_VER // msvc fails templates
 
-#define for_var_(i, n)   \
+#define for_var_(i, n) \
   for (int i = 0, i##End = (n); i < i##End; ++i)
+
 #define for_var_down_(i, n) \
   for (int i = (n); i-- > 0; )
 
 #else
 
-#define for_var_(i, n)   \
+// a simple iteration for i = <0..n)
+#define for_var_(i, n) \
   for (mut_typ<decltype(n)>::typ i = decltype(n)(0), i##End = (n); i < i##End; ++i)
+
+// a simple iteration for i = (0..n)n..0>
 #define for_var_down_(i, n) \
   for (mut_typ<decltype(n)>::typ i = (n); i-- > decltype(n)(0); )
 
 #endif
 
+// a simple iteration for i = <0..n)
 #define for_i_(n)       for_var_(i, n)
+
+// a simple iteration for i = (0..n)n..0>
 #define for_i_down_(n)  for_var_down_(i, n)
+
+// a simple iteration for i, j = <0..ni, 0..nj)
 #define for_ij_(ni, nj) for_var_(i, ni) for_var_(j, nj)
 
 //------------------------------------------------------------------------------
@@ -131,17 +151,17 @@ private:
 #define ONLY_ONCE \
 { static bool once = false; if (once) return; once = true; }
 
-
 //------------------------------------------------------------------------------
 // ad-hoc mutability
 
 #include <utility>
+// swap two values
 template <typename T> void mut_swap(T& t1, T& t2) {
   std::swap(mut(t1), mut(t2));
 }
 
 //------------------------------------------------------------------------------
-// includes
+// common includes
 
 #include "exc.hpp"
 #include "flt.hpp"

@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * goniometry: type-safe degrees and radians
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/num.hpp"
 
@@ -57,4 +62,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

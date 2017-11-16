@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * set
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <set>
 
@@ -29,4 +34,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

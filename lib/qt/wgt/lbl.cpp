@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "lbl.hpp"
 #include "../defs.inc"

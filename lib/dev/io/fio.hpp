@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * file input / output
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../typ/buf.hpp"
 #include "endian.hpp"
@@ -10,10 +15,14 @@
 namespace l_io {
 //------------------------------------------------------------------------------
 
+/** in/out file
+ */
 dcl_base_(fio)
   atr_(str, basename);
 
+  /// open (2 arguments)
   virtual void open2(path::rc, bool binary) may_err = 0;
+  /// signal an error
   [[noreturn]] voi_(err, (strc msg)) will_err;
 
 protected:
@@ -23,6 +32,8 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/** file input
+ */
 dcl_reimpl2_(fin, fio, std::fstream)
   fin();
   fin(path::rc, bool binary);
@@ -37,6 +48,8 @@ protected:
   void seek2(pos_type) may_err;
 dcl_end
 
+/** file input, binary mode
+ */
 dcl_sub_(fbin, fin)
   atr_(endian::ness, endianness) = endian::le;
 
@@ -55,9 +68,10 @@ dcl_sub_(fbin, fin)
   mth_mut_(uint64, get64,    ()) may_err;
   mth_mut_(flt32,  getflt32, ()) may_err;
   mth_mut_(flt64,  getflt64, ()) may_err;
-
 dcl_end
 
+/** file input, text mode
+ */
 dcl_sub_(ftin, fin)
   ftin();
   ftin(path::rc);
@@ -70,6 +84,8 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/** file output, binary mode
+ */
 dcl_reimpl2_(fout, fio, std::fstream)
   fout();
   fout(path::rc, bool binary);
@@ -89,4 +105,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,6 +1,12 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * conversion from big and little endians to the system representation;
+ * TODO only prepared
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 
 namespace l_io { namespace endian {
@@ -19,4 +25,4 @@ uint64 from_le(uint64);
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

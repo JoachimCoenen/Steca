@@ -101,9 +101,9 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./lib/dev/inc .
+INPUT                  = ./lib/dev
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.hpp *.cpp *.inc
+FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
@@ -123,7 +123,7 @@ USE_MDFILE_AS_MAINPAGE =
 #---------------------------------------------------------------------------
 SOURCE_BROWSER         = YES
 INLINE_SOURCES         = NO
-STRIP_CODE_COMMENTS    = YES
+STRIP_CODE_COMMENTS    = NO
 REFERENCED_BY_RELATION = NO
 REFERENCES_RELATION    = NO
 REFERENCES_LINK_SOURCE = YES
@@ -267,7 +267,7 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =
-PREDEFINED             = signals=public
+PREDEFINED             = DOXYGEN_SHOULD_SKIP_THIS=1 signals=public
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = NO
 #---------------------------------------------------------------------------

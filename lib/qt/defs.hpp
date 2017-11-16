@@ -1,13 +1,17 @@
-// (qt_lib)
+// (lib/qt)
 
 #include <lib/dev/defs.hpp>
 
-/** @file */
+/** @file
+  */
 
 //------------------------------------------------------------------------------
 // signalling annotation
 
+/** \def emits
+ * an annotation to mark methods that emit signals
+ */
 #define emits
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

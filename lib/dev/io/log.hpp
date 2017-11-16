@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * logger, busy indicator, progress indicator
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 
 namespace l_io {
@@ -40,4 +45,4 @@ struct progress {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

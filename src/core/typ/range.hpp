@@ -21,7 +21,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_(Range) COMPARABLE EQ_NE
+dcl_(Range) COMPARABLE EQNE
   using rv_t = real;
 
   atr_(rv_t, min);
@@ -58,7 +58,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_reimpl_(Ranges, l::vec<Range>) EQ_NE
+dcl_reimpl_(Ranges, l::vec<Range>) EQNE
   UB7_(base, clear, isEmpty, size, at, begin, end)
 
   Ranges();

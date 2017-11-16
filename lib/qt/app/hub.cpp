@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "hub.hpp"
 #include "../defs.inc"
@@ -68,4 +68,4 @@ bool Hub::event(QEvent* e) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "dlg_about.hpp"
 #include "../defs.inc"
@@ -65,4 +65,4 @@ void DlgAbout::construct() {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "gon.hpp"
 #include "../inc/defs.inc"
@@ -110,4 +110,4 @@ real rad::cos() const {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,39 +1,49 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * floating-point support
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "num.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
 
+/// A "smarter" @c real number
 template <typename Real>
 dcl_(RealNum)
-  atr_(Real, val);
+  atr_(Real, val);      ///< the value
+  cop_(Real) RET_(val)  ///< automatic conversion to the value
 
+  /// takes the initial value; default NaN
   explicit RealNum(Real val_ = real_nan) : val(val_) {}
-  cop_(Real) RET_(val)
 
-#define REALNUM_DCL_OP(op) \
-  set_(operator op, (rc that))  SET_(mut(val) op that.val) \
-  set_(operator op, (Real val)) SET_(mut(val) op val)
+  #define REALNUM_DCL_OP(op) \
+    set_(operator op, (rc that))  SET_(mut(val) op that.val) \
+    set_(operator op, (Real val)) SET_(mut(val) op val)
 
   REALNUM_DCL_OP(=)
   REALNUM_DCL_OP(+=)
   REALNUM_DCL_OP(-=)
   REALNUM_DCL_OP(*=)
   REALNUM_DCL_OP(/=)
-#undef REALNUM_DCL_OP
 
-#define REALNUM_DCL_OP(op) \
-  mth_(Self, operator op, (rc that)) RET_(RealNum(*this) op##= that)
+  #undef REALNUM_DCL_OP
+
+  #define REALNUM_DCL_OP(op) \
+    mth_(Self, operator op, (rc that)) RET_(RealNum(*this) op##= that)
 
   REALNUM_DCL_OP(+)
   REALNUM_DCL_OP(-)
   REALNUM_DCL_OP(*)
   REALNUM_DCL_OP(/)
-#undef REALNUM_DCL_OP
 
+  #undef REALNUM_DCL_OP
+
+  /// test for NaN
   bol_(isnan,   ()) RET_(l::isnan(val))
   bol_(isfin,   ()) RET_(l::isfin(val))
   bol_(isinf,   ()) RET_(l::isinf(val))
@@ -56,4 +66,4 @@ using Real = Flt64;
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

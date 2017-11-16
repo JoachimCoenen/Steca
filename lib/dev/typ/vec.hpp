@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * vector
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/num.hpp"
 #include <vector>
@@ -47,4 +52,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

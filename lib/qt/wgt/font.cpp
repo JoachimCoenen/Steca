@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "font.hpp"
 #include "../defs.inc"

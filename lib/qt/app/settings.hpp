@@ -1,6 +1,11 @@
-// (qt_lib)
+// (lib/qt)
+
+/** @file
+ * wrapper around QSettings
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <lib/dev/inc/str.hpp>
 #include <QSettings>
@@ -35,4 +40,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,12 +1,17 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * 2-dimesional floating-point coordinates
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
 
-dcl_(xy) COMPARABLE EQ_NE
+dcl_(xy) COMPARABLE EQNE
   atr_(real, x);
   atr_(real, y);
 
@@ -22,4 +27,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

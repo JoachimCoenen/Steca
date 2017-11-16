@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * thread + OpenMP-like distribution of work
+ */
 
 #pragma once
+
 #include "vec.hpp"
 #include <thread>
 
@@ -33,4 +38,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

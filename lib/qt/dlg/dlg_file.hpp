@@ -1,6 +1,11 @@
-// (qt_lib)
+// (lib/qt)
+
+/** @file
+ * a set of standard file dialogs
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <lib/dev/io/path.hpp>
 
@@ -17,4 +22,4 @@ l_io::path     dlgSaveDir(QWidget*,  strc caption, strc dir);
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

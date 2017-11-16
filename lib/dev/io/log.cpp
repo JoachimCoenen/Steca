@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "log.hpp"
 #include "../inc/defs.inc"
@@ -98,4 +98,4 @@ void progress::unset() {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 /* Adapted from https://github.com/dropbox/json11. Original license:
  *
@@ -23,7 +23,12 @@
  * THE SOFTWARE.
  */
 
+/** @file
+ * JSon encoder and decoder
+ */
+
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/str.hpp"
 #include "../typ/vec.hpp"
@@ -40,6 +45,7 @@ struct xy;
 namespace l_io {
 //------------------------------------------------------------------------------
 
+/// Json element
 dcl_base_(Json)
   enum Typ {
     NUM, STR, VEC, OBJ,
@@ -137,4 +143,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

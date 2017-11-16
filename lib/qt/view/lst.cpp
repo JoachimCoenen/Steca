@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "lst.hpp"
 #include "../defs.inc"
@@ -137,7 +137,6 @@ void lst_model::signalReset() const {
   mut(*this).beginResetModel();
   mut(*this).endResetModel();
   updateTriState();
-  emit columnsToFix();
 }
 
 void lst_model::signalRowChanged(rw_n rw) const {
@@ -400,4 +399,4 @@ void lst_view::selectionChanged(QItemSelection const& selected,
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

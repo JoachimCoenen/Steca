@@ -1,6 +1,10 @@
-// (qt_lib)
+// (lib/qt)
 
+/** @file
+ * wrapped QVariant
+ */
 #pragma once
+
 #include "../defs.hpp"
 #include "tim.hpp"
 #include <QVariant>
@@ -29,12 +33,16 @@ dcl_sub_(var, QVariant)
 
   using cmpFun = int(rc, rc);
 
+  /// 3-way compare two ints
   static int cmp_int(var::rc,  var::rc);
+  /// 3-way compare two strs
   static int cmp_str(var::rc,  var::rc);
+  /// 3-way compare two reals
   static int cmp_real(var::rc, var::rc);
+  /// 3-way compare two tims
   static int cmp_tim(var::rc,  var::rc);
 dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

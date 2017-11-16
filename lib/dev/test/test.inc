@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #ifdef DEV_LIB_TEST_INC
   #error inlude only once
@@ -37,4 +37,4 @@ DOCTEST_TEST_CASE(name) { __VA_ARGS__ } \
 #endif
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

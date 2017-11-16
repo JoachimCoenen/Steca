@@ -1,39 +1,50 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * useful vectors, forward-declared in defs.hpp;
+ * Mac requires the explicit default constructors
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/str.hpp"
 #include "../typ/vec.hpp"
 
 //------------------------------------------------------------------------------
-// useful vecs, forward-decld in defs.hpp
 
+/// vector of @c str
 dcl_sub_(str_vec, l::vec<str>)
   using base::base;
-  str_vec() {} // for Mac
+  str_vec() {}
 
+  /// splits a string by white space
   fry_(str_vec, split, (strc));
 dcl_end
 
+/// vector of @c bool
 dcl_sub_(bol_vec, l::vec<bool>)
   using base::base;
-  bol_vec() {} // for Mac
+  bol_vec() {}
 dcl_end
 
+/// vector of @c int
 dcl_sub_(int_vec, l::vec<int>)
   using base::base;
-  int_vec() {} // for Mac
+  int_vec() {}
 dcl_end
 
+/// vector of @c uint
 dcl_sub_(uint_vec, l::vec<uint>)
   using base::base;
-  uint_vec() {} // for Mac
+  uint_vec() {}
 dcl_end
 
+/// vector of @c real
 dcl_sub_(real_vec, l::vec<real>)
   using base::base;
-  real_vec() {} // for Mac
+  real_vec() {}
 dcl_end
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

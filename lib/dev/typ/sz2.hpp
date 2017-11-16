@@ -1,13 +1,18 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * 2-dimensional size
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
 // 2-D size
 
-dcl_(sz2) COMPARABLE EQ_NE
+dcl_(sz2) COMPARABLE EQNE
   atr_(uint, i);
   atr_(uint, j);
 
@@ -26,4 +31,4 @@ sz2 operator-(sz2::rc, sz2::rc);
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -21,14 +21,14 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
-dcl_(dgram_options) EQ_NE
+dcl_(dgram_options) EQNE
   atr_(bool, isCombined)        = false;
   atr_(bool, isFixedIntenScale) = false;
   atr_(core::Range, gammaRange) = core::Range();
   mut_(set, (rc));
 dcl_end
 
-dcl_(image_options) EQ_NE
+dcl_(image_options) EQNE
   atr_(bool, isFixedIntenScale) = false;
   mut_(set, (rc));
 dcl_end

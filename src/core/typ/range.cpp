@@ -36,7 +36,7 @@ COMPARABLE_IMPL(Range) {
   return 0;
 }
 
-DEF_EQ_NE_IMPL(Range)
+DEF_EQNE_IMPL(Range)
 
 TEST_("Range::compare",
   Range rn1, rn2, r(1,2), r1(1,2), r2(2,3);

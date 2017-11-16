@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "act.hpp"
 #include "../defs.inc"
@@ -123,4 +123,4 @@ str const acts::QUIT("quit");
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

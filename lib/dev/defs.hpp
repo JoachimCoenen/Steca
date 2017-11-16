@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 /** @file
 
@@ -52,9 +52,17 @@ Finally, a few macros:
 - @c may_err, @c will_err - exception annotation
 - @c EXPECT_, @c ENSURE_, @c NEED_(cond)  (assert(cond), cond)
 
+The library is contained in a namespace @c l ((l)ibrary).
 
 Note: Yoda want we to be, prefer we thus <code>type const</code> over
 <code>const type</code>.
+
+Note: the use of the underscore '_'. A leading underscore is sometimes used to
+indicate that a member (method, attribute) is not for outside use. The trailing
+underscore is used in macro names to:
+- avoid name clashes with normal identifiers
+- to force an "optical space" in the code (z.B. <code>dcl_(name)</code> reads
+better than <code>dcl (name)</code> or <code>dcl(name)</code>).
 
 Note: Yoda wants you to be brief. Therefore well-known and oft-used names are
 used in their three-letter form. Some even have a one-letter form. And a few
@@ -78,6 +86,7 @@ Here is a vocabulary:
 - @b flt float
 - @b fry factory
 - @b int integer
+- @b lst list
 - @b mth method
 - @b mut mutable / mutate
 - @b no, number (ordinal)
@@ -93,6 +102,8 @@ Here is a vocabulary:
 - @b sz  size
 - @b typ type
 - @b val, @b v value
+- @b var variant / variable
+- @b vec vector
 - @b voi void
 
 */
@@ -100,8 +111,9 @@ Here is a vocabulary:
 #pragma once
 
 #ifdef __clang__
-// TODO #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-// TODO #pragma GCC diagnostic ignored "-Wreserved-id-macro"
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wreserved-id-macro"
 
 // allow Doxygen @file annotations
 #pragma GCC diagnostic ignored "-Wdocumentation-unknown-command"
@@ -133,13 +145,17 @@ Here is a vocabulary:
 /**
  * Declared structures have these, very useful, self-referencing types:
  * - @c Self: an alias for its own type.
- * - @c rc: a const reference to @Self (@rc = (r)eference (c)onst)
+ * - @c rc: a const reference to @c Self (@c rc = (r)eference (c)onst)
  * - @c ref: a mutable reference to @c Self
  */
+#ifdef DOXYGEN_SHOULD_SKIP_THIS
+#define _self_types_(s)
+#else
 #define _self_types_(s)     \
   using Self = s;           \
   using rc   = Self const&; \
   using ref  = Self&;
+#endif
 
 /// A @c struct declaration begins with <code>dcl_(name)</code>.
 #define dcl_(s) \
@@ -227,18 +243,21 @@ Here is a vocabulary:
 
 /// make a structure three-way comparable ...
 #define COMPARABLE  int compare(rc) const;
+
 /// ... with equality ops ...
-#define EQ_NE       bool operator==(rc) const; \
-                    bool operator!=(rc) const;
+#define EQNE bool operator==(rc) const; \
+             bool operator!=(rc) const;
+
 /// ... withe inequality ops
-#define LGTE        bool operator< (rc) const; \
-                    bool operator<=(rc) const; \
-                    bool operator> (rc) const; \
-                    bool operator>=(rc) const;
+#define LGTE bool operator< (rc) const; \
+             bool operator<=(rc) const; \
+             bool operator> (rc) const; \
+             bool operator>=(rc) const;
+
 /// a helper to implement a body of non-mutating method
 #define RET_(expr) { return expr; }
 
-/// a helper to implement a body of @set_
+/// a helper to implement a body of @c set_
 #define SET_(...) { __VA_ARGS__; RTHIS }
 
 /** These are helpers to generate <code>using base::...</code> directives.

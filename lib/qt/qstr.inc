@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #ifdef QT_LIB_STR_INC
   #error inlude only once

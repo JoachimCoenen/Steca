@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "win.hpp"
 #include "../defs.inc"

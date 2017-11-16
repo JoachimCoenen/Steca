@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * hash-table (unordered map)
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/ptr.hpp"
 #include <unordered_map>
@@ -32,4 +37,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

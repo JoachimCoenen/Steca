@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "var.hpp"
 #include "../defs.inc"
@@ -107,4 +107,4 @@ int var::cmp_tim(var::rc v1, var::rc v2) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

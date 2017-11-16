@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "fio.hpp"
 #include "../inc/defs.inc"
@@ -152,4 +152,4 @@ ftout::ftout(path::rc path) : base(path, true) {}
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

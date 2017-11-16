@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "xy.hpp"
 #include "../inc/defs.inc"
@@ -16,7 +16,7 @@ COMPARABLE_IMPL(xy) {
   return 0;
 }
 
-DEF_EQ_NE_IMPL(xy)
+DEF_EQNE_IMPL(xy)
 
 xy::ref xy::operator=(rc that) {
   mut(x) = that.x;
@@ -68,4 +68,4 @@ TEST_("xy::isDef",
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

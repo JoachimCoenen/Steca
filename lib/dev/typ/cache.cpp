@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "cache.hpp"
 #include "../inc/defs.inc"
@@ -32,4 +32,4 @@ void cache_base::touch(mru_t& mru) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -41,7 +41,7 @@ dcl_(AngleMap) SHARED
     using base::base;
   dcl_end
 
-  dcl_(Key) COMPARABLE EQ_NE LGTE
+  dcl_(Key) COMPARABLE EQNE LGTE
     atr_(Geometry, geometry);
     atr_(tth_t,    midTth);
 

@@ -255,24 +255,24 @@ l::own<File> loadTiffDat(l_io::path::rc path) may_err {
     str tiffFileName = row.at(0);
 
     phi_t phi;
-    guard_err_("bad phi value",
+    wrap_err_msg_("bad phi value",
       phi = phi_t(row.at(1).asFlt());
     );
 
     flt32 monitor = 0;
     if (cnt > 2)
-      guard_err_("bad monitor value",
+      wrap_err_msg_("bad monitor value",
         monitor = phi_t(row.at(2).asFlt());
       );
 
     flt32 expTime = 0;
     if (cnt > 3)
-      guard_err_("bad expTime value",
+      wrap_err_msg_("bad expTime value",
         monitor = phi_t(row.at(3).asFlt());
       );
 
     // load one dataset
-    guard_err_(tiffFileName,
+    wrap_err_msg_(tiffFileName,
       loadTiff(mut(*file), l_io::path(tiffFileName), phi, monitor, expTime);
     )
   }

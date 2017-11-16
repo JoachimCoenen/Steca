@@ -1,12 +1,16 @@
-// (dev_lib)
+// (lib/dev)
 
+/** @file
+ * two-dimensional integral coordinates; signed and unsigned
+ */
 #pragma once
+
 #include "../defs.hpp"
 
 namespace l {
 //------------------------------------------------------------------------------
 
-dcl_(ij) COMPARABLE EQ_NE
+dcl_(ij) COMPARABLE EQNE
   atr_(int, i);
   atr_(int, j);
 
@@ -14,7 +18,7 @@ dcl_(ij) COMPARABLE EQ_NE
   ij(int, int);
 dcl_end
 
-dcl_(uij) COMPARABLE EQ_NE
+dcl_(uij) COMPARABLE EQNE
   atr_(uint, i);
   atr_(uint, j);
 
@@ -24,4 +28,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

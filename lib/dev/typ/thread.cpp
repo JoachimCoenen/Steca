@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "thread.hpp"
 #include "../inc/defs.inc"
@@ -45,4 +45,4 @@ TEST_("thread",
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

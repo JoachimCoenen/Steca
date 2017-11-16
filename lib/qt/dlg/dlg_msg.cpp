@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "dlg_msg.hpp"
 #include "../defs.inc"
@@ -21,4 +21,4 @@ bool dlgYes(QWidget* parent, strc text) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

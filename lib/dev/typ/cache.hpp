@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * cache; MRU strategy
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/num.hpp"
 #include "map.hpp"
@@ -90,4 +95,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "split.hpp"
 #include "../defs.inc"

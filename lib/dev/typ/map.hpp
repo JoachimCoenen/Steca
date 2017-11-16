@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * map; map of scoped pointers
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "../inc/ptr.hpp"
 #include <map>
@@ -35,15 +40,5 @@ dcl_reimpl_(map, std::map<K COMMA T>)
 dcl_end
 
 //------------------------------------------------------------------------------
-
-template <typename K, typename T>
-dcl_sub_(scoped_map, map<K COMMA scoped<T const>>)
-  mth_mut_(T const*, add, (K const& k, T const* t)) {
-    base::operator[](k).reset(t);
-    return t;
-  }
-dcl_end
-
-//------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

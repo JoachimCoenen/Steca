@@ -1,32 +1,36 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * strong and smart pointer types;
+ * ideas in part adapted from https://github.com/Microsoft/GSL.git
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <type_traits>
 
 typedef void*       pvoid;
 typedef void const* pcvoid;
 
-// safer pointer types
-// parts adapted from https://github.com/Microsoft/GSL.git
-
 namespace l {
 
-[[noreturn]] void err(pcstr);
+[[noreturn]] void err(pcstr); // forward declaration
 
 //------------------------------------------------------------------------------
 
+/// the base for all smart pointers
 dcl_(ptr_base)
 protected:
-  ptr_(void, p);
+  ptr_(void, p);        ///< the value
 
   ptr_base(pcvoid);
-  set_(set, (pcvoid));
+  set_(_set, (pcvoid));  ///< setter
 dcl_end
 
 //------------------------------------------------------------------------------
-// just a pointer! (not null)
 
+/// (j)ust (p)ointer - a pointer that cannot be null
 template <typename T>
 struct jp : ptr_base {
   explicit jp (T const* p) : ptr_base(p) {
@@ -36,28 +40,26 @@ struct jp : ptr_base {
   jp(jp const&)            = default;
   jp& operator=(jp const&) = default;
 
-  // from another type jp
+  /// conversion constructor - from a subtype
   template <typename O>
-  jp (jp<O> const& that) : ptr_base(static_cast<O const*>(that.ptr())) {}
+  jp (jp<O> const& that) : ptr_base(static_cast<T const*>(that.ptr())) {}
 
+  /// conversion assignment - from a subtype
   template <typename O>
-  jp& operator=(jp<O> const& that) SET_(set(static_cast<O*>(that.ptr())))
+  jp& operator=(jp<O> const&) = delete;
 
+  /// explicit access to raw pointer
   T const* ptr()        const RET_(static_cast<T const*>(p))
+  /// conversion to raw pointer
   operator T const*()   const RET_(ptr())
+  /// pointer dereference operator
   T const* operator->() const RET_(ptr())
 
   bool operator==(T* const& o) const RET_(p == o)
   bool operator!=(T* const& o) const RET_(p != o)
 
-protected:
-  void set(T* p_) {
-    EXPECT_(p_)
-    p = p_;
-  }
-
 private:
-  // no pointer arithmetics
+  // disallow pointer arithmetics
   jp<T>& operator++()     = delete;
   jp<T>& operator--()     = delete;
   jp<T>  operator++(int)  = delete;
@@ -69,37 +71,36 @@ private:
 };
 
 //------------------------------------------------------------------------------
-// a non-null pointer owning the pointed-to thing
-// only a hint, ownership not enforced
 
+/** @c own is a just pointer that "owns" the pointed-to thing. Unlike the scoped
+ * or shared pointers, @c own does not do any work. It is only a hint, and the
+ * programmer must take care of things.
+ */
 template <typename T>
 struct own : jp<T> {
   explicit own(T const* p) : jp<T>(p) {}
   own(own const&)            = default;
   own& operator=(own const&) = default;
 
-  // from another type
+  /// conversion constructor - from a subtype
   template <typename O>
-  own(own<O> const& that) : jp<T>(static_cast<O const*>(that.ptr())) {}
+  own(own<O> const& that) : jp<T>(that.ptr()) {}
 
   template <typename O>
-  own& operator=(jp<O> const& that) {
-    return static_cast<own&>(jp<T>::operator=(that));
-  }
+  own& operator=(jp<O> const&) = delete;
 };
 
-// helpers
-template <typename T> own<T>       owned(T* p)       RET_(own<T>(p))
-template <typename T> own<T const> owned(T const* p) RET_(own<T>(p))
+/// a helper function to turn a raw pointer into @c own
+template <typename T> own<T> owned(T* p) RET_(own<T>(p))
 
 //------------------------------------------------------------------------------
-// a maybe null pointer owning the pointed-to thing
-// only a hint, ownership not enforced
 
+/** @c own_ptr is a nullable @c own
+ */
 template <typename T>
 struct own_ptr : ptr_base {
   own_ptr() : ptr_base(nullptr) {}
-  own_ptr(T const*const p) : ptr_base(p) {}
+  own_ptr(T const* p) : ptr_base(p) {}
 
   T const* ptr()      const   RET_(static_cast<T const*>(p))
   T* ptr()                    RET_(static_cast<T*>(mutp(p)))
@@ -108,27 +109,26 @@ struct own_ptr : ptr_base {
   T*       operator->()       RET_(ptr())
   T const* operator->() const RET_(ptr())
 
-  set_(set, (T const*const p_)) SET_(mut(p) = p_)
-
-  // convert to non-null
+  /// convert to non-null @c own
   own<T> justOwn() const {
     return own<T>(NEED_(ptr()));
   }
 };
 
 //------------------------------------------------------------------------------
-// expecting an owning over; will take ownership
-// only a hint, ownership not enforced
 
-template <typename T> // TODO implicit T const ?
+/** @c give_me expects to take over an ownership from @c own. It serves as a hint,
+ * the programmer must do all the work.
+ */
+template <typename T>
 struct give_me : own<T> { using base = own<T>;
   explicit give_me(T* p) : base(p) {}
   give_me(own<T> p)      : base(p) {}
 };
 
 //------------------------------------------------------------------------------
-// scoped (auto-destruct)
 
+/** @c scoped deletes its pointed-to object, when it goes out of scope */
 template <typename T>
 struct scoped : ptr_base {
   scoped(T* p = nullptr): ptr_base(p) {}
@@ -145,11 +145,6 @@ struct scoped : ptr_base {
  ~scoped() {
     drop();
   }
-
-  template <typename O>
-  scoped& operator=(scoped<O>& that) SET_(reset(that.take()))
-  template <typename O>
-  scoped& operator=(own<O>& that)    SET_(reset(that.take()))
 
   T* reset(T* p_) {
     delete static_cast<T*>(mutp(p));
@@ -174,18 +169,20 @@ struct scoped : ptr_base {
   T* ptr() const {
     return static_cast<T*>(mutp(p));
   }
+
   operator T*()   const RET_(ptr())
   T* operator->() const RET_(ptr())
 };
 
-// a handy way to make a scoped pointer
+/// a helper to make @c scoped
 template <typename T> scoped<T> scope(T* p)             RET_(scoped<T>(p))
 template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
 template <typename T> scoped<T> scope(own<T> p)         RET_(scoped<T>(p.ptr()))
 
 //------------------------------------------------------------------------------
-// shared - for reference-counted data
 
+/** the base of shared pointers
+ */
 struct _shared_base_ : ptr_base {
 protected:
   _shared_base_(pcvoid);
@@ -199,6 +196,8 @@ protected:
   void cleanup();
 };
 
+/** the templated base of shared pointers
+ */
 template <typename T>
 struct sh_base : protected _shared_base_ {
  ~sh_base() { _drop(); }
@@ -223,8 +222,8 @@ protected:
    }
 };
 
-template <typename T> struct shp;
-
+/** checks default-constructibility
+ */
 template <typename T, bool constructible> struct T_maybe_maker;
 
 template <typename T> struct T_maybe_maker<T, false> {
@@ -241,6 +240,8 @@ template <typename T> struct T_maybe_maker<T, true> {
   }
 };
 
+/** makes T()
+ */
 template <typename T> struct T_maker {
   T_maybe_maker<T, std::is_default_constructible<T>::value> maker;
   T* make() {
@@ -248,11 +249,16 @@ template <typename T> struct T_maker {
   }
 };
 
-// non-mutable shared pointer and reference
+template <typename T> struct shp;
+
+/** reference-counted, (sh)ared pointer-"(r)eference";
+ * not nullable, cannot be re-pointed
+ */
 template <typename T>
-struct shr : sh_base<T> {
-  // default () forced by Qt metasystem, but quite useful, too
+struct shr : sh_base<T> {  
+  /// default construction; required by Qt metasystem; otherwise also quite useful
   explicit shr() : sh_base<T>(maker.make()) {}
+  /// take an ownership
   explicit shr(T const* p) : sh_base<T>(p)  {}
 
   shr(shr const& that) : sh_base<T>(that) {}
@@ -295,8 +301,12 @@ private:
   static T_maker<T> maker;
 };
 
+/// a maker
 template <typename T> T_maker<T> shr<T>::maker;
 
+/** reference-counted, (sh)ared (p)ointer
+ * nullable, can be re-pointed
+ */
 template <typename T>
 struct shp : sh_base<T> {
   explicit shp(T const* p = nullptr) : sh_base<T>(p) {}
@@ -348,29 +358,30 @@ struct shp : sh_base<T> {
   }
 };
 
-// a handy way to make a shr
+/// helpers to make a shared reference-pointer
 template <typename T> shr<T> sh(T* p)             RET_(shr<T>(p))
 template <typename T> shr<T const> sh(T const* p) RET_(shr<T>(p))
 template <typename T> shr<T> sh(own<T> p)         RET_(shr<T>(p.ptr()))
 
-// declare struct as shr
+/// declare types for sharing
 #define SHARED \
   using shr = l::shr<Self>; \
   using shp = l::shp<Self>;
 
-// clone it
+/// define @c clone
 #define CLONED \
   mth_(Self*, clone, ()) RET_(new Self(*this))
 
 //------------------------------------------------------------------------------
 }
 
-// make a pointed-to value mutable
+/// make a pointed-to value mutable
 template <typename T> T* mutp(l::jp<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
+/// make a shared referenced value mutable
 template <typename T> T* mutp(l::shr<T> const& p) \
   RET_(const_cast<T*>(p.ptr()))
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

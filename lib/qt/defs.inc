@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 // common definitions, include in a *source* file
 
 #ifdef QT_LIB_DEFS_INC

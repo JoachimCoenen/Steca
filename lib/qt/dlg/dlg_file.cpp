@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "dlg_file.hpp"
 #include "../defs.inc"
@@ -79,4 +79,4 @@ l_io::path dlgSaveDir(QWidget* parent, strc caption, strc dir) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

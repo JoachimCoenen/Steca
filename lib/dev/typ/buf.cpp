@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "buf.hpp"
 #include "../inc/defs.inc"
@@ -24,4 +24,4 @@ str buf::asStr() const {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

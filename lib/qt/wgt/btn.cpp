@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "btn.hpp"
 #include "../app/act.hpp"

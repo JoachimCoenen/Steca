@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "app.hpp"
 #include "../defs.inc"
@@ -114,4 +114,4 @@ bool app::notify(QObject* receiver, QEvent* event) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

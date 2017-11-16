@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * uset = unordered set
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <unordered_set>
 
@@ -46,4 +51,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

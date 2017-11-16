@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "rio.hpp"
 #include "../defs.inc"

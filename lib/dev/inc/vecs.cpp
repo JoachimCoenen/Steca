@@ -1,7 +1,7 @@
-// (dev_lib)
+// (lib/dev)
 
-#include "vec.hpp"
-#include "../inc/defs.inc"
+#include "vecs.hpp"
+#include "defs.inc"
 
 //------------------------------------------------------------------------------
 
@@ -20,4 +20,4 @@ str_vec str_vec::split(strc s) {
 }
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

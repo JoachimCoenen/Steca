@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "str.hpp"
 #include "defs.inc"
@@ -6,7 +6,7 @@
 //------------------------------------------------------------------------------
 
 flt32 str::asFlt() const may_err {
-  guard_err_("str::asFlt",
+  wrap_err_msg_("str::asFlt",
     return std::stof(*this);
   );
 }
@@ -30,7 +30,7 @@ str str::num(uint val) {
   return CAT(val);
 }
 
-
+/// @cond
 namespace std {
 
 size_t hash<::str>::operator()(::strc s) const {
@@ -38,8 +38,9 @@ size_t hash<::str>::operator()(::strc s) const {
 }
 
 }
+/// @endcond
 
 str const str::null;
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * the @c str (string) class - an extension of <code>std::string</code>
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include <string>
 
@@ -14,19 +19,20 @@ dcl_sub_(str, std::string)
 
   bol_(isEmpty, ()) RET_(base::empty())
 
-  mth_(flt32, asFlt, ()) may_err;
+  mth_(flt32, asFlt, ()) may_err;         ///< parse as flt32
 
-  static str const null;
+  static str const null;                  ///< an empty string
 
-  mth_(str, trimmed, ());
+  mth_(str, trimmed, ());                 ///< trimmed whitespace, left and right
 
-  fry_(str, num, (int));
-  fry_(str, num, (uint));
+  fry_(str, num, (int));                  ///< format @c int as a string
+  fry_(str, num, (uint));                 ///< format @c uint as a string
 
 private:
-  bool empty() const; // disallow
+  bool empty() const; // disallow @c empty() - @c isEmpty() is a better name
 dcl_end
 
+/// @cond
 namespace std {
 
 template <> struct hash<str> {
@@ -34,6 +40,7 @@ template <> struct hash<str> {
 };
 
 }
+/// @endcond
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

@@ -1,6 +1,11 @@
-// (dev_lib)
+// (lib/dev)
+
+/** @file
+ * a two-dimensional array
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 #include "sz2.hpp"
 #include "vec.hpp"
@@ -31,4 +36,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

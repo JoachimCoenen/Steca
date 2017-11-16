@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "table.hpp"
 #include "../defs.inc"
@@ -116,4 +116,4 @@ void ModelTable::moveColumn(uint from, uint to) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

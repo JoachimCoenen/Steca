@@ -1,4 +1,4 @@
-// (qt_lib)
+// (lib/qt)
 
 #include "settings.hpp"
 #include "../defs.inc"
@@ -69,4 +69,4 @@ Settings::ref Settings::saveStr(strc key, strc val) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

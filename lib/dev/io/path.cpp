@@ -1,4 +1,4 @@
-// (dev_lib)
+// (lib/dev)
 
 #include "path.hpp"
 #include "../typ/buf.hpp"
@@ -81,4 +81,4 @@ path_vec::path_vec(str_vec::rc ss) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

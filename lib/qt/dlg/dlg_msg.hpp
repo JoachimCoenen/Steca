@@ -1,6 +1,11 @@
-// (qt_lib)
+// (lib/qt)
+
+/** @file
+ * a set of standard message dialogs
+ */
 
 #pragma once
+
 #include "../defs.hpp"
 
 class QWidget;
@@ -14,4 +19,4 @@ bool dlgYes(QWidget*,  strc);
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

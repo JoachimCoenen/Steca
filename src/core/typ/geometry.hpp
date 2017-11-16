@@ -55,7 +55,7 @@ dcl_(ImageTransform)
   bol_(operator==, (rc that)) RET_(val == that.val)
 dcl_end
 
-dcl_(ImageCut) COMPARABLE EQ_NE
+dcl_(ImageCut) COMPARABLE EQNE
   atr_(uint, left);
   atr_(uint, top);
   atr_(uint, right);
@@ -67,7 +67,7 @@ dcl_(ImageCut) COMPARABLE EQ_NE
   l::sz2 marginSize() const;
 };
 
-dcl_(Geometry) COMPARABLE EQ_NE SHARED
+dcl_(Geometry) COMPARABLE EQNE SHARED
   cst_(real, MIN_DETECTOR_DISTANCE);
   cst_(real, MIN_DETECTOR_PIXEL_SIZE);
   cst_(real, DEF_DETECTOR_DISTANCE);
