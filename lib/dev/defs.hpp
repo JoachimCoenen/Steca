@@ -69,7 +69,7 @@ used in their three-letter form. Some even have a one-letter form. And a few
 are two-letter. Zusammengestzte Wörter können aus diesen Partikel gebildet
 werden.
 
-Here is a dictionary:
+Here is a vocabulary:
 
 - @b arg argument
 - @b atr attribute
@@ -92,9 +92,11 @@ Here is a dictionary:
 - @b mut mutable / mutate
 - @b no, number (ordinal)
 - @b num, @b n number (how many)
+- @b par parameter
 - @b pos position
 - @b ptr, @b p pointer
 - @b row, @b rw row
+- @b rge range
 - @b set set / setter
 - @b str string
 - @b res result

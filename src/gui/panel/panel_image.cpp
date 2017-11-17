@@ -266,7 +266,7 @@ void PanelImage::renderTabs() {
     inten /= maxInten;
 
     if (curved && inten > 0)
-      inten = l::pow(inten, .6f);
+      inten = inten_t(l::pow(inten, .6f));
 
     inten_t const low(.25f), mid(.5f), high(.75f);
     if (inten < low)

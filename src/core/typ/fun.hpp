@@ -15,30 +15,37 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * A representation of functions and their combination.
+ */
+
 #pragma once
+
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/typ/vec.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
+/// Function parameter
 dcl_(Par)
-  atr_(real, val);
-  atr_(real, err);
+  atr_(real, val);  ///< parameter value
+  atr_(real, err);  ///< parameter error (i.e. standard deviation)
 
-  Par(real, real);
+  Par(real val = 0, real err = 0);
 
-  set_(set, (real val, real err));
-  set_(setVal, (real));
+  set_(set, (real));                ///< set the value
+  set_(set, (real val, real err));  ///< set the value and error
 
   set_(operator=, (rc));
 dcl_end
 
+/// An abstract function
 dcl_base_(Fun) SHARED
   Fun();
 
-  virtual mth_(uint, parCount, ())     = 0;
-  virtual mth_(Par::rc, parAt, (uint)) = 0;
+  virtual mth_(uint, parCount, ())     = 0; ///< the number of parameters
+  virtual mth_(Par::rc, parAt, (uint)) = 0; ///< access to n-th parameter
   virtual set_(resetPars, ())  SET_()
 
   // evaluate the fun y = f(x), with given (parVals) or own pars

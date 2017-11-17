@@ -177,20 +177,23 @@ vbox::vbox() {
 panel::panel() : l(nullptr) {}
 
 box& panel::hb() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new hbox);
+  EXPECT_(!l || dynamic_cast<hbox*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new hbox);
   return *static_cast<hbox*>(l);
 }
 
 box& panel::vb() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new vbox);
+  EXPECT_(!l || dynamic_cast<vbox*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new vbox);
   return *static_cast<vbox*>(l);
 }
 
 grid& panel::gr() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new grid);
+  EXPECT_(!l || dynamic_cast<grid*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new grid);
   return *static_cast<grid*>(l);
 }
 
@@ -199,20 +202,23 @@ grid& panel::gr() {
 group::group(strc label) : base(toQt(label)), l(nullptr) {}
 
 box& group::hb() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new hbox);
+  EXPECT_(!l || dynamic_cast<hbox*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new hbox);
   return *static_cast<hbox*>(l);
 }
 
 box& group::vb() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new vbox);
+  EXPECT_(!l || dynamic_cast<vbox*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new vbox);
   return *static_cast<vbox*>(l);
 }
 
 grid& group::gr() {
-  EXPECT_(!l) // only one layout
-  setLayout(l = new grid);
+  EXPECT_(!l || dynamic_cast<grid*>(l)) // only one layout
+  if (!l)
+    setLayout(l = new grid);
   return *static_cast<grid*>(l);
 }
 

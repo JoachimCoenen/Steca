@@ -17,19 +17,17 @@
 
 #pragma once
 #include "../types.hpp"
-#include "range.hpp"
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/typ/arr2.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
-dcl_(count_arr2) SHARED
-  using count_rge = Range;
-  atr_(count_rge, rgeCount);
+dcl_(inten_arr2) SHARED
+  atr_(inten_rge, rgeInten);
 
-  count_arr2(l::sz2, inten_t = inten_t(0));
-  count_arr2(rc);
+  inten_arr2(l::sz2, inten_t = inten_t(0));
+  inten_arr2(rc);
 
   mth_(l::sz2, size, ()) RET_(cs.sz)
   bol_(isEmpty, ()) RET_(cs.isEmpty())
@@ -49,7 +47,7 @@ dcl_end
 dcl_(Image) SHARED
   Image();
   Image(l::sz2::rc, inten_t = inten_t(0));
-  Image(count_arr2::rc);
+  Image(inten_arr2::rc);
 
   mth_(l::sz2, size, ());
   set_(clear, ());
@@ -61,10 +59,10 @@ dcl_(Image) SHARED
   set_(addInten, (uint i, uint j, inten_t val));
   set_(addIntens, (rc));
 
-  mth_(inten_rge, rgeInten, ()) RET_(intens->rgeCount)
+  mth_(inten_rge, rgeInten, ()) RET_(intens->rgeInten)
 
 private:
-  count_arr2::shp intens;
+  inten_arr2::shp intens;
 dcl_end
 
 //------------------------------------------------------------------------------

@@ -357,27 +357,27 @@ flt32 CombinedSet::dMon() const {
   return lazyDMon;
 }
 
-#define RGE_SETS_COMBINE(op, fun) \
-  EXPECT_(!isEmpty())             \
-  Range rge;                      \
-  for (auto&& set : *this)        \
-    rge.op(set().fun);            \
+#define RGE_SETS_COMBINE(typ, op, fun)  \
+  EXPECT_(!isEmpty())                   \
+  typ rge;                              \
+  for (auto&& set : *this)              \
+    rge.op(set().fun);                  \
   return rge;
 
 gma_rge CombinedSet::rgeGma(calc::FitParams::rc s) const {
-  RGE_SETS_COMBINE(extendBy, rgeGma(s))
+  RGE_SETS_COMBINE(gma_rge, extendBy, rgeGma(s))
 }
 
 gma_rge CombinedSet::rgeGmaFull(FitParams const& s) const {
-  RGE_SETS_COMBINE(extendBy, rgeGmaFull(s))
+  RGE_SETS_COMBINE(gma_rge, extendBy, rgeGmaFull(s))
 }
 
 tth_rge CombinedSet::rgeTth(FitParams const& s) const {
-  RGE_SETS_COMBINE(extendBy, rgeTth(s))
+  RGE_SETS_COMBINE(tth_rge, extendBy, rgeTth(s))
 }
 
 inten_rge CombinedSet::rgeInten() const {
-  RGE_SETS_COMBINE(intersect, rgeInten())
+  RGE_SETS_COMBINE(inten_rge, intersect, rgeInten())
 }
 
 inten_vec CombinedSet::collectIntens(FitParams::rc fp, gma_rge::rc rgeGma) const {

@@ -16,7 +16,7 @@
  ******************************************************************************/
 
 /**@file
- *
+ * Common types
 */
 
 #pragma once
@@ -25,27 +25,28 @@
 #include <lib/dev/typ/gon.hpp>
 #include <lib/dev/typ/vec.hpp>
 #include <lib/dev/typ/xy.hpp>
+#include "core/typ/range.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------
 
-using tth_t = l::deg;
-using omg_t = l::deg;
-using phi_t = l::deg;
-using chi_t = l::deg;
+// angles
+use_deg_(tth_t)   ///< 2theta (beam / detector)
+use_deg_(gma_t)   ///< gamma (around the diffraction cone)
 
-using gma_t = l::deg;
+use_deg_(omg_t)   ///< omega (sample)
+use_deg_(phi_t)   ///< phi (sample)
+use_deg_(chi_t)   ///< chi (sample)
 
-struct Range;
 struct Ranges;
 
-using tth_rge = Range;
-using gma_rge = Range;
+using tth_rge = Range;      ///< range of tth
+using gma_rge = Range;      ///< range of gma
 
-using peak_t = l::xy;
-using fwhm_t = l::Flt32;
+using peak_t  = l::xy;      ///< a peak position+height
+using fwhm_t  = l::Flt32;   ///< a peak width
 
-using inten_t   = l::Flt32;
+using inten_t   = l::Flt32; ///< intensity (neutron count)
 using inten_vec = l::vec<inten_t>;
 using inten_rge = Range;
 
@@ -61,4 +62,4 @@ struct FitParams;
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

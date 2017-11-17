@@ -94,7 +94,6 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
   auto tabs = new l_qt::tabs;
   vb().add(tabs);
 
-
   auto&& p = new l_qt::panel;
   auto&& hb = p->hb();
 

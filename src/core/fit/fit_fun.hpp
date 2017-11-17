@@ -18,7 +18,6 @@
 #pragma once
 #include "../typ/curve.hpp"
 #include "../typ/fun.hpp"
-#include "../typ/range.hpp"
 #include "../types.hpp"
 
 namespace core { namespace fit {
@@ -196,3 +195,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof DOCS

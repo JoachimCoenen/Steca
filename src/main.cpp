@@ -22,4 +22,4 @@ int main(int argc, char* argv[]) {
   gui::App(argc, argv).exec();
 }
 
-// eof DOCS
+// eof

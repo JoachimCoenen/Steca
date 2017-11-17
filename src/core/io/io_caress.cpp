@@ -211,7 +211,7 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
                       "bad image size");
         imageSide = l::to_i(side);
 
-        count_arr2 cs(l::sz2(side, side));
+        inten_arr2 cs(l::sz2(side, side));
         for_i_(size)
           cs.setAt(i, inten_t(adet.at(i)));
 

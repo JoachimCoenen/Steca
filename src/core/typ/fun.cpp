@@ -23,14 +23,14 @@ namespace core {
 
 Par::Par(real val_, real err_) : val(val_), err(err_) {}
 
+Par::ref Par::set(real val_)
+  SET_(mut(val) = val_)
+
 Par::ref Par::set(real val_, real err_) {
   mut(val) = val_;
   mut(err) = err_;
   RTHIS
 }
-
-Par::ref Par::setVal(real val_)
-  SET_(mut(val) = val_)
 
 Par::ref Par::operator=(rc that) {
   mut(val) = that.val;
@@ -49,14 +49,14 @@ SimpleFun::SimpleFun() : pars() {}
 
 SimpleFun::ref SimpleFun::reset() {
   for (auto&& par : pars)
-    mut(par) = Par(0, 0);
+    mut(par) = Par();
   RTHIS
 }
 
 SimpleFun::ref SimpleFun::setParCount(uint cnt) {
   mut(pars).clear();
   for_i_(cnt)
-    mut(pars).add(Par(0,0));
+    mut(pars).add(Par());
   RTHIS
 }
 
@@ -73,7 +73,7 @@ Par::rc SimpleFun::parAt(uint i) const {
 
 SimpleFun::ref SimpleFun::resetPars() {
   for_i_(parCount())
-    mut(pars).setAt(i, Par(0, 0));
+    mut(pars).setAt(i, Par());
   RTHIS
 }
 
@@ -82,7 +82,7 @@ real SimpleFun::parVal(uint i, real const* parVals) const {
 }
 
 SimpleFun::ref SimpleFun::setParVal(uint i, real val)
-  SET_(mut(pars.at(i)).setVal(val))
+  SET_(mut(pars.at(i)).set(val))
 
 real SimpleFun::parErr(uint i) const {
   return pars.at(i).err;

@@ -30,7 +30,7 @@ dcl_sub_(lst_model, QAbstractTableModel)
   /// a type-safe(r) row number
   use_int_(rw_n, uint, {})
   /// a vector of (z.B. selected) row numbers
-  use_typ_(rw_n_vec, uint_vec)
+  using rw_n_vec = uint_vec;
 
   lst_model();
 

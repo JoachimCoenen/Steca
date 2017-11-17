@@ -36,7 +36,7 @@ using Ranges = core::Ranges;
 using Curve  = core::Curve;
 using curve_vec = core::curve_vec;
 
-using eTool = FitParams::eWhat;
+enum eTool { NONE, BACKGROUND, PEAK };
 
 struct Plot;
 

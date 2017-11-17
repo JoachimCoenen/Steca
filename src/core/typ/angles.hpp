@@ -20,7 +20,6 @@
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/typ/arr2.hpp>
 #include "../typ/geometry.hpp"
-#include "../typ/range.hpp"
 #include "../types.hpp"
 
 namespace core {

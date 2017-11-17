@@ -21,17 +21,17 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-count_arr2::count_arr2(l::sz2 sz, inten_t inten) : cs(sz, inten) {}
+inten_arr2::inten_arr2(l::sz2 sz, inten_t inten) : cs(sz, inten) {}
 
-count_arr2::count_arr2(rc that) : cs(that.size()) {
+inten_arr2::inten_arr2(rc that) : cs(that.size()) {
   for_i_(cs.sz.size())
     setAt(i, that.at(i));
 }
 
 
-count_arr2::ref count_arr2::addAt(uint i, uint j, inten_t c) {
+inten_arr2::ref inten_arr2::addAt(uint i, uint j, inten_t c) {
   auto sum = (cs.refAt(i, j) += c);
-  mut(rgeCount).extendBy(sum);
+  mut(rgeInten).extendBy(sum);
   return *this;
 }
 
@@ -40,16 +40,16 @@ count_arr2::ref count_arr2::addAt(uint i, uint j, inten_t c) {
 Image::Image() : Image(l::sz2()) {}
 
 Image::Image(l::sz2::rc sz, inten_t inten)
-: intens(new count_arr2(sz, inten)) {}
+: intens(new inten_arr2(sz, inten)) {}
 
-Image::Image(count_arr2::rc is): intens(new count_arr2(is)) {}
+Image::Image(inten_arr2::rc is): intens(new inten_arr2(is)) {}
 
 l::sz2 Image::size() const {
   return intens->size();
 }
 
 Image::ref Image::clear() {
-  intens.reset(new count_arr2(l::sz2()));
+  intens.reset(new inten_arr2(l::sz2()));
   return *this;
 }
 

@@ -41,18 +41,11 @@ namespace l {
     Base val;                                     \
   };
 
-  /** \def use_typ_(T, Base, ...)
-   * @c T is a simple substruct (i.e., a different type) of @c Base,
-   * with all constructors and methods
-   */
-  #define use_typ_(T, Base)                       \
-  dcl_sub_(T, Base)                               \
-    using base::base;                             \
-  dcl_end
 #else
-  #define use_int_(T, Base, ...) using T = Base;
+
+#define use_int_(T, Base, ...) using T = Base;
   #define use_flt_(T, Base, ...) using T = Base;
-  #define use_typ_(T, Base)      using T = Base;
+
 #endif
 
 /// @c pint - a (p)ositive (int)eger

@@ -236,8 +236,11 @@ void Win::onFirstShow() {
     s.saveBool(S::STARTUP_ABOUT,  true);
   }
 
+#ifndef DEVELOPMENT
   if (s.readBool(S::STARTUP_UPDATE, true))
     checkUpdate(false);
+#endif
+
   if (s.readBool(S::STARTUP_ABOUT, true))
     about();
 

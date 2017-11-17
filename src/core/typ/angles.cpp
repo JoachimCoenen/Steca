@@ -97,9 +97,9 @@ void AngleMap::calculate() {
   auto&& size = key.geometry.imageSize;
   angles.reset(new angle_arr(size));
 
-  mut(rgeTth) = Range();
-  mut(rgeGma) = Range();
-  mut(rgeGmaFull) = Range();
+  mut(rgeTth)     = tth_rge();
+  mut(rgeGma)     = gma_rge();
+  mut(rgeGmaFull) = gma_rge();
 
   auto&& cut = key.geometry.imageCut;
   EXPECT_(size.i > cut.left + cut.right)
@@ -133,7 +133,7 @@ void AngleMap::calculate() {
       l::rad gma(atan2(b_y, b_x));
       l::rad tth(atan2(b_r, b_z));
 
-      mut(*angles).setAt(i, j, Angles(tth.toDeg(), gma.toDeg()));
+      mut(*angles).setAt(i, j, Angles(tth_t(tth), gma_t(gma)));
     }
   }
 

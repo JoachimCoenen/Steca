@@ -16,15 +16,15 @@
  ******************************************************************************/
 
 #pragma once
-#include <core/typ/range.hpp>
+#include <core/types.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
 dcl_(dgram_options) EQNE
-  atr_(bool, isCombined)        = false;
-  atr_(bool, isFixedIntenScale) = false;
-  atr_(core::Range, gammaRange) = core::Range();
+  atr_(bool, isCombined)          = false;
+  atr_(bool, isFixedIntenScale)   = false;
+  atr_(core::gma_rge, gammaRange) = core::gma_rge();
   mut_(set, (rc));
 dcl_end
 

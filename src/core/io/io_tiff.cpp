@@ -201,7 +201,7 @@ static void loadTiff(File& file, l_io::path::rc path,
   l::sz2 size(imageWidth, imageHeight);
 
   uint count = imageWidth * imageHeight;
-  count_arr2 intens(size);
+  inten_arr2 intens(size);
 
   check_or_err_((bitsPerSample/8) * count == stripByteCounts, "bad format");
 

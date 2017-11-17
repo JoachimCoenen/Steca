@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * a session object - the state of the various settings
+ */
+
 #pragma once
+
 #include "data/files.hpp"
 #include "io/json.hpp"
 #include "typ/curve.hpp"
@@ -40,26 +45,39 @@ dcl_(Session)
   mut_(load, (io::Json::rc)) may_err;
   mth_(io::Json, save, ());
 
-  // one active copy; Hub will share out clones as needed
+  /// the one active set of loaded files; immutable! - the hub clones it if it needs to be changed
   atr_(l::scoped<data::Files>,     files);
-  atr_(l::shp<data::File>,         corrFile); // not modified in Session, can be shp
+  /// the optional correction file
+  atr_(l::shp<data::File>,         corrFile);
+  /// the active fitting parameters
   atr_(l::scoped<calc::FitParams>, fp);
 
+  /// add more files
   bol_mut_(addFiles,   (l_io::path_vec::rc)) may_err;
+  /// remove files
   bol_mut_(remFilesAt, (uint_vec::rc));
 
+  /// make a file active
   bol_mut_(activateFileAt, (uint, bool));
 
+  /// load a correction file
   mut_(setCorrFile,   (l_io::path::rc)) may_err;
+  /// remove the correction file from the session
   mut_(remCorrFile, ());
+  /// enable correction (if correction file is loaded)
   mut_(tryEnableCorr, (bool on));
 
+  /// set background ranges
   mut_(setBg, (Ranges::rc));
+  /// add a range to the background
   mut_(addBg, (Range::rc));
+  /// remove range from the background
   mut_(remBg, (Range::rc));
 
+  /// set the reflection range
   mut_(setRefl, (Range::rc));
 
+  /// set or check the image size
   set_(setImageSize,  (l::sz2)) may_err;
 
 private:
@@ -68,4 +86,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

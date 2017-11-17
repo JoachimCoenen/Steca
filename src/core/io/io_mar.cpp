@@ -213,7 +213,7 @@ l::own<File> loadMar(path::rc path) may_err {
   }
 
   l::sz2 size(pixSizeX, pixSizeY);
-  count_arr2 convertedIntens(size);
+  inten_arr2 convertedIntens(size);
 
   for_i_(pixelSize)
     convertedIntens.setAt(i, inten_t(i4_image[i]));

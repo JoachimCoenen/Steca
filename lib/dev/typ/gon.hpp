@@ -60,6 +60,37 @@ dcl_(rad)
   mth_(real, cos, ());
 dcl_end
 
+#ifndef NDEBUG
+
+#define use_deg_(T)   \
+  dcl_sub_(T, l::deg) \
+    using base::base; \
+    mth_(T, operator+,  (rc that))  RET_(T(base::operator+(that)))  \
+    mth_(T, operator-,  (rc that))  RET_(T(base::operator-(that)))  \
+    mth_(T, operator-,  ())         RET_(T(base::operator-()))      \
+    mth_(T, operator*,  (real r))   RET_(T(base::operator*(r)))     \
+    mth_(T, operator/,  (real r))   RET_(T(base::operator/(r)))     \
+    mth_(T, normalized, ())         RET_(T(base::normalized()))     \
+  dcl_end
+
+#define use_rad_(T)   \
+  dcl_sub_(T, l::rad) \
+    using base::base; \
+    mth_(T, operator+,  (rc that))  RET_(T(base::operator+(that)))  \
+    mth_(T, operator-,  (rc that))  RET_(T(base::operator-(that)))  \
+    mth_(T, operator-,  ())         RET_(T(base::operator-()))      \
+    mth_(T, operator*,  (real r))   RET_(T(base::operator*(r)))     \
+    mth_(T, operator/,  (real r))   RET_(T(base::operator/(r)))     \
+    mth_(T, normalized, ())         RET_(T(base::normalized()))     \
+  dcl_end
+
+#else
+
+#define use_deg_(T) using T = l::deg;
+#define use_rad_(T) using T = l::rad;
+
+#endif
+
 //------------------------------------------------------------------------------
 }
 // eof

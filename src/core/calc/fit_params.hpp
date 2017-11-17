@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Fitting parameters
+ */
 #pragma once
+
 #include "../typ/geometry.hpp"
 #include "../typ/image.hpp"
 #include "../data/sets.hpp"
@@ -27,10 +31,9 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
+/** Contains a full set of parameters for fitting. */
 dcl_(FitParams) SHARED CLONED
   using Reflection = calc::Reflection;
-
-  enum eWhat { NONE, BACKGROUND, PEAK };
 
   FitParams();
 
@@ -71,3 +74,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof DOCS

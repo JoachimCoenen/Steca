@@ -18,13 +18,14 @@
 #include "interpolation.hpp"
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
+#include "../types.hpp"
 #include <algorithm>
 
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 ReflectionInfo::ReflectionInfo(l::deg alpha, l::deg beta)
-: ReflectionInfo(alpha, beta, Range(),
+: ReflectionInfo(alpha, beta, gma_rge(),
                  inten_t(l::real_nan), inten_t(l::real_nan),
                  tth_t(l::real_nan), tth_t(l::real_nan),
                  fwhm_t(l::real_nan), fwhm_t(l::real_nan))
