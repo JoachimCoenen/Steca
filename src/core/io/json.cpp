@@ -219,7 +219,7 @@ l::own<calc::Reflection> Json::asReflection() const may_err {
   auto fun = l::scope(asFun());
   check_or_err_(isType<fit::PeakFun>(fun.ptr()), "must be a peak function");
 
-  auto p = l::owned(static_cast<fit::PeakFun const*>(fun.take().ptr()));
+  auto p = l::owned(static_cast<fit::PeakFun const*>(fun.take()));
   return l::owned(new calc::Reflection(p));
 }
 

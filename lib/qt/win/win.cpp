@@ -14,22 +14,21 @@ namespace l_qt {
 win::win() : firstShow(true) {}
 
 static split& _hvs(split* s, win* w) {
-  EXPECT_(s) EXPECT_(w)
-  check_or_err_(w->centralWidget(), "already have a central widget");
+  EXPECT_(s) EXPECT_(w) EXPECT_(!w->centralWidget())
   w->setCentralWidget(s);
   return *s;
 }
 
-split& win::hs() may_err {
+split& win::hs() {
   return _hvs(new hSplit, this);
 }
 
-split& win::vs() may_err {
+split& win::vs() {
   return _hvs(new vSplit, this);
 }
 
-panel& win::makePanel() may_err {
-  check_or_err_(!base::centralWidget(), "already have a central widget");
+panel& win::makePanel() {
+  EXPECT_(!base::centralWidget())
   auto p = new panel;
   base::setCentralWidget(p);
   return *p;
@@ -83,4 +82,4 @@ void win::closeEvent(QCloseEvent* e) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -20,4 +20,4 @@ tabs::ref tabs::addTab(panel* p, strc title, QWidget* tabBtn) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

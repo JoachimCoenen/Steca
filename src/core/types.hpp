@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/**@file
+ *
+*/
+
 #pragma once
+
 #include <lib/dev/inc/flt.hpp>
 #include <lib/dev/typ/gon.hpp>
 #include <lib/dev/typ/vec.hpp>

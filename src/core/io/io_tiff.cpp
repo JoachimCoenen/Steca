@@ -229,7 +229,7 @@ static void loadTiff(File& file, l_io::path::rc path,
   file.addSet(
     l::sh(new Set(
       file.src,
-      l::sh(md.take().ptr()),
+      l::sh(md.take()),
       l::sh(new Image(intens)))));
 }
 

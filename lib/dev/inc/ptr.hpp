@@ -21,7 +21,7 @@ namespace l {
 
 /// the base for all smart pointers
 dcl_(ptr_base)
-protected:
+public: //protected:
   ptr_(void, p);        ///< the value
 
   ptr_base(pcvoid);
@@ -95,28 +95,6 @@ template <typename T> own<T> owned(T* p) RET_(own<T>(p))
 
 //------------------------------------------------------------------------------
 
-/** @c own_ptr is a nullable @c own
- */
-template <typename T>
-struct own_ptr : ptr_base {
-  own_ptr() : ptr_base(nullptr) {}
-  own_ptr(T const* p) : ptr_base(p) {}
-
-  T const* ptr()      const   RET_(static_cast<T const*>(p))
-  T* ptr()                    RET_(static_cast<T*>(mutp(p)))
-  operator T const*() const   RET_(ptr())
-  operator T*()               RET_(ptr())
-  T*       operator->()       RET_(ptr())
-  T const* operator->() const RET_(ptr())
-
-  /// convert to non-null @c own
-  own<T> justOwn() const {
-    return own<T>(NEED_(ptr()));
-  }
-};
-
-//------------------------------------------------------------------------------
-
 /** @c give_me expects to take over an ownership from @c own. It serves as a hint,
  * the programmer must do all the work.
  */
@@ -131,9 +109,7 @@ struct give_me : own<T> { using base = own<T>;
 /** @c scoped deletes its pointed-to object, when it goes out of scope */
 template <typename T>
 struct scoped : ptr_base {
-  scoped(T* p = nullptr): ptr_base(p) {}
-  scoped(jp<T> p)       : ptr_base(p) {}
-  scoped(own_ptr<T> p)  : ptr_base(p) {}
+  scoped(T const* p = nullptr): ptr_base(p) {}
   scoped(scoped&& that) : ptr_base(that.take()) {}
   scoped(scoped const&) = delete;
 
@@ -156,14 +132,15 @@ struct scoped : ptr_base {
     reset(nullptr);
   }
 
-  own_ptr<T> take() {
+  T* take() {
     auto res = ptr();
     mut(p) = nullptr;
     return res;
   }
 
   own<T> takeOwn() {
-    return take().justOwn();
+    EXPECT_(ptr())
+    return owned(take());
   }
 
   T* ptr() const {
@@ -175,9 +152,8 @@ struct scoped : ptr_base {
 };
 
 /// a helper to make @c scoped
-template <typename T> scoped<T> scope(T* p)             RET_(scoped<T>(p))
-template <typename T> scoped<T const> scope(T const* p) RET_(scoped<T>(p))
-template <typename T> scoped<T> scope(own<T> p)         RET_(scoped<T>(p.ptr()))
+template <typename T> scoped<T> scope(T* p)     RET_(scoped<T>(p))
+template <typename T> scoped<T> scope(own<T> p) RET_(scoped<T>(p.ptr()))
 
 //------------------------------------------------------------------------------
 

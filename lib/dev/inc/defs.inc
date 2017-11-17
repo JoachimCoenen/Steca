@@ -1,7 +1,8 @@
 // (lib/dev)
-/*
-Include this file, directly or indirectly, into each source file that uses the
-library.
+
+/**@file
+ * Include this file, directly or indirectly, into each *source* file
+ * that uses the library.
 */
 
 #ifdef DEV_LIB_DEFS_INC

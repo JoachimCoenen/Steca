@@ -1,8 +1,12 @@
 // (lib/qt)
 
+/**@file
+ * Include all simple widgets; provide helper functions that make the widgets.
+*/
+
 #pragma once
 
-// gui widgets
+// selected widgets
 #include "wgt/btn.hpp"
 #include "wgt/cbo.hpp"
 #include "wgt/chk.hpp"
@@ -16,7 +20,6 @@
 namespace l_qt { namespace make_widgets {
 //------------------------------------------------------------------------------
 
-// returns could be l::own<>, but we want r/w
 l_qt::btn*      btn(l_qt::act&);
 l_qt::pushbtn*  pushbtn(strc tx);
 
@@ -39,5 +42,5 @@ l_qt::edit*     edit();
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof
 

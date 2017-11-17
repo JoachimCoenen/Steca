@@ -1,5 +1,11 @@
 # Doxyfile 1.8.11
 
+INPUT                  = ./lib
+FILE_PATTERNS          = *.hpp *.cpp *.inc
+PREDEFINED             = \
+  DOXYGEN_SHOULD_SKIP_THIS=1 \
+  signals=public
+
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
@@ -101,9 +107,9 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = ./lib/dev
 INPUT_ENCODING         = UTF-8
-FILE_PATTERNS          = *.hpp *.cpp
+#INPUT                  = ./lib/qt
+#FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
 EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
@@ -267,7 +273,7 @@ EXPAND_ONLY_PREDEF     = NO
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           =
 INCLUDE_FILE_PATTERNS  =
-PREDEFINED             = DOXYGEN_SHOULD_SKIP_THIS=1 signals=public
+#PREDEFINED             = DOXYGEN_SHOULD_SKIP_THIS=1 signals=public
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = NO
 #---------------------------------------------------------------------------
@@ -286,7 +292,7 @@ CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            =
 DIA_PATH               =
 HIDE_UNDOC_RELATIONS   = NO
-HAVE_DOT               = NO
+HAVE_DOT               = YES
 DOT_NUM_THREADS        = 0
 DOT_FONTNAME           = Helvetica
 DOT_FONTSIZE           = 10

@@ -81,7 +81,7 @@ TEST_("scoped",
   scoped<uint> s1(new uint(8)), s2(new uint(9));
   CHECK_EQ(8, *s1);
   CHECK(bool(s1));
-  delete s1.take().ptr();
+  delete s1.take();
   CHECK_FALSE(bool(s1));
 
   typedef __test_instance_cnt cnt;
@@ -97,16 +97,16 @@ TEST_("scoped",
 
   CHECK_EQ(0, cnt::cnt);
 
-  own_ptr<cnt> raw;
+  cnt *raw;
 
-//  {
-//    sco_ptr p(new cnt);
-//    CHECK(bool(p));
-//    CHECK_EQ(1, cnt::cnt);
-//    raw.set(p.take());
-//    CHECK_FALSE(bool(p));
-//    CHECK_EQ(1, cnt::cnt);
-//  }
+  {
+    sco_ptr p(new cnt);
+    CHECK(bool(p));
+    CHECK_EQ(1, cnt::cnt);
+    raw = p.take();
+    CHECK_FALSE(bool(p));
+    CHECK_EQ(1, cnt::cnt);
+  }
 
   CHECK_EQ(1, cnt::cnt);
 

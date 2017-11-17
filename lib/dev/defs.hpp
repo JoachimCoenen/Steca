@@ -69,12 +69,13 @@ used in their three-letter form. Some even have a one-letter form. And a few
 are two-letter. Zusammengestzte Wörter können aus diesen Partikel gebildet
 werden.
 
-Here is a vocabulary:
+Here is a dictionary:
 
 - @b arg argument
 - @b atr attribute
 - @b beg begin
 - @b bol boolean
+- @b cbo combo
 - @b col, @b cl column
 - @b cst, @b c const
 - @b dbl double

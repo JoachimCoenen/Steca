@@ -1,5 +1,9 @@
 // (lib/qt)
-// common definitions, include in a *source* file
+
+/**@file
+ * Include this file, directly or indirectly, into each *source* file
+ * that uses the (with qt) library.
+*/
 
 #ifdef QT_LIB_DEFS_INC
   #error inlude only once
@@ -10,4 +14,4 @@
 #include "qstr.inc"
 
 //------------------------------------------------------------------------------
-// eof DOCS
+// eof

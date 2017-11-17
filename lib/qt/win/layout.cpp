@@ -177,58 +177,46 @@ vbox::vbox() {
 panel::panel() : l(nullptr) {}
 
 box& panel::hb() {
-  if (l)
-    check_or_err_(dynamic_cast<hbox*>(l), "panel already has another layout");
-  else
-    setLayout(l = new hbox);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new hbox);
   return *static_cast<hbox*>(l);
 }
 
 box& panel::vb() {
-  if (l)
-    check_or_err_(dynamic_cast<vbox*>(l), "panel already has another layout");
-  else
-    setLayout(l = new vbox);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new vbox);
   return *static_cast<vbox*>(l);
 }
 
 grid& panel::gr() {
-  if (l)
-    check_or_err_(dynamic_cast<grid*>(l), "panel already has another layout");
-  else
-    setLayout(l = new grid);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new grid);
   return *static_cast<grid*>(l);
 }
 
 //------------------------------------------------------------------------------
 
-group::group(strc tx) : base(toQt(tx)), l(nullptr) {}
+group::group(strc label) : base(toQt(label)), l(nullptr) {}
 
 box& group::hb() {
-  if (l)
-    check_or_err_(dynamic_cast<hbox*>(l), "panel already has another layout");
-  else
-    setLayout(l = new hbox);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new hbox);
   return *static_cast<hbox*>(l);
 }
 
 box& group::vb() {
-  if (l)
-    check_or_err_(dynamic_cast<vbox*>(l), "panel already has another layout");
-  else
-    setLayout(l = new vbox);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new vbox);
   return *static_cast<vbox*>(l);
 }
 
 grid& group::gr() {
-  if (l)
-    check_or_err_(dynamic_cast<grid*>(l), "panel already has another layout");
-  else
-    setLayout(l = new grid);
+  EXPECT_(!l) // only one layout
+  setLayout(l = new grid);
   return *static_cast<grid*>(l);
 }
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof
 

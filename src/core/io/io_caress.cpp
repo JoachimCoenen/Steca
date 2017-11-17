@@ -168,7 +168,7 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
       l::sh(new Set(
         file->src,
         l::sh(new Meta(file->dict, vals, tth, omg, chi, phi, tim, mon, dTim, dMon)),
-        l::sh(image.take().ptr()))));
+        l::sh(image.take()))));
 
     vals.clear();
     lastTim = tim; lastMon = mon;

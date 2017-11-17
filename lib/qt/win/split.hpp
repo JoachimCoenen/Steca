@@ -1,6 +1,11 @@
 // (lib/qt)
 
+/**@file
+ * A window splitter.
+ */
+
 #pragma once
+
 #include "../defs.hpp"
 #include <QSplitter>
 
@@ -12,17 +17,19 @@ struct split;
 struct box;
 struct panel;
 
+/// a splitter
 dcl_sub_(split, QSplitter)
-  split& hs();
-  split& vs();
+  split& hs();            ///< add a nested horizontal splitter
+  split& vs();            ///< add a nested vertical splitter
 
-  split& add(QWidget*);
-  panel& addPanel();
+  split& add(QWidget*);   ///< add a widget
+  panel& addPanel();      ///< add a panel
 
 protected:
   split();
 dcl_end
 
+/// a horizontal splitter
 dcl_sub_(hSplit, split)
 protected:
   hSplit();
@@ -32,6 +39,7 @@ protected:
   friend struct box;
 dcl_end
 
+/// a vertical splitter
 dcl_sub_(vSplit, split)
 protected:
   vSplit();
@@ -43,4 +51,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

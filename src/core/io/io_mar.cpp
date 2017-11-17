@@ -234,7 +234,7 @@ l::own<File> loadMar(path::rc path) may_err {
   mut(*file).addSet(
     l::sh(new Set(
       file->src,
-      l::sh(md.take().ptr()),
+      l::sh(md.take()),
       l::sh(new Image(convertedIntens)))));
 
   delete[] i2_image;
