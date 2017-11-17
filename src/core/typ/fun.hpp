@@ -46,59 +46,60 @@ dcl_base_(Fun) SHARED
 
   virtual mth_(uint, parCount, ())     = 0; ///< the number of parameters
   virtual mth_(Par::rc, parAt, (uint)) = 0; ///< access to n-th parameter
-  virtual set_(resetPars, ())  SET_()
 
-  // evaluate the fun y = f(x), with given (parVals) or own pars
+  /** Evaluate y = f(x); if @c parVals is given, parametr values are taken
+   * from it <0..parCount), otherwise @c parAt calls are used
+   */
   virtual mth_(real, y, (real x, real const* parVals = nullptr)) = 0;
 
-  // partial derivative / par, with given (parVals) or own pars
+  /// partial derivative dy = f(x) | parIdx; with given @c parVals or @c parAt
   virtual mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr)) = 0;
 dcl_end
 
+/// An abstract simple function (stores parameters)
 dcl_sub_(SimpleFun, Fun)
-  atr_(l::vec<Par>, pars);
+  atr_(l::vec<Par>, pars);        ///< parameters
 
   SimpleFun();
 
-  set_(reset, ());
+  set_(reset, ());                ///< clear all parameters
 
-  set_(setParCount, (uint));
-  set_(add, (Par::rc));
+  set_(setParCount, (uint));      ///< allocate parameters (cleared)
+  set_(add, (Par::rc));           ///< extend the parameters by one
 
   mth_(uint,    parCount, ());
   mth_(Par::rc, parAt, (uint));
-  set_(resetPars, ());
 
+  /// get a @c parIdx-th parameter's value; either from @c parVals or from own
   mth_(real, parVal, (uint parIdx, real const* parVals = nullptr));
+  /// set own parameter's value
   set_(setParVal, (uint parIdx, real val));
-
+  /// get a parameter's error
   mth_(real, parErr, (uint parIdx));
 dcl_end
 
-// a fun that is a sum of other funs
-
+/** A sum of functions (purpose: eventual option to fit overlapped peaks);
+ * the aggregate parameters is a sequence of parameters of individual functions
+ */
 dcl_sub_(SumFuns, Fun)
-  set_(add, (l::give_me<Fun>));
+  atr_(l::vec<Fun::shp>, funs);   ///< a collection of summed functions
+  set_(add, (l::give_me<Fun>));   ///< add a function to the collection
 
-  // aggregate par list for all added funs
-  mth_(uint,    parCount, ());
-  mth_(Par::rc, parAt, (uint));
+  mth_(uint,    parCount, ());    ///< the aggregate parameter count
+  mth_(Par::rc, parAt, (uint));   ///< access to aggregate parameter list
 
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
-  // summed funs
-  l::vec<Fun::shp> funs;
-
 protected:
-  // the aggregate par list
-  l::vec<Par const*> allPars;
-  // look up the original fun for a given aggregate par index
-  l::vec<Fun const*> fun4parIdx;
-  // the starting index of pars of a summed fun, given the aggregate par index
-  l::vec<uint> firstParIdx4parIdx;
+  /// the aggregate parameter list - pointers to parameters in individual functions
+  atr_(l::vec<Par const*>, allPars);
+  /// given an aggregate parameter index, look up the owning individual function
+  atr_(l::vec<Fun const*>, fun4parIdx);
+  /// given an aggregate parameter index, look the index of the first parameter of the same individual function
+  atr_(l::vec<uint>, firstParIdx4parIdx);
 dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

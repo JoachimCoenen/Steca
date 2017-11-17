@@ -71,12 +71,6 @@ Par::rc SimpleFun::parAt(uint i) const {
   return pars.at(i);
 }
 
-SimpleFun::ref SimpleFun::resetPars() {
-  for_i_(parCount())
-    mut(pars).setAt(i, Par());
-  RTHIS
-}
-
 real SimpleFun::parVal(uint i, real const* parVals) const {
   return parVals ? parVals[i] : pars.at(i).val;
 }
@@ -92,14 +86,14 @@ real SimpleFun::parErr(uint i) const {
 
 SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
   uint parIdx = parCount();
-  funs.add(Fun::shp(fun.ptr()));
+  mut(funs).add(Fun::shp(fun.ptr()));
 
   for_i_(fun->parCount()) {
     // aggregate par list
-    allPars.add(&fun->parAt(i));
+    mut(allPars).add(&fun->parAt(i));
     // lookup helpers
-    fun4parIdx.add(fun);
-    firstParIdx4parIdx.add(parIdx);
+    mut(fun4parIdx).add(fun);
+    mut(firstParIdx4parIdx).add(parIdx);
   }
 
   RTHIS
@@ -142,4 +136,4 @@ real SumFuns::dy(real x, uint i, real const* parVals) const {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

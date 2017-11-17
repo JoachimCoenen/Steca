@@ -16,32 +16,41 @@
  ******************************************************************************/
 
 #pragma once
+
+/** @file
+ * A representation of a numeric range (a.k.a. interval)
+ */
+
 #include <lib/dev/typ/vec.hpp>
 
 namespace core {
 //------------------------------------------------------------------------------
 
+/** A numeric range (interval). It can be undefined (NaN, NaN), or defined
+ * (not-NaN, not-NaN). The lower endpoint of a defined interval can be finite or
+ * -Inf, the higher endpoint either finite or +Inf.
+ */
 dcl_(Range) COMPARABLE EQNE
-  using rv_t = real;
+  using rv_t = real;          ///< (r)ange (v)alue
 
-  atr_(rv_t, min);
-  atr_(rv_t, max);
+  atr_(rv_t, min);            ///< the lower endpoint
+  atr_(rv_t, max);            ///< the higher endpoint
 
-  Range();                          // undef'd (NaN)
-  Range(rv_t);                      // singular, min == max
-  Range(rv_t, rv_t);                // the usual
+  Range();                    ///< undefined (NaN, NaN)
+  Range(rv_t);                ///< singular - one point (counts as empty)
+  Range(rv_t min, rv_t max);  ///< the usual
 
   Range(rc);
 
-  static Range inf();                // -inf .. +inf
+  static Range inf();         ///< an infinite range (-inf .. +inf)
 
-  bool  isDef()   const;             // is not NaNs
-  bool  isEmpty() const;             // not def'd or empty
+  bool  isDef()   const;      ///< is defined (not NaN-NaN)
+  bool  isEmpty() const;      ///< not defined or empty
 
   rv_t  width()   const;
   rv_t  center()  const;
 
-  static Range safeFrom(rv_t, rv_t); // safe factory
+  static Range safeFrom(rv_t, rv_t);  ///< orders the endpoints
 
   void  extendBy(rv_t);             // extend to include the number
   void  extendBy(rc);               // extend to include the range
