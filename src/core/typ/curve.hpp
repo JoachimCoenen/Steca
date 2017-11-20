@@ -15,15 +15,20 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * A curve - a sequence of x/y points.
+ */
+
 #pragma once
+
 #include <lib/dev/inc/vecs.hpp>
 #include "fun.hpp"
 #include "range.hpp"
 
 namespace core {
 //------------------------------------------------------------------------------
-// A set of x-y datapoints.
 
+/// A curve - a sequence of x/y points.
 dcl_(Curve)
   atr_(real_vec, xs);
   atr_(real_vec, ys);
@@ -38,7 +43,7 @@ dcl_(Curve)
 
   bol_(isEmpty, ());
   mth_(sz_t, size, ());
-  bol_(isSorted, ());
+  bol_(isSorted, ());         ///< check if xs in order
 
   set_(add, (real x, real y));
 
@@ -47,12 +52,12 @@ dcl_(Curve)
 
   set_(subtract, (Fun::rc));
 
-  mth_(uint, maxYindex, ());  // the index of the maximum y value
-  mth_(real, sumY, ());
+  mth_(uint, maxYindex, ());  ///< the index of the maximum y value
+  mth_(real, sumY, ());       ///< integrate
 };
 
 using curve_vec =  l::vec<Curve>;
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

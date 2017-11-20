@@ -15,16 +15,23 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI panels.
+ */
+
 #pragma once
+
 #include "panel.hpp"
 #include <core/data/sets.hpp>
 #include <core/calc/fit_params.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
+
 struct Hub;
 struct ImageWidget;
 
+/// The panel with a detector image
 dcl_sub_(PanelImage, Panel)
   friend struct ImageWidget;
   explicit PanelImage(Hub&);
@@ -44,4 +51,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

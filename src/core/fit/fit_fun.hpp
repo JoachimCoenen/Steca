@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Fitting functions.
+ */
+
 #pragma once
+
 #include "../typ/curve.hpp"
 #include "../typ/fun.hpp"
 #include "../types.hpp"
@@ -23,11 +28,7 @@
 namespace core { namespace fit {
 //------------------------------------------------------------------------------
 
-void initFry();
-
-//------------------------------------------------------------------------------
-// a polynom(ial)
-
+/// Polynomial (used to fit the background)
 dcl_sub_(Polynom, SimpleFun)
   Polynom(uint degree = 0);
 
@@ -37,30 +38,39 @@ dcl_sub_(Polynom, SimpleFun)
   mth_(real,  y, (real x, real const* parVals = nullptr));
   mth_(real, dy, (real x, uint parIdx, real const* parVals = nullptr));
 
+  /// average value - used to normalize to background
   mth_(real, avgY, (Range::rc xx, real const* parVals = nullptr));
 
-  mut_(fit, (Curve::rc, Ranges::rc xx));
+  /// fit a curve within given ranges
+  mut_(fit, (Curve::rc, Ranges::rc));
+
+  /// fit a polynom with a given degree
   fry_(Polynom, fromFit, (uint degree, Curve::rc, Ranges::rc xx));
 dcl_end
 
 //------------------------------------------------------------------------------
-// Abstract peak function
 
+/// Abstract peak function
 dcl_sub_(PeakFun, SimpleFun) SHARED
+  /// types of fit
   enum class eType {
     RAW, GAUSSIAN, LORENTZIAN, PSEUDOVOIGT1, PSEUDOVOIGT2,
-    NUM_TYPES
   };
 
+  /// string version
+  static str_vec const sTypes;
+
+  /// a peak function factory
   fry_(l::own<PeakFun>, factory, (eType));
 
   PeakFun();
 
   mth_(l::own<PeakFun>, clone, ());
-  virtual mth_(eType, type, ()) = 0;
 
-  cst_(str_vec, sTypes);
-  mth_(strc, sType, ());
+  /// this function's type
+  virtual mth_(eType, type, ()) = 0;
+  /// as a string
+  mth_(strc,   sType, ());
 
   atr_(Range,  range);
   atr_(peak_t, guessedPeak);
@@ -79,12 +89,14 @@ dcl_sub_(PeakFun, SimpleFun) SHARED
   mut_(fit, (Curve::rc curve)) { fit(curve, range); }
   virtual mut_(fit, (Curve::rc, Range::rc));
 
-  protected:
+protected:
   mth_mut_(Curve, prepareFit, (Curve::rc curve, Range::rc range));
 dcl_end
 
 //------------------------------------------------------------------------------
 
+/** "Raw": no fitting, simply copy the curve
+ */
 dcl_sub_(Raw, PeakFun)
   Raw();
 
@@ -113,6 +125,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// Gaussian
 dcl_sub_(Gaussian, PeakFun)
   enum { parAMPL, parXSHIFT, parSIGMA };
 
@@ -133,6 +146,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// Lorentzian
 dcl_sub_(Lorentzian, PeakFun)
   enum { parAMPL, parXSHIFT, parGAMMA };
 
@@ -153,6 +167,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// PseudoVoigt: a combination of Gaussian and Lorentzian, sigma = gamma
 dcl_sub_(PseudoVoigt1, PeakFun)
   enum { parAMPL, parXSHIFT, parSIGMAGAMMA, parETA };
 
@@ -174,6 +189,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// PseudoVoigt: a combination of Gaussian and Lorentzian, sigma != gamma
 dcl_sub_(PseudoVoigt2, PeakFun)
   enum { parAMPL, parXSHIFT, parSIGMA, parGAMMA, parETA };
 
@@ -195,4 +211,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

@@ -15,6 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Hub reference.
+ */
+
 #pragma once
 
 #include <lib/qt/defs.hpp>
@@ -25,6 +29,7 @@ namespace gui {
 
 struct Hub;
 
+/// Inherit from RefHub to have access to Hub
 dcl_(RefHub)
   Hub& hub;
 
@@ -33,4 +38,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

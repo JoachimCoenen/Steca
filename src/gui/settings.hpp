@@ -15,13 +15,18 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Settings.
+ */
 #pragma once
+
 #include <lib/qt/defs.hpp>
 #include <lib/qt/app/settings.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
+/// startup-actions configuration
 dcl_sub_(Settings, l_qt::Settings)
   using base::base;
 
@@ -34,4 +39,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

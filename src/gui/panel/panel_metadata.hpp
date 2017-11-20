@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI panels.
+ */
+
 #pragma once
+
 #include "panel.hpp"
 #include <lib/qt/view/lst.hpp>
 
@@ -24,6 +29,7 @@ namespace gui {
 
 struct Hub;
 
+/// The panel with metadata list
 dcl_sub_(PanelMetadata, Panel)
   PanelMetadata(Hub&);
 
@@ -34,4 +40,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -15,13 +15,19 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI panels.
+ */
+
 #pragma once
+
 #include <lib/qt/win/layout.hpp>
 #include <lib/qt/win/tabs.hpp>
 
 namespace gui {
 //------------------------------------------------------------------------------
 
+/// The base of GUI panels
 dcl_sub_(Panel, l_qt::panel)
   Panel();
   Panel(strc title);
@@ -29,4 +35,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * The application.
+ */
+
 #pragma once
+
 #include <lib/qt/app/app.hpp>
 
 namespace gui {
@@ -28,4 +33,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

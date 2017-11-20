@@ -124,4 +124,4 @@ PanelFiles::PanelFiles(Hub& hub) : base(""), view(nullptr) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI panels.
+ */
+
 #pragma once
+
 #include "panel.hpp"
 
 namespace gui {
@@ -23,6 +28,7 @@ namespace gui {
 
 struct Hub;
 
+/// The panel with a diffractogram
 dcl_sub_(PanelDiffractogram, Panel)
   PanelDiffractogram(Hub&);
 
@@ -32,4 +38,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -15,12 +15,19 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Matrix & vecor support
+ */
+
 #pragma once
+
 #include <lib/dev/defs.hpp>
 #include <lib/dev/typ/gon.hpp>
 
 namespace core {
+//------------------------------------------------------------------------------
 
+/// 3-element vector
 dcl_(vec3)
   atr_(real, _0);
   atr_(real, _1);
@@ -29,6 +36,7 @@ dcl_(vec3)
   vec3(real, real, real);
 dcl_end
 
+/// 3x3 matrix
 dcl_(mat3)
   atr_(real, _00); atr_(real, _01); atr_(real, _02);
   atr_(real, _10); atr_(real, _11); atr_(real, _12);
@@ -42,10 +50,11 @@ dcl_(mat3)
   mth_(Self, operator*,  (rc));
   mth_(vec3, operator*,  (vec3::rc));
 
-  fry_(Self, rotationCWx,  (l::rad));
-  fry_(Self, rotationCWz,  (l::rad));
-  fry_(Self, rotationCCWz, (l::rad));
+  fry_(Self, rotationCWx,  (l::rad)); ///< clockwise around x
+  fry_(Self, rotationCWz,  (l::rad)); ///< clockwise around z
+  fry_(Self, rotationCCWz, (l::rad)); ///< counter-clockwise around z
 dcl_end
 
+//------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

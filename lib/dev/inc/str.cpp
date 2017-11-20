@@ -2,6 +2,7 @@
 
 #include "str.hpp"
 #include "defs.inc"
+#include <algorithm>
 
 //------------------------------------------------------------------------------
 
@@ -20,6 +21,12 @@ str str::trimmed() const {
   while (p1 < p2 && std::isspace(*(p2-1)))          // trim right
     --p2;
   return str(p1, l::to_u(p2-p1));                   // substring
+}
+
+str str::lower() const {
+  str s(*this);
+  std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+  return s;
 }
 
 str str::num(int val) {

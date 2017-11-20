@@ -15,6 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Our best attempt to wrap data-loading subroutines of the legacy Caress code
+ */
+
 #pragma once
 #include <lib/dev/defs.hpp>
 #include <lib/dev/typ/buf.hpp>
@@ -31,10 +35,10 @@ enum dtype {
 
 using buf = l::buf;
 
-buf getData(dtype, uint n);
-str getString(uint n);
-str getAsString(dtype, uint n);
-float  getAsFloat(dtype, uint n);
+buf   getData(dtype, uint n);
+str   getString(uint n);
+str   getAsString(dtype, uint n);
+float getAsFloat(dtype, uint n);
 
 l::vec<int32> getAdet(dtype, uint n);
 
@@ -42,3 +46,4 @@ bool nextDataUnit(str& elem, str& node, dtype&, uint& n);
 
 //------------------------------------------------------------------------------
 }}
+// eof

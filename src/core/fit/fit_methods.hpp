@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Fitting methods: a simple wrapper around the LevMar library
+ */
 #pragma once
+
 #include "fit_fun.hpp"
 
 namespace core { namespace fit {
@@ -56,3 +60,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof

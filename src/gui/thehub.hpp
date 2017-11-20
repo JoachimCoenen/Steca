@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * The Hudsucker Proxy.
+ */
 #pragma once
+
 #include "acts.hpp"
 #include "options.hpp"
 #include "refhub.hpp"
@@ -36,14 +40,17 @@ namespace gui {
 
 struct Win;
 
+/// The hub of all communication
 dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
   ref_(Win,  win);
   atr_(Acts, acts);
 
+  /// The base of hub-connected models
   dcl_sub2_(HubModel, RefHub, l_qt::lst_model)
     HubModel(Hub&);
   dcl_end
 
+  /// The model of loaded files
   dcl_sub_(ModelFiles, HubModel)
     friend struct Hub;
     ModelFiles(Hub&);
@@ -60,6 +67,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mth_(core::data::File::shp, at, (rw_n));
   dcl_end
 
+  /// The model of datasets
   dcl_sub_(ModelDatasets, HubModel)
     friend struct Hub;
     ModelDatasets(Hub&);
@@ -87,6 +95,7 @@ dcl_reimpl2_(Hub, l_qt::Hub, core::Session)
     mut_(combineSets, ());
   dcl_end
 
+  /// The model of metadata
   dcl_sub_(ModelMetadata, HubModel)
     friend struct Hub;
     ModelMetadata(Hub&);
@@ -118,10 +127,12 @@ private:
     RET_(*base::files)
   mth_(core::data::FilesMetaDict::rc, currentDict, ())
     RET_(base::files->dict())
+
   core::data::CombinedSets::shr currentSets;
   core::data::CombinedSet::shp  currentSet;
+
   void setSet(core::data::CombinedSet::shp);
-  str_vec currentMetaKeys; // shown metadata
+  str_vec currentMetaKeys; ///< currently shown metadata
 
 public:
   friend struct ModelFiles;
@@ -152,7 +163,7 @@ public:
   mut_(addBg, (core::Range::rc))  emits;
   mut_(remBg, (core::Range::rc))  emits;
 
-  mut_(setRefl, (Range::rc r)) emits;
+  mut_(setRefl, (Range::rc r))    emits;
 
   mut_(setNorm, (core::calc::eNorm))   emits;
 
@@ -178,9 +189,9 @@ private:
   void setMetaChecked(core::data::KeyBag::shr);
 
 signals:
-  // a new set of combined sets, opt. the selected one, fit params
+  /// a new set of combined sets, opt. the selected one, fit params
   void sigSetsInfo(SetsInfo) const;
-  // add/rem/on/off correction file
+  /// add/rem/on/off correction file
   void sigCorrFileName(str) const;
 
 private:
@@ -205,4 +216,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

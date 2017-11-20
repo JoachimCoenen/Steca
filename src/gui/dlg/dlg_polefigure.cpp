@@ -59,4 +59,4 @@ PoleFigure::PoleFigure(QWidget* parent, Hub::rc hub)
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI panels.
+ */
+
 #pragma once
+
 #include "panel.hpp"
 #include "model_view.hpp"
 
@@ -24,6 +29,7 @@ namespace gui {
 
 struct Hub;
 
+/// The tabbed panel with setup choices: geometry, background, reflections
 dcl_sub_(PanelSetup, Panel)
   explicit PanelSetup(Hub&);
 
@@ -34,4 +40,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

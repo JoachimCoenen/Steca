@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * GUI Actions.
+ */
+
 #pragma once
+
 #include <lib/qt/app/act.hpp>
 
 namespace gui {
@@ -27,56 +32,56 @@ struct Win;
 dcl_sub_(Acts, l_qt::acts)
   Acts(Hub&, Win&);
 
-  cst_(str, SHOW_FILES);
-  cst_(str, SHOW_DATASETS);
-  cst_(str, SHOW_METADATA);
+  cst_(str, SHOW_FILES);        ///< show/hide the files panel
+  cst_(str, SHOW_DATASETS);     ///< show/hide the datasets panel
+  cst_(str, SHOW_METADATA);     ///< show/hide the metadata panel
 
-  cst_(str, SESSION_LOAD);
-  cst_(str, SESSION_SAVE);
+  cst_(str, SESSION_LOAD);      ///< load a session file
+  cst_(str, SESSION_SAVE);      ///< save a session file
 
-  cst_(str, FILES_ADD);
-  cst_(str, FILES_REM);
-  cst_(str, CORR_ENABLE);
-  cst_(str, CORR_REM);
+  cst_(str, FILES_ADD);         ///< open a file-selection dialog
+  cst_(str, FILES_REM);         ///< remove selected file
+  cst_(str, CORR_ENABLE);       ///< enable correction (open a file selection dialog)
+  cst_(str, CORR_REM);          ///< remove the correction file
 
   // diffractogram
-  cst_(str, DIFF_ZOOM);
-  cst_(str, DIFF_ALL_DSETS);
-  cst_(str, DIFF_FIX_INTEN);
+  cst_(str, DIFF_ZOOM);         ///< zoom into diffractogram
+  cst_(str, DIFF_ALL_DSETS);    ///< show the average of all datasets
+  cst_(str, DIFF_FIX_INTEN);    ///< fix the intensity scale
 
   // image
-  cst_(str, IMG_FIX_INTEN);
-  cst_(str, IMG_STEP_ZOOM);
-  cst_(str, IMG_SHOW_OVER);
-  cst_(str, IMG_SHOW_GAMMA);
+  cst_(str, IMG_FIX_INTEN);     ///< fix the intensity scale (image)
+  cst_(str, IMG_STEP_ZOOM);     ///< zoom in steps (whole multiplies or fractions of pixels)
+  cst_(str, IMG_SHOW_OVER);     ///< show overlay
+  cst_(str, IMG_SHOW_GAMMA);    ///< show gamma slices (and 2theta bins)
 
-  cst_(str, IMG_ROTATE0);
-  cst_(str, IMG_ROTATE1);
-  cst_(str, IMG_ROTATE2);
-  cst_(str, IMG_ROTATE3);
+  cst_(str, IMG_ROTATE0);       ///< rotate image to initial position
+  cst_(str, IMG_ROTATE1);       ///< rotate image by 90 degrees
+  cst_(str, IMG_ROTATE2);       ///< rotate image by 180 degrees
+  cst_(str, IMG_ROTATE3);       ///< rotate image by 270 degrees
 
-  cst_(str, IMG_MIRROR_HORZ);
-  cst_(str, IMG_MIRROR_VERT);
+  cst_(str, IMG_MIRROR_HORZ);   ///< horizontally mirror the image
+  cst_(str, IMG_MIRROR_VERT);   ///< vertically mirror the image
 
-  cst_(str, IMG_LINK_CUT);
+  cst_(str, IMG_LINK_CUT);      ///< link the cut values
 
   // background
-  cst_(str, BG_SELECT);
-  cst_(str, BG_SHOW);
-  cst_(str, BG_CLEAR);
+  cst_(str, BG_SELECT);         ///< background-selection tool
+  cst_(str, BG_SHOW);           ///< show/hide the background criteria
+  cst_(str, BG_CLEAR);          ///< clear the background sections
 
   // reflection
-  cst_(str, REFL_ADD);
-  cst_(str, REFL_REM);
-  cst_(str, REFL_SELECT);
-  cst_(str, REFL_CLEAR);
+  cst_(str, REFL_ADD);          ///< add (select the range of) a reflection
+  cst_(str, REFL_REM);          ///< remove a reflection
+  cst_(str, REFL_SELECT);       ///< reflection-selection tool
+  cst_(str, REFL_CLEAR);        ///< clear the reflections
 
   // outputs
-  cst_(str, DLG_POLEFIG);
-  cst_(str, DLG_DIAGRAM);
-  cst_(str, DLG_DIFFRGS);
+  cst_(str, DLG_POLEFIG);       ///< open a new polefigure-calculating dialog
+  cst_(str, DLG_DIAGRAM);       ///< open a new diagram-calculating dialog
+  cst_(str, DLG_DIFFRGS);       ///< open a new diffractogram-output dialog
 dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

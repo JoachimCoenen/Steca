@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Data as seen through "lenses" that do transformations. (Thanks, Antti!)
+ */
+
 #pragma once
+
 #include "../data/sets.hpp"
 #include "../typ/curve.hpp"
 #include "../typ/geometry.hpp"
@@ -30,8 +35,7 @@ enum class eNorm {
 
 //------------------------------------------------------------------------------
 
-/** Data as seen through "lenses" that do transformations. (Thanks, Antti!)
- */
+/** Lens base */
 dcl_base_(LensBase)
   LensBase(FitParams const&, data::CombinedSets::rc, bool trans, bool cut);
   virtual mth_(l::sz2, size, ()) = 0;

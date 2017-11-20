@@ -19,7 +19,6 @@
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/fio.hpp>
 #include "io_tiff.hpp"
-#include <algorithm>
 
 namespace core { namespace io {
 //------------------------------------------------------------------------------
@@ -46,9 +45,8 @@ bool couldBeTiffDat(l_io::path::rc path) may_err {
     EXPECT_(row.size() > 0)
     str fileName = row.at(0);
 
-    // naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
-    std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
-    auto pos = fileName.find_first_of(".tif");
+    // a very naive detection: possibly contains a name ending in .tif, .tiff, .TIFF etc.
+    auto pos = fileName.lower().find_first_of(".tif");
     if (str::npos != pos)
       couldBe = true;
   }
@@ -84,4 +82,4 @@ l::own<data::File> load(l_io::path::rc path) may_err {
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

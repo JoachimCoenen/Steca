@@ -15,6 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Parts of data-processing dialogs.
+ */
+
 #pragma once
 #include <lib/qt/defs.hpp>
 #include <lib/qt/win/layout.hpp>
@@ -91,4 +95,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

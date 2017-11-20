@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Data files (on the disk and read into memory.
+ */
 #pragma once
+
 #include "sets.hpp"
 
 namespace core { namespace data {

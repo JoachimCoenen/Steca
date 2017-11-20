@@ -225,4 +225,4 @@ l::own<calc::Reflection> Json::asReflection() const may_err {
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

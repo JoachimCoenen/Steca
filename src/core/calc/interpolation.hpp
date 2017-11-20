@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Antti's reverse-engineered reflection interpolation.
+ */
 #pragma once
+
 #include "../data/sets.hpp"
 
 namespace core { namespace calc {
@@ -127,4 +131,4 @@ ReflectionInfos interpolate(ReflectionInfos::rc,
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

@@ -17,6 +17,7 @@
 dcl_sub_(str_vec, l::vec<str>)
   using base::base;
   str_vec() {}
+  str_vec(pcstr[], uint n);
 
   /// splits a string by white space
   fry_(str_vec, split, (strc));

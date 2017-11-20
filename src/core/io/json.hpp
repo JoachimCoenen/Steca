@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * An extension of l_io::Json, specifically for Steca
+ */
+
 #pragma once
+
 #include <lib/dev/io/json.hpp>
 
 namespace core {
@@ -57,3 +62,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof

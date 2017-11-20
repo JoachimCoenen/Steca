@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Diagram and image options
+ */
+
 #pragma once
+
 #include <core/types.hpp>
 
 namespace gui {
@@ -35,4 +40,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

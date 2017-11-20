@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Datasets (dataset = intensity image + metadata)
+ */
 #pragma once
+
 #include "../typ/image.hpp"
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/io/path.hpp>

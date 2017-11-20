@@ -104,4 +104,4 @@ Frame::Frame(strc title, QWidget* parent, Hub::rc hub)
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

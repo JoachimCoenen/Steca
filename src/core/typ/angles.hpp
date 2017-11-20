@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * 2theta and gamma angles
+ */
+
 #pragma once
+
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/inc/vecs.hpp>
 #include <lib/dev/typ/arr2.hpp>
@@ -65,7 +70,7 @@ private:
   mut_(calculate, ());
   angle_arr::shp angles;
 
-  // sorted
+  // sorted data, used to binary search for a range of gammas
   l::vec<gma_t> gmas;
   uint_vec      gmaIndexes;
 dcl_end

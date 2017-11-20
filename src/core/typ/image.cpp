@@ -21,16 +21,16 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-inten_arr2::inten_arr2(l::sz2 sz, inten_t inten) : cs(sz, inten) {}
+inten_arr2::inten_arr2(l::sz2 sz, inten_t inten) : ins(sz, inten) {}
 
-inten_arr2::inten_arr2(rc that) : cs(that.size()) {
-  for_i_(cs.sz.size())
+inten_arr2::inten_arr2(rc that) : ins(that.size()) {
+  for_i_(ins.sz.size())
     setAt(i, that.at(i));
 }
 
 
 inten_arr2::ref inten_arr2::addAt(uint i, uint j, inten_t c) {
-  auto sum = (cs.refAt(i, j) += c);
+  auto sum = (ins.refAt(i, j) += c);
   mut(rgeInten).extendBy(sum);
   return *this;
 }
@@ -89,4 +89,4 @@ Image::ref Image::addIntens(rc that) {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

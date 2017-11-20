@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * The polefigure-calculating dialog.
+ */
 #pragma once
+
 #include "dlg_dialog.hpp"
 
 namespace gui { namespace calc_dlg {
@@ -27,4 +31,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

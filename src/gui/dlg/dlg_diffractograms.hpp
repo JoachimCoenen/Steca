@@ -15,6 +15,10 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * The diffractogra,-exporting dialog.
+ */
+
 #pragma once
 #include "dlg_dialog.hpp"
 
@@ -28,4 +32,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

@@ -19,14 +19,15 @@ dcl_sub_(str, std::string)
 
   bol_(isEmpty, ()) RET_(base::empty())
 
-  mth_(flt32, asFlt, ()) may_err;         ///< parse as flt32
+  mth_(flt32, asFlt, ()) may_err; ///< parse as flt32
 
-  static str const null;                  ///< an empty string
+  static str const null;          ///< an empty string
 
-  mth_(str, trimmed, ());                 ///< trimmed whitespace, left and right
+  mth_(str, trimmed, ());         ///< trimmed whitespace, left and right
+  mth_(str, lower, ());           ///< convert to lower case
 
-  fry_(str, num, (int));                  ///< format @c int as a string
-  fry_(str, num, (uint));                 ///< format @c uint as a string
+  fry_(str, num, (int));          ///< format @c int as a string
+  fry_(str, num, (uint));         ///< format @c uint as a string
 
 private:
   bool empty() const; // disallow @c empty() - @c isEmpty() is a better name

@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Geometry: beam - sample - detector
+ */
 #pragma once
+
 #include <lib/dev/inc/ptr.hpp>
 #include <lib/dev/typ/ij.hpp>
 #include <lib/dev/typ/sz2.hpp>
@@ -23,6 +27,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
+/// Image rotation and mirroring
 dcl_(ImageTransform)
   enum eTransform {
     ROTATE_0        = 0,  // no transform
@@ -55,6 +60,7 @@ dcl_(ImageTransform)
   bol_(operator==, (rc that)) RET_(val == that.val)
 dcl_end
 
+/// Image cut
 dcl_(ImageCut) COMPARABLE EQNE
   atr_(uint, left);
   atr_(uint, top);
@@ -67,6 +73,7 @@ dcl_(ImageCut) COMPARABLE EQNE
   l::sz2 marginSize() const;
 };
 
+/// Detector  geometry
 dcl_(Geometry) COMPARABLE EQNE SHARED
   cst_(real, MIN_DETECTOR_DISTANCE);
   cst_(real, MIN_DETECTOR_PIXEL_SIZE);
@@ -75,9 +82,9 @@ dcl_(Geometry) COMPARABLE EQNE SHARED
 
   Geometry();
 
-  atr_(real,  detectorDistance);
-  atr_(real,  pixSize);
-  atr_(l::ij, midPixOffset);
+  atr_(real,  detectorDistance);  ///< the distance from the sample (millimeters)
+  atr_(real,  pixSize);           ///< detecor pixel size (mm)
+  atr_(l::ij, midPixOffset);      ///< the offset of the beam centre (pixels)
 
   atr_(ImageTransform,  imageTransform);
   atr_(ImageCut,        imageCut);
@@ -86,3 +93,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
+// eof

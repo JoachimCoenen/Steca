@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Reflections - peaks
+ */
+
 #pragma once
+
 #include <lib/dev/defs.hpp>
 #include <lib/dev/inc/ptr.hpp>
 #include "../fit/fit_fun.hpp"

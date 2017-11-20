@@ -15,7 +15,12 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * The main window
+ */
+
 #pragma once
+
 #include <lib/qt/win/win.hpp>
 #include "thehub.hpp"
 #include <QNetworkAccessManager>
@@ -30,6 +35,7 @@ struct PanelImage;
 struct PanelDiffractogram;
 struct PanelMetadata;
 
+/// The main window
 dcl_sub_(Win, l_qt::win)
   Win();
   Hub hub;
@@ -57,4 +63,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

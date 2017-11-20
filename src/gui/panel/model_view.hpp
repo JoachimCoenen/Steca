@@ -15,7 +15,11 @@
  * See the COPYING and AUTHORS files for more details.
  ******************************************************************************/
 
+/** @file
+ * Model-views.
+ */
 #pragma once
+
 #include <lib/qt/view/lst.hpp>
 #include <core/calc/reflection.hpp>
 #include "../refhub.hpp"
@@ -23,6 +27,7 @@
 namespace gui {
 //------------------------------------------------------------------------------
 
+/// Model - list of reflections
 dcl_sub_(ModelReflections, l_qt::lst_model)
   ModelReflections();
 
@@ -43,6 +48,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// The base of hub-connected views
 template <typename Model>
 dcl_sub2_(HubView, RefHub, l_qt::lst_view)
   HubView(Hub& hub, Model const* model_) : RefHub(hub) {
@@ -55,4 +61,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

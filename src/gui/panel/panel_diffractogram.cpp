@@ -470,4 +470,4 @@ PanelDiffractogram::PanelDiffractogram(Hub& hub) : base("") {
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

@@ -12,4 +12,4 @@ char const
   *STECA2_VERSION_URL    = "http://apps.jcns.fz-juelich.de/src/Steca2/version.php",
   *STECA2_DOWNLOAD_URL   = "https://github.com/scgmlz/Steca2/releases";
 
-// eof DOCS
+// eof

@@ -5,6 +5,12 @@
 
 //------------------------------------------------------------------------------
 
+str_vec::str_vec(pcstr p[], uint n) {
+  str_vec vec;
+  while (n-- > 0)
+    vec.add(str(*p++));
+}
+
 str_vec str_vec::split(strc s) {
   str_vec vec;
 
