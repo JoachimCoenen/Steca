@@ -84,4 +84,4 @@ void Reflection::setPeakFun(l::give_me<fit::PeakFun> f) {
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

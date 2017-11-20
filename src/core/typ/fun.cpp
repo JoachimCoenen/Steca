@@ -84,6 +84,8 @@ real SimpleFun::parErr(uint i) const {
 
 //------------------------------------------------------------------------------
 
+SumFuns::SumFuns() : funs(), allPars(), fun4parIdx(), firstParIdx4parIdx() {}
+
 SumFuns::ref SumFuns::add(l::give_me<Fun> fun) {
   uint parIdx = parCount();
   mut(funs).add(Fun::shp(fun.ptr()));

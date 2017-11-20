@@ -168,8 +168,10 @@ tth_rge Set::rgeTth(FitParams::rc fp)const {
 void Set::collect(FitParams::rc fp,
                 core::inten_vec& intens, uint_vec& counts,
                 gma_rge::rc rgeGma, tth_t minTth, tth_t deltaTth) const {
+
   auto&& map = *fp.angleMap(*this);
 
+  // get min-max indexes of gammas that are in the gamma range
   uint_vec const* gmaIndexes = nullptr;
   uint gmaIndexMin = 0, gmaIndexMax = 0;
   map.getGmaIndexes(rgeGma, gmaIndexes, gmaIndexMin, gmaIndexMax);
@@ -184,25 +186,30 @@ void Set::collect(FitParams::rc fp,
   EXPECT_(0 < deltaTth)
 
   auto* corrImg = fp.corrEnabled ? fp.corrImage.ptr() : nullptr;
+  // for all applicable gammas
   for (auto i = gmaIndexMin; i < gmaIndexMax; ++i) {
     auto ind   = gmaIndexes->at(i);
+    // get intensity
     auto inten = image->inten(ind);
     if (l::isnan(inten))
       continue;
 
+    // get correction, or assume 1 (no correction)
     inten_t ci = corrImg ? corrImg->inten(ind) : inten_t(1);
     if (l::isnan(ci))
       continue;
 
+    // correct
     inten *= ci;
 
+    // figure out the bin index
     tth_t tth  = map.at(ind).tth;
-
-    // bin index
     auto ti = l::to_uint(l::floor((tth - minTth) / deltaTth));
     EXPECT_(ti <= size)
-    ti = l::min(ti, size-1); // it can overshoot due to floating point calculation
+    // the last one could overshoot due to floating point calculation
+    ti = l::min(ti, size-1);
 
+    // add it
     intens.refAt(ti) += inten;
     counts.refAt(ti) += 1;
   }
@@ -265,9 +272,9 @@ Meta::shp CombinedSet::meta() const {
   MetaDict::ref ld = mut(*lm.dict);
   MetaVals::rc lv = lm.vals;
 
-  // max tim, mon
-  // sum dTim, dMon
-  // avg all else
+  // max of: tim, mon
+  // sum of: dTim, dMon
+  // avg of: all else
 
   for_i_(n) {
     Meta::rc im = *(at(i)().meta);
@@ -406,7 +413,7 @@ inten_vec CombinedSet::collectIntens(FitParams::rc fp, gma_rge::rc rgeGma) const
     one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
   // sum or average
-  if (fp.avgScaleIntens) {
+  if (fp.avgIntens) {
     auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
@@ -418,32 +425,41 @@ inten_vec CombinedSet::collectIntens(FitParams::rc fp, gma_rge::rc rgeGma) const
   return intens;
 }
 
-inten_vec CombinedSet::collect(FitParams::rc fp, gma_rge::rc rgeGma) const {
-  tth_rge tthRge = rgeTth(fp);
-  tth_t   tthWdt = tth_t(tthRge.width());
+inten_vec CombinedSet::histogram(FitParams::rc fp, gma_rge::rc rgeGma) const {
+  tth_rge tthRge = rgeTth(fp);            // the range of 2theta
+  tth_t   tthWdt = tth_t(tthRge.width()); // its width
 
+  // pixel width of the image
   auto cut = fp.geometry.imageCut;
   uint pixWidth = fp.geometry.imageSize.i - cut.left - cut.right;
 
+  // the number of bins in the histogram:
   uint numBins;
   if (1 < size()) {
+    // if more than one set (they can have different 2theta ranges),
+    // calculate 2theta delta (from the first image, that's fine)
     auto one   = first();
     auto delta = tth_t(one().rgeTth(fp).width() / pixWidth);
+    // the full 2theta width / 2theta delta
     numBins = l::to_uint(l::ceil(tthWdt / delta));
   } else {
-    numBins = pixWidth; // simply match the pixel resolution
+    // if only one set, number of bins = pixel width of the image
+    // (simply match the pixel resolution)
+    numBins = pixWidth;
   }
 
+  // intensities and counts
   inten_vec intens(numBins, inten_t(0));
   uint_vec  counts(numBins, 0);
 
   auto minTth = tth_t(tthRge.min), deltaTth = tthWdt / real(numBins);
 
+  // collect (sum of) intensities (pixels) from images
   for (auto&& one : *this)
     one().collect(fp, intens, counts, rgeGma, minTth, deltaTth);
 
-  // sum or average
-  if (fp.avgScaleIntens) {
+  // optionally, make averages
+  if (fp.avgIntens) {
     auto scale = fp.intenScale;
     for_i_(numBins) {
       auto cnt = counts.at(i);
@@ -544,4 +560,4 @@ TEST_("data",
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

@@ -24,7 +24,6 @@
 #include "data/files.hpp"
 #include "io/json.hpp"
 #include "typ/curve.hpp"
-#include "calc/fit_params.hpp"
 #include "typ/geometry.hpp"
 #include <lib/dev/inc/num.hpp>
 #include <lib/dev/io/path.hpp>

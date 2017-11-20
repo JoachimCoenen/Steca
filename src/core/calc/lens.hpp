@@ -29,33 +29,44 @@ enum class eNorm {
 };
 
 //------------------------------------------------------------------------------
-// View the dataset through a lens (thanks, Antti!)
 
+/** Data as seen through "lenses" that do transformations. (Thanks, Antti!)
+ */
 dcl_base_(LensBase)
   LensBase(FitParams const&, data::CombinedSets::rc, bool trans, bool cut);
   virtual mth_(l::sz2, size, ()) = 0;
 
 protected:
+  /// optionally transform and adjust size by cut
   mth_(l::sz2, transCutSize, (l::sz2));
 
+  /// optionally swap @c i and @c j based on transform
   voi_(doTrans, (uint& i, uint& j));
+  /// optionally adjust @c i and @c j based on cut
   voi_(doCut,   (uint& i, uint& j));
 
-  atr_(bool, trans); // TODO remove ?
-  atr_(bool, cut);
-
+  /// fitting parameters - to access geometry
   ref_(FitParams,          fp);
+  /// datasets contain values pertinent to the whol set
   ref_(data::CombinedSets, datasets);
+  /// is transposed
+  atr_(bool, trans);
+  /// has a cut
+  atr_(bool, cut);
 dcl_end
 
 //------------------------------------------------------------------------------
 
+/** A lens to look through at images
+ */
 dcl_sub_(ImageLens, LensBase) SHARED
   ImageLens(FitParams const&, Image::rc, data::CombinedSets::rc, bool trans, bool cut);
 
+  /// image size as seen through the lens
   mth_(l::sz2, size, ()) RET_(base::transCutSize(image.size()))
+  /// get intensity at coordinates
   mth_(inten_t, imageInten, (uint i, uint j));
-
+  /// intensity range
   inten_rge::rc rgeInten(bool fixed) const;
 
 private:
@@ -65,10 +76,13 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/** A lens to look through at dataset
+ */
 dcl_sub_(DatasetLens, LensBase) SHARED
   DatasetLens(FitParams const&, data::CombinedSets::rc, data::CombinedSet::rc,
               eNorm, bool trans, bool cut);
 
+  /// image size as seen through the lens
   mth_(l::sz2, size, ());
 
   mth_(gma_rge,   rgeGma,     ());
@@ -79,8 +93,6 @@ dcl_sub_(DatasetLens, LensBase) SHARED
   mth_(Curve, makeCurve, ());
   mth_(Curve, makeCurve, (gma_rge::rc));
 
-//  data::Dataset::rc dataset()  const { return dataset_;   }
-
 private:
   mut_(setNorm, (eNorm));
   inten_t normFactor;
@@ -89,4 +101,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

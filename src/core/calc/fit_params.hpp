@@ -28,7 +28,11 @@
 #include "lens.hpp"
 #include <lib/dev/typ/cache.hpp>
 
-namespace core { namespace calc {
+namespace core {
+
+struct Session;
+
+namespace calc {
 //------------------------------------------------------------------------------
 
 /** Contains a full set of parameters for fitting. */
@@ -37,41 +41,62 @@ dcl_(FitParams) SHARED CLONED
 
   FitParams();
 
+  /// how normnalized
   atr_(core::calc::eNorm, norm) = core::calc::eNorm::NONE;
+
+  /// background polynomial degree
   atr_(uint,   bgPolyDegree);
+  /// 2theta ranges of background
   atr_(Ranges, bgRanges);
+
+  /// correction image (if any)
   atr_(Image::shp,      corrImage);
-  atr_(Ranges, bg);
+
+  /// reflections
   atr_(reflection_vec,  refls);
+  /// current (active) reflection
   atr_(Reflection::shp, currRefl);
+  /// scale of intensity display
   atr_(l::peal,         intenScale);
+  /// used geometry
   atr_(Geometry, geometry);
 
+  /// is correction enabled ?
   atr_(bool,            corrEnabled);
+  /// map of 2theta/gamma angles
   mth_(AngleMap::shp,   angleMap, (data::Set::rc));
-  atr_(bool,            avgScaleIntens);
-
+  /// do average intensities in a histogram bucket
+  atr_(bool,            avgIntens);
+  /// the correction image
   mth_(Image::shp,      intensCorr, ());
 
+  /// make a lens to display images
   mth_(ImageLens::shr,  imageLens,
        (Image::rc, data::CombinedSets::rc, bool trans, bool cut));
+  /// make a lens to display datasets
   mth_(DatasetLens::shr, datasetLens,
         (data::CombinedSets::rc, data::CombinedSet::rc, bool trans, bool cut));
+  /// make a histogram curve
   mth_(Curve, makeCurve, (calc::DatasetLens::rc, gma_rge::rc));
 
+  /// calculate the background average (used for normalization by background)
   mth_(real, calcAvgBackground, (data::CombinedSets::rc, data::CombinedSet::rc));
+  /// calculate the background average (used for normalization by background)
   mth_(real, calcAvgBackground, (data::CombinedSets::rc));
 
-//private: TODO make private
-  mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
-  mutable Image::shp intensCorrImage;
+private:
+  friend struct core::Session;
+
+  // lazy computation
+  mutable Image::shp lazyIntensCorr;
   voi_(calcIntensCorr, ());
+
+  mutable l::cache<AngleMap::Key,AngleMap> angleMapCache;
   mutable bool corrHasNaNs;
 
-private:
   FitParams(rc) = default;
 dcl_end
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

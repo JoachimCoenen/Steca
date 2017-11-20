@@ -25,6 +25,7 @@
 namespace core {
 //------------------------------------------------------------------------------
 
+/// 2theta / gamma index of a pixel
 dcl_(Angles)
   atr_(tth_t, tth);
   atr_(gma_t, gma);
@@ -35,6 +36,7 @@ dcl_(Angles)
   set_(operator=, (rc));
 dcl_end
 
+/// the full map for an image
 dcl_(AngleMap) SHARED
   dcl_sub_(angle_arr, l::arr2<Angles>) SHARED
     using base::base;
@@ -70,4 +72,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

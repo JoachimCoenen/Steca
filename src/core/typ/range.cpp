@@ -315,6 +315,11 @@ bool Ranges::operator!=(rc that) const {
 
 Ranges::Ranges() {}
 
+static bool lessThan(Range::rc r1, Range::rc r2) {
+  RET_BOOL_IF_LT_GT(r1.min, r2.min)
+  return r1.max < r2.max;
+}
+
 bool Ranges::add(Range::rc range) {
   if (!range.isDef())
     return false;
@@ -322,7 +327,7 @@ bool Ranges::add(Range::rc range) {
   l::vec<Range> newRanges;
 
   auto addRange = range;
-  for (Range::rc r : rs) {
+  for (Range::rc r : *this) {
     if (r.contains(range))
       return false;
     if (!range.contains(r)) {
@@ -335,7 +340,7 @@ bool Ranges::add(Range::rc range) {
 
   newRanges.add(addRange);
   base::operator=(newRanges);
-  sort();
+  std::sort(begin(), end(), lessThan);
 
   return true;
 }
@@ -344,7 +349,7 @@ bool Ranges::rem(Range::rc remRange) {
   l::vec<Range> newRanges;
   bool changed = false;
 
-  for (Range::rc r : rs) {
+  for (Range::rc r : *this) {
     if (!r.intersect(remRange).isEmpty()) {
       changed = true;
       if (r.min < remRange.min)
@@ -360,15 +365,6 @@ bool Ranges::rem(Range::rc remRange) {
     base::operator=(newRanges);
 
   return changed;
-}
-
-static bool lessThan(Range::rc r1, Range::rc r2) {
-  RET_BOOL_IF_LT_GT(r1.min, r2.min)
-  return r1.max < r2.max;
-}
-
-void Ranges::sort() {
-  std::sort(begin(), end(), lessThan);
 }
 
 TEST_CODE_(
@@ -431,4 +427,4 @@ TEST_("Ranges",
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

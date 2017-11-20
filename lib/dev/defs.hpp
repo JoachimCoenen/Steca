@@ -71,43 +71,48 @@ werden.
 
 Here is a vocabulary:
 
-- @b arg argument
-- @b atr attribute
-- @b beg begin
-- @b bol boolean
-- @b cbo combo
-- @b col, @b cl column
-- @b cst, @b c const
-- @b dbl double
-- @b dcl declare / declaration
-- @b def define / definition
-- @b end end
-- @b err error / to err
-- @b exc exception
-- @b flt float
-- @b fry factory
-- @b int integer
-- @b lst list
-- @b mth method
-- @b mut mutable / mutate
-- @b no, number (ordinal)
-- @b num, @b n number (how many)
-- @b par parameter
-- @b pos position
-- @b ptr, @b p pointer
-- @b row, @b rw row
-- @b rge range
-- @b set set / setter
-- @b str string
-- @b res result
-- @b ret return
-- @b sub sub(structure, etc.)
-- @b sz  size
-- @b typ type
-- @b val, @b v value
-- @b var variant / variable
-- @b vec vector
-- @b voi void
+- @c arg argument
+- @c atr attribute
+- @c avg average (noun or verb)
+- @c beg begin
+- @c bol boolean
+- @c cbo combo
+- @c col, @c cl column
+- @c cst, @c c const
+- @c dbl double
+- @c dcl declare / declaration
+- @c def define / definition
+- @c end end
+- @c err error / to err
+- @c exc exception
+- @c flt float
+- @c fry factory
+- @c int integer
+- @c lst list
+- @c mth method
+- @c mut mutable / mutate
+- @c no, number (ordinal)
+- @c num, @c n number (how many)
+- @c par parameter
+- @c pos position
+- @c ptr, @c p pointer
+- @c row, @c rw row
+- @c rge range
+- @c set set / setter
+- @c str string
+- @c res result
+- @c ret return
+- @c str, @c s string
+- @c sub sub(structure, etc.)
+- @c sz  size
+- @c tx  text
+- @c typ type
+- @c val, @c v value
+- @c var variant / variable
+- @c vec vector
+- @c voi void
+
+Identifiers ending in <code>-s</code> (the plurakl form) denote collections.
 
 */
 

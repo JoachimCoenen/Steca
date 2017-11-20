@@ -19,6 +19,7 @@
 #include <lib/dev/inc/defs.inc>
 #include <lib/dev/io/log.hpp>
 #include "fit/fit_methods.hpp"
+#include "calc/fit_params.hpp"
 #include "io/io.hpp"
 #include <algorithm>
 
@@ -233,7 +234,7 @@ void Session::setCorrFile(l_io::path::rc path) may_err {
   setImageSize(sets.imageSize());
 
   mut(fp->corrImage)   = sets.foldImage();
-  mut(fp->intensCorrImage).drop();
+  mut(fp->lazyIntensCorr).drop();
   mut(fp->corrEnabled) = true;
   mut(corrFile).reset(file.takeOwn());
 }
@@ -244,7 +245,7 @@ void Session::remCorrFile() {
 
   mut(corrFile).drop();
   mut(fp->corrImage).drop();
-  mut(fp->intensCorrImage).drop();
+  mut(fp->lazyIntensCorr).drop();
   mut(fp->corrEnabled) = false;
 
   updateImageSize();
@@ -255,15 +256,15 @@ void Session::tryEnableCorr(bool on) {
 }
 
 void Session::setBg(Ranges::rc rs) {
-  mut(fp->bg) = rs;
+  mut(fp->bgRanges) = rs;
 }
 
 void Session::addBg(Range::rc r) {
-  mut(fp->bg).add(r);
+  mut(fp->bgRanges).add(r);
 }
 
 void Session::remBg(Range::rc r) {
-  mut(fp->bg).rem(r);
+  mut(fp->bgRanges).rem(r);
 }
 
 void Session::setRefl(Range::rc r) {

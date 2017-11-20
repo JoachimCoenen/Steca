@@ -23,8 +23,8 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 FitParams::FitParams()
-: bgPolyDegree(0), bgRanges(), bg(), refls(), intenScale(1), geometry()
-, corrEnabled(false), avgScaleIntens(false), angleMapCache(l::pint(12)) {}
+: bgPolyDegree(0), bgRanges(), refls(), intenScale(1), geometry()
+, corrEnabled(false), avgIntens(false), angleMapCache(l::pint(12)) {}
 
 AngleMap::shp FitParams::angleMap(data::Set::rc set) const {
 //  Key(Geometry::rc, l::sz2::rc, ImageCut::rc, l::ij::rc midPix, tth_t midTth);
@@ -52,10 +52,10 @@ Image::shp FitParams::intensCorr() const {
   if (!corrEnabled)
     return Image::shp();
 
-  if (!intensCorrImage)
+  if (!lazyIntensCorr)
     calcIntensCorr();
 
-  return intensCorrImage;
+  return lazyIntensCorr;
 }
 
 DatasetLens::shr FitParams::datasetLens(
@@ -103,7 +103,7 @@ void FitParams::calcIntensCorr() const {
 
   real avg = sum / (w * h);
 
-  intensCorrImage = l::sh(new Image(corrImage->size(), inten_t(1)));
+  lazyIntensCorr = l::sh(new Image(corrImage->size(), inten_t(1)));
 
   for_ij_(w, h) {
     auto inten = corrImage->inten(i + di, j + dj);
@@ -116,10 +116,10 @@ void FitParams::calcIntensCorr() const {
       corrHasNaNs = true;
     }
 
-    mut(*intensCorrImage).setInten(i + di, j + dj, inten_t(factor));
+    mut(*lazyIntensCorr).setInten(i + di, j + dj, inten_t(factor));
   }
 }
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

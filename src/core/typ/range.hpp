@@ -26,9 +26,9 @@
 namespace core {
 //------------------------------------------------------------------------------
 
-/** A numeric range (interval). It can be undefined (NaN, NaN), or defined
- * (not-NaN, not-NaN). The lower endpoint of a defined interval can be finite or
- * -Inf, the higher endpoint either finite or +Inf.
+/** A numeric range (interval; closed). It can be undefined (NaN, NaN),
+ * or defined (not-NaN, not-NaN). The lower endpoint of a defined interval
+ * can be finite or -Inf, the higher endpoint either finite or +Inf.
  */
 dcl_(Range) COMPARABLE EQNE
   using rv_t = real;          ///< (r)ange (v)alue
@@ -42,47 +42,46 @@ dcl_(Range) COMPARABLE EQNE
 
   Range(rc);
 
-  static Range inf();         ///< an infinite range (-inf .. +inf)
+  fry_(Range, inf, ());       ///< an infinite range (-inf .. +inf)
 
-  bool  isDef()   const;      ///< is defined (not NaN-NaN)
-  bool  isEmpty() const;      ///< not defined or empty
+  bol_(isDef, ());            ///< is defined (not NaN-NaN)
+  bol_(isEmpty, ());          ///< not defined or empty
 
-  rv_t  width()   const;
-  rv_t  center()  const;
+  mth_(rv_t, width, ());      ///< the width or NaN
+  mth_(rv_t, center, ());     ///< the centre or NaN
 
-  static Range safeFrom(rv_t, rv_t);  ///< orders the endpoints
+  fry_(Range, safeFrom, (rv_t, rv_t));  ///< orders the endpoints
 
-  void  extendBy(rv_t);             // extend to include the number
-  void  extendBy(rc);               // extend to include the range
+  mut_(extendBy, (rv_t));     ///< extend the range to include the number
+  mut_(extendBy, (rc));       ///< extend the range to include the number
 
-  bool  contains(rv_t)  const;
-  bool  contains(rc)    const;
-  bool  intersects(rc)  const;
-  Range intersect(rc)   const;
+  bol_(contains, (rv_t));     ///< is in the range ?
+  bol_(contains, (rc));       ///< is in the range ?
+  bol_(intersects, (rc));     ///< itersects, or touches ?
 
-  rv_t  bound(rv_t)     const;      // limit the number to the interval
+  mth_(Range, intersect,(rc));
 
-  ref   operator=(rc);
+  mth_(rv_t, bound, (rv_t));  /// constrain the number to the interval
+
+  set_(operator=, (rc));
 dcl_end
 
 //------------------------------------------------------------------------------
 
+/** A set of ranges, kept simplified and sorted.
+ */
 dcl_reimpl_(Ranges, l::vec<Range>) EQNE
   UB7_(base, clear, isEmpty, size, at, begin, end)
 
   Ranges();
 
-  // collapses overlapping ranges into one; true if there was a change
-  bool add(Range::rc);
+  /// collapses overlapping ranges into one; true if there was a change
+  bol_mut_(add, (Range::rc));
 
-  // removes (cuts out) a range; true if there was a change
-  bool rem(Range::rc);
-
-private:
-  void sort();
-  l::vec<Range> rs;
+  /// removes (cuts out) a range; true if there was a change
+  bol_mut_(rem, (Range::rc));
 dcl_end
 
 //------------------------------------------------------------------------------
 }
-// eof DOCS
+// eof

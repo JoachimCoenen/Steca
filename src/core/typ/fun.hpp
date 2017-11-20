@@ -83,6 +83,9 @@ dcl_end
  */
 dcl_sub_(SumFuns, Fun)
   atr_(l::vec<Fun::shp>, funs);   ///< a collection of summed functions
+
+  SumFuns();
+
   set_(add, (l::give_me<Fun>));   ///< add a function to the collection
 
   mth_(uint,    parCount, ());    ///< the aggregate parameter count

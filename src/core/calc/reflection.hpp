@@ -23,7 +23,9 @@
 namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
-dcl_(Reflection) SHARED // TODO rename -> Peak ?
+/** Reflection (also - Peak)
+ */
+dcl_(Reflection) SHARED
   atr_(l::scoped<fit::PeakFun>, peakFun);
 
   Reflection(fit::PeakFun::eType);
@@ -61,4 +63,4 @@ using reflection_vec = l::vec<Reflection::shr>;
 
 //------------------------------------------------------------------------------
 }}
-// eof DOCS
+// eof

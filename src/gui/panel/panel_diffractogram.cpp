@@ -383,7 +383,7 @@ void Plot::renderPlot() {
 
   switch (tool) {
   case eTool::BACKGROUND:
-    for (auto&& bg : fp->bg)
+    for (auto&& bg : fp->bgRanges)
       addBgItem(bg);
     break;
   case eTool::PEAK:

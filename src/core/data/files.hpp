@@ -23,11 +23,17 @@ namespace core { namespace data {
 
 struct Files;
 
-dcl_(File) SHARED CLONED // one file
-  atr_(FileSrc::shp,src);      // the number within files, 0 = not
-  atr_(bool,       isActive); // included in calculations
+/** One file with dataset, as read from a disk file
+ */
+dcl_(File) SHARED CLONED
+  /// information about the source (disk) file
+  atr_(FileSrc::shp,src);
+  /// is it inculded in calculations ?
+  atr_(bool,       isActive);
+  /// datasets in the file
   atr_(Sets,       sets);
-  atr_(MetaDict::shp, dict); // for all sets
+  /// dictionary of metadata; union of metadata types from all sets
+  atr_(MetaDict::shp, dict);
 
   File(l_io::path::rc);
 
@@ -40,19 +46,25 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-// the whole file group
+/** The group of all loaded files
+ */
 dcl_reimpl_(Files, l::vec<File::shp>) SHARED CLONED
   UB4_(begin, end, size, at)
 
+  /// shared dictionary
   atr_(FilesMetaDict::shr, dict);
 
   Files();
   virtual ~Files() {}
 
+  /// is there afile with this path already in the group ?
   bol_(hasPath, (l_io::path::rc));
+  /// add a file
   mut_(addFile, (data::File::shp));
+  /// remove a file
   mut_(remFileAt, (uint));
 
+  /// collect datasets from all files
   mth_(CombinedSets::shr, collectDatasets, (l::pint groupedBy));
 
 private:
@@ -61,3 +73,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof

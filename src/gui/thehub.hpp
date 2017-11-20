@@ -25,6 +25,7 @@
 #include <lib/dev/io/path.hpp>
 #include <lib/qt/app/hub.hpp>
 #include <lib/qt/view/lst.hpp>
+#include "../core/calc/fit_params.hpp"
 
 /* Note that since both l_qt::Hub and gui::Hub are Q_OBJECT, their base file
  * names (hub & thehub) *must* differ, because that's how MOC operates: on base

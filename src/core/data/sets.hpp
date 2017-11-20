@@ -26,11 +26,13 @@
 
 namespace core { namespace data {
 //------------------------------------------------------------------------------
-// attribute dictionaries
 
+/** a dictionary of metadata attributes
+ */
 dcl_(MetaDictBase)
   using idx = uint;
 
+  /// current set of keys, ordered
   atr_(str_vec, keys);
 
   MetaDictBase();
@@ -42,17 +44,20 @@ dcl_(MetaDictBase)
   mth_(strc, key,  (idx i)) RET_(keys.at(i))
 
 protected:
+  /// current set of keys, fast to search
   l::set<str> keySet;
   mut_(enter, (strc key));
   mut_(enter, (str_vec::rc keys));
   MetaDictBase(rc);
 dcl_end
 
+/// A bag of keys
 dcl_sub_(KeyBag, l::uset<str>) SHARED
 dcl_end
 
 //------------------------------------------------------------------------------
 
+/** metadata dictionary for Files */
 dcl_sub_(FilesMetaDict, MetaDictBase) SHARED CLONED
   UB1_(enter)
   FilesMetaDict();
@@ -60,6 +65,7 @@ private:
   FilesMetaDict(rc);
 dcl_end
 
+/** metadata dictionary */
 dcl_sub_(MetaDict, MetaDictBase) SHARED
   atr_(l::hash<str COMMA idx>, idxs);
 
@@ -79,7 +85,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-// attribute values
+/** A storage for metadata values */
 dcl_reimpl_(MetaVals, l::hash<MetaDictBase::idx COMMA flt32>)
   UB4_(begin, end, clear, isEmpty)
 
@@ -92,22 +98,26 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(Meta) SHARED // metadata
-  atr_(str, comment);
-  atr_(str, date);
+/** Metadata: several explicitely stored values; those and a number of others
+ * are also in @c dict and @c vals */
+dcl_(Meta) SHARED
+  atr_(str,    comment);
+  atr_(str,    date);
 
-  atr_(MetaDict::shp, dict); // other than the values stored explicitly below
-  atr_(MetaVals,     vals); // their values
+  atr_(tth_t,  tth);  ///< "middle" 2theta
+  atr_(omg_t,  omg);  ///< cradle
+  atr_(chi_t,  chi);  ///< cradle
+  atr_(phi_t,  phi);  ///< cradle
 
-  atr_(tth_t,  tth);    // *mid* tth
-  atr_(omg_t,  omg);
-  atr_(chi_t,  chi);
-  atr_(phi_t,  phi);
+  atr_(flt32,  tim);  ///< time
+  atr_(flt32,  mon);  ///< monitor count
+  atr_(flt32, dTim);  ///< delta time, may be NaN
+  atr_(flt32, dMon);  ///< delta monitor count, may be NaN
 
-  atr_(flt32,  tim);   // time
-  atr_(flt32,  mon);   // monitor count
-  atr_(flt32, dTim);   // delta time, may be nan
-  atr_(flt32, dMon);   // delta mon. count, may be nan
+  /// dynamic dictionary of metadata values
+  atr_(MetaDict::shp, dict);
+  /// values of metadata in the above dictionary
+  atr_(MetaVals,      vals);
 
   Meta(MetaDict::shp);
   Meta(MetaDict::shp, MetaVals::rc, flt32, flt32, flt32, flt32,
@@ -116,6 +126,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// Information on source (disk) file.
 dcl_(FileSrc) SHARED
   atr_(l_io::path, path);
   atr_(str, comment);
@@ -125,10 +136,11 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
-dcl_(Set) SHARED   // one dataset, as acquired
-  atr_(FileSrc::shp, src);
-  atr_(Meta::shp,    meta);
-  atr_(Image::shp,   image);
+/// One dataset, as read from the source file
+dcl_(Set) SHARED
+  atr_(FileSrc::shp, src);    ///< source file information
+  atr_(Meta::shp,    meta);   ///< metadata
+  atr_(Image::shp,   image);  ///< detector image
 
   Set(FileSrc::shp, Meta::shp, Image::shp);
 
@@ -150,6 +162,7 @@ dcl_(Set) SHARED   // one dataset, as acquired
 
   mth_(inten_rge, rgeInten, ()) RET_(image->rgeInten())
 
+  /// collect pixels (intensities) that are within a 2theta and gamma ranges
   voi_(collect, (calc::FitParams const&,
                  core::inten_vec&, uint_vec&, gma_rge::rc,
                  tth_t minTth, tth_t deltaTth));
@@ -157,6 +170,7 @@ dcl_end
 
 //------------------------------------------------------------------------------
 
+/// A collection of datasets (base class)
 dcl_reimpl_(Sets, l::vec<Set::shr>)
   UB5_(first, begin, end, isEmpty, size)
 
@@ -174,10 +188,18 @@ dcl_end
 
 struct CombinedSets;
 
-dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
+/** A "combined set" - a collection of one or more datasets, that is seen as
+ * a single dataset. Its metadata are calculated from individual datasets:
+ * the maximum of time + monitor count; the sum of delta time and delta monitor
+ * count; the average of everything else.
+ */
+dcl_sub_(CombinedSet, Sets) SHARED
+  /// the number of the file from which (the first of) the datasets came
   atr_(uint, fileNo);
+  /// tag to display (a range of original set numbers)
   atr_(str,  tag);
-  atr_(bool, isActive); // included in calculations
+  /// is it included in calculations ?
+  atr_(bool, isActive);
 
   CombinedSet(uint fileNo);
 
@@ -199,6 +221,7 @@ dcl_sub_(CombinedSet, Sets) SHARED   // one or more Set
 
   mth_(inten_rge, rgeInten, ());
   mth_(inten_vec, collectIntens, (calc::FitParams const&, gma_rge::rc));
+
 private:
   mutable Meta::shp lazyMeta;
 
@@ -211,11 +234,15 @@ private:
   mutable flt32    lazyDTim;
   mutable flt32    lazyDMon;
 
-  mth_(inten_vec, collect, (calc::FitParams const&, gma_rge::rc));
+  /// calculate the histogram
+  mth_(inten_vec, histogram, (calc::FitParams const&, gma_rge::rc));
 dcl_end
 
 //------------------------------------------------------------------------------
 
+/** The complete set of datasets in an experiment is a collection of
+ * combined sets
+ */
 dcl_sub_(CombinedSets, l::vec<CombinedSet::shr>) SHARED
   CombinedSets();
 
@@ -242,3 +269,4 @@ dcl_end
 
 //------------------------------------------------------------------------------
 }}
+// eof
