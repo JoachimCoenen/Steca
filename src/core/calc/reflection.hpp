@@ -36,32 +36,13 @@ dcl_(Reflection) SHARED
   Reflection(fit::PeakFun::eType);
   Reflection(l::give_me<fit::PeakFun const>);
 
-  mut_(setType,  (fit::PeakFun::eType)); // TODO r/o remove ?
+  mut_(setType,  (fit::PeakFun::eType)); 
   mut_(setRange, (Range::rc));
   mut_(setGuess, (peak_t::rc = peak_t(), fwhm_t = fwhm_t()));
 
 private:
   void setPeakFun(fit::PeakFun::eType);
   void setPeakFun(l::give_me<fit::PeakFun>);
-
-//  static rcstr       typeTag(fit::ePeakType);
-
-
-//  fit::ePeakType type() const;
-
-//  fit::PeakFunction::rc peakFunction() const;  // REMOVE
-
-//  typ::Range::rc range() const;
-
-
-//  void fit(typ::Curve::rc);
-
-//_private
-
-
-//public:
-//  typ::JsonObj saveJson() const;
-//  void loadJson(typ::JsonObj::rc) THROWS;
 dcl_end
 
 using reflection_vec = l::vec<Reflection::shr>;

@@ -6,7 +6,7 @@ namespace l_io { namespace endian {
 //------------------------------------------------------------------------------
 
 uint16 from_be(uint16 v) {
-  return v; // be16toh(v); TODO
+  return v; // be16toh(v);
 }
 
 uint16 from_le(uint16 v) {

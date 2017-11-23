@@ -2,7 +2,7 @@
 
 /** @file
  * conversion from big and little endians to the system representation;
- * TODO only prepared
+ * TODO so far this is only an interface
  */
 
 #pragma once

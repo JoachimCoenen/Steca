@@ -43,7 +43,7 @@ l::own<File> loadMar(path::rc path) may_err {
   check_or_err_(fpIn = fopen(path.c_str(), "rb"),
                 CAT("Cannot open data file: ", path));
 
-  struct CloseFile { // TODO remove, replace with QFile etc.
+  struct CloseFile { 
     CloseFile(FILE *fpIn) : fpIn_(fpIn) {}
    ~CloseFile() { fclose(fpIn_); }
   private:
@@ -133,7 +133,7 @@ l::own<File> loadMar(path::rc path) may_err {
   //*** Read and correct high bytes ***
   //***********************************
   /* There are some high intensity values stored in the image */
-//  bool pictureOverflow = false;
+
   if (numberOfHigh) {
     int pair[2];
 
@@ -168,7 +168,10 @@ l::own<File> loadMar(path::rc path) may_err {
       // dataset will set the overflow flag)
       if (pair[1] == 999999.0) {
         pair[1] = 128000;
-//        pictureOverflow = true;
+        /* NOTE: Steca1 passes this overflow flag on to DetectorDataset,
+         * but then it is apparently not used anywhere. Ergo we do not.
+         */
+        // pictureOverflow = true;
       }
 
       // Correct high pixel
@@ -177,7 +180,6 @@ l::own<File> loadMar(path::rc path) may_err {
   }
 
   // Check Pixel Level um Daten mit defekten Pixeln lesen zu k�nnen
-  // TODO REVIEW
 //  if (MeasurementData::isPixelLevelUsed()) {
 //    for_i_(pixelSize) {
 //      if (i4_image[i] > MeasurementData::pixelLevel)
@@ -225,11 +227,9 @@ l::own<File> loadMar(path::rc path) may_err {
   mut(md->phi)  = phi_t(phi);
   mut(md->chi)  = chi_t(chi);
 
-  mut(md->mon)  = dosen; // ? REVIEW ? md.deltaMonitorCount
+  mut(md->mon)  = dosen;
   mut(md->dTim) = exposureTime;
   mut(md->tim)  = totalTime;
-
-  // REVIEW ?? pictureOverflow
 
   mut(*file).addSet(
     l::sh(new Set(

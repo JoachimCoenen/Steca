@@ -206,34 +206,10 @@ PanelImage::PanelImage(Hub& hub) : base("") {
     vb.add(wgtCorrection = new ImageWidget(*this));
   }
 
-//  connect(actions.enableCorr, &QAction::toggled, [this](bool) {
-//    render();
-//  });
-
-//  connect(actions.showBins, &QAction::toggled, [this]() {
-//    render();
-//  });
-
-//  onSigDisplayChanged([this]() {
-//    render();
-//  });
-
-//  onSigGeometryChanged([this]() {
-//    render();
-//  });
-
-//  onSigNormChanged([this]() {
-//    render();
-//  });
-
-//  onSigDatasetSelected([this](data::shp_Dataset dataset) {
-//    setDataset(dataset);
-//  });
-
   hub.onSigSetsInfo([this](Hub::SetsInfo info) {
     if (set != info.set || fp != info.fp) {
       sets = info.sets; set = info.set; fp = info.fp;
-      renderTabs(); // TODO only one tab
+      renderTabs();
     }
   });
 
@@ -316,61 +292,10 @@ void PanelImage::renderTabs() {
   {
     QPixmap pixMap;
 
-//    uint nSlices  = to_u(numSlices_->value());
-//    numSlice_->setMaximum(qMax(1, to_i(nSlices)));
-//    numSlice_->setEnabled(nSlices > 0);
-
     if (set) {
       pixMap = makePixmap(set->first()().image);
-//      // 1 - based
-//      uint by = qBound(1u, uint(hub_.datasetsGroupedBy()), dataset_->count());
-//      uint n  = qBound(1u, to_u(spinN_->value()), by);
 
-//      spinN_->setValue(to_i(n));
-//      spinN_->setEnabled(by > 1);
-
-//      lens_ = hub_.datasetLens(*dataset_);
-
-//      typ::Range rge;
-//      if (nSlices > 0) {
-//        uint nSlice  = qMax(1u, to_u(numSlice_->value()));
-//        uint iSlice  = nSlice - 1;
-
-//        auto rgeGma = lens_->rgeGma();
-//        auto min    = rgeGma.min;
-//        auto wn = rgeGma.width() / nSlices;
-
-//        rge = gma_rge(min + iSlice * wn, min + (iSlice+1) * wn);
-
-//        minGamma_->setValue(rge.min);
-//        maxGamma_->setValue(rge.max);
-//      } else {
-//        rge = typ::Range::infinite();;
-//        minGamma_->clear();
-//        maxGamma_->clear();
-//      }
-
-//      hub_.setGammaRange(rge);
-
-//      auto oneDataset = dataset_->at(n-1);
-
-//      numBin_->setEnabled(true);
-//      if (hub_.actions.showBins->isChecked()) {
-//        typ::Range rgeTth = lens_->rgeTth();
-//        auto curve = lens_->makeCurve(false); // TODO factor out lens::binCount()
-//        int count  = to_i(curve.count());
-//        numBin_->setMaximum(count-1);
-//        auto min = rgeTth.min, wdt = rgeTth.width();
-//        qreal num = qreal(numBin_->value());
-//        pixMap = makePixmap(*oneDataset, rge, typ::Range(min + wdt * (num/count), min + wdt * ((num+1)/count)));
-//      } else {
-//        pixMap = makePixmap(oneDataset->image());
-//      }
     } else {
-//      spinN_->setEnabled(false);
-//      numBin_->setMaximum(0);
-//      numBin_->setEnabled(false);
-
       pixMap = makeBlankPixmap();
     }
 

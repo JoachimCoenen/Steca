@@ -30,7 +30,7 @@ void msg_cannotSolve(unsigned int n, unsigned int m);
  */
 
 /* specifies whether to use LAPACK or not. Using LAPACK is strongly recommended */
-// #define HAVE_LAPACK # REVIEW restore this
+// #define HAVE_LAPACK
 
 /* specifies whether the PLASMA parallel library for multicore CPUs is available */
 /* #undef HAVE_PLASMA */

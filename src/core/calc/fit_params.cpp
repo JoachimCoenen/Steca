@@ -68,7 +68,7 @@ DatasetLens::shr FitParams::datasetLens(
 real FitParams::calcAvgBackground(data::CombinedSets::rc datasets, data::CombinedSet::rc dataset) const {
   auto lens = datasetLens(datasets, dataset, true, true);
 
-  Curve gmaCurve = lens().makeCurve(true); // REVIEW averaged?
+  Curve gmaCurve = lens().makeCurve(true); 
   auto bgPolynom = fit::Polynom::fromFit(bgPolyDegree, gmaCurve, bgRanges);
   return bgPolynom.avgY(lens().rgeTth());
 }

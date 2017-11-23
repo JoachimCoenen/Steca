@@ -182,22 +182,6 @@ QLayout* DlgAbout::extra() const {
   chkAbout->check(s.readBool(S::STARTUP_ABOUT, true));
   chkUpdate->check(s.readBool(S::STARTUP_UPDATE, true));
 
-  //// TODO put back
-  // auto&& gr = vb->gr();
-  ////  g->addWidget(label("default det. distance"), 0, 0, Qt::AlignRight);
-  //  g->addWidget((detDistance_ = spinDoubleCell(gui_cfg::em4_2, typ::Geometry::MIN_DETECTOR_DISTANCE)), 0, 1);
-  ////  g->addWidget(label("default pixel size"), 1, 0, Qt::AlignRight);
-  //  g->addWidget((detPixelSize_ = spinDoubleCell(gui_cfg::em4_2, typ::Geometry::MIN_DETECTOR_PIXEL_SIZE)), 1, 1);
-  //  g->addColumnStretch();
-
-  //  detPixelSize_->setDecimals(3);
-  //  detDistance_->setValue(s.readReal(config_key::DET_DISTANCE, typ::Geometry::DEF_DETECTOR_DISTANCE));
-  //  detPixelSize_->setValue(s.readReal(config_key::DET_PIX_SIZE, typ::Geometry::DEF_DETECTOR_PIXEL_SIZE));
-
-  //// TODO put back
-  //  detDistance_->setVisible(false);
-  //  detPixelSize_->setVisible(false);
-
   return vb;
 }
 
@@ -207,9 +191,6 @@ void DlgAbout::accept() {
 
   s.saveBool(S::STARTUP_ABOUT,  chkAbout->isChecked());
   s.saveBool(S::STARTUP_UPDATE, chkUpdate->isChecked());
-
-//TODO  s.saveReal(config_key::DET_DISTANCE, detDistance_->value());
-//  s.saveReal(config_key::DET_PIX_SIZE, detPixelSize_->value());
 
   base::accept();
 }
@@ -258,7 +239,7 @@ void Win::onFirstShow() {
 }
 
 bool Win::onClose() {
-  return true; // TODO dlgYes("Quit?");
+  return true; // or: dlgYes("Quit?");
 }
 
 void Win::checkUpdate(bool completeReport) const {

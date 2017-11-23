@@ -52,7 +52,6 @@ real Polynom::dy(real x, uint i, real const*) const {
   return l::pow(x, i);
 }
 
-// REVIEW
 real Polynom::avgY(Range::rc rgeX, real const* parVals) const {
   EXPECT_(rgeX.isDef())
 
@@ -139,29 +138,27 @@ void PeakFun::fit(Curve::rc curve, Range::rc range) {
   if (c.isEmpty())
     return;
 
-//  if (!guessedPeak().isValid()) {  // calculate guesses // TODO caching temporarily disabled, until it works correctly
-    uint peakIndex  = c.maxYindex();
-    auto peakTth    = c.xs.at(peakIndex);
-    auto peakIntens = c.ys.at(peakIndex);
+  uint peakIndex  = c.maxYindex();
+  auto peakTth    = c.xs.at(peakIndex);
+  auto peakIntens = c.ys.at(peakIndex);
 
-    // half-maximum indices
-    uint hmi1 = peakIndex, hmi2 = peakIndex;
+  // half-maximum indices
+  uint hmi1 = peakIndex, hmi2 = peakIndex;
 
-    // left
-    for (uint i = peakIndex; i-- > 0;) {
-      hmi1 = i;
-      if (c.ys.at(i) < peakIntens / 2) break;
-    }
+  // left
+  for (uint i = peakIndex; i-- > 0;) {
+    hmi1 = i;
+    if (c.ys.at(i) < peakIntens / 2) break;
+  }
 
-    // right
-    for (uint i = peakIndex, iEnd = c.size(); i < iEnd; ++i) {
-      hmi2 = i;
-      if (c.ys.at(i) < peakIntens / 2) break;
-    }
+  // right
+  for (uint i = peakIndex, iEnd = c.size(); i < iEnd; ++i) {
+    hmi2 = i;
+    if (c.ys.at(i) < peakIntens / 2) break;
+  }
 
-    mut(guessedPeak).set(peakTth, peakIntens);
-    mut(guessedFWHM) = fwhm_t(c.xs.at(hmi2) - c.xs.at(hmi1));
-//  }
+  mut(guessedPeak).set(peakTth, peakIntens);
+  mut(guessedFWHM) = fwhm_t(c.xs.at(hmi2) - c.xs.at(hmi1));
 
   LevenbergMarquardt().fit(*this, c);
 }
@@ -296,7 +293,7 @@ peak_t Gaussian::peakError() const {
 }
 
 fwhm_t Gaussian::fwhmError() const {
-  // REVIEW
+  // REVIEW is it so?
   return fwhm_t(parErr(parSIGMA));
 }
 
@@ -549,7 +546,6 @@ peak_t PseudoVoigt2::peakError() const {
 }
 
 fwhm_t PseudoVoigt2::fwhmError() const {
-  // REVIEW
   return fwhm_t(parErr(parSIGMA) +
                 parErr(parGAMMA));
 }

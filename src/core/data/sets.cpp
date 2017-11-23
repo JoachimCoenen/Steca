@@ -287,7 +287,7 @@ Meta::shp CombinedSet::meta() const {
     mut(lm.tim) = l::max(lm.tim, im.tim);
     mut(lm.mon) = l::max(lm.mon, im.mon);
 
-    mut(lm.dTim) += l::isnan(im.dTim) ? 0.f : im.dTim; // TODO handle nans properly
+    mut(lm.dTim) += l::isnan(im.dTim) ? 0.f : im.dTim;
     mut(lm.dMon) += l::isnan(im.dMon) ? 0.f : im.dMon;
 
     MetaDict::rc id = *im.dict;

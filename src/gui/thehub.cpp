@@ -138,9 +138,7 @@ bool Hub::ModelDatasets::rightAlign(cl_n cl) const {
   return 0 == cl;
 }
 
-// TODO macro like this
-#define _set_(cls) cls::ref cls
-_set_(Hub::ModelDatasets)::check(rw_n rw, bool on, bool) {
+Hub::ModelDatasets::ref Hub::ModelDatasets::check(rw_n rw, bool on, bool) {
   auto&& isActive = hub.currentSets().at(rw)().isActive;
   if (isActive != on) {
     mut(isActive) = on;
@@ -342,7 +340,6 @@ void Hub::init() {
 }
 
 void Hub::sessionClear() {
-  // TODO set acts to default states
   base::clear();
   corrRem(); // to reset controls
   filesModified();
@@ -414,27 +411,27 @@ void Hub::corrRem() {
 
 void Hub::setBg(Ranges::rc rs) emits {
   base::setBg(rs);
-// TODO emitFit(base::fit);
+  // emit ...
 }
 
 void Hub::addBg(Range::rc r) emits {
   base::addBg(r);
-// TODO emitFit(base::fit);
+  // emit ...
 }
 
 void Hub::remBg(Range::rc r) emits {
   base::remBg(r);
-// TODO emitFit(base::fit);
+  // emit ...
 }
 
 void Hub::setRefl(Range::rc r) emits {
   base::setRefl(r);
-// TODO emitFit(base::fit);
+  // emit ...
 }
 
 void Hub::setNorm(core::calc::eNorm) {
-// ... base::remBg(r);
-// TODO emitFit(base::fit);
+  // ... base::remBg(r);
+  // emit ...
 }
 
 Hub::SetsInfo Hub::setsInfo() const

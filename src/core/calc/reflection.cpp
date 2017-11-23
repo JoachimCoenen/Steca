@@ -45,42 +45,8 @@ void Reflection::setPeakFun(fit::PeakFun::eType type) {
 }
 
 void Reflection::setPeakFun(l::give_me<fit::PeakFun> f) {
-  mut(peakFun).reset(mutp(f.ptr())); // TODO mutp?
+  mut(peakFun).reset(mutp(f.ptr()));
 }
-
-//rcstr Reflection::typeTag(fit::ePeakType type) {
-//  return typeStrLst().at(uint(type));
-//}
-
-//fit::ePeakType Reflection::type() const {
-//  return peakFunction_->type();
-//}
-
-//fit::PeakFunction::rc Reflection::peakFunction() const {
-//  ENSURE_(peakFunction_)
-//  return *peakFunction_;
-//}
-
-//typ::Range::rc Reflection::range() const {
-//  return peakFunction_->range();
-//}
-
-//void Reflection::fit(typ::Curve::rc curve) {
-//  peakFunction_->fit(curve);
-//}
-
-
-//typ::JsonObj Reflection::saveJson() const {
-//  return peakFunction_->saveJson();
-//}
-
-//void Reflection::loadJson(typ::JsonObj::rc obj) THROWS {
-//  scoped<typ::Function*> f(typ::Function::make(obj));
-
-//  RUNTIME_CHECK(dynamic_cast<fit::PeakFunction*>(f.ptr()),
-//                "must be a peak function");
-//  setPeakFunction(static_cast<fit::PeakFunction*>(f.take()));
-//}
 
 //------------------------------------------------------------------------------
 }}

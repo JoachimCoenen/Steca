@@ -50,7 +50,7 @@ public:
   bol_(isEmpty,    ())      RET_(cash.isEmpty())
   mut_(clear, ()) { trim(0); }
 
-  void trim(uint n) { // TODO to cache_base (with adapter)
+  void trim(uint n) { 
     if (size() > n) {
       map<mru_t, cash_it> mit;
       for (auto it = cash.begin(), itEnd = cash.end(); it != itEnd; ++it)

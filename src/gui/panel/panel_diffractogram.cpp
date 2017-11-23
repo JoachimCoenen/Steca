@@ -330,14 +330,9 @@ void Plot::plot(Curve::rc dgram, Curve::rc bgFitted, Curve::rc bg, curve_vec::rc
     auto&& tthRange = dgram.rgeX;
 
     Range intenRange;
-// TODO if (dgramOptions.isFixedIntenScale) {
-//      ENSURE(!diffractogram_.dataset().isNull())
-//      auto lens = hub_.datasetLens(*diffractogram_.dataset());
-//      intenRange = lens->rgeInten();
-//    } else {
+
     intenRange = bgFitted.rgeY;
     intenRange.extendBy(dgram.rgeY);
-//    }
 
     xAxis->setRange(tthRange.min, tthRange.max);
     yAxis->setRange(qMin(0., intenRange.min), intenRange.max);
@@ -363,7 +358,7 @@ void Plot::plot(Curve::rc dgram, Curve::rc bgFitted, Curve::rc bg, curve_vec::rc
     for (auto&& r : refls) {
       auto* graph = addGraph();
       reflGraph.add(graph);
-      graph->setPen(QPen(Qt::green, /*TODO i == currReflIndex ? 2 : 1*/1));
+      graph->setPen(QPen(Qt::green, 1));
       graph->setData(qv(r.xs), qv(r.ys));
     }
   }

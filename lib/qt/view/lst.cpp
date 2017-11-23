@@ -117,7 +117,7 @@ void lst_model::fixColumns(lst_view& view) const {
       auto&& s = v.isReal() ? QString::number(v.toDouble()) : v.toString();
       w = l::max(w, m.boundingRect(s).width());
     }
-    return 24 + w; // TODO Qt views use what format?  (e.g. e+06)
+    return 24 + w;
   };
 
   if (isNumbered) {
@@ -365,10 +365,10 @@ void lst_view::keyPressEvent(QKeyEvent* e) {
     setCurrentRow(currRow + 1);
     break;
   case Qt::Key_PageUp:
-    setCurrentRow(currRow - 10);  // TODO
+    setCurrentRow(currRow - 10);  // TODO by page
     break;
   case Qt::Key_PageDown:
-    setCurrentRow(currRow + 10);  // TODO
+    setCurrentRow(currRow + 10);  // TODO by page
     break;
   case Qt::Key_Home:
     setCurrentRow(0);

@@ -138,7 +138,6 @@ tth_rge DatasetLens::rgeTth() const {
 
 inten_rge DatasetLens::rgeInten() const {
   // "freezes" the scale
-  // TODO consider return datasets_.rgeInten();
   return dataset.rgeInten();
 }
 

@@ -99,7 +99,7 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
     return addValTo(vs, node, getAsFloat(dt, n));
   };
 
-  // TODO make nanable flt32/64
+  // TODO consider making these NaN-able: use Flt32/64 types
   flt32 tth = l::flt32_nan, omg = l::flt32_nan, chi = l::flt32_nan, phi = l::flt32_nan,
         tim = l::flt32_nan, mon = l::flt32_nan;
 
@@ -135,10 +135,9 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
   };
 
   auto doTimMon = [&]() -> bool {
-    return
-      doVal("TIM1", tim) ||
-      doVal("MON",  mon);
-    // TODO (Michael): until (including) Feb 2015, tim /= 100
+    // TODO until (including) Feb 2015, should be: tim /= 100
+    // (there was a system change at the instrument)
+    return doVal("TIM1", tim) || doVal("MON",  mon);
   };
 
   auto beginDataset = [&]() {
@@ -155,8 +154,9 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
     check_or_err_(!l::isnan(tth), "missing TTH");
     bool robot = eAxes::ROBOT == axes;
 
+    // robot somehow looks the other way
     if (robot)
-      chi = 180 - chi; // TODO ask Michael
+      chi = 180 - chi;
 
     check_or_err_(image.ptr(), "do not have an image");
 
