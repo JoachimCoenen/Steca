@@ -10,6 +10,11 @@ compiler:
 - clang
 - gcc
 
+branches:
+  only:
+  - master
+  - develop
+
 env:
 - BUILD_TYPE=Debug
 - BUILD_TYPE=Release
