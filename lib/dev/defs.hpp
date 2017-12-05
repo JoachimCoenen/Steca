@@ -28,7 +28,7 @@ to others that may have access to the data. Typically, one would modify:
 - local data that are not shared
 
 There are a set of macros that help with and also enforce the above rules in
-declarations of data types. The macrost inject @c const modifiers. They are:
+declarations of data types. The macros inject @c const modifiers. They are:
 - @c dcl_, @c dcl_base_, @c dcl_sub_, @c dcl_sub2_, @c  dcl_reimpl_,
   @c dcl_reimpl2_, @c dcl_end: delimit each declaration
 - @c atr_, @c ptr_, @c ref_, @c cst_: these declare data members
@@ -50,7 +50,7 @@ uint64, @c int64 - signed and unsigned integers of various sizes
 
 Finally, a few macros:
 - @c may_err, @c will_err - exception annotation
-- @c EXPECT_, @c ENSURE_, @c NEED_(cond)  (assert(cond), cond)
+- @c EXPECT_, @c ENSURE_, @c NEED_(cond) - assertions
 
 The library is contained in a namespace @c l ((l)ibrary).
 
@@ -118,8 +118,7 @@ Here is a vocabulary:
 - @c vec vector
 - @c voi void
 
-Identifiers ending in <code>-s</code> (the plurakl form) denote collections.
-
+Identifiers ending in <code>-s</code> (the plural form) denote collections.
 */
 
 #pragma once
@@ -189,7 +188,7 @@ Identifiers ending in <code>-s</code> (the plurakl form) denote collections.
 
 /**
  * Multiple inheritance is discouraged, for known reasons. But inheriting from
- * two structures is, in specific circumstances, useful and necessarys. Such
+ * two structures is, in specific circumstances, useful and necessary. Such
  * declaration begins with <code>dcl_sub2_(name, other_base, base)</code>.
  * - The inheritance has public visibility.
  * - @c base is an alias to the (second) super-structure type.
@@ -262,7 +261,7 @@ Identifiers ending in <code>-s</code> (the plurakl form) denote collections.
 #define EQNE bool operator==(rc) const; \
              bool operator!=(rc) const;
 
-/// ... withe inequality ops
+/// ... with inequality ops
 #define LGTE bool operator< (rc) const; \
              bool operator<=(rc) const; \
              bool operator> (rc) const; \
@@ -394,7 +393,7 @@ using pcstr = char const*;
 /// a (debug time) invariant or a post-condition assertion
 #define ENSURE_(cond) assert(cond);
 
-/// an assertion that passes on its value
+/// an assertion that passes on its value (if it does not fail)
 #define NEED_(cond)  (assert(cond), cond)
 
 //------------------------------------------------------------------------------
