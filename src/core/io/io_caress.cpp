@@ -206,7 +206,7 @@ static l::own<File> loadOpenCaressFile(l_io::path::rc path) may_err {
       if (node == "ADET") {
         auto adet = getAdet(dt, n);
         auto size = adet.size();
-        auto side = l::to_uint(l::floor(sqrt(size)));
+        auto side = l::to_uint(l::floor(sqrt(real(size))));
         check_or_err_((side*side == size) && (imageSide < 0 || imageSide == int(side)),
                       "bad image size");
         imageSide = l::to_i(side);
