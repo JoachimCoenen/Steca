@@ -110,16 +110,16 @@ MetaVals::ref MetaVals::addAt(idx i, flt32 val) {
 
 Meta::Meta(MetaDict::shp dict_)
 : comment()
-, dict(dict_), vals(), tth(0.), omg(0.), chi(0.), phi(0.)
-, tim(0), mon(0) , dTim(0), dMon(0) {}
+, tth(0.), omg(0.), chi(0.), phi(0.), tim(0), mon(0) , dTim(0), dMon(0)
+, dict(dict_), vals() {}
 
 Meta::Meta(MetaDict::shp dict_, MetaVals::rc vals_,
            flt32 tth_, flt32 omg_, flt32 chi_,  flt32 phi_,
            flt32 tim_, flt32 mon_, flt32 dTim_, flt32 dMon_)
 : comment()
-, dict(dict_), vals(vals_), tth(tth_), omg(omg_), chi(chi_), phi(phi_)
-, tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_) {
-}
+, tth(tth_), omg(omg_), chi(chi_), phi(phi_)
+, tim(tim_), mon(mon_) , dTim(dTim_), dMon(dMon_)
+, dict(dict_), vals(vals_) {}
 
 TEST_("dict",
   MetaDict dict;

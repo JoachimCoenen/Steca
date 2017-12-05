@@ -24,7 +24,7 @@ namespace core { namespace calc {
 //------------------------------------------------------------------------------
 
 LensBase::LensBase(FitParams::rc fp_, data::CombinedSets::rc datasets_, bool trans_, bool cut_)
-: trans(trans_), cut(cut_), fp(fp_), datasets(datasets_){}
+: fp(fp_), datasets(datasets_), trans(trans_), cut(cut_) {}
 
 LensBase::~LensBase() {}
 

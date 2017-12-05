@@ -1,2 +1,4 @@
-cd build/tests_steca
-./tests_steca
+cd build/tests/lib
+xvfb-run ./tests_lib
+cd ../steca
+xvfb-run ./tests_steca

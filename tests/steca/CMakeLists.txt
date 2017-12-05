@@ -7,9 +7,6 @@ find_package (Qt5 5.2.1 REQUIRED COMPONENTS Core Gui Widgets Multimedia Network)
 set (CMAKE_AUTOMOC ON)
 
 add_definitions (-DWITH_TESTS)
-if (WITH_COVERAGE)
-  add_compile_options(--coverage)
-endif ()
 
 include_directories (${CMAKE_HOME_DIRECTORY}/src)
 
@@ -33,10 +30,6 @@ file (COPY ${testdata} DESTINATION .)
 
 if (UNIX)
   target_link_libraries (${app} pthread)
-endif ()
-
-if (WITH_COVERAGE)
-  target_link_libraries (${app} gcov)
 endif ()
 
 # eof
