@@ -95,15 +95,21 @@ Here is a vocabulary:
 - @c num, @c n number (how many)
 - @c par parameter
 - @c pos position
-- @c ptr, @c p pointer
+- @c ptr, @c p pointer, @c pc pointer to a constant
+- @c r reference, @c rc reference to a constant
 - @c row, @c rw row
 - @c rge range
 - @c set set / setter
 - @c str string
 - @c res result
 - @c ret return
+- @c sh  shared
+- @c shp shared pointer
+- @c shr shared reference
 - @c str, @c s string
 - @c sub sub(structure, etc.)
+- @c tgl toggle (as in a button or action)
+- @c trg trigger (as in a button or action)
 - @c sz  size
 - @c tx  text
 - @c typ type
