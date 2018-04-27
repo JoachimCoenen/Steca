@@ -14,6 +14,7 @@
 
 #include "core/def/idiomatic_for.h"
 #include "core/raw/rawfile.h"
+#include "qcr/engine/debug.h"
 #include <qmath.h>
 #include <sstream>
 
@@ -23,6 +24,7 @@
 namespace load {
 
 Rawfile loadCaress(const QString& filePath) {
+    qDebug() << "DEBUG[load_caress] before load file";
     Rawfile ret(filePath);
 
     if(open_data_file(filePath.toLocal8Bit().data(), nullptr))
@@ -548,6 +550,8 @@ Rawfile loadCaress(const QString& filePath) {
         }
     }
 
+
+    qDebug() << "DEBUG[load_caress] done";
     return ret;
 }
 

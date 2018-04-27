@@ -15,6 +15,11 @@
 #include "core/raw/rawfile.h"
 #include "qcr/engine/debug.h"
 #include "yaml-cpp/include/yaml-cpp/yaml.h"
+#include <fstream>
+#include "core/typ/json.h"
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QStringBuilder> // for ".." % ..
 
 namespace  {
 
@@ -93,11 +98,41 @@ void readSingleScan(const YAML::Node& node, Metadata& metadata, Rawfile& rawfile
     // fill image row after row...:
     qDebug() << "DEBUG[load_yaml] before read scan";
     std::stringstream imageStr(imageNode.as<std::string>());
-    while (!imageStr.eof()) {
-        float v;
-        imageStr >> v;
-        image.push_back(v);
+    //for(const auto& lineNode: imageNode)
+    {
+    //    std::stringstream imageStr(lineNode.as<std::string>());
+        while (!imageStr.eof()) {
+            int v;
+            imageStr >> v;
+            image.push_back(v);
+        }
     }
+    qDebug() << "DEBUG[load_yaml] after read scan";
+
+    rawfile.addDataset(std::move(metadata), size, std::move(image));
+}
+
+void readSingleScanOLD(const YAML::Node& node, Metadata& metadata, Rawfile& rawfile)
+{
+    if (!node.IsDefined())
+        return;
+
+    metadata.time = node["time"].as<double>(Q_QNAN);
+    metadata.monitorCount = node["monitor"].as<double>(Q_QNAN);
+    const auto sum = node["sum"].as<double>(Q_QNAN);
+    const auto imageNode = node["image"];
+
+    const size2d size(imageNode[0].size(), imageNode.size());
+
+    qDebug() << "DEBUG[load_yaml] before read scan";
+    std::vector<float> image;
+    // fill image row after row...:
+    for (const auto& rowNode: imageNode) {
+        for (const auto& pixelNode: rowNode) {
+            image.push_back(pixelNode.as<float>());
+        }
+    }
+
     qDebug() << "DEBUG[load_yaml] after read scan";
 
     rawfile.addDataset(std::move(metadata), size, std::move(image));
@@ -115,7 +150,7 @@ void readScans(const YAML::Node& node, Metadata& metadata, Rawfile& rawfile)
         // Copy the QStrings back, because std::move removes them from metadata:
         metadata.date    = metadataCopy.date;
         metadata.comment = metadataCopy.comment;
-        readSingleScan(innerNode, metadataCopy, rawfile);
+        readSingleScanOLD(innerNode, metadataCopy, rawfile);
     }
 }
 
@@ -142,7 +177,8 @@ void readMeasurement(const YAML::Node& node, Rawfile& rawfile)
 
 namespace load {
 
-Rawfile loadYaml(const QString& filePath)
+
+Rawfile loadYamlREAL(const QString& filePath)
 {
     try {
         qDebug() << "DEBUG[load_yaml] before load file";
@@ -163,4 +199,190 @@ Rawfile loadYaml(const QString& filePath)
     return Rawfile("");
 }
 
+Rawfile loadJsonStr(const QString& filePath)
+{
+    try {
+        qDebug() << "DEBUG[load_yaml] before load file";
+
+        QFile file(filePath);
+        if (!(file.open(QIODevice::ReadOnly | QIODevice::Text))) {
+            qWarning() << ("Cannot open file for reading: " % filePath);
+            return Rawfile("");
+        }
+
+        QJsonParseError parseError;
+        QJsonDocument doc(QJsonDocument::fromJson(file.readAll(), &parseError));
+        if (!(QJsonParseError::NoError == parseError.error))
+            THROW("Error parsing session file");
+        JsonObj top(doc.object());
+        qDebug() << "DEBUG[load_yaml] after load file";
+
+        Rawfile rawfile(filePath);
+        // readInstrument (yamlFile["instrument"] , rawfile);
+        // readFormat     (yamlFile["format"]     , rawfile);
+        // readExperiment (yamlFile["experiment"] , rawfile);
+        const JsonObj& measurement = top.loadObj("measurement");
+        const QJsonArray& scans = measurement.loadArr("scan");
+
+        for (const QJsonValue& scanVal: scans) {
+            const JsonObj& scan(scanVal.toObject());
+            const QString& imageString = scan.loadString("image");
+            const JsonObj& dimensionsNode = scan.loadObj("dimensions");
+
+            const size2d size(dimensionsNode.loadInt("width"), dimensionsNode.loadInt("height"));
+
+            std::vector<float> image;
+            // fill image row after row...:
+            qDebug() << "DEBUG[load_yaml] before read scan";
+            std::stringstream imageStr(imageString.toStdString());
+            qDebug() << "DEBUG[load_yaml] after imageString.toStdString()";
+            while (!imageStr.eof()) {
+                int v;
+                imageStr >> v;
+                image.push_back(v);
+            }
+            qDebug() << "DEBUG[load_yaml] after read scan";
+
+            rawfile.addDataset(Metadata(), size, std::move(image));
+        }
+
+        return rawfile;
+    qDebug() << "DEBUG[load_yaml] done";
+    } catch (YAML::Exception e) {
+        THROW("Invalid data in file "+filePath+":\n" + e.what());
+    }
+    // just to avoid compiler warnings:
+    return Rawfile("");
+}
+
+Rawfile loadJsonArr(const QString& filePath)
+{
+    try {
+        qDebug() << "DEBUG[load_yaml] before load file";
+
+        QFile file(filePath);
+        if (!(file.open(QIODevice::ReadOnly | QIODevice::Text))) {
+            qWarning() << ("Cannot open file for reading: " % filePath);
+            return Rawfile("");
+        }
+
+        QJsonParseError parseError;
+        QJsonDocument doc(QJsonDocument::fromJson(file.readAll(), &parseError));
+        if (!(QJsonParseError::NoError == parseError.error))
+            THROW("Error parsing session file");
+        JsonObj top(doc.object());
+        qDebug() << "DEBUG[load_yaml] after load file";
+
+        Rawfile rawfile(filePath);
+        // readInstrument (yamlFile["instrument"] , rawfile);
+        // readFormat     (yamlFile["format"]     , rawfile);
+        // readExperiment (yamlFile["experiment"] , rawfile);
+        const JsonObj& measurement = top.loadObj("measurement");
+        const QJsonArray& scans = measurement.loadArr("scan");
+
+        for (const QJsonValue& scanVal: scans) {
+            const JsonObj& scan(scanVal.toObject());
+            const JsonObj& dimensionsNode = scan.loadObj("dimensions");
+
+            const size2d size(dimensionsNode.loadInt("width"), dimensionsNode.loadInt("height"));
+
+            qDebug() << "DEBUG[load_yaml] before read scan";
+            const QJsonArray& imageArray = scan.loadArr("image");
+            std::vector<float> image;
+            // fill image row after row...:
+            for (const auto& rowVal: imageArray) {
+                for (const auto& pixelNode: rowVal.toArray()) {
+                    image.push_back(pixelNode.toDouble(Q_QNAN));
+                }
+            }
+            qDebug() << "DEBUG[load_yaml] after read scan";
+
+            rawfile.addDataset(Metadata(), size, std::move(image));
+        }
+
+        return rawfile;
+    qDebug() << "DEBUG[load_yaml] done";
+    } catch (YAML::Exception e) {
+        THROW("Invalid data in file "+filePath+":\n" + e.what());
+    }
+    // just to avoid compiler warnings:
+    return Rawfile("");
+}
+
+Rawfile loadText(const QString& filePath)
+{
+    try {
+        qDebug() << "DEBUG[load_yaml] before load file";
+        Rawfile rawfile(filePath);
+
+        std::ifstream file( filePath.toStdString() );
+        if (file) {
+
+            int w, h;
+            file >> w >> h;
+
+            const size2d size(w, h);
+
+            std::vector<float> image;
+            qDebug() << "DEBUG[load_yaml] before read scan";
+            while(!file.eof()) {
+                int v;
+                file >> v;
+                image.push_back(v);
+            }
+            qDebug() << "DEBUG[load_yaml] after read scan";
+            file.close();
+
+            rawfile.addDataset(Metadata(), size, std::move(image));
+
+        }
+
+
+        return rawfile;
+
+        qDebug() << "DEBUG[load_yaml] done";
+    } catch (YAML::Exception e) {
+        THROW("Invalid data in file "+filePath+":\n" + e.what());
+    }
+    // just to avoid compiler warnings:
+    return Rawfile("");
+}
+
+Rawfile loadYamlREAL2(const QString& filePath)
+{
+    try {
+        qDebug() << "DEBUG[load_yaml] before load file";
+        YAML::Node yamlFile = YAML::LoadFile(filePath.toStdString()); // throws: ParserException, BadFile;
+        qDebug() << "DEBUG[load_yaml] after load file";
+
+        const auto imageNode = yamlFile["image"];
+        const size2d size(yamlFile["width"].as<int>(), yamlFile["height"].as<int>());
+
+        std::vector<float> image;
+        // fill image row after row...:
+        qDebug() << "DEBUG[load_yaml] before read scan";
+        std::stringstream imageStr(imageNode.as<std::string>());
+        while (!imageStr.eof()) {
+            int v;
+            imageStr >> v;
+            image.push_back(v);
+        }
+        qDebug() << "DEBUG[load_yaml] after read scan";
+
+        Rawfile rawfile(filePath);
+        rawfile.addDataset(Metadata(), size, std::move(image));
+
+        return rawfile;
+    qDebug() << "DEBUG[load_yaml] done";
+    } catch (YAML::Exception e) {
+        THROW("Invalid data in file "+filePath+":\n" + e.what());
+    }
+    // just to avoid compiler warnings:
+    return Rawfile("");
+}
+
+Rawfile loadYaml(const QString& filePath)
+{
+    return loadJsonArr(filePath);
+}
 } // namespace load

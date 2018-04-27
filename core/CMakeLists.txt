@@ -14,4 +14,5 @@ target_link_libraries (${lib}
     caress_loader
     yaml_cpp
     mar_loader
+    yaml
 )

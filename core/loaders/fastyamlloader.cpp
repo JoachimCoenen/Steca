@@ -2,7 +2,7 @@
 //
 //  Steca: stress and texture calculator
 //
-//! @file      core/loaders/loaders.cpp
+//! @file      core/loaders/fastyamlloader.cpp
 //! @brief     Implements loader functions.
 //!
 //! @homepage  https://github.com/scgmlz/Steca
@@ -12,15 +12,17 @@
 //
 //  ***********************************************************************************************
 
-#include "core/raw/rawfile.h"
+#include "fastyamlloader.h"
 #include <QStringBuilder> // for ".." % ..
 
 namespace load {
+    
 Rawfile loadCaress(const QString& filePath);
 Rawfile loadYaml(const QString& filePath);
 Rawfile loadMar(const QString& filePath);
 Rawfile loadTiffDat(const QString& filePath);
 QString loadCaressComment(const QString& filePath);
+
 }
 
 namespace {
