@@ -12,10 +12,12 @@
 //
 //  ***********************************************************************************************
 
+#include "fastyamlloader.h"
 #include "core/raw/rawfile.h"
 #include "qcr/engine/debug.h"
 #include "yaml-cpp/include/yaml-cpp/yaml.h"
 #include <fstream>
+#include<memory>
 #include "core/typ/json.h"
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -381,8 +383,56 @@ Rawfile loadYamlREAL2(const QString& filePath)
     return Rawfile("");
 }
 
+typedef loadYAML::YamlNode YamlNode;
+
+
+Rawfile loadYamlFast(const QString& filePath)
+{
+    try {
+        qDebug() << "DEBUG[load_yaml] before load file";
+        YamlNode yamlFile(loadYAML::loadYamlFast(filePath.toStdString())); // throws: ParserException, BadFile;
+        qDebug() << "DEBUG[load_yaml] after load file";
+
+        YamlNode& scans = yamlFile["measurement"]["scan"];
+
+        \
+        Rawfile rawfile(filePath);
+
+        for (auto& scan : scans) {
+            Metadata metadata;
+
+            metadata.time = scan["time"].value().toDouble();
+            metadata.monitorCount = scan["monitor"].value().toDouble();
+            auto sum = scan["sum"].value().toDouble();
+            auto imageNode = scan["image"];
+
+            const size2d size(imageNode[0].size(), imageNode.size());
+
+            qDebug() << "DEBUG[load_yaml] before read scan";
+            std::vector<float> image;
+            // fill image row after row...:
+            for (auto& rowNode: imageNode) {
+                for (auto& pixelNode: rowNode) {
+                    image.push_back(pixelNode.value().toInt());
+                }
+            }
+
+            qDebug() << "DEBUG[load_yaml] after read scan";
+
+            rawfile.addDataset(std::move(metadata), size, std::move(image));
+        }
+
+        return rawfile;
+    qDebug() << "DEBUG[load_yaml] done";
+    } catch (YAML::Exception e) {
+        THROW("Invalid data in file "+filePath+":\n" + e.what());
+    }
+    // just to avoid compiler warnings:
+    return Rawfile("");
+}
+
 Rawfile loadYaml(const QString& filePath)
 {
-    return loadJsonArr(filePath);
+    return loadYamlFast(filePath);
 }
 } // namespace load

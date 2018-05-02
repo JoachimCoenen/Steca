@@ -18,256 +18,342 @@
 #include "core/raw/rawfile.h"
 #include "core/typ/exception.h"
 #include<yaml.h>
-#include<map>
+#include<memory>
 #include <QVariant>
 #include <QMap>
+#include <QStringBuilder>
+#include <QDebug>
 
 //! Functions loadRawfile and loadComment, and their dependences.
 
-namespace load {
+namespace loadYAML {
+
+struct Hello {
+
+    Hello() :
+        val1(false), val2("") { }
+
+    //Hello(Hello& other) :
+    //    val1(other.val1), val2(other.val2) { }
+
+    Hello(bool _val1) :
+        val1(_val1), val2("") { }
+
+    Hello(const std::string _val2) :
+        val1(false), val2(_val2) { }
+    ~Hello() { }
+
+    bool val1;
+    std::string val2;
+};
+
+
+
+
+template<typename T, typename r, r(*clenupEvent)(T*)>
+struct Container {
+    Container() : value_(new T()) { }
+    Container(T* value) : value_(value) { }
+    Container(T&& value) : value_(&value) { }
+    ~Container() { clenupEvent(&*value_);}
+
+
+    T*const getReference() {
+        return value_.get();
+    }
+
+    T& operator *() {
+        if (value_ == nullptr) {
+            THROW("value is nullptr, but should be initialized")
+        }
+        return *value_;
+    }
+private:
+    std::shared_ptr<T> value_;
+};
+
+//typedef Container<yaml_parser_t, void, &yaml_parser_delete> YamlParserType;
+typedef std::shared_ptr<yaml_parser_t> YamlParserType;
 
 class YamlNode {
 public:
-    YamlNode(MapType&& map) : map_(&std::move(map))
-    {
-
-    }
-
-    YamlNode(SequenceType&& sequence) : sequence_(&std::move(sequence))
-    {
-
-    }
-
-    YamlNode(ScalarType&& scalar) : sequence_(std::move(scalar))
-    {
-
-    }
-
-    ~YamlNode()
-    {
-        if (map_) delete(map_);
-        if (sequence_) delete(sequence_);
-    }
-
-    inline const ScalarType& value() {
-        return getScalar();
-    }
-
-    inline const YamlNode& operator[](const KeyType& key) const
-    {
-        return getMap().find(key)*;
-    }
-
-    inline const YamlNode& operator[](const int& index) const
-    {
-        return getSequence().at(index);
-    }
-
-    inline SequenceType::iterator begin()
-    {
-        switch (nodeType_) {
-        case MAP:
-            return getMap().begin();
-            break;
-        case SEQUENCE:
-            return getSequence().begin();
-            break;
-        case SCALAR:
-            THROW("node doesn't have an iterator")
-        }
-    }
-
-    inline SequenceType::iterator end()
-    {
-        switch (nodeType_) {
-        case MAP:
-            return getMap().end();
-            break;
-        case SEQUENCE:
-            return getSequence().end();
-            break;
-        case SCALAR:
-            THROW("node doesn't have an iterator")
-        }
-    }
-
-    inline SequenceType::const_iterator cbegin()
-    {
-        switch (nodeType_) {
-        case MAP:
-            return getMap().cbegin();
-            break;
-        case SEQUENCE:
-            return getSequence().cbegin();
-            break;
-        case SCALAR:
-            THROW("node doesn't have an iterator")
-        }
-    }
-
-    inline SequenceType::const_iterator cend()
-    {
-        switch (nodeType_) {
-        case MAP:
-            return getMap().cend();
-            break;
-        case SEQUENCE:
-            return getSequence().cend();
-            break;
-        case SCALAR:
-            THROW("node doesn't have an iterator")
-        }
-    }
-
-    inline const eNodeType nodeType() { return nodeType_; }
-
-    friend const ParsingResult parseYamlFast(yaml_parser_t *parser, yaml_event_t *event);
-
-    typedef std::map<KeyType, YamlNode> MapType;
+    typedef QString KeyType;
+    typedef QMap<KeyType, YamlNode> MapType;
     typedef std::vector<YamlNode> SequenceType;
-    typedef std::string ScalarType;
-    typedef std::string KeyType;
+    typedef QString ScalarType;
 
     enum class eNodeType {
         MAP,
         SEQUENCE,
         SCALAR,
     };
+/*
+    YamlNode(MapType&& map) : map_(&map)
+    {
+    }
+
+    YamlNode(SequenceType&& sequence) : sequence_(&sequence)
+    {
+
+    }
+*/
+    YamlNode(ScalarType&& scalar) : scalar_(scalar), nodeType_(eNodeType::SCALAR)
+    {
+
+    }
+
+    YamlNode(eNodeType nodeType) : nodeType_(nodeType)
+    {
+
+    }
+
+    YamlNode(bool _isEnd) : isEnd(_isEnd)
+    {
+
+    }
+
+    YamlNode()
+    {
+
+    }
+
+    YamlNode(const YamlNode& other)
+        : nodeType_(other.nodeType_),
+          map_(other.map_),
+          sequence_(other.sequence_),
+          scalar_(other.scalar_),
+          isEnd(other.isEnd)
+    {
+
+    }
+
+    ~YamlNode()
+    {
+    }
+
+    bool isEnd = false;
+
+    inline bool IsDefined() { return true; } // for now...
+
+    inline ScalarType& value() {
+        return getScalar();
+    }
+
+    YamlNode& operator= ( const YamlNode& other )
+    {
+        nodeType_ = other.nodeType_;
+        map_ = other.map_;
+        sequence_ = other.sequence_;
+        scalar_ = other.scalar_;
+        isEnd = other.isEnd;
+        return *this;
+    }
+
+    inline YamlNode& operator[](const KeyType& key)
+    {
+        //return getMap().find(key)->second;
+        return getMap().find(key).value();
+    }
+
+    inline YamlNode& operator[](const int& index)
+    {
+        return getSequence().at(index);
+    }
+
+    const int size() const {
+        return sequence_.size();
+    }
+    inline SequenceType::iterator begin()
+    {
+        switch (nodeType_) {
+        case eNodeType::MAP:
+            THROW("node(map) doesn't have an iterator")
+            break;
+        case eNodeType::SEQUENCE:
+            return sequence_.begin();
+            break;
+        case eNodeType::SCALAR:
+            THROW("node(scalar) doesn't have an iterator")
+        }
+    }
+
+    inline SequenceType::iterator end()
+    {
+        switch (nodeType_) {
+        case eNodeType::MAP:
+            THROW("node(map) doesn't have an iterator")
+            break;
+        case eNodeType::SEQUENCE:
+            return sequence_.end();
+            break;
+        case eNodeType::SCALAR:
+            THROW("node(scalar) doesn't have an iterator")
+        }
+    }
+
+    inline SequenceType::const_iterator cbegin() const
+    {
+        switch (nodeType_) {
+        case eNodeType::MAP:
+            THROW("node(map) doesn't have an iterator")
+            break;
+        case eNodeType::SEQUENCE:
+            return sequence_.cbegin();
+            break;
+        case eNodeType::SCALAR:
+            THROW("node(scalar) doesn't have an iterator")
+        }
+    }
+
+    inline SequenceType::const_iterator cend() const
+    {
+        switch (nodeType_) {
+        case eNodeType::MAP:
+            THROW("node(map) doesn't have an iterator")
+            break;
+        case eNodeType::SEQUENCE:
+            return sequence_.cend();
+            break;
+        case eNodeType::SCALAR:
+            THROW("node(scalar) doesn't have an iterator")
+        }
+    }
+
+    inline const eNodeType nodeType() { return nodeType_; }
+
+    friend YamlNode parseYamlFast(const YamlParserType parser);
 private:
 
     eNodeType nodeType_;
-    MapType*const map_ = nullptr;
-    std::vector<YamlNode>*const sequence_ = nullptr;
-    ScalarType const scalar_ = "";
+    //const std::shared_ptr<MapType> map_ = nullptr;
+    //const std::shared_ptr<SequenceType> sequence_ = nullptr;
+    MapType map_;// = nullptr;
+    SequenceType sequence_;// = nullptr;
+    ScalarType scalar_ = "42";
 
-    inline const MapType& getMap() { return *map_; }
-    inline const SequenceType& getSequence() { return *sequence_; }
-    inline const ScalarType& getScalar() { return scalar_; }
+    inline MapType& getMap() { return map_; }
+    inline SequenceType& getSequence() { return sequence_; }
+    inline ScalarType& getScalar() { return scalar_; }
 };
 
-const YamlNode& loadYamlFast(const Qstring& filePath) {
-    FILE *fh = fopen("config/public.yaml", "r");
-      yaml_parser_t parser;
-      yaml_event_t  event;   /* New variable */
 
-      /* Initialize parser */
-      if(!yaml_parser_initialize(&parser))
-        THROW("Failed to initialize parser!");
-      if(fh == NULL)
-        THROW("Failed to open file!");
+YamlNode parseYamlFast(YamlParserType parser) {
+    //Container<yaml_event_t, void, &yaml_event_delete> event = Container<yaml_event_t, void, &yaml_event_delete>(yaml_event_t());
+    yaml_event_t event;
 
-      /* Set input file */
-      yaml_parser_set_input_file(&parser, fh);
-
-      /* START new code */
-      do {
-        if (!yaml_parser_parse(&parser, &event)) {
-           THROW("Parser error %d" % parser.error);
-           exit(EXIT_FAILURE);
-        }
-
-        switch(event.type)
-        {
-        case YAML_NO_EVENT: puts("No event!"); break;
-        /* Stream start/end */
-        case YAML_STREAM_START_EVENT: puts("STREAM START"); break;
-        case YAML_STREAM_END_EVENT:   puts("STREAM END");   break;
-        /* Block delimeters */
-        case YAML_DOCUMENT_START_EVENT: puts("<b>Start Document</b>"); break;
-        case YAML_DOCUMENT_END_EVENT:   puts("<b>End Document</b>");   break;
-        case YAML_SEQUENCE_START_EVENT: puts("<b>Start Sequence</b>"); break;
-        case YAML_SEQUENCE_END_EVENT:   puts("<b>End Sequence</b>");   break;
-        case YAML_MAPPING_START_EVENT:  puts("<b>Start Mapping</b>");  break;
-        case YAML_MAPPING_END_EVENT:    puts("<b>End Mapping</b>");    break;
-        /* Data */
-        case YAML_ALIAS_EVENT:  printf("Got alias (anchor %s)\n", event.data.alias.anchor); break;
-        case YAML_SCALAR_EVENT: printf("Got scalar (value %s)\n", event.data.scalar.value); break;
-        }
-        if(event.type != YAML_STREAM_END_EVENT)
-          yaml_event_delete(&event);
-      } while(event.type != YAML_STREAM_END_EVENT);
-      yaml_event_delete(&event);
-      /* END new code */
-
-      /* Cleanup */
-      yaml_parser_delete(&parser);
-      fclose(fh);
-      return 0;
-
-
-}
-
-struct ParsingResult {
-    ParsingResult(const YamlNode& _Node) :
-        node(_Node), isEnd(false) { }
-    ParsingResult(const bool _isEnd) :
-        node(nullptr), isEnd(_isEnd) { }
-    const YamlNode& node;
-    const bool isEnd;
-};
-
-struct EventContainer {
-    EventDeleter() : event_(){ }
-    EventDeleter(yaml_event_t& event) : event_(event){ }
-    ~EventDeleter() { yaml_event_delete(&event_); }
-    yaml_event_t event_;
-};
-
-const ParsingResult parseYamlFast(yaml_parser_t *parser) {
-    EventContainer event;
-
-    if (!yaml_parser_parse(parser, &event.event)) {
-       THROW("Parser error %d" % parser.error);
+    if (!yaml_parser_parse(parser.get(), &event)) {
+       THROW(QString::fromStdString("Parser error " + std::to_string((*parser).error)));
     }
-    switch(event.type)
+
+    switch((event).type)
     {
-    case YAML_NO_EVENT: puts("No event!"); break;
+    case YAML_NO_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_NO_EVENT";
+        break;
     /* Stream start/end */
-    case YAML_STREAM_START_EVENT: puts("STREAM START"); break;
-    case YAML_STREAM_END_EVENT:   puts("STREAM END");   break;
+    case YAML_STREAM_START_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_STREAM_START_EVENT";
+        return parseYamlFast(parser);
+    case YAML_STREAM_END_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_STREAM_END_EVENT";
+        return YamlNode(true);
     /* Block delimeters */
-    case YAML_DOCUMENT_START_EVENT: puts("<b>Start Document</b>"); break;
-    case YAML_DOCUMENT_END_EVENT:   puts("<b>End Document</b>");   break;
-    case YAML_SEQUENCE_START_EVENT: puts("<b>Start Sequence</b>"); {
-        YamlNode node(new YamlNode::SequenceType());
-        YamlNode::SequenceTyp& sequence = node.getSequence();
-        for (auto parsResult = parseYamlFast(parser); !parsResult.isEnd; parsResult = parseYamlFast(parser)) {
-            sequence.push_back(parsResult.node);
+    case YAML_DOCUMENT_START_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_DOCUMENT_START_EVENT";
+        return parseYamlFast(parser);
+    case YAML_DOCUMENT_END_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_DOCUMENT_END_EVENT";
+        return YamlNode(true);
+    case YAML_SEQUENCE_START_EVENT: {
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_SEQUENCE_START_EVENT";
+        YamlNode node(YamlNode::eNodeType::SEQUENCE);
+        YamlNode::SequenceType& sequence = node.getSequence();
+
+        for (auto parseResult = parseYamlFast(parser); !parseResult.isEnd; parseResult = parseYamlFast(parser)) {
+            sequence.push_back(parseResult);
         }
-        return ParsingResult(node);
+        return node;
     }
     break;
-    case YAML_SEQUENCE_END_EVENT:   puts("<b>End Sequence</b>");
-        return ParsingResult(true);
-    case YAML_MAPPING_START_EVENT:  puts("<b>Start Mapping</b>"); {
-        YamlNode node(new YamlNode::SequenceType());
+    case YAML_SEQUENCE_END_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_SEQUENCE_END_EVENT";
+        return YamlNode(true);
+    case YAML_MAPPING_START_EVENT: {
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_MAPPING_START_EVENT";
+        YamlNode node(YamlNode::eNodeType::MAP);
         YamlNode::MapType& map = node.getMap();
-        for (auto parsResult = parseYamlFast(parser); !parsResult.isEnd; parsResult = parseYamlFast(parser)) {
-            map[parsResult.node.value()] = parseYamlFast(parser).node;
+        for (auto key = parseYamlFast(parser); !key.isEnd; key = parseYamlFast(parser)) {
+            qDebug() << "DEBUG[parseYamlFast] key.value() == " << key.value();
+            auto value = parseYamlFast(parser);
+            //map.insert({key.value(), value});
+            map.insert(key.value(), value);
         }
-        return ParsingResult(node);
+        return node;
     }
     break;
-    case YAML_MAPPING_END_EVENT:    puts("<b>End Mapping</b>");
-        return ParsingResult(true);
+    case YAML_MAPPING_END_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_MAPPING_END_EVENT";
+        return new YamlNode(true);
     /* Data */
-    case YAML_ALIAS_EVENT:  THROW("Got alias (anchor %s)\n" % event.data.alias.anchor); break;
+    case YAML_ALIAS_EVENT:
+        yaml_event_delete(&event);
+        qDebug() << "DEBUG[parseYamlFast] YAML_ALIAS_EVENT";
+        THROW(QString("Got alias (anchor %s)") /*% (*event).data.alias.anchor)*/);
+        break;
     case YAML_SCALAR_EVENT:
-        ParsingResult(YamlNode(event.event_.data.scalar.value));
+        qDebug() << "DEBUG[parseYamlFast] YAML_SCALAR_EVENT = " << QString::fromLatin1((char*)event.data.scalar.value);
+        //auto node = YamlNode(event.data.scalar.value);
+        //yaml_event_delete(&event);
+        return YamlNode(QString::fromLatin1((char*)event.data.scalar.value));
         break;
     }
-    yaml_event_delete(&event);
-  /* END new code */
-
+    qDebug() << "DEBUG[load_yaml] after switch";
 
 }
 
+struct FILEContainer {
+    //Container() : value_(new T()) { }
+    FILEContainer(FILE* file) : value_(file) { }
+    ~FILEContainer() { fclose(value_); }
+    FILE* operator *() {
+        if (value_ == nullptr) {
+            THROW("value is nullptr, but should be initialized")
+        }
+        return value_;
+    }
+private:
+    FILE* value_;
+};
 
 
-//! load a file; file type will be sensed
-Rawfile loadRawfile(const QString& filePath);
+const YamlNode loadYamlFast(const std::string& filePath) {
+    FILEContainer file(fopen(filePath.c_str(), "r"));
+    YamlParserType parser( new yaml_parser_t());
 
-QString loadComment(const QFileInfo& info);
+    qDebug() << "DEBUG[load_yaml] after openFile";
+    /* Initialize parser */
+    if(!yaml_parser_initialize(&*parser))
+        THROW("Failed to initialize parser!");
+    if(*file == nullptr)
+        THROW("Failed to open file!");
+
+    /* Set input file */
+    yaml_parser_set_input_file(&*parser, *file);
+    qDebug() << "DEBUG[load_yaml] before parseYamlFast";
+    return parseYamlFast(parser);
+    qDebug() << "DEBUG[load_yaml] after parseYamlFast";
+    yaml_parser_delete(parser.get());
+}
+
 
 } // namespace load
 
