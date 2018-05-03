@@ -41,7 +41,10 @@ bool couldBeCaress(const QFileInfo& info) {
 
 // Yaml file format
 bool couldBeYaml(const QFileInfo& info) {
-    return "yaml" == info.suffix().toLower();
+    return (false
+            || "yaml" == info.suffix().toLower()
+            || "json" == info.suffix().toLower()
+    );
 }
 
 // Mar file format

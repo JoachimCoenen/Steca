@@ -398,7 +398,9 @@ Rawfile loadYamlFast(const QString& filePath)
         \
         Rawfile rawfile(filePath);
 
+        static unsigned int scanCounter = 0;
         for (auto& scan : scans) {
+            scanCounter++;
             Metadata metadata;
 
             metadata.time = scan["time"].value().toDouble();
@@ -408,7 +410,7 @@ Rawfile loadYamlFast(const QString& filePath)
 
             const size2d size(imageNode[0].size(), imageNode.size());
 
-            qDebug() << "DEBUG[load_yaml] before read scan";
+            qDebug() << QString("DEBUG[load_yaml] before read scan #%1").arg(scanCounter);
             std::vector<float> image;
             // fill image row after row...:
             for (auto& rowNode: imageNode) {
@@ -417,7 +419,7 @@ Rawfile loadYamlFast(const QString& filePath)
                 }
             }
 
-            qDebug() << "DEBUG[load_yaml] after read scan";
+            qDebug() << QString("DEBUG[load_yaml] after read scan #%1").arg(scanCounter);
 
             rawfile.addDataset(std::move(metadata), size, std::move(image));
         }
