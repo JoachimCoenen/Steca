@@ -28,49 +28,7 @@
 
 namespace loadYAML {
 
-struct Hello {
-
-    Hello() :
-        val1(false), val2("") { }
-
-    //Hello(Hello& other) :
-    //    val1(other.val1), val2(other.val2) { }
-
-    Hello(bool _val1) :
-        val1(_val1), val2("") { }
-
-    Hello(const std::string _val2) :
-        val1(false), val2(_val2) { }
-    ~Hello() { }
-
-    bool val1;
-    std::string val2;
-};
-
-
-
-
-template<typename T, typename r, r(*clenupEvent)(T*)>
-struct Container {
-    Container() : value_(new T()) { }
-    Container(T* value) : value_(value) { }
-    Container(T&& value) : value_(&value) { }
-    ~Container() { clenupEvent(&*value_);}
-
-
-    T*const getReference() {
-        return value_.get();
-    }
-
-    T& operator *() {
-        if (value_ == nullptr) {
-            THROW("value is nullptr, but should be initialized")
-        }
-        return *value_;
-    }
-private:
-    std::shared_ptr<T> value_;
-};
+#define DEBUG_OUT_TEMP(a) // qDebug() << a;
 
 //typedef Container<yaml_parser_t, void, &yaml_parser_delete> YamlParserType;
 typedef std::shared_ptr<yaml_parser_t> YamlParserType;
@@ -87,35 +45,21 @@ public:
         SEQUENCE,
         SCALAR,
     };
-/*
-    YamlNode(MapType&& map) : map_(&map)
-    {
+
+    //YamlNode(MapType&& map) : map_(map), nodeType_(eNodeType::MAP) { }
+    YamlNode(const MapType& map) : map_(map), nodeType_(eNodeType::MAP) { }
+
+    //YamlNode(SequenceType&& sequence) : sequence_(sequence), nodeType_(eNodeType::SEQUENCE) { }
+    YamlNode(const SequenceType& sequence) : sequence_(sequence), nodeType_(eNodeType::SEQUENCE) { }
+
+    YamlNode( ScalarType&& scalar) : scalar_(scalar), nodeType_(eNodeType::SCALAR) {
     }
 
-    YamlNode(SequenceType&& sequence) : sequence_(&sequence)
-    {
+    YamlNode(eNodeType nodeType) : nodeType_(nodeType) { }
 
-    }
-*/
-    YamlNode(ScalarType&& scalar) : scalar_(scalar), nodeType_(eNodeType::SCALAR)
-    {
+    YamlNode(bool _isEnd) : isEnd(_isEnd) { }
 
-    }
-
-    YamlNode(eNodeType nodeType) : nodeType_(nodeType)
-    {
-
-    }
-
-    YamlNode(bool _isEnd) : isEnd(_isEnd)
-    {
-
-    }
-
-    YamlNode()
-    {
-
-    }
+    YamlNode() { }
 
     YamlNode(const YamlNode& other)
         : nodeType_(other.nodeType_),
@@ -123,13 +67,9 @@ public:
           sequence_(other.sequence_),
           scalar_(other.scalar_),
           isEnd(other.isEnd)
-    {
+    { }
 
-    }
-
-    ~YamlNode()
-    {
-    }
+    ~YamlNode() { }
 
     bool isEnd = false;
 
@@ -221,7 +161,10 @@ public:
 
     inline const eNodeType nodeType() { return nodeType_; }
 
-    friend YamlNode parseYamlFast(const YamlParserType parser);
+
+
+    friend YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node);
+    friend YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent);
 private:
 
     eNodeType nodeType_;
@@ -237,88 +180,9 @@ private:
 };
 
 
-YamlNode parseYamlFast(YamlParserType parser) {
-    //Container<yaml_event_t, void, &yaml_event_delete> event = Container<yaml_event_t, void, &yaml_event_delete>(yaml_event_t());
-    yaml_event_t event;
+YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node);
+YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent);
 
-    if (!yaml_parser_parse(parser.get(), &event)) {
-       THROW(QString::fromStdString("Parser error " + std::to_string((*parser).error)));
-    }
-
-    switch((event).type)
-    {
-    case YAML_NO_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_NO_EVENT";
-        break;
-    /* Stream start/end */
-    case YAML_STREAM_START_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_STREAM_START_EVENT";
-        return parseYamlFast(parser);
-    case YAML_STREAM_END_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_STREAM_END_EVENT";
-        return YamlNode(true);
-    /* Block delimeters */
-    case YAML_DOCUMENT_START_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_DOCUMENT_START_EVENT";
-        return parseYamlFast(parser);
-    case YAML_DOCUMENT_END_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_DOCUMENT_END_EVENT";
-        return YamlNode(true);
-    case YAML_SEQUENCE_START_EVENT: {
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_SEQUENCE_START_EVENT";
-        YamlNode node(YamlNode::eNodeType::SEQUENCE);
-        YamlNode::SequenceType& sequence = node.getSequence();
-
-        for (auto parseResult = parseYamlFast(parser); !parseResult.isEnd; parseResult = parseYamlFast(parser)) {
-            sequence.push_back(parseResult);
-        }
-        return node;
-    }
-    break;
-    case YAML_SEQUENCE_END_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_SEQUENCE_END_EVENT";
-        return YamlNode(true);
-    case YAML_MAPPING_START_EVENT: {
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_MAPPING_START_EVENT";
-        YamlNode node(YamlNode::eNodeType::MAP);
-        YamlNode::MapType& map = node.getMap();
-        for (auto key = parseYamlFast(parser); !key.isEnd; key = parseYamlFast(parser)) {
-            qDebug() << "DEBUG[parseYamlFast] key.value() == " << key.value();
-            auto value = parseYamlFast(parser);
-            //map.insert({key.value(), value});
-            map.insert(key.value(), value);
-        }
-        return node;
-    }
-    break;
-    case YAML_MAPPING_END_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_MAPPING_END_EVENT";
-        return new YamlNode(true);
-    /* Data */
-    case YAML_ALIAS_EVENT:
-        yaml_event_delete(&event);
-        qDebug() << "DEBUG[parseYamlFast] YAML_ALIAS_EVENT";
-        THROW(QString("Got alias (anchor %s)") /*% (*event).data.alias.anchor)*/);
-        break;
-    case YAML_SCALAR_EVENT:
-        qDebug() << "DEBUG[parseYamlFast] YAML_SCALAR_EVENT = " << QString::fromLatin1((char*)event.data.scalar.value);
-        //auto node = YamlNode(event.data.scalar.value);
-        //yaml_event_delete(&event);
-        return YamlNode(QString::fromLatin1((char*)event.data.scalar.value));
-        break;
-    }
-    qDebug() << "DEBUG[load_yaml] after switch";
-
-}
 
 struct FILEContainer {
     //Container() : value_(new T()) { }
@@ -335,24 +199,7 @@ private:
 };
 
 
-const YamlNode loadYamlFast(const std::string& filePath) {
-    FILEContainer file(fopen(filePath.c_str(), "r"));
-    YamlParserType parser( new yaml_parser_t());
-
-    qDebug() << "DEBUG[load_yaml] after openFile";
-    /* Initialize parser */
-    if(!yaml_parser_initialize(&*parser))
-        THROW("Failed to initialize parser!");
-    if(*file == nullptr)
-        THROW("Failed to open file!");
-
-    /* Set input file */
-    yaml_parser_set_input_file(&*parser, *file);
-    qDebug() << "DEBUG[load_yaml] before parseYamlFast";
-    return parseYamlFast(parser);
-    qDebug() << "DEBUG[load_yaml] after parseYamlFast";
-    yaml_parser_delete(parser.get());
-}
+const YamlNode loadYamlFast(const std::string& filePath);
 
 
 } // namespace load
