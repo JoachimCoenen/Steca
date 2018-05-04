@@ -46,14 +46,17 @@ public:
         SCALAR,
     };
 
-    //YamlNode(MapType&& map) : map_(map), nodeType_(eNodeType::MAP) { }
-    YamlNode(const MapType& map) : map_(map), nodeType_(eNodeType::MAP) { }
+    YamlNode(MapType&& map) : map_(new MapType(map)), nodeType_(eNodeType::MAP) { }
+    YamlNode(const MapType& map) : map_(new MapType(map)), nodeType_(eNodeType::MAP) { }
+    YamlNode(MapType* map) : map_(map), nodeType_(eNodeType::MAP) { }
 
-    //YamlNode(SequenceType&& sequence) : sequence_(sequence), nodeType_(eNodeType::SEQUENCE) { }
-    YamlNode(const SequenceType& sequence) : sequence_(sequence), nodeType_(eNodeType::SEQUENCE) { }
+    YamlNode(SequenceType&& sequence) : sequence_(new SequenceType(sequence)), nodeType_(eNodeType::SEQUENCE) { }
+    YamlNode(const SequenceType& sequence) : sequence_(new SequenceType(sequence)), nodeType_(eNodeType::SEQUENCE) { }
+    YamlNode(SequenceType* sequence) : sequence_(sequence), nodeType_(eNodeType::SEQUENCE) { }
 
-    YamlNode( ScalarType&& scalar) : scalar_(scalar), nodeType_(eNodeType::SCALAR) {
-    }
+    YamlNode( ScalarType&& scalar) : scalar_(scalar), nodeType_(eNodeType::SCALAR) { }
+    YamlNode(std::shared_ptr<std::vector<float>> vec) : vec_(vec), nodeType_(eNodeType::SCALAR) { }
+
 
     YamlNode(eNodeType nodeType) : nodeType_(nodeType) { }
 
@@ -66,6 +69,7 @@ public:
           map_(other.map_),
           sequence_(other.sequence_),
           scalar_(other.scalar_),
+          vec_(other.vec_),
           isEnd(other.isEnd)
     { }
 
@@ -78,13 +82,17 @@ public:
     inline ScalarType& value() {
         return getScalar();
     }
+    inline std::shared_ptr<std::vector<float>> getVector() {
+        return vec_;
+    }
 
     YamlNode& operator= ( const YamlNode& other )
     {
         nodeType_ = other.nodeType_;
-        map_ = other.map_;
-        sequence_ = other.sequence_;
+        *map_ = *other.map_;
+        *sequence_ = *other.sequence_;
         scalar_ = other.scalar_;
+        vec_ = other.vec_;
         isEnd = other.isEnd;
         return *this;
     }
@@ -101,7 +109,7 @@ public:
     }
 
     const int size() const {
-        return sequence_.size();
+        return sequence_->size();
     }
     inline SequenceType::iterator begin()
     {
@@ -110,7 +118,7 @@ public:
             THROW("node(map) doesn't have an iterator")
             break;
         case eNodeType::SEQUENCE:
-            return sequence_.begin();
+            return sequence_->begin();
             break;
         case eNodeType::SCALAR:
             THROW("node(scalar) doesn't have an iterator")
@@ -124,7 +132,7 @@ public:
             THROW("node(map) doesn't have an iterator")
             break;
         case eNodeType::SEQUENCE:
-            return sequence_.end();
+            return sequence_->end();
             break;
         case eNodeType::SCALAR:
             THROW("node(scalar) doesn't have an iterator")
@@ -138,7 +146,7 @@ public:
             THROW("node(map) doesn't have an iterator")
             break;
         case eNodeType::SEQUENCE:
-            return sequence_.cbegin();
+            return sequence_->cbegin();
             break;
         case eNodeType::SCALAR:
             THROW("node(scalar) doesn't have an iterator")
@@ -152,7 +160,7 @@ public:
             THROW("node(map) doesn't have an iterator")
             break;
         case eNodeType::SEQUENCE:
-            return sequence_.cend();
+            return sequence_->cend();
             break;
         case eNodeType::SCALAR:
             THROW("node(scalar) doesn't have an iterator")
@@ -170,19 +178,19 @@ private:
     eNodeType nodeType_;
     //const std::shared_ptr<MapType> map_ = nullptr;
     //const std::shared_ptr<SequenceType> sequence_ = nullptr;
-    MapType map_;// = nullptr;
-    SequenceType sequence_;// = nullptr;
-    ScalarType scalar_ = "42";
+    const std::shared_ptr<MapType> map_;// = nullptr;
+    const std::shared_ptr<SequenceType> sequence_;// = nullptr;
+    ScalarType scalar_ = "";
+    std::shared_ptr<std::vector<float>> vec_;
 
-    inline MapType& getMap() { return map_; }
-    inline SequenceType& getSequence() { return sequence_; }
+    inline MapType& getMap() { return *map_; }
+    inline SequenceType& getSequence() { return *sequence_; }
     inline ScalarType& getScalar() { return scalar_; }
 };
 
-
+yaml_event_type_t parser_parse(YamlParserType parser, yaml_event_t& event);
 YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node);
 YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent);
-
 
 struct FILEContainer {
     //Container() : value_(new T()) { }

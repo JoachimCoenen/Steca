@@ -15,10 +15,12 @@
 #include "fastyamlloader.h"
 #include <QStringBuilder> // for ".." % ..
 #include <QMap>
+#include <sstream>
 
 namespace loadYAML {
 
 YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node) {
+    /*
     //Container<yaml_event_t, void, &yaml_event_delete> event = Container<yaml_event_t, void, &yaml_event_delete>(yaml_event_t());
     yaml_event_t event;
 
@@ -103,7 +105,7 @@ YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node) {
     case YAML_ALIAS_EVENT:
         yaml_event_delete(&event);
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast] YAML_ALIAS_EVENT");
-        THROW(QString("Got alias (anchor %s)") /*% (*event).data.alias.anchor)*/);
+        THROW(QString("Got alias (anchor %s)"));
         break;
     case YAML_SCALAR_EVENT:
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast] YAML_SCALAR_EVENT = " << QString::fromLatin1((char*)event.data.scalar.value));
@@ -114,7 +116,7 @@ YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node) {
         break;
     }
     DEBUG_OUT_TEMP("DEBUG[load_yaml] after switch");
-
+*/
 }
 
 
@@ -159,7 +161,8 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
     case YAML_SEQUENCE_START_EVENT: {
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast2] YAML_SEQUENCE_START_EVENT");
         //node.nodeType_ = YamlNode::eNodeType::SEQUENCE;
-        YamlNode::SequenceType sequence;
+        YamlNode node = YamlNode(new YamlNode::SequenceType());
+        YamlNode::SequenceType& sequence = node.getSequence();
 
         yaml_event_t event;
         while(YAML_SEQUENCE_END_EVENT != parser_parse(parser, event)) {
@@ -172,7 +175,7 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
         //    sequence.push_back(std::move(innnerNode));
         //}
         yaml_event_delete(&event);
-        return YamlNode(sequence);
+        return node;//YamlNode(sequence);
     }
     break;
     case YAML_SEQUENCE_END_EVENT:
@@ -181,7 +184,8 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
     case YAML_MAPPING_START_EVENT: {
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast2] YAML_MAPPING_START_EVENT");
         //node.nodeType_ = YamlNode::eNodeType::MAP;
-        YamlNode::MapType map;
+        YamlNode node = YamlNode(new YamlNode::MapType());
+        YamlNode::MapType& map = node.getMap();
 
         yaml_event_t event;
         while(YAML_MAPPING_END_EVENT != parser_parse(parser, event)) {
@@ -199,7 +203,7 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
         //    map.insert(key.value(), parseYamlFast(parser, YamlNode()));
         //}
         yaml_event_delete(&event);
-        return YamlNode(map);
+        return node;
     }
     break;
     case YAML_MAPPING_END_EVENT:
@@ -212,7 +216,22 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
     case YAML_SCALAR_EVENT:
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast2] YAML_SCALAR_EVENT = " << QString::fromLatin1((char*)prevEvent.data.scalar.value));
         //node.nodeType_ = YamlNode::eNodeType::SCALAR;
-        return std::move(YamlNode(QString::fromLatin1((char*)prevEvent.data.scalar.value)));
+        if ((char*)prevEvent.data.scalar.tag
+                && std::string((char*)prevEvent.data.scalar.tag) == "!array2d") {
+          std::shared_ptr<std::vector<float>> vec(new std::vector<float>);
+
+          std::stringstream arrayStr((char*)prevEvent.data.scalar.value);
+          int width; arrayStr >> width;
+          int height; arrayStr >> height;
+          for (int i = 0; i < width*height; i++) {
+              int v;
+              arrayStr >> v;
+              vec->push_back(v);
+              //vect.push_back(atoi((char*)event_.data.scalar.value));
+          }
+          return YamlNode(vec);
+        }
+        return YamlNode(QString::fromLatin1((char*)prevEvent.data.scalar.value));
         break;
     }
     //DEBUG_OUT_TEMP("DEBUG[parseYamlFast2] after switch");

@@ -18,137 +18,210 @@
 #include "fastyamlloader.h"
 #include "core/raw/rawfile.h"
 #include "core/typ/exception.h"
-#include<yaml.h>
-#include<map>
+#include <fstream>
+#include <sstream>
+#include <yaml.h>
+#include <map>
 #include <QVariant>
 #include <QMap>
+#include <assert.h>
 
 //! Functions loadRawfile and loadComment, and their dependences.
-/*
+
 namespace loadYAML {
 
-
-template <typename T>
-class yamlIterator {
+class YamlIterator {
 public:
-    //typedef T value_type;
-    //typedef T& reference_type;
-    //typedef const T& const_reference_type;
-    //typedef T* pointer_type;
-    //typedef const T* const_pointer_type;
+    typedef std::string ScalarType;
+    typedef ScalarType KeyType;
+    typedef std::map<KeyType, YamlNode> MapType;
+    typedef std::vector<YamlNode> SequenceType;
+    typedef std::shared_ptr<YamlNode> NodeType;
+    typedef std::shared_ptr<YamlIterator> IteratorType;
 
-    yamlIterator(bool isMappingIterator)  : isMappingIterator_(isMappingIterator) {
-
-    }
+    YamlIterator(bool isMappingIterator, YamlParserType parser)
+        : isMappingIterator_(isMappingIterator)
+        , parser_(parser)
+    { }
 
     void finishThisNode() {
-        Container<yaml_event_t, &yaml_event_delete>  event;
+        if (nodeState == eNodeState::UNTOUCHED) {
+            //getInnerIterator();
+            yaml_event_t event;
 
-        int stackDepth = 0;
-        bool noEvent = false;
-        do {
-            noEvent = false;
-            if (!yaml_parser_parse(parser, *event)) {
-                THROW("Parser error %d" % parser.error);
+            int counter = 0;
+            int maxStackDepth = 0;
+            int stackDepth = 0;
+            bool noEvent = false;
+            do {
+                noEvent = false;
+                switch(parser_parse(parser_, event))
+                {
+                case YAML_NO_EVENT: noEvent = true; break;
+                // Stream start/end
+                case YAML_STREAM_START_EVENT:
+                    stackDepth++; break;
+                case YAML_STREAM_END_EVENT:
+                    stackDepth--; break;
+                // Block delimeters
+                case YAML_DOCUMENT_START_EVENT:
+                    stackDepth++; break;
+                case YAML_DOCUMENT_END_EVENT:
+                    stackDepth--; break;
+                case YAML_SEQUENCE_START_EVENT:
+                    stackDepth++; break;
+                case YAML_SEQUENCE_END_EVENT:
+                    stackDepth--; break;
+                case YAML_MAPPING_START_EVENT:
+                    stackDepth++; break;
+                case YAML_MAPPING_END_EVENT:
+                    stackDepth--; break;
+                // Data
+                case YAML_ALIAS_EVENT:
+                    THROW("Got alias (anchor s)\n"); break;
+                case YAML_SCALAR_EVENT:
+                    break;
+                }
+                counter++;
+                maxStackDepth = stackDepth > maxStackDepth ? stackDepth : maxStackDepth;
+                yaml_event_delete(&event);
+            } while (0 >= stackDepth && !noEvent);
+            DEBUG_OUT_TEMP("DEBUG[yamlIterator::finishThisNode] counted " << counter << " tokens up.");
+            nodeState = eNodeState::FINISHED;
+        }
+        if (nodeState == eNodeState::ITERATING) {
+            assert(currentIterator_ != nullptr);
+            int counter = 0;
+            while (!currentIterator_->isEnd()) {
+                counter++;
+                ++(*currentIterator_);
             }
-            switch(*event.type)
-            {
-            case YAML_NO_EVENT: noEvent = true; break;
-            // Stream start/end
-            case YAML_STREAM_START_EVENT:
-                stackDepth++; break;
-            case YAML_STREAM_END_EVENT:
-                stackDepth--; break;
-            // Block delimeters
-            case YAML_DOCUMENT_START_EVENT:
-                stackDepth++; break;
-            case YAML_DOCUMENT_END_EVENT:
-                stackDepth--; break;
-            case YAML_SEQUENCE_START_EVENT:
-                stackDepth++; break;
-            case YAML_SEQUENCE_END_EVENT:
-                stackDepth--; break;
-            case YAML_MAPPING_START_EVENT:
-                stackDepth++; break;
-            case YAML_MAPPING_END_EVENT:
-                return ParsingResult(true);
-            // Data
-            case YAML_ALIAS_EVENT:
-                THROW("Got alias (anchor %s)\n" % *event.data.alias.anchor); break;
-            case YAML_SCALAR_EVENT:
-                break;
-            }
-            yaml_event_delete(*event);
-        } while (0 >= stackDepth && !noEvent);
-
-        thisNodeHasFinished_ = true;
+            DEBUG_OUT_TEMP("DEBUG[yamlIterator::finishThisNode] counted " << counter << " iterators up.");
+            nodeState = eNodeState::FINISHED;
+        }
     }
 
-    yamlIterator& operator++ (void) {
-        if (!thisNodeHasFinished_) {
-            finishThisNode();
-        }
-        thisNodeHasFinished_ = false;
+    YamlIterator& operator++ (void) {
+        assert(!isEndIterator_);
+        finishThisNode();
+        nodeState = eNodeState::UNTOUCHED;
         currentNode_ = nullptr;
+        currentIterator_ = nullptr;
 
-        if(isMappingIterator_) {
-            auto parseResult = parseYamlFast(parser_);
-            key_ = parseResult.node;
-        } // else key_ = nullptr;
+        yaml_event_delete(&event_);
+        parser_parse(parser_, event_);
+        DEBUG_OUT_TEMP("DEBUG[yamlIterator::++] event_.type == " << event_.type);
 
-
-        Container<yaml_event_t, &yaml_event_delete>  event;
-
-        if (!yaml_parser_parse(*parser, *event)) {
-            THROW("Parser error %d" % *parser.error);
+        isEndIterator_ = false
+                || YAML_MAPPING_END_EVENT == event_.type
+                || YAML_SEQUENCE_END_EVENT == event_.type
+                || YAML_NO_EVENT == event_.type
+                ;
+        if (isMappingIterator_ && !isEndIterator_) {
+            key_ = std::string((char*)event_.data.scalar.value);
+            DEBUG_OUT_TEMP("DEBUG[yamlIterator::++] key == " << QString::fromStdString(key_));
+            yaml_event_delete(&event_);
+            parser_parse(parser_, event_);
+        } else if (isEndIterator_) {
+            nodeState = eNodeState::FINISHED;
         }
-
-        return this;
+        return *this;
     }
-
 
     NodeType getCurrentNode() {
         if (nullptr == currentNode_) {
-            currentNode_ = constructCurrentNode();
+            currentNode_ = NodeType(new YamlNode(constructCurrentNode()));
         } // else
         return currentNode_;
     }
 
+    IteratorType getInnerIterator()
+    {
+        nodeState = eNodeState::ITERATING;
+        if (nullptr == currentIterator_) {
+            currentIterator_ = IteratorType(new YamlIterator(YAML_MAPPING_START_EVENT == event_.type, parser_));
+            if (YAML_SCALAR_EVENT == event_.type) {
+                currentIterator_->nodeState = eNodeState::FINISHED;
+                DEBUG_OUT_TEMP("DEBUG[yamlIterator::getInnerIterator] YAML_SCALAR_EVENT");
+            }
+        }
+        return currentIterator_;
+    }
 
+    ScalarType getValue()
+    {
+        nodeState = eNodeState::FINISHED;
+        return std::string((char*)event_.data.scalar.value);
+    }
 
+    template<typename T>
+    inline void fillVectorWithInts(std::vector<T>& vect)
+    {
+        yaml_event_delete(&event_);
+        parser_parse(parser_, event_);
+
+        while (YAML_SEQUENCE_END_EVENT != event_.type) {
+            vect.push_back(atoi((char*)event_.data.scalar.value));
+            yaml_event_delete(&event_);
+            parser_parse(parser_, event_);
+        }
+        DEBUG_OUT_TEMP("DEBUG[yamlIterator::fillVectorWithInts] vect.size() == " << vect.size());
+        nodeState = eNodeState::FINISHED;
+        isEndIterator_ = true;
+    }
+
+    template<typename T>
+    inline void fillVectorWithIntsFromScalar(std::vector<T>& vect)
+    {
+        //yaml_event_delete(&event_);
+        //parser_parse(parser_, event_);
+
+        auto str = std::string((char*)event_.data.scalar.value);
+        std::stringstream imageStr(str);
+        while (!imageStr.eof()) {
+            int v;
+            imageStr >> v;
+            vect.push_back(v);
+            //vect.push_back(atoi((char*)event_.data.scalar.value));
+        }
+        DEBUG_OUT_TEMP("DEBUG[yamlIterator::fillVectorWithInts] vect.size() == " << vect.size());
+        nodeState = eNodeState::FINISHED;
+        //isEndIterator_ = true;
+    }
+
+    KeyType getKey() { return key_; }
+
+    bool isEnd() { return isEndIterator_; }
 
 private:
-    const YamlNode&& constructCurrentNode() {
-    Assert(false == thisNodeHasFinished_)
-        const auto& parsingResult = parseYamlFast(parser_);
-        if (parsingResult.isEnd) {
-            THROW("Invalid or non-existent Node")
-        }
-        thisNodeHasFinished_ = true;
-        return parsingResult.node;
+
+    const YamlNode constructCurrentNode() {
+    assert(eNodeState::UNTOUCHED == nodeState);
+        const auto& node = parseYamlFast2(parser_, event_);
+        nodeState = eNodeState::FINISHED;
+        return node;
     }
+
+    enum class eNodeState {
+        UNTOUCHED = 0,
+        ITERATING = 1,
+        FINISHED = 2,
+    };
 
     const bool isMappingIterator_;
     bool isEndIterator_ = false;
-    bool thisNodeHasFinished_ = false;
+    eNodeState nodeState = eNodeState::FINISHED;
     NodeType currentNode_ = nullptr;
-    KeyType key_ = nullptr;
+    IteratorType currentIterator_ = nullptr;
+    KeyType key_ = "";
 
+    yaml_event_t event_;
+    const YamlParserType parser_;
 
-    const std::shared_ptr<yaml_parser_t> parser_;
-
-    const_reference_type operator *() {
-        return ;
-    }
-public:
-    typedef std::map<KeyType, YamlNode> MapType;
-    typedef std::vector<YamlNode> SequenceType;
-    typedef std::string ScalarType;
-    typedef std::shared_ptr<YamlNode> NodeType;
-    typedef NodeType KeyType;
 };
 
 
+/*
 
 class DeferredYamlLoader {
 public:
@@ -209,7 +282,7 @@ private:
 
 
 };
-
-} // namespace loadYAML
 */
+} // namespace loadYAML
+
 #endif // DEFERREDYAMLLOADER_H
