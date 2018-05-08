@@ -197,7 +197,7 @@ private:
 
     const YamlNode constructCurrentNode() {
     assert(eNodeState::UNTOUCHED == nodeState);
-        const auto& node = parseYamlFast2(parser_, event_);
+        const auto& node = parseYamlFast(parser_, event_);
         nodeState = eNodeState::FINISHED;
         return node;
     }

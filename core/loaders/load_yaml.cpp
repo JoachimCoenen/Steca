@@ -639,7 +639,7 @@ void parseSingleScanDeferred(loadYAML::YamlIterator& scanIterator, Rawfile& rawf
 
 }
 
-void parseScansDeferred(loadYAML::YamlIterator& scansIterator, Rawfile& rawfile)
+    void parseScansDeferred(loadYAML::YamlIterator& scansIterator, Rawfile& rawfile)
 {
     while(!(++scansIterator).isEnd()) {
         parseSingleScanDeferred(*scansIterator.getInnerIterator(), rawfile);

@@ -92,7 +92,7 @@ public:
         *map_ = *other.map_;
         *sequence_ = *other.sequence_;
         scalar_ = other.scalar_;
-        vec_ = other.vec_;
+        *vec_ = *other.vec_;
         isEnd = other.isEnd;
         return *this;
     }
@@ -172,16 +172,14 @@ public:
 
 
     friend YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node);
-    friend YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent);
+    friend YamlNode parseYamlFast(YamlParserType parser, const yaml_event_t& prevEvent);
 private:
 
     eNodeType nodeType_;
-    //const std::shared_ptr<MapType> map_ = nullptr;
-    //const std::shared_ptr<SequenceType> sequence_ = nullptr;
     const std::shared_ptr<MapType> map_;// = nullptr;
     const std::shared_ptr<SequenceType> sequence_;// = nullptr;
     ScalarType scalar_ = "";
-    std::shared_ptr<std::vector<float>> vec_;
+    const std::shared_ptr<std::vector<float>> vec_;
 
     inline MapType& getMap() { return *map_; }
     inline SequenceType& getSequence() { return *sequence_; }
@@ -190,7 +188,7 @@ private:
 
 yaml_event_type_t parser_parse(YamlParserType parser, yaml_event_t& event);
 YamlNode&& parseYamlFast(YamlParserType parser, YamlNode&& node);
-YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent);
+YamlNode parseYamlFast(YamlParserType parser, const yaml_event_t& prevEvent);
 
 struct FILEContainer {
     //Container() : value_(new T()) { }
