@@ -128,11 +128,6 @@ yaml_event_type_t parser_parse(YamlParserType parser, yaml_event_t& event) {
 }
 
 YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
-    //Container<yaml_event_t, void, &yaml_event_delete> event = Container<yaml_event_t, void, &yaml_event_delete>(yaml_event_t());
-    //yaml_event_t event;
-
-
-
     switch(prevEvent.type)
     {
     case YAML_NO_EVENT:
@@ -171,9 +166,6 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
         };
         DEBUG_OUT_TEMP("DEBUG[parseYamlFast2] YAML_SEQUENCE_END_EVENT");
 
-        //for (auto&& innnerNode = parseYamlFast(parser, YamlNode()); !innnerNode.isEnd; innnerNode = parseYamlFast(parser, YamlNode())) {
-        //    sequence.push_back(std::move(innnerNode));
-        //}
         yaml_event_delete(&event);
         return node;//YamlNode(sequence);
     }
@@ -196,12 +188,6 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
             map.insert(key, parseYamlFast2(parser, event));
             yaml_event_delete(&event);
         }
-
-        //for (auto key = parseYamlFast(parser, YamlNode()); !key.isEnd; key = parseYamlFast(parser, YamlNode())) {
-        //    DEBUG_OUT_TEMP("DEBUG[parseYamlFast] key.value() == " << key.value());
-        //    //map.insert({key.value(), value});
-        //    map.insert(key.value(), parseYamlFast(parser, YamlNode()));
-        //}
         yaml_event_delete(&event);
         return node;
     }
@@ -218,18 +204,24 @@ YamlNode parseYamlFast2(YamlParserType parser, const yaml_event_t& prevEvent) {
         //node.nodeType_ = YamlNode::eNodeType::SCALAR;
         if ((char*)prevEvent.data.scalar.tag
                 && std::string((char*)prevEvent.data.scalar.tag) == "!array2d") {
-          std::shared_ptr<std::vector<float>> vec(new std::vector<float>);
+            qDebug() << QString("DEBUG[parseYamlFast2] before read array2d");
+            std::shared_ptr<std::vector<float>> vec(new std::vector<float>);
 
-          std::stringstream arrayStr((char*)prevEvent.data.scalar.value);
-          int width; arrayStr >> width;
-          int height; arrayStr >> height;
-          for (int i = 0; i < width*height; i++) {
-              int v;
-              arrayStr >> v;
-              vec->push_back(v);
-              //vect.push_back(atoi((char*)event_.data.scalar.value));
-          }
-          return YamlNode(vec);
+            std::stringstream arrayStr((char*)prevEvent.data.scalar.value, std::ios_base::in);
+            int width; arrayStr >> width;
+            int height; arrayStr >> height;
+            qDebug() << QString("DEBUG[parseYamlFast2] mid read array2d");
+            // find start of actual array data:
+            while ('[' != arrayStr.get())
+            { }
+
+            for (int i = 0; i < width*height; i++) {
+                int v;
+                arrayStr >> v;
+                vec->push_back(v);
+            }
+            qDebug() << QString("DEBUG[parseYamlFast2] after read array2d");
+            return YamlNode(vec);
         }
         return YamlNode(QString::fromLatin1((char*)prevEvent.data.scalar.value));
         break;
@@ -250,8 +242,6 @@ const YamlNode loadYamlFast(const std::string& filePath) {
 
     /* Set input file */
     yaml_parser_set_input_file(&*parser, *file);
-    // qDebug() << "DEBUG[load_yaml] before parseYamlFast";
-   // return parseYamlFast(parser, YamlNode());
 
     yaml_event_t event;
     parser_parse(parser, event);

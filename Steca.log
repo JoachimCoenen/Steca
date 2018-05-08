@@ -1,0 +1,262 @@
+[    0ms main]#  Steca started at 2018-05-04 14:30::19.927
+[    0ms main]#  "Trigger about" emits changed()
+[    2ms main]#  "Trigger addFiles" emits changed()
+[    0ms main]#  "Trigger addPeak" emits changed()
+[    0ms main]#  "Trigger checkUpdate" emits changed()
+[    0ms main]#  "Trigger clearBackground" emits changed()
+[    0ms main]#  "Trigger clearPeaks" emits changed()
+[    0ms main]#  "Trigger clearSession" emits changed()
+[    1ms main]#  "Trigger corrFile" emits changed()
+[    2ms main]#  "Trigger exportDfgram" emits changed()
+[    2ms main]#  "Trigger exportPolefig" emits changed()
+[    3ms main]#  "Trigger exportBigtable" emits changed()
+[    2ms main]#  "Trigger exportDiagram" emits changed()
+[    0ms main]#  "Trigger spawnTable" emits changed()
+[    0ms main]#  "Trigger spawnDiagram" emits changed()
+[    1ms main]#  "Trigger spawnPolefig" emits changed()
+[    0ms main]#  "Trigger loadSession" emits changed()
+[    0ms main]#  "Trigger online" emits changed()
+[    0ms main]#  "Trigger quit" emits changed()
+[    0ms main]#  "Trigger removeFile" emits changed()
+[    0ms main]#  "Trigger removePeak" emits changed()
+[    0ms main]#  "Trigger saveSession" emits changed()
+[    0ms main]#  "Trigger viewReset" emits changed()
+[    0ms main]#: initialization: dfg.all off
+[    1ms main]#  "Toggle dfg.all" emits changed()
+[    0ms main]#: initialization: crosshair off
+[    1ms main]#  "Toggle crosshair" emits changed()
+[    0ms main]#: initialization: enableCorr off
+[    0ms main]#  "Toggle enableCorr" emits changed()
+[    0ms main]#: initialization: dfg.fixInt off
+[    0ms main]#  "Toggle dfg.fixInt" emits changed()
+[    0ms main]#: initialization: img.fixInt off
+[    0ms main]#  "Toggle img.fixInt" emits changed()
+[    0ms main]#: initialization: linkCuts off
+[    1ms main]#  "Toggle linkCuts" emits changed()
+[    0ms main]#: initialization: showBackground off
+[    0ms main]#  "Toggle showBackground" emits changed()
+[    0ms main]#: initialization: showBins off
+[    0ms main]#  "Toggle showBins" emits changed()
+[    0ms main]#: initialization: viewMeasurements off
+[    0ms main]#  "Toggle viewMeasurements" emits changed()
+[    0ms main]#: initialization: viewFiles off
+[    0ms main]#  "Toggle viewFiles" emits changed()
+[    0ms main]#: initialization: viewMetadata off
+[    0ms main]#  "Toggle viewMetadata" emits changed()
+[    0ms main]#: initialization: viewStatusbar off
+[    0ms main]#  "Toggle viewStatusbar" emits changed()
+[    0ms main]#: initialization: toggle_fullScreen off
+[    0ms main]#  "Toggle toggle_fullScreen" emits changed()
+[    2ms main]#: initialization: gridPts off
+[    0ms main]#: initialization: xAxis -1
+[    0ms main]#: initialization: yAxis -1
+[    0ms main]#  diagram tags:  "α β γ1 γ2 inten σinten 2θ σ2θ fwhm σfwhm X Y Z ω mid 2θ φ χ PST SST ΩM T teload tepos teext xe ye ze mon Δmon t Δt"
+[    0ms main]#: xAxis 0
+[    0ms main]#: yAxis 0
+[    1ms main]#  "Trigger rotateImage" emits changed()
+[    0ms main]#: initialization: mirrorImage off
+[    0ms main]#  "Toggle mirrorImage" emits changed()
+[  101ms main]#: initialization: setupTab -1
+[    0ms main]#: initialization: detDistance 0
+[    0ms main]#: initialization: detPixelSize 0
+[    0ms main]#: initialization: beamOffsetI 0
+[    0ms main]#: initialization: beamOffsetJ 0
+[    0ms main]#: detDistance 1035
+[    0ms main]#: detPixelSize 1
+[    0ms main]#: initialization: cutLeft 0
+[    1ms main]#: initialization: cutTop 0
+[    0ms main]#: initialization: cutRight 0
+[    0ms main]#: initialization: cutBottom 0
+[    0ms main]#: initialization: combineMeasurements 0
+[    0ms main]#: initialization: dropIncomplete off
+[    0ms main]#  "Toggle dropIncomplete" emits changed()
+[    1ms main]#: initialization: numSlices 0
+[    0ms main]#: numSlices 1
+[    0ms main]#  GammaControls emits gSession->sigImage()
+[    1ms main]#: setupTab 0
+[    0ms main]#: initialization: degree 0
+[    1ms main]#: initialization: reflTyp -1
+[    0ms main]#: initialization: peakRangeMin 0
+[    0ms main]#: initialization: peakRangeMax 0
+[    1ms main]#: initialization: doInterpol off
+[    0ms main]#: initialization: stepAlpha 0
+[    0ms main]#: initialization: stepBeta 0
+[    0ms main]#: initialization: idwRadius 0
+[    0ms main]#: initialization: avgAlphaMax 0
+[    0ms main]#: initialization: avgRadius 0
+[    0ms main]#: initialization: threshold 0
+[    0ms main]#: stepAlpha 5
+[    0ms main]#: stepBeta 5
+[    0ms main]#: idwRadius 10
+[    1ms main]#: avgAlphaMax 5
+[    0ms main]#: avgRadius 5
+[    3ms main]#: initialization: viewsTab -1
+[    0ms main]#: initialization: idxMeas 0
+[    0ms main]#: initialization: idxSlice 0
+[    0ms main]#: initialization: idxTheta 0
+[    3ms main]#: viewsTab 0
+[    1ms main]#: initialization: rbHidden off
+[    0ms main]#: initialization: rbAll off
+[    0ms main]#: initialization: rbNone off
+[    0ms main]#: initialization: rbInten off
+[    0ms main]#: initialization: rbTth off
+[    0ms main]#: initialization: rbFWHM off
+[    0ms main]#: initialization: cb0 on
+[    0ms main]#: initialization: cb1 on
+[    0ms main]#: initialization: cb2 on
+[    0ms main]#: initialization: cb3 on
+[    0ms main]#: initialization: cb4 on
+[    0ms main]#: initialization: cb5 on
+[    0ms main]#: initialization: cb6 on
+[    0ms main]#: initialization: cb7 on
+[    0ms main]#: initialization: cb8 on
+[    0ms main]#: initialization: cb9 on
+[    0ms main]#: initialization: cb10 on
+[    0ms main]#: initialization: cb11 on
+[    0ms main]#: initialization: cb12 on
+[    0ms main]#: initialization: cb13 on
+[    0ms main]#: initialization: cb14 on
+[    0ms main]#: initialization: cb15 on
+[    0ms main]#: initialization: cb16 on
+[    0ms main]#: initialization: cb17 on
+[    0ms main]#: initialization: cb18 on
+[    0ms main]#: initialization: cb19 on
+[    0ms main]#: initialization: cb20 on
+[    0ms main]#: initialization: cb21 on
+[    0ms main]#: initialization: cb22 on
+[    0ms main]#: initialization: cb23 on
+[    0ms main]#: initialization: cb24 on
+[    1ms main]#: initialization: cb25 on
+[    0ms main]#: initialization: cb26 on
+[    0ms main]#: initialization: cb27 on
+[    0ms main]#: initialization: cb28 on
+[    0ms main]#: initialization: cb29 on
+[    0ms main]#: initialization: cb30 on
+[    0ms main]#: initialization: cb31 on
+[    0ms main]#: initialization: cb32 on
+[    4ms main]#: initialization: normTyp -1
+[    0ms main]#: initialization: intenSum off
+[    0ms main]#: initialization: intenAvg off
+[    0ms main]#: initialization: intenScale 0
+[    0ms main]#: initialization: actZoom off
+[    1ms main]#  "Toggle actZoom" emits changed()
+[    1ms main]#: showBackground on
+[    0ms main]#  Toggles::showBackground emits gSession->sigDfgram()
+[    0ms main]#  sigDfgram emits sigDoFits()
+[    1ms main]#: intenAvg on
+[    0ms main]#: intenScale 0.001
+[    1ms main]#: enableCorr on
+[ 1996ms main]#  Deregister entry 'mirrorImage' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rotateImage' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewReset' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'saveSession' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'removePeak' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'removeFile' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'quit' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'online' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'loadSession' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'spawnPolefig' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'spawnDiagram' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'spawnTable' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'exportDiagram' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'exportBigtable' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'exportPolefig' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'exportDfgram' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'corrFile' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'clearSession' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'clearPeaks' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'clearBackground' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'checkUpdate' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'addPeak' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'addFiles' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'about' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'toggle_fullScreen' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewStatusbar' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewMetadata' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewFiles' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewMeasurements' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'showBins' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'showBackground' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'linkCuts' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'img.fixInt' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'dfg.fixInt' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'enableCorr' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'crosshair' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'dfg.all' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'viewsTab' from the widget registry 'main'
+[    2ms main]#  Deregister entry 'gridPts' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'xAxis' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'yAxis' from the widget registry 'main'
+[    2ms main]#  Deregister entry 'rbFWHM' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rbTth' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rbInten' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rbNone' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rbAll' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'rbHidden' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb0' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb1' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb2' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb3' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb4' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb5' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'cb6' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb7' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb8' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb9' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb10' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb11' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb12' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb13' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb14' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb15' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb16' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb17' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb18' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb19' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb20' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb21' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb22' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb23' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb24' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb25' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb26' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'cb27' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb28' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb29' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb30' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb31' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cb32' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'idxTheta' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'idxSlice' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'idxMeas' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'actZoom' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'intenScale' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'intenAvg' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'intenSum' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'normTyp' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'setupTab' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'threshold' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'avgRadius' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'avgAlphaMax' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'idwRadius' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'stepBeta' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'stepAlpha' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'doInterpol' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'reflTyp' from the widget registry 'main'
+[    8ms main]#  Deregister entry 'peakRangeMax' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'peakRangeMin' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'degree' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'beamOffsetJ' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'beamOffsetI' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'detPixelSize' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'detDistance' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cutBottom' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'cutRight' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cutTop' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'cutLeft' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'dropIncomplete' from the widget registry 'main'
+[    0ms main]#  Deregister entry 'combineMeasurements' from the widget registry 'main'
+[    1ms main]#  Deregister entry 'numSlices' from the widget registry 'main'
+[    2ms main]#  Steca session ended
+[    0ms main]#  duration: 2164ms
+[    0ms main]#  computing time: 2164ms

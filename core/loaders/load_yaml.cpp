@@ -805,6 +805,7 @@ const std::map<QString, LoaderFunction> loaderFunctions = {
     {"arr.yaml",    &loadYamlFastArr},
     {"strarr.yaml", &loadYamlFastStrArr},
     {"str.yaml",    &loadYamlFastStr},
+    //{"arr2d.yaml",  &loadYamlFastArr2d},
 };
 
 }
