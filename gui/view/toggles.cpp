@@ -25,7 +25,4 @@ Toggles::Toggles()
               "Link the four cut settings", ":/icon/link"}
 {
     QObject::connect(&enableCorr, &QAction::changed, [&](){ enableCorr.setText(enableCorr.isChecked() ? "On" : "Off"); });
-
-
-
 }
