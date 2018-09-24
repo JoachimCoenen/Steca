@@ -14,12 +14,18 @@
 
 #include "gui/view/toggles.h"
 #include "core/session.h"
+#include <QObject>
 
 Toggles::Toggles()
     : combinedDfgram {"dfg.all", &gSession->params.showAvgeDfgram,
         "All measurements", ":/icon/all"}
     , enableCorr {"enableCorr", &gSession->corrset.enabled,
-        "Enable correction file", ":/icon/useCorrection"}
+        "Enable correction file"}
     , linkCuts {"linkCuts", &gSession->params.imageCut.linked,
               "Link the four cut settings", ":/icon/link"}
-{}
+{
+    QObject::connect(&enableCorr, &QAction::changed, [&](){ enableCorr.setText(enableCorr.isChecked() ? "On" : "Off"); });
+
+
+
+}
