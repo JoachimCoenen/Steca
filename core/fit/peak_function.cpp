@@ -182,7 +182,8 @@ inline void derivative(const F f, double fxp0, double x, const double *P, uint n
 //! @class Voigt
 
 inline double Voigt::getY(double x, const double *P) {
-    return P[2] * voigt(x - P[0], P[1], P[1]*P[3]);
+    const double sigma = P[1] / sqrt(8.0*log(2.0));
+    return P[2] * voigt(x - P[0], sigma, sigma*P[3]);
 }
 
 void Voigt::setY(const double *P, const int nXY, const double *X, double *Y) const

@@ -14,6 +14,7 @@
 
 #include "core/fit/fit_methods.h"
 #include "LevMar/LM/levmar.h"
+//#include "minimizer.h"
 #include "core/typ/curve.h"
 #include "qcr/base/debug.h"
 #include <qmath.h>
@@ -23,7 +24,45 @@ T* remove_const(T const* t)
 {
     return const_cast<T*>(t);
 }
+#ifdef MINIMIZER_H
+Fitted FitWrapper::execFit(const FitFunction* f,const Curve& curve, std::vector<double> parValue, bool onlyPositiveParams)
+{
+    int nPar = f->nPar();
+    ASSERT(parValue.size()==nPar);
 
+    if (curve.size()<nPar)
+        return {}; // signals failure
+
+    std::vector<double> parError(nPar);
+
+    Matrix covarMat;
+
+    if (onlyPositiveParams) {
+        std::vector<double> minParams (nPar, 0.0);
+        parValue = levenbergMarquardtLowerBound(curve.ys(), parValue, minParams,
+            [&](const double *params, double *ys) {
+                f->setY(params, curve.xs().size(), curve.xs().data(), ys);
+            },
+            [&](const double *params, double *jacobian) {
+                f->setDY(params, curve.xs().size(), curve.xs().data(), jacobian);
+            }, covarMat, { 1e-12, 1e-12, 1e-18 }, nPar > 1);
+    } else {
+        parValue = levenbergMarquardt(curve.ys(), parValue,
+            [&](const double *params, double *ys) {
+                f->setY(params, curve.xs().size(), curve.xs().data(), ys);
+            },
+            [&](const double *params, double *jacobian) {
+                f->setDY(params, curve.xs().size(), curve.xs().data(), jacobian);
+            }, covarMat, { 1e-12, 1e-12, 1e-18 }, nPar > 1);
+    }
+    // pass fit results
+    for (int ip=0; ip<nPar; ++ip)
+        parError[ip] = sqrt(covarMat.get(ip, ip)); // the diagonal
+    return Fitted(f, parValue, parError);
+
+}
+
+#else
 
 Fitted FitWrapper::execFit(const FitFunction* f,const Curve& curve, std::vector<double> parValue, bool onlyPositiveParams)
 {
@@ -71,6 +110,7 @@ Fitted FitWrapper::execFit(const FitFunction* f,const Curve& curve, std::vector<
         parError[ip] = sqrt(covar[ip * nPar + ip]); // the diagonal
     return Fitted(f, parValue, parError);
 }
+#endif
 
 void FitWrapper::callbackY(double* P, double* Y, int, int, void*)
 {
