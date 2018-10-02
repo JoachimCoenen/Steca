@@ -1096,7 +1096,6 @@ inline FloatType dot(const MatOrMatOpL &lhs, const MatOrMatOpR &rhs) {
 template<typename MatOrMatOp>
 inline FloatType sqrMagnitude(const MatOrMatOp &matrix) {
     ASSERT_IS_MATRIX_TYPE(MatOrMatOp);
-
     return dot(matrix, matrix);
 }
 
@@ -1318,11 +1317,10 @@ std::vector<double> levenbergMarquardtInternal(
             uint16_t count = 0;
             while (true) {
                 iterations--;
-                Matrix diagJTJ = diagonal(JTJ);
-                double diagJTJMag = sqrt(sqrMagnitude(diagJTJ)) / FloatType(diagJTJ.height());
-                Matrix diagJTJmu = (elementwiseAbs(diagJTJ)*(1.0/diagJTJMag) + I(JTJ) ) * mu;
+                double diagJTJInvMag = 1.0 / (sqrt(sqrMagnitude(diagonal(JTJ))) / FloatType(JTJ.height()));
                 //Solve (JTJ + I*mu)h = -JTe;
-                delta = invert(JTJ + (diagJTJmu)) * JTe;
+                Matrix invRes = invert(JTJ + (elementwiseAbs(diagonal(JTJ)) * diagJTJInvMag + I(JTJ) ) * mu);
+                delta = invRes * JTe;
 
                 Vector newBeta = boxProject(beta + delta, lowerBound, upperBound);
                 delta = newBeta - beta;
@@ -1333,13 +1331,13 @@ std::vector<double> levenbergMarquardtInternal(
 
                 const FloatType deltaSqrMag = sqrMagnitude(delta);
                 const FloatType betaSqrMag = sqrMagnitude(beta);
-                Vector deltaScaled = scaleInv(delta, elementwiseAbs(beta) + epsilons[1]);
-                //if (iterations <= 0 || sqrt(deltaSqrMag) <= (epsilons[1] * (sqrt(betaSqrMag) + epsilons[1]))) {
+                //Vector deltaScaled = scaleInv(delta, elementwiseAbs(beta) + epsilons[1]);
+                if (iterations <= 0 || (deltaSqrMag) <= (epsilons[1] * ((betaSqrMag) + epsilons[1]))) {
                 //if (iterations <= 0 || deltaSqrMag <= pow2(epsilons[1] * (sqrt(betaSqrMag) + epsilons[1]))) {
                 //if (iterations <= 0 || sqrMagnitude(scaleInv(delta, elementwiseAbs(beta) + epsilons[1])) <= (epsilons[1])) {
-                if (iterations <= 0 || sqrMagnitude(deltaScaled) <= pow2(epsilons[1])) {
-                    if (doLog)
-                        std::cout << "exit exit exit 1" << std::endl;
+                //if (iterations <= 0 || sqrMagnitude(scaleInv(delta, elementwiseAbs(beta) + epsilons[1])) <= (epsilons[1])) {
+                    //NOLOG if (doLog)
+                    //NOLOG     std::cout << "exit exit exit 1" << std::endl;
                     goto breakOuterLoop;
                 }
 
@@ -1387,16 +1385,14 @@ std::vector<double> levenbergMarquardtInternal(
                 JTJ = transpose(J) * J;
                 JTe = transpose(J) * e;
                 if (maxAbsComponent(JTe) <= epsilons[0]) {
-                    if (doLog)
-                        std::cout << "exit exit exit 2" << std::endl;
+                    //NOLOG if (doLog)
+                    //NOLOG     std::cout << "exit exit exit 2" << std::endl;
                     goto breakOuterLoop;
                 }
 
                 if (maxAbsComponent(JTe) < F(0.02) * eSqrMag) {
                     // it might be time to switch method...
                     count++;
-                    if(doLog)
-                        LOG_VAR1(count)
                     if (count == 3) {
                         break; // inner loop and proceed with Quasi-Newton.
                     }
@@ -1428,8 +1424,8 @@ std::vector<double> levenbergMarquardtInternal(
                 delta = newBeta - beta;
                 const FloatType sqrMagDelta = sqrMagnitude(delta);
                 if (iterations <= 0 || sqrMagDelta <= pow2(epsilons[1] * (sqrMagnitude(beta) + epsilons[1]))) {
-                    if (doLog)
-                        std::cout << "exit exit exit 3" << std::endl;
+                    //NOLOG if (doLog)
+                    //NOLOG     std::cout << "exit exit exit 3" << std::endl;
                     goto breakOuterLoop;
                 }
 
@@ -1442,7 +1438,7 @@ std::vector<double> levenbergMarquardtInternal(
                 f(newBeta.get().data(), newE.get().data());
                 newE = data - newE;
                 FloatType newESqrMag = sqrMagnitude(newE);
-
+/*
                 // how many steps can we do at once?:
                 while (true) {
                     delta *= lambda;
@@ -1461,7 +1457,7 @@ std::vector<double> levenbergMarquardtInternal(
                     }
                 }
                 delta = newBeta - beta;
-
+*/
 
                 Matrix newJ(beta.height(), data.height());
                 j(newBeta.get().data(), newJ.get().data());
@@ -1475,8 +1471,8 @@ std::vector<double> levenbergMarquardtInternal(
                     deltaCap = std::max(deltaCap, F(3.0)*sqrt(sqrMagnitude(delta)));
 
                 if (maxAbsComponent(newJTe) <= epsilons[0]) {
-                    if (doLog)
-                        std::cout << "exit exit exit 4" << std::endl;
+                    //NOLOG if (doLog)
+                    //NOLOG     std::cout << "exit exit exit 4" << std::endl;
                     goto breakOuterLoop;
                 }
 
@@ -1520,8 +1516,8 @@ std::vector<double> levenbergMarquardtInternal(
     }
 
 breakOuterLoop:
-    if (doLog)
-        std::cout << "stp " << " | " << iterations << std::endl;
+    //NOLOG if (doLog)
+    //NOLOG     std::cout << "stp " << " | " << iterations << std::endl;
     /* covariance matrix */
     covar.resize(beta.height(), beta.height());
     try {

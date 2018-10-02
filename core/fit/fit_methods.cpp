@@ -13,8 +13,8 @@
 //  ***********************************************************************************************
 
 #include "core/fit/fit_methods.h"
-#include "LevMar/LM/levmar.h"
-//#include "minimizer.h"
+//#include "LevMar/LM/levmar.h"
+#include "minimizer.h"
 #include "core/typ/curve.h"
 #include "qcr/base/debug.h"
 #include <qmath.h>
